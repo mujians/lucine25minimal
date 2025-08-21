@@ -21,31 +21,39 @@
     tab.onclick = (e) => {
       e.preventDefault();
       
-      // Salva lo stato attuale del menu
+      // Salva lo stato attuale del menu PRIMA di ogni modifica
       const wasShowingContent = contentArea.classList.contains('show');
-      const currentPosition = container.classList.contains('top') ? 'top' : 
-                            container.classList.contains('middle') ? 'middle' : 'bottom';
+      const isTop = container.classList.contains('top');
+      const isMiddle = container.classList.contains('middle');
+      
+      console.log('Tab click:', index, 'wasShowingContent:', wasShowingContent, 'isTop:', isTop, 'isMiddle:', isMiddle);
       
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
       
       if (index === 0) {
-        // Homepage: animazione di chiusura, poi vai in basso
+        // Homepage: sempre in basso
         container.className = 'navigation-container';
-        contentArea.className = 'content'; // Trigger close animation
+        contentArea.className = 'content';
+        console.log('Going to homepage - bottom position');
       } else {
-        // Altre tab: mantieni la posizione attuale se stavamo mostrando content
-        if (wasShowingContent && currentPosition === 'top') {
-          container.className = 'navigation-container top';
-        } else if (wasShowingContent && currentPosition === 'middle') {
-          container.className = 'navigation-container middle';  
+        // Altre tab: logica di posizionamento
+        if (wasShowingContent) {
+          // Stavamo già mostrando content, mantieni la posizione
+          if (isTop) {
+            container.className = 'navigation-container top';
+            console.log('Maintaining top position');
+          } else {
+            container.className = 'navigation-container middle';
+            console.log('Maintaining middle position');
+          }
         } else {
-          // Prima volta che apriamo content: vai a middle
+          // Prima apertura: vai a middle
           container.className = 'navigation-container middle';
+          console.log('First time opening - going to middle');
         }
-        contentArea.className = 'content show';
         
-        // Reset scroll quando si cambia tab
+        contentArea.className = 'content show';
         contentArea.scrollTop = 0;
       }
     };
