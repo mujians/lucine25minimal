@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.6 - FULL HEIGHT BACKGROUND";
+  content: "LUCINE MINIMAL v1.7 - FIXED Z-INDEX";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -122,8 +122,14 @@ body::before {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
-  z-index: 7;
+  z-index: 5;
   pointer-events: none;
+}
+
+.navigation-container.middle .content.show {
+  position: relative;
+  max-height: 50vh;
+  z-index: 9;
 }
 
 .navigation-container.top .content.show {
@@ -134,7 +140,7 @@ body::before {
   bottom: 0;
   max-height: none;
   height: calc(100vh - 80px);
-  z-index: 8;
+  z-index: 9;
 }
 
 .tab-content {
