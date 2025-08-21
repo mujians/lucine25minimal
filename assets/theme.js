@@ -20,15 +20,28 @@
   tabs.forEach((tab, index) => {
     tab.onclick = (e) => {
       e.preventDefault();
+      
+      // Salva lo stato attuale (top o middle)
+      const isTop = container.classList.contains('top');
+      
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
       
       if (index === 0) {
+        // Homepage: sempre in basso
         container.className = 'navigation-container';
         contentArea.className = 'content';
       } else {
-        container.className = 'navigation-container middle';
+        // Altre tab: mantieni posizione se già in top, altrimenti middle
+        if (isTop) {
+          container.className = 'navigation-container top';
+        } else {
+          container.className = 'navigation-container middle';
+        }
         contentArea.className = 'content show';
+        
+        // Reset scroll quando si cambia tab
+        contentArea.scrollTop = 0;
       }
     };
   });
