@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.7 - ABSOLUTE CONTENT";
+  content: "LUCINE MINIMAL v3.8 - SCROLL RESET";
   position: fixed;
   top: 10px;
   left: 10px;

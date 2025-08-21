@@ -16,6 +16,10 @@
     } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
       container.classList.remove('top');
       container.classList.add('middle');
+      // Reset scroll per posizione ottimale quando torniamo a middle
+      setTimeout(() => {
+        contentArea.scrollTop = 0;
+      }, 100);
     }
   };
   
