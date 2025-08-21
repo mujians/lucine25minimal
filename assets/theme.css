@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.5 - DEBUG DISPLAY";
+  content: "LUCINE MINIMAL v1.6 - FULL HEIGHT BACKGROUND";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -108,14 +108,33 @@ body::before {
   max-height: 50vh;
 }
 
+.navigation-container.middle .content.show {
+  position: relative;
+  max-height: 50vh;
+}
+
+/* Background esteso per coprire fino in fondo */
+.navigation-container.middle::after {
+  content: '';
+  position: fixed;
+  top: calc(35vh + 160px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 7;
+  pointer-events: none;
+}
+
 .navigation-container.top .content.show {
-  position: absolute;
+  position: fixed;
   top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
   max-height: none;
-  height: auto;
+  height: calc(100vh - 80px);
+  z-index: 8;
 }
 
 .tab-content {
