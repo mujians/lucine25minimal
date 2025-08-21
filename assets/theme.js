@@ -44,6 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('📄 Content mode: container middle, content visible');
         container.className = 'navigation-container middle';
         contentArea.className = 'content show';
+        
+        // Debug display
+        setTimeout(() => {
+          console.log('🔍 Content display after click:', window.getComputedStyle(contentArea).display);
+          console.log('🔍 Content visibility:', contentArea.offsetHeight > 0 ? 'visible' : 'hidden');
+        }, 100);
       }
     });
   });

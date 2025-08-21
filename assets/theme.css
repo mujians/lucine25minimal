@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.4 - FIXED TOP POSITION";
+  content: "LUCINE MINIMAL v1.5 - DEBUG DISPLAY";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -97,7 +97,6 @@ body::before {
   color: white;
   overflow-y: auto;
   padding: 20px;
-  flex: 1;
 }
 
 .content.show {
@@ -109,13 +108,12 @@ body::before {
   max-height: 50vh;
 }
 
-.navigation-container.top {
-  display: flex;
-  flex-direction: column;
-}
-
-.navigation-container.top .content {
-  flex: 1;
+.navigation-container.top .content.show {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   max-height: none;
   height: auto;
 }
