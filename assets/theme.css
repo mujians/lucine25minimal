@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.0 - CLEAN SINGLE BACKGROUND";
+  content: "LUCINE MINIMAL v2.1 - MORE PADDING TOP";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -126,7 +126,7 @@ body::before {
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
   z-index: 8;
-  padding-top: 100px;
+  padding-top: 120px;
 }
 
 .tab-content {
