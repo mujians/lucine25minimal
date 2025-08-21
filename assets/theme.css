@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.1 - SMOOTH ANIMATIONS";
+  content: "LUCINE MINIMAL v3.2 - POSITION STICKY";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -98,7 +98,7 @@ body::before {
 
 /* CONTENT (sempre sotto il menu) */
 .content {
-  display: none;
+  display: block;
   color: white;
   overflow-y: auto;
   padding: 20px;
@@ -106,13 +106,14 @@ body::before {
   opacity: 0;
   transform: translateY(50px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  visibility: hidden;
 }
 
 .content.show {
-  display: block;
   background: transparent;
   opacity: 1;
   transform: translateY(0);
+  visibility: visible;
 }
 
 /* MIDDLE POSITION */
