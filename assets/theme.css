@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.1 - MORE PADDING TOP";
+  content: "LUCINE MINIMAL v2.2 - CONTENT AFTER MENU";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -108,25 +108,25 @@ body::before {
 /* MIDDLE POSITION */
 .navigation-container.middle .content.show {
   position: fixed;
-  top: 35vh;
+  top: calc(35vh + 80px);
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
   z-index: 8;
-  padding-top: 100px;
+  padding-top: 20px;
 }
 
 /* TOP POSITION */
 .navigation-container.top .content.show {
   position: fixed;
-  top: 0;
+  top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
   z-index: 8;
-  padding-top: 120px;
+  padding-top: 20px;
 }
 
 .tab-content {
