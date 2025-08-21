@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.7 - FIXED Z-INDEX";
+  content: "LUCINE MINIMAL v1.8 - SINGLE BACKGROUND";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -93,54 +93,37 @@ body::before {
 /* CONTENT (sempre sotto il menu) */
 .content {
   display: none;
-  background: rgba(0, 0, 0, 0.9);
   color: white;
   overflow-y: auto;
   padding: 20px;
+  background: none;
 }
 
 .content.show {
   display: block;
+  background: rgba(0, 0, 0, 0.9);
 }
 
-/* Regole specifiche per posizioni */
-.navigation-container.middle .content {
-  max-height: 50vh;
-}
-
+/* MIDDLE POSITION */
 .navigation-container.middle .content.show {
-  position: relative;
-  max-height: 50vh;
-}
-
-/* Background esteso per coprire fino in fondo */
-.navigation-container.middle::after {
-  content: '';
   position: fixed;
-  top: calc(35vh + 160px);
+  top: calc(35vh + 80px);
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
-  z-index: 5;
-  pointer-events: none;
+  z-index: 8;
 }
 
-.navigation-container.middle .content.show {
-  position: relative;
-  max-height: 50vh;
-  z-index: 9;
-}
-
+/* TOP POSITION */
 .navigation-container.top .content.show {
   position: fixed;
   top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
-  max-height: none;
-  height: calc(100vh - 80px);
-  z-index: 9;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 8;
 }
 
 .tab-content {
