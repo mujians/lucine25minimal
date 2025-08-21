@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.6 - SYNC ANIMATIONS";
+  content: "LUCINE MINIMAL v3.7 - ABSOLUTE CONTENT";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -55,7 +55,7 @@ body::before {
 
 .navigation-container.middle {
   top: 35vh;
-  bottom: auto;
+  bottom: 0;
 }
 
 .navigation-container.top {
@@ -125,13 +125,12 @@ body::before {
 
 /* MIDDLE POSITION */
 .navigation-container.middle .content.show {
-  position: fixed;
-  top: calc(35vh + 90px);
+  position: absolute;
+  top: 90px;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 1);
-  z-index: 8;
   padding-top: 20px;
   transform: translateY(0);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);

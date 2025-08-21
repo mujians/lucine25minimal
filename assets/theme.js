@@ -60,5 +60,5 @@
     };
   });
   
-  tabs[0]?.click();
+  // Inizializza homepage senza click
 })();
