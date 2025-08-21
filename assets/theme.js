@@ -1,4 +1,4 @@
-console.log('🎵 LUCINE MINIMAL v1.3 - Starting...');
+console.log('🎵 LUCINE MINIMAL v1.4 - FIXED TOP POSITION - Starting...');
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('📱 DOM loaded, initializing mobile navigation...');

@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.3";
+  content: "LUCINE MINIMAL v1.4 - FIXED TOP POSITION";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -58,8 +58,8 @@ body::before {
 }
 
 .navigation-container.top {
-  top: 20px;
-  bottom: auto;
+  top: 0;
+  bottom: 0;
 }
 
 /* MENU (sempre in cima al container) */
@@ -96,21 +96,28 @@ body::before {
   background: rgba(0, 0, 0, 0.9);
   color: white;
   overflow-y: auto;
-  max-height: 60vh;
   padding: 20px;
+  flex: 1;
 }
 
 .content.show {
   display: block;
 }
 
-/* Quando il container è middle o top, il content ha altezza fissa */
-.navigation-container.middle .content.show {
+/* Regole specifiche per posizioni */
+.navigation-container.middle .content {
   max-height: 50vh;
 }
 
-.navigation-container.top .content.show {
-  max-height: calc(100vh - 120px);
+.navigation-container.top {
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation-container.top .content {
+  flex: 1;
+  max-height: none;
+  height: auto;
 }
 
 .tab-content {
