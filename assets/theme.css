@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.2 - CONTENT AFTER MENU";
+  content: "LUCINE MINIMAL v2.3 - FINAL";
   position: fixed;
   top: 10px;
   left: 10px;
