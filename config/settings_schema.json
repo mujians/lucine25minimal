@@ -1,10 +1,15 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Lucine Minimal",
-    "theme_version": "1.0.0",
-    "theme_author": "Claude",
-    "theme_documentation_url": "",
-    "theme_support_url": ""
+    "settings": [
+      {
+        "type": "header",
+        "content": "Theme Information"
+      },
+      {
+        "type": "paragraph",
+        "content": "Lucine Minimal v1.2 by Claude"
+      }
+    ]
   }
 ]
