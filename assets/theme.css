@@ -131,12 +131,14 @@ body::before {
   bottom: 0;
   background: rgba(0, 0, 0, 1);
   z-index: 8;
-  padding-top: 0;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 20px;
+  padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
+}
+
+/* Fix per primo elemento nel content */
+.navigation-container.top .tab-content h2:first-child {
+  margin-top: 0;
 }
 
 .tab-content {
