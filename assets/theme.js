@@ -1,44 +1,41 @@
-(function() {
-  const menu = document.querySelector('[data-menu]');
-  if (!menu) return;
+document.addEventListener('DOMContentLoaded', function() {
+  const menu = document.querySelector('.mobile-menu');
+  const tabs = document.querySelectorAll('.tab');
+  const contents = document.querySelectorAll('.tab-content');
+  const contentArea = document.querySelector('.content');
   
-  const tabs = menu.querySelectorAll('.tab');
-  const contents = menu.querySelectorAll('.tab-content');
-  const contentZone = menu.querySelector('.content');
-  if (!contentZone) return;
+  if (!menu || !tabs.length || !contents.length || !contentArea) return;
   
-  // Scroll handler
-  const handleScroll = () => {
-    if (menu.classList.contains('middle') && contentZone.scrollTop > 100) {
-      menu.classList.replace('middle', 'top');
-      contentZone.classList.replace('middle', 'top');
-    } else if (menu.classList.contains('top') && contentZone.scrollTop < 50) {
-      menu.classList.replace('top', 'middle');
-      contentZone.classList.replace('top', 'middle');
-    }
-  };
-  
-  contentZone.addEventListener('scroll', handleScroll);
-  
-  // Tab clicks
+  // Click sui tab
   tabs.forEach((tab, index) => {
-    tab.onclick = () => {
-      // Update active states
-      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
-      contents.forEach((c, i) => c.classList.toggle('active', i === index));
+    tab.addEventListener('click', function() {
+      // Cambia tab attiva
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      
+      tab.classList.add('active');
+      contents[index].classList.add('active');
       
       if (index === 0) {
-        // Homepage: menu at bottom, no content
+        // Homepage: menu in basso, niente contenuto
         menu.className = 'mobile-menu';
-        contentZone.classList.remove('visible', 'middle', 'top');
+        contentArea.className = 'content';
       } else {
-        // Other tabs: menu at middle, show content
+        // Altre tab: menu in mezzo, mostra contenuto
         menu.className = 'mobile-menu middle';
-        contentZone.className = 'content visible middle';
+        contentArea.className = 'content show middle';
       }
-    };
+    });
   });
   
-  // Initialize homepage
-  tabs[0]?.click();
-})();
+  // Scroll del contenuto
+  contentArea.addEventListener('scroll', function() {
+    if (menu.classList.contains('middle') && contentArea.scrollTop > 100) {
+      menu.className = 'mobile-menu top';
+      contentArea.className = 'content show top';
+    } else if (menu.classList.contains('top') && contentArea.scrollTop < 50) {
+      menu.className = 'mobile-menu middle';
+      contentArea.className = 'content show middle';
+    }
+  });
+});

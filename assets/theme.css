@@ -8,68 +8,51 @@ body {
   background: #000;
   color: white;
   font-family: Arial, sans-serif;
+  min-height: 100vh;
 }
 
-/* VIDEO BACKGROUND */
+/* VIDEO */
 .video-bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
-  overflow: hidden;
+  z-index: 1;
 }
 
 .video-bg video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-/* MOBILE MENU - 3 POSITIONS */
+/* MENU */
 .mobile-menu {
   position: fixed;
   left: 0;
   right: 0;
+  bottom: 20px;
   z-index: 10;
   transition: all 0.5s ease;
-  bottom: 0; /* Default: homepage position */
 }
 
-.mobile-menu.middle {
-  top: 35vh;
-  bottom: auto;
-}
-
-.mobile-menu.top {
-  top: 0;
-  bottom: auto;
-}
-
-/* MENU STYLING */
 .menu-tabs {
-  background: rgba(50, 50, 50, 0.9);
-  padding: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
   display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
+  gap: 10px;
+  justify-content: center;
 }
 
 .tab {
   background: #333;
   color: white;
   border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
+  padding: 15px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  white-space: nowrap;
+  font-size: 16px;
 }
 
 .tab.active {
@@ -79,35 +62,45 @@ body {
 
 /* CONTENT */
 .content {
+  display: none;
   position: fixed;
   left: 0;
   right: 0;
-  z-index: 9;
-  background: rgba(30, 30, 30, 0.9);
-  padding: 2rem;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px 20px;
+  color: white;
   overflow-y: auto;
-  transition: all 0.5s ease;
-  opacity: 0;
-  transform: translateY(100%);
 }
 
-.content.visible {
-  opacity: 1;
-  transform: translateY(0);
+.content.show {
+  display: block;
 }
 
 .content.middle {
-  top: calc(35vh + 80px);
-  height: calc(65vh - 80px);
+  top: 40vh;
+  bottom: 100px;
 }
 
 .content.top {
-  top: 80px;
-  height: calc(100vh - 80px);
+  top: 100px;
+  bottom: 20px;
+}
+
+.mobile-menu.middle {
+  top: 35vh;
+  bottom: auto;
+}
+
+.mobile-menu.top {
+  top: 20px;
+  bottom: auto;
 }
 
 .tab-content {
   display: none;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .tab-content.active {
