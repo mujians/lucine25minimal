@@ -1,2 +1,27 @@
-<h1>{{ 'general.404.title' | t }}</h1>
-<p>{{ 'general.404.subtext_html' | t }}</p>
+<!-- LUCINE MINIMAL v1.2 - 404 PAGE -->
+<script>console.log('🚫 404 PAGE LOADED v1.2');</script>
+
+<div class="video-bg">
+  <video autoplay muted loop playsinline>
+    <source src="https://cdn.shopify.com/videos/c/o/v/088cf9e084664519ad8bf3af537b87fe.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="mobile-menu">
+  <div class="menu-tabs">
+    <button class="tab active">Home</button>
+    <button class="tab">404</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="tab-content active">
+    <h1>{{ 'general.404.title' | t }}</h1>
+    <p>{{ 'general.404.subtext_html' | t }}</p>
+    <p><a href="/">Torna alla homepage</a></p>
+  </div>
+  <div class="tab-content">
+    <h2>Pagina non trovata</h2>
+    <p>La pagina che cercavi non esiste.</p>
+  </div>
+</div>
