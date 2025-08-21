@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.4 - NO GAP";
+  content: "LUCINE MINIMAL v2.5 - CONTENT FIX";
   position: fixed;
   top: 10px;
   left: 10px;
