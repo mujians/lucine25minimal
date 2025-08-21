@@ -1,38 +1,22 @@
-console.log('🎵 LUCINE MINIMAL v1.2 - Starting...');
+console.log('🎵 LUCINE MINIMAL v1.3 - Starting...');
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('📱 DOM loaded, initializing mobile navigation...');
   
-  const menu = document.querySelector('.mobile-menu');
+  const container = document.querySelector('.navigation-container');
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
   
   console.log('🔍 Elements found:', {
-    menu: !!menu,
+    container: !!container,
     tabs: tabs.length,
     contents: contents.length,
     contentArea: !!contentArea
   });
   
-  // Debug dettagliato
-  if (!menu) console.error('🚫 .mobile-menu not found!');
-  if (!tabs.length) console.error('🚫 .tab buttons not found!');
-  if (!contents.length) console.error('🚫 .tab-content sections not found!');
-  if (!contentArea) console.error('🚫 .content area not found!');
-  
-  console.log('🔍 Full DOM check:', {
-    allMenus: document.querySelectorAll('.mobile-menu').length,
-    allTabs: document.querySelectorAll('.tab').length,
-    allContents: document.querySelectorAll('.tab-content').length,
-    allContentAreas: document.querySelectorAll('.content').length,
-    bodyHTML: document.body.innerHTML.substring(0, 200) + '...'
-  });
-  
-  if (!menu || !tabs.length || !contents.length || !contentArea) {
+  if (!container || !tabs.length || !contents.length || !contentArea) {
     console.error('❌ Missing elements! Cannot initialize navigation');
-    console.log('🌐 Current URL:', window.location.href);
-    console.log('📄 Page type:', document.body.className);
     return;
   }
   
@@ -51,15 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
       contents[index].classList.add('active');
       
       if (index === 0) {
-        // Homepage: menu in basso, niente contenuto
-        console.log('🏠 Homepage mode: menu bottom, content hidden');
-        menu.className = 'mobile-menu';
+        // Homepage: container in basso, niente contenuto
+        console.log('🏠 Homepage mode: container bottom, content hidden');
+        container.className = 'navigation-container';
         contentArea.className = 'content';
       } else {
-        // Altre tab: menu in mezzo, mostra contenuto
-        console.log('📄 Content mode: menu middle, content visible');
-        menu.className = 'mobile-menu middle';
-        contentArea.className = 'content show middle';
+        // Altre tab: container in mezzo, mostra contenuto
+        console.log('📄 Content mode: container middle, content visible');
+        container.className = 'navigation-container middle';
+        contentArea.className = 'content show';
       }
     });
   });
@@ -70,14 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
   contentArea.addEventListener('scroll', function() {
     const scrollTop = contentArea.scrollTop;
     
-    if (menu.classList.contains('middle') && scrollTop > 100) {
-      console.log('⬆️ Scroll down: menu moving to top, scrollTop =', scrollTop);
-      menu.className = 'mobile-menu top';
-      contentArea.className = 'content show top';
-    } else if (menu.classList.contains('top') && scrollTop < 50) {
-      console.log('⬇️ Scroll up: menu moving to middle, scrollTop =', scrollTop);
-      menu.className = 'mobile-menu middle';
-      contentArea.className = 'content show middle';
+    if (container.classList.contains('middle') && scrollTop > 100) {
+      console.log('⬆️ Scroll down: container moving to top, scrollTop =', scrollTop);
+      container.className = 'navigation-container top';
+    } else if (container.classList.contains('top') && scrollTop < 50) {
+      console.log('⬇️ Scroll up: container moving to middle, scrollTop =', scrollTop);
+      container.className = 'navigation-container middle';
     }
   });
   

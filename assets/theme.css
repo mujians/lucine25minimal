@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.2";
+  content: "LUCINE MINIMAL v1.3";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -42,14 +42,29 @@ body::before {
   pointer-events: none;
 }
 
-/* MENU */
-.mobile-menu {
+/* NAVIGATION CONTAINER */
+.navigation-container {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 20px;
   z-index: 10;
   transition: all 0.5s ease;
+}
+
+.navigation-container.middle {
+  top: 35vh;
+  bottom: auto;
+}
+
+.navigation-container.top {
+  top: 20px;
+  bottom: auto;
+}
+
+/* MENU (sempre in cima al container) */
+.mobile-menu {
+  position: relative;
 }
 
 .menu-tabs {
@@ -75,41 +90,27 @@ body::before {
   color: black;
 }
 
-/* CONTENT */
+/* CONTENT (sempre sotto il menu) */
 .content {
   display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 5;
   background: rgba(0, 0, 0, 0.9);
-  padding: 40px 20px;
   color: white;
   overflow-y: auto;
+  max-height: 60vh;
+  padding: 20px;
 }
 
 .content.show {
   display: block;
 }
 
-.content.middle {
-  top: 40vh;
-  bottom: 100px;
+/* Quando il container è middle o top, il content ha altezza fissa */
+.navigation-container.middle .content.show {
+  max-height: 50vh;
 }
 
-.content.top {
-  top: 100px;
-  bottom: 20px;
-}
-
-.mobile-menu.middle {
-  top: 35vh;
-  bottom: auto;
-}
-
-.mobile-menu.top {
-  top: 20px;
-  bottom: auto;
+.navigation-container.top .content.show {
+  max-height: calc(100vh - 120px);
 }
 
 .tab-content {
