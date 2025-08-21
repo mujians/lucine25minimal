@@ -15,8 +15,24 @@ document.addEventListener('DOMContentLoaded', function() {
     contentArea: !!contentArea
   });
   
+  // Debug dettagliato
+  if (!menu) console.error('🚫 .mobile-menu not found!');
+  if (!tabs.length) console.error('🚫 .tab buttons not found!');
+  if (!contents.length) console.error('🚫 .tab-content sections not found!');
+  if (!contentArea) console.error('🚫 .content area not found!');
+  
+  console.log('🔍 Full DOM check:', {
+    allMenus: document.querySelectorAll('.mobile-menu').length,
+    allTabs: document.querySelectorAll('.tab').length,
+    allContents: document.querySelectorAll('.tab-content').length,
+    allContentAreas: document.querySelectorAll('.content').length,
+    bodyHTML: document.body.innerHTML.substring(0, 200) + '...'
+  });
+  
   if (!menu || !tabs.length || !contents.length || !contentArea) {
     console.error('❌ Missing elements! Cannot initialize navigation');
+    console.log('🌐 Current URL:', window.location.href);
+    console.log('📄 Page type:', document.body.className);
     return;
   }
   
