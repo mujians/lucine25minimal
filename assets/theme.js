@@ -4,8 +4,12 @@
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
   
+  let scrollHandlerEnabled = true;
+  
   // Single permanent scroll handler
   const scrollHandler = () => {
+    if (!scrollHandlerEnabled) return;
+    
     if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
       container.classList.remove('middle');
       container.classList.add('top');
@@ -20,6 +24,9 @@
   tabs.forEach((tab, index) => {
     tab.onclick = (e) => {
       e.preventDefault();
+      
+      // Disabilita scroll handler temporaneamente
+      scrollHandlerEnabled = false;
       
       // Salva lo stato attuale del menu PRIMA di ogni modifica
       const wasShowingContent = contentArea.classList.contains('show');
@@ -45,6 +52,11 @@
         
         contentArea.className = 'content show';
       }
+      
+      // Riabilita scroll handler dopo le transizioni
+      setTimeout(() => {
+        scrollHandlerEnabled = true;
+      }, 500);
     };
   });
   

@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.4 - SCROLL FIX";
+  content: "LUCINE MINIMAL v3.5 - HANDLER LOCK";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -48,6 +48,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 20px;
+  top: auto;
   z-index: 10;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
