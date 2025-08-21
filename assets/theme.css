@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.5 - HANDLER LOCK";
+  content: "LUCINE MINIMAL v3.6 - SYNC ANIMATIONS";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -61,6 +61,12 @@ body::before {
 .navigation-container.top {
   top: 0;
   bottom: 0;
+}
+
+/* Homepage - forza posizione in basso */
+.navigation-container:not(.middle):not(.top) {
+  top: auto !important;
+  bottom: 20px !important;
 }
 
 /* MENU (sempre in cima al container) */
@@ -106,7 +112,7 @@ body::before {
   background: none;
   opacity: 0;
   transform: translateY(50px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   visibility: hidden;
 }
 
@@ -128,7 +134,7 @@ body::before {
   z-index: 8;
   padding-top: 20px;
   transform: translateY(0);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Animazione per quando il content appare/scompare */
