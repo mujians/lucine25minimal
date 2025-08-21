@@ -24,9 +24,6 @@
       // Salva lo stato attuale del menu PRIMA di ogni modifica
       const wasShowingContent = contentArea.classList.contains('show');
       const isTop = container.classList.contains('top');
-      const isMiddle = container.classList.contains('middle');
-      
-      console.log('Tab click:', index, 'wasShowingContent:', wasShowingContent, 'isTop:', isTop, 'isMiddle:', isMiddle);
       
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
@@ -35,26 +32,18 @@
         // Homepage: sempre in basso
         container.className = 'navigation-container';
         contentArea.className = 'content';
-        console.log('Going to homepage - bottom position');
       } else {
         // Altre tab: logica di posizionamento
-        if (wasShowingContent) {
-          // Stavamo già mostrando content, mantieni la posizione
-          if (isTop) {
-            container.className = 'navigation-container top';
-            console.log('Maintaining top position');
-          } else {
-            container.className = 'navigation-container middle';
-            console.log('Maintaining middle position');
-          }
+        if (wasShowingContent && isTop) {
+          // Mantieni top position e NON resettare scroll
+          container.className = 'navigation-container top';
         } else {
-          // Prima apertura: vai a middle
+          // Vai a middle e resetta scroll
           container.className = 'navigation-container middle';
-          console.log('First time opening - going to middle');
+          contentArea.scrollTop = 0;
         }
         
         contentArea.className = 'content show';
-        contentArea.scrollTop = 0;
       }
     };
   });
