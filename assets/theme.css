@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.8 - FLEXBOX";
+  content: "LUCINE MINIMAL v2.9 - SPACER";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -153,4 +153,16 @@ body::before {
 
 .tab-content.active {
   display: block;
+}
+
+/* Aggiungi spazio prima del contenuto quando in top position */
+.navigation-container.top .tab-content.active {
+  padding-top: 50px;
+}
+
+/* O in alternativa, spazio prima del primo elemento */
+.navigation-container.top .tab-content.active::before {
+  content: "";
+  display: block;
+  height: 100px;
 }
