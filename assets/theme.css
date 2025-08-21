@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.6 - POSITION FIX";
+  content: "LUCINE MINIMAL v2.7 - ALIGNED";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -125,7 +125,7 @@ body::before {
 /* TOP POSITION */
 .navigation-container.top .content.show {
   position: absolute;
-  top: 80px;
+  top: 90px;
   left: 0;
   right: 0;
   bottom: 0;
