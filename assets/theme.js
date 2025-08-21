@@ -1,80 +1,37 @@
-console.log('🎵 LUCINE MINIMAL v1.4 - FIXED TOP POSITION - Starting...');
-
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('📱 DOM loaded, initializing mobile navigation...');
-  
+(function() {
   const container = document.querySelector('.navigation-container');
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
   
-  console.log('🔍 Elements found:', {
-    container: !!container,
-    tabs: tabs.length,
-    contents: contents.length,
-    contentArea: !!contentArea
-  });
+  // Single permanent scroll handler
+  const scrollHandler = () => {
+    if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
+      container.classList.remove('middle');
+      container.classList.add('top');
+    } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
+      container.classList.remove('top');
+      container.classList.add('middle');
+    }
+  };
   
-  if (!container || !tabs.length || !contents.length || !contentArea) {
-    console.error('❌ Missing elements! Cannot initialize navigation');
-    return;
-  }
+  contentArea.addEventListener('scroll', scrollHandler);
   
-  console.log('✅ All elements found, setting up navigation...');
-  
-  // Click sui tab
   tabs.forEach((tab, index) => {
-    tab.addEventListener('click', function() {
-      console.log(`🔘 Tab clicked: ${index} (${tab.textContent})`);
-      
-      // Cambia tab attiva
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      
-      tab.classList.add('active');
-      contents[index].classList.add('active');
+    tab.onclick = (e) => {
+      e.preventDefault();
+      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
+      contents.forEach((c, i) => c.classList.toggle('active', i === index));
       
       if (index === 0) {
-        // Homepage: container in basso, niente contenuto
-        console.log('🏠 Homepage mode: container bottom, content hidden');
         container.className = 'navigation-container';
         contentArea.className = 'content';
       } else {
-        // Altre tab: container in mezzo, mostra contenuto
-        console.log('📄 Content mode: container middle, content visible');
         container.className = 'navigation-container middle';
         contentArea.className = 'content show';
-        
-        // Debug display
-        setTimeout(() => {
-          console.log('🔍 Content display after click:', window.getComputedStyle(contentArea).display);
-          console.log('🔍 Content visibility:', contentArea.offsetHeight > 0 ? 'visible' : 'hidden');
-        }, 100);
       }
-    });
+    };
   });
   
-  console.log('🔗 Tab click handlers attached to', tabs.length, 'tabs');
-  
-  // Scroll del contenuto
-  contentArea.addEventListener('scroll', function() {
-    const scrollTop = contentArea.scrollTop;
-    
-    if (container.classList.contains('middle') && scrollTop > 100) {
-      console.log('⬆️ Scroll down: container moving to top, scrollTop =', scrollTop);
-      container.className = 'navigation-container top';
-    } else if (container.classList.contains('top') && scrollTop < 50) {
-      console.log('⬇️ Scroll up: container moving to middle, scrollTop =', scrollTop);
-      container.className = 'navigation-container middle';
-    }
-  });
-  
-  console.log('📜 Scroll handler attached to content area');
-  console.log('🎉 Navigation initialized successfully!');
-  
-  // Auto-click prima tab per inizializzare
-  if (tabs[0]) {
-    console.log('🎯 Auto-clicking first tab to initialize...');
-    tabs[0].click();
-  }
-});
+  tabs[0]?.click();
+})();

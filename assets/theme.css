@@ -76,6 +76,11 @@ body::before {
   justify-content: center;
 }
 
+/* Menu background solo quando in posizione top */
+.navigation-container.top .menu-tabs {
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
 .tab {
   background: #333;
   color: white;
@@ -120,13 +125,14 @@ body::before {
 /* TOP POSITION */
 .navigation-container.top .content.show {
   position: fixed;
-  top: 80px;
+  top: 100px;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
   z-index: 8;
   padding-top: 20px;
+  box-sizing: border-box;
 }
 
 .tab-content {
