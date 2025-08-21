@@ -21,8 +21,9 @@
     tab.onclick = (e) => {
       e.preventDefault();
       
-      // Salva lo stato attuale (top o middle)
-      const isTop = container.classList.contains('top');
+      // Salva lo stato attuale SOLO se il content è già visibile (non homepage)
+      const wasShowingContent = contentArea.classList.contains('show');
+      const isCurrentlyTop = container.classList.contains('top') && wasShowingContent;
       
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
@@ -32,8 +33,8 @@
         container.className = 'navigation-container';
         contentArea.className = 'content';
       } else {
-        // Altre tab: mantieni posizione se già in top, altrimenti middle
-        if (isTop) {
+        // Altre tab: mantieni posizione solo se stavamo già mostrando content e eravamo in top
+        if (isCurrentlyTop) {
           container.className = 'navigation-container top';
         } else {
           container.className = 'navigation-container middle';
