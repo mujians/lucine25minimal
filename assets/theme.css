@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v1.8 - SINGLE BACKGROUND";
+  content: "LUCINE MINIMAL v1.9 - NO OVERLAP";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -65,10 +65,11 @@ body::before {
 /* MENU (sempre in cima al container) */
 .mobile-menu {
   position: relative;
+  z-index: 12;
 }
 
 .menu-tabs {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   padding: 20px;
   display: flex;
   gap: 10px;
@@ -101,7 +102,7 @@ body::before {
 
 .content.show {
   display: block;
-  background: rgba(0, 0, 0, 0.9);
+  background: transparent;
 }
 
 /* MIDDLE POSITION */
@@ -111,8 +112,19 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: transparent;
   z-index: 8;
+}
+
+.navigation-container.middle .content.show::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: -1;
 }
 
 /* TOP POSITION */
@@ -122,8 +134,19 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: transparent;
   z-index: 8;
+}
+
+.navigation-container.top .content.show::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: -1;
 }
 
 .tab-content {
