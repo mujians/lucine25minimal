@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v2.7 - ALIGNED";
+  content: "LUCINE MINIMAL v2.8 - FLEXBOX";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -122,13 +122,18 @@ body::before {
   padding-top: 20px;
 }
 
-/* TOP POSITION */
+/* TOP POSITION - Use flexbox for proper flow */
+.navigation-container.top {
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation-container.top .mobile-menu {
+  flex-shrink: 0; /* Menu mantiene la sua altezza */
+}
+
 .navigation-container.top .content.show {
-  position: absolute;
-  top: 90px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  flex: 1; /* Content occupa tutto lo spazio rimanente */
   background: rgba(0, 0, 0, 1);
   padding: 20px;
   box-sizing: border-box;
