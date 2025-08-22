@@ -53,12 +53,29 @@
             {% assign page_handle = link.url | split: '/pages/' | last %}
             {% assign page = pages[page_handle] %}
             {% if page.content != blank %}
-              <div class="page-content">
+              <div class="page-content formatted-content">
                 {{ page.content }}
               </div>
+              
+              {% comment %} Aggiungi CTA se la pagina contiene info specifiche {% endcomment %}
+              {% if page_handle contains 'bigliett' or page_handle contains 'ticket' %}
+                <div class="event-card" style="margin-top: 2rem; text-align: center;">
+                  <h3 class="christmas-accent">Prenota Ora</h3>
+                  <p>Non perdere la magia delle <span class="highlight-text">Lucine di Natale</span></p>
+                  <a href="#" class="family-cta">Acquista Biglietti</a>
+                </div>
+              {% elsif page_handle contains 'info' or page_handle contains 'informazion' %}
+                <div class="event-card" style="margin-top: 2rem;">
+                  <h4 class="christmas-accent">Hai domande?</h4>
+                  <p>Il nostro team è disponibile per aiutarti a pianificare la tua visita.</p>
+                  <a href="/pages/contatti" class="family-cta">Contattaci</a>
+                </div>
+              {% endif %}
             {% else %}
-              <p class="christmas-accent">I contenuti per <span class="highlight-text">{{ link.title }}</span> stanno arrivando...</p>
-              <p>Le nostre <span class="highlight-text">Lucine di Natale</span> si stanno preparando per illuminare questa sezione con tutta la magia delle feste!</p>
+              <div class="event-card">
+                <p class="christmas-accent">I contenuti per <span class="highlight-text">{{ link.title }}</span> stanno arrivando...</p>
+                <p>Le nostre <span class="highlight-text">Lucine di Natale</span> si stanno preparando per illuminare questa sezione con tutta la magia delle feste!</p>
+              </div>
             {% endif %}
             
           {% elsif link.url contains '/collections/' %}

@@ -46,7 +46,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v6.4 - CLEAN FONTS";
+  content: "LUCINE MINIMAL v7.0 - CONTENT READY";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -380,6 +380,148 @@ li {
 .event-card h3 {
   color: var(--christmas-gold);
   margin-bottom: 0.5rem;
+}
+
+/* FORMATTED CONTENT FROM SHOPIFY PAGES */
+.formatted-content {
+  color: var(--soft-white);
+}
+
+.formatted-content h1,
+.formatted-content h2,
+.formatted-content h3,
+.formatted-content h4 {
+  font-family: 'Perandory', -apple-system, sans-serif;
+  color: var(--christmas-gold);
+  margin: 2rem 0 1rem 0;
+}
+
+.formatted-content h1 { font-size: 2.5rem; }
+.formatted-content h2 { font-size: 2rem; }
+.formatted-content h3 { font-size: 1.75rem; }
+.formatted-content h4 { font-size: 1.5rem; }
+
+.formatted-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+  color: var(--soft-white);
+}
+
+.formatted-content ul,
+.formatted-content ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.formatted-content li {
+  margin: 0.75rem 0;
+  color: var(--soft-white);
+  line-height: 1.7;
+}
+
+.formatted-content li::marker {
+  color: var(--christmas-gold);
+}
+
+.formatted-content strong,
+.formatted-content b {
+  color: var(--christmas-gold);
+  font-weight: 600;
+}
+
+.formatted-content em,
+.formatted-content i {
+  color: var(--christmas-cream);
+  font-style: italic;
+}
+
+.formatted-content blockquote {
+  border-left: 3px solid var(--christmas-gold);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(--warm-white);
+}
+
+.formatted-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  margin: 1.5rem 0;
+}
+
+.formatted-content a {
+  color: var(--christmas-gold);
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.formatted-content a:hover {
+  color: #f4d03f;
+  text-decoration: none;
+}
+
+.formatted-content hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--christmas-gold), transparent);
+  margin: 2.5rem 0;
+}
+
+.formatted-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+.formatted-content th,
+.formatted-content td {
+  padding: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  text-align: left;
+}
+
+.formatted-content th {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--christmas-gold);
+  font-weight: 600;
+}
+
+.formatted-content tbody tr:hover {
+  background: rgba(212, 175, 55, 0.05);
+}
+
+/* SPECIAL SECTIONS */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.info-box h4 {
+  color: var(--christmas-gold);
+  margin-bottom: 0.5rem;
+}
+
+.price-tag {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--christmas-gold), #f4d03f);
+  color: #000;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0.5rem;
 }
 
 /* Nessuno spazio extra necessario con absolute positioning */
