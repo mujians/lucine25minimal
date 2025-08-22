@@ -36,7 +36,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v5.2 - DYNAMIC MENU";
+  content: "LUCINE MINIMAL v5.4 - AUTO CENTER";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -95,6 +95,41 @@ body::before {
 
 .menu-tabs::-webkit-scrollbar {
   display: none; /* Webkit browsers */
+}
+
+/* HORIZONTAL SCROLL INDICATORS */
+.menu-tabs::before,
+.menu-tabs::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  z-index: 15;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.menu-tabs::before {
+  left: 5px;
+  border-right-color: rgba(255, 255, 255, 0.8);
+}
+
+.menu-tabs::after {
+  right: 5px;
+  border-left-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Hide indicators when not needed */
+.menu-tabs.no-left-scroll::before {
+  opacity: 0;
+}
+
+.menu-tabs.no-right-scroll::after {
+  opacity: 0;
 }
 
 /* Menu MAI con sfondo, sempre trasparente */
@@ -214,6 +249,49 @@ body::before {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* VERTICAL SCROLL HINT - Only show in middle position with content */
+.navigation-container.middle .content.show::after {
+  content: '⬇ Scorri per espandere';
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  opacity: 0.7;
+  animation: pulseHint 2s infinite;
+  pointer-events: none;
+  z-index: 20;
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* COLLAPSE HINT - Only show in top position when at scroll top */
+.navigation-container.top .content.show::before {
+  content: '⬆ Scorri in alto per chiudere';
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.navigation-container.top .content.show.at-top::before {
+  opacity: 0.7;
 }
 
 /* Nessuno spazio extra necessario con absolute positioning */

@@ -3,12 +3,62 @@
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
+  const menuTabs = document.querySelector('.menu-tabs');
   
   let scrollHandlerEnabled = true;
+  
+  // Function to update horizontal scroll indicators
+  function updateScrollIndicators() {
+    if (!menuTabs) return;
+    
+    const isAtStart = menuTabs.scrollLeft <= 1;
+    const isAtEnd = menuTabs.scrollLeft >= (menuTabs.scrollWidth - menuTabs.clientWidth - 1);
+    
+    menuTabs.classList.toggle('no-left-scroll', isAtStart);
+    menuTabs.classList.toggle('no-right-scroll', isAtEnd);
+  }
+  
+  // Listen for horizontal scroll
+  if (menuTabs) {
+    menuTabs.addEventListener('scroll', updateScrollIndicators);
+    // Initial check
+    setTimeout(updateScrollIndicators, 100);
+  }
+  
+  // Function to update vertical scroll hint
+  function updateVerticalHint() {
+    if (!contentArea) return;
+    
+    const isAtTop = contentArea.scrollTop === 0;
+    contentArea.classList.toggle('at-top', isAtTop);
+  }
+  
+  // Function to center selected tab horizontally
+  function centerActiveTab() {
+    if (!menuTabs) return;
+    
+    const activeTab = menuTabs.querySelector('.tab.active');
+    if (!activeTab) return;
+    
+    const menuTabsRect = menuTabs.getBoundingClientRect();
+    const activeTabRect = activeTab.getBoundingClientRect();
+    
+    const menuCenter = menuTabsRect.width / 2;
+    const tabCenter = activeTabRect.left - menuTabsRect.left + activeTabRect.width / 2;
+    const scrollOffset = tabCenter - menuCenter;
+    
+    menuTabs.scrollTo({
+      left: menuTabs.scrollLeft + scrollOffset,
+      behavior: 'smooth'
+    });
+  }
   
   // Single permanent scroll handler
   const scrollHandler = () => {
     if (!scrollHandlerEnabled) return;
+    
+    // Update vertical hint
+    updateVerticalHint();
     
     if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
       // Scroll DOWN: menu va in top, content torna all'inizio
@@ -72,6 +122,11 @@
         activeContent.classList.add('active');
       }
       
+      // Center the selected tab
+      setTimeout(() => {
+        centerActiveTab();
+      }, 100);
+      
       if (index === 0) {
         // Homepage: aggiungi classe bottom e rimuovi altre
         container.classList.remove('middle', 'top');
@@ -98,6 +153,8 @@
       // Riabilita scroll handler dopo le transizioni
       setTimeout(() => {
         scrollHandlerEnabled = true;
+        updateScrollIndicators();
+        updateVerticalHint();
       }, 500);
     };
   });
@@ -114,5 +171,11 @@
     container.classList.add('navigation-container', 'bottom');
     container.classList.remove('middle', 'top');
     contentArea.classList.remove('show');
+    
+    // Initialize indicators
+    setTimeout(() => {
+      updateScrollIndicators();
+      updateVerticalHint();
+    }, 200);
   }
 })();
