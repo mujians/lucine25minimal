@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v3.10 - SAFE SPACING";
+  content: "LUCINE MINIMAL v4.0 - ABSOLUTE EVERYWHERE";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -145,18 +145,13 @@ body::before {
   transform: translateY(0);
 }
 
-/* TOP POSITION - Use flexbox for proper flow */
-.navigation-container.top {
-  display: flex;
-  flex-direction: column;
-}
-
-.navigation-container.top .mobile-menu {
-  flex-shrink: 0; /* Menu mantiene la sua altezza */
-}
-
+/* TOP POSITION - Same approach as middle for consistency */
 .navigation-container.top .content.show {
-  flex: 1; /* Content occupa tutto lo spazio rimanente */
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 1);
   padding: 20px;
   box-sizing: border-box;
@@ -190,14 +185,4 @@ body::before {
   }
 }
 
-/* Spazio ottimale per non andare sotto il menu */
-.navigation-container.top .tab-content.active {
-  padding-top: 10px;
-}
-
-/* Spacer per sicurezza che il testo sia visibile */
-.navigation-container.top .tab-content.active::before {
-  content: "";
-  display: block;
-  height: 20px;
-}
+/* Nessuno spazio extra necessario con absolute positioning */
