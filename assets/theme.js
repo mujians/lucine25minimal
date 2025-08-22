@@ -13,6 +13,10 @@
     if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
       container.classList.remove('middle');
       container.classList.add('top');
+      // Scroll automatico a posizione ottimale quando andiamo in top
+      setTimeout(() => {
+        contentArea.scrollTop = 50; // Posizione ottimale per vedere bene il contenuto
+      }, 100);
     } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
       container.classList.remove('top');
       container.classList.add('middle');
