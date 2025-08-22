@@ -11,15 +11,18 @@
     if (!scrollHandlerEnabled) return;
     
     if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
-      // Scroll DOWN: menu va in top, mantieni la posizione di lettura
+      // Scroll DOWN: menu va in top, content torna all'inizio
       container.classList.remove('middle');
       container.classList.add('top');
-      // NON modificare scrollTop - l'utente sta leggendo!
+      // Riposiziona il content all'inizio per vista ottimale
+      setTimeout(() => {
+        contentArea.scrollTop = 0;
+      }, 300); // Aspetta metà animazione per smoothness
     } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
       // Scroll UP: menu torna a middle, reset per vista ottimale
       container.classList.remove('top');
       container.classList.add('middle');
-      // Reset scroll solo quando torniamo a middle (coerente con direzione)
+      // Reset scroll quando torniamo a middle
       setTimeout(() => {
         contentArea.scrollTop = 0;
       }, 100);
