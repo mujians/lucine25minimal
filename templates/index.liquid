@@ -30,36 +30,67 @@
   <div class="content">
     <!-- Home content -->
     <div class="tab-content" data-index="0">
-      <h2>Home</h2>
-      <p>Benvenuti su Lucine di Natale.</p>
+      <div class="content-section">
+        <h1>Lucine di Natale</h1>
+        <p class="christmas-accent">Benvenuti nella magia del Natale per tutta la <span class="highlight-text">famiglia</span></p>
+        
+        <div class="event-card">
+          <h3>Un evento speciale</h3>
+          <p>Vivi insieme ai tuoi cari un'esperienza natalizia unica, dove tradizione e magia si incontrano per creare ricordi indimenticabili.</p>
+          <p>Le nostre <span class="highlight-text">Lucine di Natale</span> illuminano il cuore di grandi e piccini con atmosfere calde e accoglienti.</p>
+        </div>
+      </div>
     </div>
     
-    <!-- Dynamic content per ogni menu item -->
+    <!-- Dynamic content con design system -->
     {% for link in main_menu.links %}
       <div class="tab-content" data-index="{{ forloop.index }}">
-        <h2>{{ link.title }}</h2>
-        {% comment %} Contenuto dinamico basato sul tipo di pagina {% endcomment %}
-        {% if link.url contains '/pages/' %}
-          {% assign page_handle = link.url | split: '/pages/' | last %}
-          {% assign page = pages[page_handle] %}
-          {% if page.content != blank %}
-            {{ page.content }}
+        <div class="content-section">
+          <h2>{{ link.title }}</h2>
+          
+          {% comment %} Contenuto con styling natalizio {% endcomment %}
+          {% if link.url contains '/pages/' %}
+            {% assign page_handle = link.url | split: '/pages/' | last %}
+            {% assign page = pages[page_handle] %}
+            {% if page.content != blank %}
+              <div class="page-content">
+                {{ page.content }}
+              </div>
+            {% else %}
+              <p class="christmas-accent">I contenuti per <span class="highlight-text">{{ link.title }}</span> stanno arrivando...</p>
+              <p>Le nostre <span class="highlight-text">Lucine di Natale</span> si stanno preparando per illuminare questa sezione con tutta la magia delle feste!</p>
+            {% endif %}
+            
+          {% elsif link.url contains '/collections/' %}
+            {% assign collection_handle = link.url | split: '/collections/' | last %}
+            {% assign collection = collections[collection_handle] %}
+            
+            {% if collection.description != blank %}
+              <p>{{ collection.description }}</p>
+            {% endif %}
+            
+            {% for product in collection.products limit: 3 %}
+              <div class="event-card">
+                <h3 class="christmas-accent">{{ product.title }}</h3>
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | img_url: '400x300' }}" alt="{{ product.title }}" style="width: 100%; border-radius: 10px; margin: 1rem 0;">
+                {% endif %}
+                <p>{{ product.description | truncate: 200 }}</p>
+                {% if product.price %}
+                  <p class="highlight-text">Da {{ product.price | money }}</p>
+                {% endif %}
+                <a href="{{ product.url }}" class="family-cta">Scopri di più</a>
+              </div>
+            {% endfor %}
+            
           {% else %}
-            <p>Contenuto di {{ link.title }} in arrivo...</p>
-          {% endif %}
-        {% elsif link.url contains '/collections/' %}
-          {% assign collection_handle = link.url | split: '/collections/' | last %}
-          {% assign collection = collections[collection_handle] %}
-          <p>{{ collection.description }}</p>
-          {% for product in collection.products limit: 3 %}
-            <div>
-              <h3>{{ product.title }}</h3>
-              <p>{{ product.description | truncate: 200 }}</p>
+            <div class="event-card">
+              <h3 class="christmas-accent">{{ link.title }}</h3>
+              <p>Una sezione speciale dedicata alle <span class="highlight-text">famiglie</span> che vogliono vivere insieme la magia del Natale.</p>
+              <p>Scopri le nostre <span class="highlight-text">Lucine di Natale</span> e lasciati incantare dall'atmosfera festosa pensata per grandi e piccini.</p>
             </div>
-          {% endfor %}
-        {% else %}
-          <p>Sezione {{ link.title }} - Contenuto personalizzato</p>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     {% endfor %}
   </div>
