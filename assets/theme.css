@@ -36,7 +36,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v4.7 - BOTTOM CLASS";
+  content: "LUCINE MINIMAL v4.8 - LONG CONTENT FIX";
   position: fixed;
   top: 10px;
   left: 10px;

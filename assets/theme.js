@@ -24,20 +24,25 @@
           scrollHandlerEnabled = true;
         }, 200);
       }, 300); // Aspetta metà animazione per smoothness
-    } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
-      // Scroll UP: menu torna a middle, reset per vista ottimale
-      container.classList.remove('top');
-      container.classList.add('middle');
-      // Disabilita handler durante il reset
-      scrollHandlerEnabled = false;
-      // Reset scroll quando torniamo a middle
-      setTimeout(() => {
-        contentArea.scrollTop = 0;
-        // Riabilita handler dopo il reset
+    } else if (container.classList.contains('top') && contentArea.scrollTop === 0) {
+      // Solo quando sei COMPLETAMENTE in cima (scrollTop = 0)
+      // Aggiungi un flag per evitare trigger immediati
+      if (!scrollHandler.atTopFlag) {
+        scrollHandler.atTopFlag = true;
         setTimeout(() => {
-          scrollHandlerEnabled = true;
-        }, 200);
-      }, 100);
+          // Se dopo 300ms sei ancora a scrollTop = 0, allora chiudi
+          if (contentArea.scrollTop === 0) {
+            container.classList.remove('top');
+            container.classList.add('middle');
+            // Disabilita handler durante il reset
+            scrollHandlerEnabled = false;
+            setTimeout(() => {
+              scrollHandlerEnabled = true;
+            }, 200);
+          }
+          scrollHandler.atTopFlag = false;
+        }, 300);
+      }
     }
   };
   
