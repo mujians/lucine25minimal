@@ -7,26 +7,6 @@
   
   let scrollHandlerEnabled = true;
   
-  // Function to update horizontal scroll indicators
-  function updateScrollIndicators() {
-    if (!menuTabs) return;
-    
-    const mobileMenu = document.querySelector('.mobile-menu');
-    if (!mobileMenu) return;
-    
-    const isAtStart = menuTabs.scrollLeft <= 1;
-    const isAtEnd = menuTabs.scrollLeft >= (menuTabs.scrollWidth - menuTabs.clientWidth - 1);
-    
-    mobileMenu.classList.toggle('no-left-scroll', isAtStart);
-    mobileMenu.classList.toggle('no-right-scroll', isAtEnd);
-  }
-  
-  // Listen for horizontal scroll
-  if (menuTabs) {
-    menuTabs.addEventListener('scroll', updateScrollIndicators);
-    // Initial check
-    setTimeout(updateScrollIndicators, 100);
-  }
   
   // Function to update vertical scroll hint
   function updateVerticalHint() {
@@ -156,7 +136,6 @@
       // Riabilita scroll handler dopo le transizioni
       setTimeout(() => {
         scrollHandlerEnabled = true;
-        updateScrollIndicators();
         updateVerticalHint();
       }, 500);
     };
@@ -177,7 +156,6 @@
     
     // Initialize indicators
     setTimeout(() => {
-      updateScrollIndicators();
       updateVerticalHint();
     }, 200);
   }

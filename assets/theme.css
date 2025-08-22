@@ -36,7 +36,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v5.5 - FIXED ARROWS";
+  content: "LUCINE MINIMAL v5.6 - CLEAN MINIMAL";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -97,45 +97,6 @@ body::before {
   display: none; /* Webkit browsers */
 }
 
-/* HORIZONTAL SCROLL INDICATORS - Outside menu container */
-.mobile-menu::before,
-.mobile-menu::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border: 10px solid transparent;
-  z-index: 15;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  padding: 5px;
-}
-
-.mobile-menu::before {
-  left: 5px;
-  border-right: 12px solid rgba(255, 255, 255, 0.9);
-  border-left: none;
-}
-
-.mobile-menu::after {
-  right: 5px;
-  border-left: 12px solid rgba(255, 255, 255, 0.9);
-  border-right: none;
-}
-
-/* Hide indicators when not needed */
-.mobile-menu.no-left-scroll::before {
-  opacity: 0;
-}
-
-.mobile-menu.no-right-scroll::after {
-  opacity: 0;
-}
 
 /* Menu MAI con sfondo, sempre trasparente */
 .navigation-container.top .menu-tabs {
@@ -256,47 +217,26 @@ body::before {
   }
 }
 
-/* VERTICAL SCROLL HINT - Only show in middle position with content */
+/* MINIMAL SCROLL HINT - Only show in middle position with content */
 .navigation-container.middle .content.show::after {
-  content: '⬇ Scorri per espandere';
+  content: '';
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 15px;
-  font-size: 12px;
-  opacity: 0.7;
-  animation: pulseHint 2s infinite;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 1px;
+  opacity: 0.6;
+  animation: subtlePulse 2s infinite;
   pointer-events: none;
   z-index: 20;
 }
 
-@keyframes pulseHint {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
-}
-
-/* COLLAPSE HINT - Only show in top position when at scroll top */
-.navigation-container.top .content.show::before {
-  content: '⬆ Scorri in alto per chiudere';
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 15px;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 20;
-}
-
-.navigation-container.top .content.show.at-top::before {
-  opacity: 0.7;
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 /* Nessuno spazio extra necessario con absolute positioning */
