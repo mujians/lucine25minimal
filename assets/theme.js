@@ -14,17 +14,29 @@
       // Scroll DOWN: menu va in top, content torna all'inizio
       container.classList.remove('middle');
       container.classList.add('top');
+      // Disabilita handler durante il reset per evitare bounce back
+      scrollHandlerEnabled = false;
       // Riposiziona il content all'inizio per vista ottimale
       setTimeout(() => {
         contentArea.scrollTop = 0;
+        // Riabilita handler dopo il reset
+        setTimeout(() => {
+          scrollHandlerEnabled = true;
+        }, 200);
       }, 300); // Aspetta metà animazione per smoothness
     } else if (container.classList.contains('top') && contentArea.scrollTop < 50) {
       // Scroll UP: menu torna a middle, reset per vista ottimale
       container.classList.remove('top');
       container.classList.add('middle');
+      // Disabilita handler durante il reset
+      scrollHandlerEnabled = false;
       // Reset scroll quando torniamo a middle
       setTimeout(() => {
         contentArea.scrollTop = 0;
+        // Riabilita handler dopo il reset
+        setTimeout(() => {
+          scrollHandlerEnabled = true;
+        }, 200);
       }, 100);
     }
   };

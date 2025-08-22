@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v4.3 - RESET TO TOP";
+  content: "LUCINE MINIMAL v4.4 - NO BOUNCE";
   position: fixed;
   top: 10px;
   left: 10px;
