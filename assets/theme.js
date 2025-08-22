@@ -1,5 +1,5 @@
 (function() {
-  const container = document.querySelector('.navigation-container');
+  const container = document.querySelector('[data-tabs-section]');
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
@@ -48,19 +48,29 @@
   
   contentArea.addEventListener('scroll', scrollHandler);
   
-  tabs.forEach((tab, index) => {
+  tabs.forEach((tab) => {
     tab.onclick = (e) => {
       e.preventDefault();
       
       // Disabilita scroll handler temporaneamente
       scrollHandlerEnabled = false;
       
+      // Get index from data attribute
+      const index = parseInt(tab.dataset.index);
+      
       // Salva lo stato attuale del menu PRIMA di ogni modifica
       const wasShowingContent = contentArea.classList.contains('show');
       const isTop = container.classList.contains('top');
       
-      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
-      contents.forEach((c, i) => c.classList.toggle('active', i === index));
+      // Update active states using data-index
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      
+      tab.classList.add('active');
+      const activeContent = document.querySelector(`[data-index="${index}"]`);
+      if (activeContent && activeContent.classList.contains('tab-content')) {
+        activeContent.classList.add('active');
+      }
       
       if (index === 0) {
         // Homepage: aggiungi classe bottom e rimuovi altre
@@ -93,9 +103,13 @@
   });
   
   // Inizializza homepage all'avvio
-  if (tabs[0]) {
-    tabs[0].classList.add('active');
-    contents[0]?.classList.add('active');
+  if (tabs.length > 0) {
+    const homeTab = document.querySelector('[data-index="0"]');
+    const homeContent = document.querySelector('.tab-content[data-index="0"]');
+    
+    if (homeTab) homeTab.classList.add('active');
+    if (homeContent) homeContent.classList.add('active');
+    
     // Assicurati che il container abbia la classe base e bottom
     container.classList.add('navigation-container', 'bottom');
     container.classList.remove('middle', 'top');
