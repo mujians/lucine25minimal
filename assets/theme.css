@@ -36,7 +36,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v5.4 - AUTO CENTER";
+  content: "LUCINE MINIMAL v5.5 - FIXED ARROWS";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -97,38 +97,43 @@ body::before {
   display: none; /* Webkit browsers */
 }
 
-/* HORIZONTAL SCROLL INDICATORS */
-.menu-tabs::before,
-.menu-tabs::after {
+/* HORIZONTAL SCROLL INDICATORS - Outside menu container */
+.mobile-menu::before,
+.mobile-menu::after {
   content: '';
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   width: 0;
   height: 0;
-  border: 8px solid transparent;
+  border: 10px solid transparent;
   z-index: 15;
-  opacity: 0.6;
+  opacity: 0.8;
   transition: opacity 0.3s ease;
   pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 5px;
 }
 
-.menu-tabs::before {
+.mobile-menu::before {
   left: 5px;
-  border-right-color: rgba(255, 255, 255, 0.8);
+  border-right: 12px solid rgba(255, 255, 255, 0.9);
+  border-left: none;
 }
 
-.menu-tabs::after {
+.mobile-menu::after {
   right: 5px;
-  border-left-color: rgba(255, 255, 255, 0.8);
+  border-left: 12px solid rgba(255, 255, 255, 0.9);
+  border-right: none;
 }
 
 /* Hide indicators when not needed */
-.menu-tabs.no-left-scroll::before {
+.mobile-menu.no-left-scroll::before {
   opacity: 0;
 }
 
-.menu-tabs.no-right-scroll::after {
+.mobile-menu.no-right-scroll::after {
   opacity: 0;
 }
 

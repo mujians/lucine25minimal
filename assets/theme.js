@@ -11,11 +11,14 @@
   function updateScrollIndicators() {
     if (!menuTabs) return;
     
+    const mobileMenu = document.querySelector('.mobile-menu');
+    if (!mobileMenu) return;
+    
     const isAtStart = menuTabs.scrollLeft <= 1;
     const isAtEnd = menuTabs.scrollLeft >= (menuTabs.scrollWidth - menuTabs.clientWidth - 1);
     
-    menuTabs.classList.toggle('no-left-scroll', isAtStart);
-    menuTabs.classList.toggle('no-right-scroll', isAtEnd);
+    mobileMenu.classList.toggle('no-left-scroll', isAtStart);
+    mobileMenu.classList.toggle('no-right-scroll', isAtEnd);
   }
   
   // Listen for horizontal scroll
