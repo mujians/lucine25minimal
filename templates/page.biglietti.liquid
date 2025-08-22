@@ -1,0 +1,117 @@
+<!-- BIGLIETTI PAGE TEMPLATE -->
+<div class="video-bg">
+  <video autoplay muted loop playsinline>
+    <source src="https://cdn.shopify.com/videos/c/o/v/088cf9e084664519ad8bf3af537b87fe.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="navigation-container top" data-tabs-section>
+  <div class="mobile-menu">
+    <div class="menu-tabs">
+      <a href="/" class="tab">Home</a>
+      {% assign main_menu = linklists['menu-principale'] %}
+      {% for link in main_menu.links %}
+        <a href="{{ link.url }}" class="tab {% if link.url contains 'bigliett' %}active{% endif %}">
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="content show" style="display: block; opacity: 1; visibility: visible; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; background: transparent; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 20px; overflow-y: auto; z-index: 5;">
+    <div class="content-section">
+      <div class="formatted-content">
+        <h1>Biglietti e Tariffe</h1>
+        <p class="christmas-accent">Scegli la soluzione migliore per la <span class="highlight-text">tua famiglia</span></p>
+        
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Biglietto Singolo</h4>
+            <p class="price-tag">€15</p>
+            <p><strong>Adulti (13+)</strong></p>
+            <ul style="text-align: left; list-style: none; padding: 0;">
+              <li>✓ Accesso completo all'evento</li>
+              <li>✓ Spettacoli inclusi</li>
+              <li>✓ Mappa souvenir</li>
+              <li>✓ Sconto 10% mercatini</li>
+            </ul>
+          </div>
+          
+          <div class="info-box">
+            <h4>Biglietto Bambino</h4>
+            <p class="price-tag">€10</p>
+            <p><strong>3-12 anni</strong></p>
+            <ul style="text-align: left; list-style: none; padding: 0;">
+              <li>✓ Accesso completo</li>
+              <li>✓ 1 Laboratorio incluso</li>
+              <li>✓ Gadget natalizio</li>
+              <li>✓ Merenda gratuita</li>
+            </ul>
+          </div>
+          
+          <div class="info-box" style="border: 2px solid var(--christmas-gold);">
+            <h4>🎄 Famiglia</h4>
+            <p class="price-tag">€40</p>
+            <p><strong>2 adulti + 2 bambini</strong></p>
+            <ul style="text-align: left; list-style: none; padding: 0;">
+              <li>✓ Risparmio €10</li>
+              <li>✓ Fast track ingresso</li>
+              <li>✓ Foto con Babbo Natale</li>
+              <li>✓ Parcheggio incluso</li>
+            </ul>
+            <p style="color: var(--christmas-gold); font-weight: 600;">BEST VALUE!</p>
+          </div>
+        </div>
+        
+        <div class="event-card" style="text-align: center; margin-top: 2rem;">
+          <h3 class="christmas-accent">Promozioni Speciali</h3>
+          <p><strong>🎁 Early Bird:</strong> <span class="highlight-text">-20%</span> per acquisti entro il 30 novembre</p>
+          <p><strong>👥 Gruppi (10+):</strong> Tariffe speciali e accesso prioritario</p>
+          <p><strong>🎂 Compleanni:</strong> Festeggiato entra gratis nel giorno del compleanno</p>
+          <a href="#" class="family-cta">Acquista Online</a>
+        </div>
+
+        <div class="event-card">
+          <h3 class="christmas-accent">Cosa Include il Biglietto</h3>
+          <div class="info-grid">
+            <div class="info-box">
+              <h4>✨ Spettacoli</h4>
+              <p>Tutti gli show e le performance dal vivo</p>
+            </div>
+            <div class="info-box">
+              <h4>🎅 Babbo Natale</h4>
+              <p>Incontro e foto ricordo</p>
+            </div>
+            <div class="info-box">
+              <h4>🎠 Giostre</h4>
+              <p>Accesso illimitato alle attrazioni</p>
+            </div>
+            <div class="info-box">
+              <h4>🎭 Animazione</h4>
+              <p>Personaggi e mascotte itineranti</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <h3 class="christmas-accent">Info Utili</h3>
+          <ul>
+            <li><strong>Gratuito</strong> per bambini sotto i 3 anni</li>
+            <li><strong>Ridotto 50%</strong> per diversamente abili e accompagnatore</li>
+            <li>I biglietti sono <strong>datati</strong> e validi solo per il giorno selezionato</li>
+            <li>In caso di maltempo, possibilità di <strong>cambio data gratuito</strong></li>
+            <li>Possibilità di <strong>upgrade</strong> in loco per servizi aggiuntivi</li>
+          </ul>
+        </div>
+
+        <div class="event-card" style="text-align: center; background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), rgba(244, 208, 63, 0.1));">
+          <h3 class="christmas-accent">Acquista in Sicurezza</h3>
+          <p>💳 Pagamenti sicuri con carta di credito, PayPal o bonifico</p>
+          <p>📧 Ricevi i biglietti via email (print@home)</p>
+          <p>📱 Mostra il QR code all'ingresso dal tuo smartphone</p>
+          <a href="#" class="family-cta">Procedi all'Acquisto</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
