@@ -58,11 +58,14 @@
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
       
       if (index === 0) {
-        // Homepage: rimuovi classi position mantenendo base class
+        // Homepage: aggiungi classe bottom e rimuovi altre
         container.classList.remove('middle', 'top');
+        container.classList.add('bottom');
         contentArea.classList.remove('show');
       } else {
         // Altre tab: logica di posizionamento
+        container.classList.remove('bottom'); // Rimuovi sempre bottom quando lasci homepage
+        
         if (wasShowingContent && isTop) {
           // Mantieni top position e NON resettare scroll
           container.classList.remove('middle');
@@ -88,8 +91,8 @@
   if (tabs[0]) {
     tabs[0].classList.add('active');
     contents[0]?.classList.add('active');
-    // Assicurati che il container abbia la classe base ma non position classes
-    container.classList.add('navigation-container');
+    // Assicurati che il container abbia la classe base e bottom
+    container.classList.add('navigation-container', 'bottom');
     container.classList.remove('middle', 'top');
     contentArea.classList.remove('show');
   }

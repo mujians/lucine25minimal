@@ -36,7 +36,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v4.6 - CLASS FIX";
+  content: "LUCINE MINIMAL v4.7 - BOTTOM CLASS";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -54,10 +54,14 @@ body::before {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 20px;
-  top: auto;
   z-index: 10;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Homepage position */
+.navigation-container.bottom {
+  top: calc(100vh - 120px);
+  bottom: 20px;
 }
 
 .navigation-container.middle {
@@ -68,12 +72,6 @@ body::before {
 .navigation-container.top {
   top: 0;
   bottom: 0;
-}
-
-/* Homepage - forza posizione in basso */
-.navigation-container:not(.middle):not(.top) {
-  top: auto !important;
-  bottom: 20px !important;
 }
 
 /* MENU (sempre in cima al container) */
