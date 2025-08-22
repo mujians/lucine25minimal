@@ -58,21 +58,23 @@
       contents.forEach((c, i) => c.classList.toggle('active', i === index));
       
       if (index === 0) {
-        // Homepage: sempre in basso
-        container.className = 'navigation-container';
-        contentArea.className = 'content';
+        // Homepage: rimuovi classi position mantenendo base class
+        container.classList.remove('middle', 'top');
+        contentArea.classList.remove('show');
       } else {
         // Altre tab: logica di posizionamento
         if (wasShowingContent && isTop) {
           // Mantieni top position e NON resettare scroll
-          container.className = 'navigation-container top';
+          container.classList.remove('middle');
+          container.classList.add('top');
         } else {
           // Vai a middle e resetta scroll
-          container.className = 'navigation-container middle';
+          container.classList.remove('top');
+          container.classList.add('middle');
           contentArea.scrollTop = 0;
         }
         
-        contentArea.className = 'content show';
+        contentArea.classList.add('show');
       }
       
       // Riabilita scroll handler dopo le transizioni
@@ -86,7 +88,9 @@
   if (tabs[0]) {
     tabs[0].classList.add('active');
     contents[0]?.classList.add('active');
-    container.className = 'navigation-container';
-    contentArea.className = 'content';
+    // Assicurati che il container abbia la classe base ma non position classes
+    container.classList.add('navigation-container');
+    container.classList.remove('middle', 'top');
+    contentArea.classList.remove('show');
   }
 })();

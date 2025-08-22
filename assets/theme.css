@@ -11,6 +11,13 @@ body {
   min-height: 100vh;
 }
 
+/* Reset main container */
+main, #MainContent {
+  position: static;
+  margin: 0;
+  padding: 0;
+}
+
 /* VIDEO v1.2 */
 .video-bg {
   position: fixed;
@@ -29,7 +36,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v4.5 - COMPLETE";
+  content: "LUCINE MINIMAL v4.6 - CLASS FIX";
   position: fixed;
   top: 10px;
   left: 10px;
