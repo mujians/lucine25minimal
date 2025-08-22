@@ -82,5 +82,11 @@
     };
   });
   
-  // Inizializza homepage senza click
+  // Inizializza homepage all'avvio
+  if (tabs[0]) {
+    tabs[0].classList.add('active');
+    contents[0]?.classList.add('active');
+    container.className = 'navigation-container';
+    contentArea.className = 'content';
+  }
 })();

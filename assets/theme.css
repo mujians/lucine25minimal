@@ -29,7 +29,7 @@ body {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v4.4 - NO BOUNCE";
+  content: "LUCINE MINIMAL v4.5 - COMPLETE";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -167,11 +167,11 @@ body::before {
   display: none;
   font-size: 18px;
   line-height: 1.5;
-  animation: fadeIn 0.4s ease-in-out;
 }
 
 .tab-content.active {
   display: block;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 @keyframes fadeIn {
