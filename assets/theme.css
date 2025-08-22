@@ -46,7 +46,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v7.1 - EXAMPLE CONTENT";
+  content: "LUCINE MINIMAL v7.2 - DEBUG MODE";
   position: fixed;
   top: 10px;
   left: 10px;

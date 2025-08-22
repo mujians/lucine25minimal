@@ -100,9 +100,12 @@
       contents.forEach(c => c.classList.remove('active'));
       
       tab.classList.add('active');
-      const activeContent = document.querySelector(`[data-index="${index}"]`);
-      if (activeContent && activeContent.classList.contains('tab-content')) {
+      const activeContent = document.querySelector(`.tab-content[data-index="${index}"]`);
+      if (activeContent) {
         activeContent.classList.add('active');
+        console.log('Activated content with index:', index);
+      } else {
+        console.log('No content found for index:', index);
       }
       
       // Center the selected tab
@@ -110,12 +113,14 @@
         centerActiveTab();
       }, 100);
       
-      if (index === 0) {
+      if (index === 0 || isNaN(index)) {
         // Homepage: aggiungi classe bottom e rimuovi altre
+        console.log('Going to homepage');
         container.classList.remove('middle', 'top');
         container.classList.add('bottom');
         contentArea.classList.remove('show');
       } else {
+        console.log('Going to section:', index);
         // Altre tab: logica di posizionamento
         container.classList.remove('bottom'); // Rimuovi sempre bottom quando lasci homepage
         
@@ -142,9 +147,15 @@
   });
   
   // Inizializza homepage all'avvio
+  console.log('Initializing - Found tabs:', tabs.length);
+  console.log('Found contents:', contents.length);
+  
   if (tabs.length > 0) {
-    const homeTab = document.querySelector('[data-index="0"]');
+    const homeTab = document.querySelector('.tab[data-index="0"]');
     const homeContent = document.querySelector('.tab-content[data-index="0"]');
+    
+    console.log('Home tab found:', !!homeTab);
+    console.log('Home content found:', !!homeContent);
     
     if (homeTab) homeTab.classList.add('active');
     if (homeContent) homeContent.classList.add('active');
