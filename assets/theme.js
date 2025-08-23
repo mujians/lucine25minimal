@@ -277,3 +277,16 @@ document.addEventListener('DOMContentLoaded', function() {
     attributeFilter: ['class']
   });
 })();
+
+// Function to close footer manually
+function closeFooter() {
+  const footer = document.getElementById('snap-footer');
+  if (footer) {
+    footer.classList.remove('show');
+    // Update the global state if the footer snap code is running
+    if (typeof isFooterVisible !== 'undefined') {
+      isFooterVisible = false;
+    }
+    console.log('🔴 FOOTER CLOSED MANUALLY');
+  }
+}
