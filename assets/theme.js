@@ -203,95 +203,56 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Appears at bottom, expands to fullscreen
+// FOOTER SNAP FUNCTIONALITY - Trigger bar opens fullscreen menu
 (function() {
   const footer = document.getElementById('snap-footer');
-  if (!footer) {
-    console.log('❌ FOOTER NOT FOUND');
+  const trigger = document.getElementById('footer-trigger');
+  
+  if (!footer || !trigger) {
+    console.log('❌ FOOTER OR TRIGGER NOT FOUND');
     return;
   }
   
-  console.log('🚀 FOOTER OVERLAY SYSTEM INITIALIZED');
+  console.log('🚀 FOOTER TRIGGER SYSTEM INITIALIZED');
   
-  let isFooterVisible = false;
   let isFooterExpanded = false;
-  let lastScrollTop = 0;
   
-  // Show footer (slide up from bottom)
-  function showFooter() {
-    if (!isFooterVisible) {
-      footer.classList.add('show');
-      isFooterVisible = true;
-      console.log('🟢 FOOTER APPEARED');
-      
-      // Auto-expand after short delay
-      setTimeout(() => {
-        if (isFooterVisible && !isFooterExpanded) {
-          expandFooter();
-        }
-      }, 300);
-    }
+  // Show and expand footer to fullscreen
+  function showAndExpandFooter() {
+    footer.classList.add('show', 'expanded');
+    document.body.classList.add('footer-expanded');
+    isFooterExpanded = true;
+    console.log('🟢 FOOTER OPENED FROM TRIGGER');
   }
   
   // Hide footer completely
   function hideFooter() {
     footer.classList.remove('show', 'expanded');
     document.body.classList.remove('footer-expanded');
-    isFooterVisible = false;
     isFooterExpanded = false;
-    console.log('🔴 FOOTER HIDDEN');
+    console.log('🔴 FOOTER CLOSED');
   }
   
-  // Expand footer to fullscreen
-  function expandFooter() {
-    if (isFooterVisible && !isFooterExpanded) {
-      footer.classList.add('expanded');
-      document.body.classList.add('footer-expanded');
-      isFooterExpanded = true;
-      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
-    }
-  }
-  
-  // Click to expand (if not already)
-  footer.addEventListener('click', (e) => {
-    if (!e.target.closest('.footer-close-btn')) {
-      expandFooter();
+  // Click trigger to open footer
+  trigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!isFooterExpanded) {
+      showAndExpandFooter();
     }
   });
   
-  // Scroll detection
-  function handleScroll() {
-    const scrollTop = window.pageYOffset;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = window.innerHeight;
-    const maxScroll = scrollHeight - clientHeight;
-    
-    // Detect when at bottom
-    const isAtBottom = scrollTop >= maxScroll - 10;
-    const isScrollingDown = scrollTop > lastScrollTop;
-    const isScrollingUp = scrollTop < lastScrollTop;
-    
-    // Show footer when reaching bottom
-    if (isAtBottom && !isFooterVisible) {
-      showFooter();
+  // Click footer background (not content) to expand if not already
+  footer.addEventListener('click', (e) => {
+    if (!e.target.closest('.footer-close-btn') && !e.target.closest('.footer-container')) {
+      if (!isFooterExpanded) {
+        showAndExpandFooter();
+      }
     }
-    
-    // Hide footer when scrolling up from bottom
-    if (isScrollingUp && scrollTop < maxScroll - 100 && isFooterVisible) {
-      hideFooter();
-    }
-    
-    lastScrollTop = scrollTop;
-  }
-  
-  // Listen for scroll events
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  });
   
   // Make closeFooter function available globally
   window.closeFooter = function() {
     hideFooter();
-    // Scroll up slightly to avoid immediate re-trigger
-    window.scrollBy(0, -150);
   };
 })();
 
