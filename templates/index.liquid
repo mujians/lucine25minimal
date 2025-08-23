@@ -109,7 +109,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
               <!-- Contenuto di esempio per {{ link.title }} -->
               <div class="formatted-content">
                 {% case link.title %}
-                  {% when 'Design System' %}
+                  {% when 'Design System', 'design system', 'design-system' %}
                     {% comment %} Design System showcase {% endcomment %}
                     {% render 'design-system' %}
                     
