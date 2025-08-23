@@ -5,13 +5,7 @@
 }
 
 /* CUSTOM FONTS */
-@font-face {
-  font-family: 'Perandory';
-  src: url('PerandorySemiCondensed.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap');
 
 @font-face {
   font-family: 'Providence Sans';
@@ -54,7 +48,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v9.3 - TESTI BIANCHI";
+  content: "LUCINE MINIMAL v9.4 - HOMEMADE APPLE";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -258,9 +252,9 @@ body::before {
    Minimale | Natalizio | Famiglie
    ============================================= */
 
-/* TYPOGRAPHY SYSTEM - PERANDORY */
+/* TYPOGRAPHY SYSTEM - HOMEMADE APPLE */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Perandory', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Homemade Apple', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   font-weight: normal;
   margin: 0 0 1.5rem 0;
   line-height: 1.3;
