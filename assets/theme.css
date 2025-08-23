@@ -7,9 +7,8 @@
 /* CUSTOM FONTS */
 @font-face {
   font-family: 'Homemade Apple';
-  src: url('HomemadeApple-Regular.woff2') format('woff2'),
-       url('HomemadeApple.woff2') format('woff2');
-  font-weight: 400;
+  src: url('HomemadeApple.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
@@ -262,8 +261,8 @@ body::before {
 
 /* TYPOGRAPHY SYSTEM - HOMEMADE APPLE */
 h1, h2, h3, h4, h5, h6 {
-  font-family: Georgia, 'Times New Roman', serif !important;
-  font-weight: 400 !important;
+  font-family: 'Homemade Apple', cursive !important;
+  font-weight: normal !important;
   margin: 0 0 1.5rem 0 !important;
   line-height: 1.4 !important;
   color: var(--text-white) !important;
@@ -276,21 +275,21 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 { 
   font-size: 3rem !important; 
-  font-weight: 400 !important; 
+  font-weight: normal !important; 
   margin-bottom: 2rem !important;
   color: var(--text-white) !important;
 }
 h2 { 
   font-size: 2.5rem !important; 
   color: var(--text-white) !important;
-  font-weight: 400 !important;
+  font-weight: normal !important;
   margin: 3rem 0 1.5rem 0 !important;
   border-bottom: none !important;
   padding-bottom: 0 !important;
 }
 h3 { 
   font-size: 2rem !important; 
-  font-weight: 400 !important;
+  font-weight: normal !important;
   margin: 2rem 0 1rem 0 !important;
   color: var(--text-white) !important;
   border-bottom: none !important;
@@ -298,7 +297,7 @@ h3 {
 }
 h4 { 
   font-size: 1.5rem !important; 
-  font-weight: 400 !important;
+  font-weight: normal !important;
   color: var(--text-white) !important;
 }
 
