@@ -77,8 +77,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
         </div>
       </div>
       
-      <!-- Include footer snippet in homepage -->
-      {% render 'footer-snap' %}
     </div>
 
     <!-- Dynamic content con design system -->
@@ -215,13 +213,13 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
             </div>
           {% endif %}
         </div>
-        
-        <!-- Include footer snippet in every tab -->
-        {% render 'footer-snap' %}
       </div>
     {% endfor %}
   </div>
 </div>
+
+<!-- GLOBAL FOOTER - Outside tabs, triggered by scroll -->
+{% render 'footer-snap' %}
 
 <!-- ERUDA MOBILE DEBUGGER (TEMPORARY) -->
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>

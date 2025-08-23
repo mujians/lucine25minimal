@@ -203,62 +203,76 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Multiple footers approach
+// FOOTER SNAP FUNCTIONALITY - Global footer with smart scroll detection
 (function() {
-  const footers = document.querySelectorAll('.snap-footer');
-  if (!footers.length) {
-    console.log('❌ NO FOOTERS FOUND');
+  const footer = document.getElementById('snap-footer');
+  if (!footer) {
+    console.log('❌ FOOTER NOT FOUND');
     return;
   }
   
-  console.log('🚀 FOOTER SYSTEM INITIALIZED - Multiple Static Footers:', footers.length);
+  console.log('🚀 GLOBAL FOOTER SYSTEM INITIALIZED');
   
-  let expandedFooter = null;
+  let isFooterExpanded = false;
   
   // Expand footer to fullscreen
-  function expandFooter(footer) {
-    // Close any other expanded footer first
-    if (expandedFooter && expandedFooter !== footer) {
-      expandedFooter.classList.remove('expanded');
+  function expandFooter() {
+    if (!isFooterExpanded) {
+      footer.classList.add('expanded');
+      isFooterExpanded = true;
+      console.log('🟢 GLOBAL FOOTER EXPANDED');
     }
-    
-    footer.classList.add('expanded');
-    expandedFooter = footer;
-    console.log('🟢 FOOTER EXPANDED:', footer.id);
   }
   
-  // Setup each footer
-  footers.forEach(footer => {
-    // Add click listener
-    footer.addEventListener('click', () => expandFooter(footer));
+  // Click to expand
+  footer.addEventListener('click', expandFooter);
+  
+  // Smart scroll detection - triggers from any page scroll
+  function checkScrollTrigger() {
+    // Check both window scroll and content area scroll
+    const contentArea = document.querySelector('.content.show');
+    const windowScroll = window.pageYOffset;
+    const contentScroll = contentArea ? contentArea.scrollTop : 0;
+    const maxScroll = contentArea ? contentArea.scrollHeight - contentArea.clientHeight : document.body.scrollHeight - window.innerHeight;
     
-    // Scroll detection for this footer
-    function checkFooterInView() {
-      // Only check if this footer is in an active tab
-      const parentTab = footer.closest('.tab-content');
-      if (parentTab && !parentTab.classList.contains('active')) {
-        return;
-      }
-      
-      const footerRect = footer.getBoundingClientRect();
-      const isInView = footerRect.top < window.innerHeight && footerRect.bottom > 0;
-      
-      if (isInView && expandedFooter !== footer) {
-        console.log('📱 FOOTER IN VIEW - Auto expanding:', footer.id);
-        expandFooter(footer);
-      }
+    // Trigger if scrolled 70% down in either window or content area
+    const windowProgress = maxScroll > 0 ? (windowScroll / maxScroll) * 100 : 0;
+    const contentProgress = contentArea && contentArea.scrollHeight > contentArea.clientHeight ? (contentScroll / (contentArea.scrollHeight - contentArea.clientHeight)) * 100 : 0;
+    
+    const shouldTrigger = windowProgress > 70 || contentProgress > 70;
+    
+    if (shouldTrigger && !isFooterExpanded) {
+      console.log('📱 SCROLL TRIGGER - Expanding footer:', {
+        windowProgress: Math.round(windowProgress),
+        contentProgress: Math.round(contentProgress)
+      });
+      expandFooter();
     }
-    
-    // Attach scroll listener for this footer
-    window.addEventListener('scroll', checkFooterInView);
+  }
+  
+  // Attach to both window and content scrolls
+  window.addEventListener('scroll', checkScrollTrigger);
+  
+  // Monitor for content area changes (tab switches)
+  const observer = new MutationObserver(function() {
+    const contentArea = document.querySelector('.content.show');
+    if (contentArea) {
+      contentArea.addEventListener('scroll', checkScrollTrigger);
+    }
+  });
+  
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class'],
+    subtree: true
   });
 })();
 
 // Function to close footer manually
 function closeFooter() {
-  const expandedFooter = document.querySelector('.snap-footer.expanded');
-  if (expandedFooter) {
-    expandedFooter.classList.remove('expanded');
-    console.log('🔴 FOOTER CLOSED MANUALLY:', expandedFooter.id);
+  const footer = document.getElementById('snap-footer');
+  if (footer && footer.classList.contains('expanded')) {
+    footer.classList.remove('expanded');
+    console.log('🔴 GLOBAL FOOTER CLOSED MANUALLY');
   }
 }
