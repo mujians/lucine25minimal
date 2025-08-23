@@ -16,11 +16,36 @@
     contents: contents.length,
     contentArea: !!contentArea
   });
+  
+  // Debug: stampa tutti i data-index disponibili
+  console.log('Available tabs:', Array.from(tabs).map(t => t.dataset.index));
+  console.log('Available contents:', Array.from(contents).map(c => c.dataset.index));
 
   let scrollHandlerEnabled = true;
 
   function updateVerticalHint() {
     // Nessun hint necessario - menu solo aperto/chiuso
+  }
+
+  // Function to center selected tab horizontally
+  function centerActiveTab() {
+    const menuTabs = document.querySelector('.menu-tabs');
+    if (!menuTabs) return;
+    
+    const activeTab = menuTabs.querySelector('.tab.active');
+    if (!activeTab) return;
+    
+    const menuTabsRect = menuTabs.getBoundingClientRect();
+    const activeTabRect = activeTab.getBoundingClientRect();
+    
+    const menuCenter = menuTabsRect.width / 2;
+    const tabCenter = activeTabRect.left - menuTabsRect.left + activeTabRect.width / 2;
+    const scrollOffset = tabCenter - menuCenter;
+    
+    menuTabs.scrollTo({
+      left: menuTabs.scrollLeft + scrollOffset,
+      behavior: 'smooth'
+    });
   }
 
   // Function to activate a tab and update URL
@@ -45,13 +70,13 @@
 
     // Update content visibility - prima rimuovi tutti
     contents.forEach(content => {
-      content.classList.remove('show');
+      content.classList.remove('active');
     });
     
     // Poi attiva quello corretto usando data-index
     const targetContent = document.querySelector(`.tab-content[data-index="${index}"]`);
     if (targetContent) {
-      targetContent.classList.add('show');
+      targetContent.classList.add('active');
       console.log('Activated content for index:', index);
     } else {
       console.log('No content found for index:', index);
@@ -68,6 +93,11 @@
       contentArea.scrollTop = 0;
       contentArea.classList.add('show');
     }
+    
+    // Center the active tab
+    setTimeout(() => {
+      centerActiveTab();
+    }, 100);
     
     // Re-enable scroll handling
     setTimeout(() => {
