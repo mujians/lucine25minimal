@@ -878,15 +878,24 @@ body.footer-expanded {
   flex: 1;
 }
 
-/* Navetta inside sketch card adjustments */
+/* Navetta inside sketch card - centered layout */
 .sketch-card .navetta-title {
-  margin-bottom: 0.75rem;
+  flex-direction: column;
+  text-align: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .sketch-card .navetta-icon {
-  width: 60px;
-  height: 60px;
-  margin-right: 0.75rem;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  align-self: center;
+}
+
+.sketch-card .navetta-title h4 {
+  font-size: 1.5rem !important;
+  text-align: center;
 }
 
 .footer-link {
