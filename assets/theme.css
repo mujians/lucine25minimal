@@ -519,8 +519,8 @@ li {
   background: transparent;
   color: var(--card-text);
   border-radius: 16px;
-  padding: 20px 22px 24px;
-  margin: 1.5rem 0;
+  padding: 32px 24px 28px; /* Increased top padding and overall padding */
+  margin: 2.5rem 0; /* Increased spacing between cards */
 }
 
 .sketch-card.sketch {
@@ -567,6 +567,7 @@ li {
 .seed-3 .sketch-border rect { stroke-dasharray: 12 7 5 11 9 8; }
 .seed-4 .sketch-border rect { stroke-dashoffset: 4; stroke-dasharray: 15 9 7 13; }
 .seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
+.seed-6 .sketch-border rect { stroke-dashoffset: 10; stroke-dasharray: 16 10 8 14; }
 
 /* Fix border radius per forme rettangolari */
 .sketch-border rect {
@@ -864,17 +865,28 @@ body.footer-expanded {
 }
 
 .navetta-icon {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   mix-blend-mode: screen; /* Screen blend mode for transparency effect */
   flex-shrink: 0;
-  margin-right: 1.5rem;
+  margin-right: 1rem;
 }
 
 .navetta-title h4 {
   margin: 0 !important;
   flex: 1;
+}
+
+/* Navetta inside sketch card adjustments */
+.sketch-card .navetta-title {
+  margin-bottom: 0.75rem;
+}
+
+.sketch-card .navetta-icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 0.75rem;
 }
 
 .footer-link {
