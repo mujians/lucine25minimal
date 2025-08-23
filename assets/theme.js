@@ -213,21 +213,32 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('🚀 GLOBAL FOOTER SYSTEM INITIALIZED');
   
+  let isFooterVisible = false;
   let isFooterExpanded = false;
+  
+  // Show footer (normal height)
+  function showFooter() {
+    if (!isFooterVisible) {
+      footer.classList.add('show');
+      isFooterVisible = true;
+      console.log('🟢 FOOTER SHOWN');
+    }
+  }
   
   // Expand footer to fullscreen
   function expandFooter() {
+    showFooter(); // Ensure it's visible first
     if (!isFooterExpanded) {
       footer.classList.add('expanded');
       isFooterExpanded = true;
-      console.log('🟢 GLOBAL FOOTER EXPANDED');
+      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
     }
   }
   
   // Click to expand
   footer.addEventListener('click', expandFooter);
   
-  // Smart scroll detection - triggers from any page scroll
+  // Smart scroll detection - show footer at 60%, expand at click
   function checkScrollTrigger() {
     // Check both window scroll and content area scroll
     const contentArea = document.querySelector('.content.show');
@@ -235,18 +246,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentScroll = contentArea ? contentArea.scrollTop : 0;
     const maxScroll = contentArea ? contentArea.scrollHeight - contentArea.clientHeight : document.body.scrollHeight - window.innerHeight;
     
-    // Trigger if scrolled 70% down in either window or content area
+    // Show footer at 60% scroll in either window or content area
     const windowProgress = maxScroll > 0 ? (windowScroll / maxScroll) * 100 : 0;
     const contentProgress = contentArea && contentArea.scrollHeight > contentArea.clientHeight ? (contentScroll / (contentArea.scrollHeight - contentArea.clientHeight)) * 100 : 0;
     
-    const shouldTrigger = windowProgress > 70 || contentProgress > 70;
+    const shouldShow = windowProgress > 60 || contentProgress > 60;
     
-    if (shouldTrigger && !isFooterExpanded) {
-      console.log('📱 SCROLL TRIGGER - Expanding footer:', {
+    if (shouldShow && !isFooterVisible) {
+      console.log('📱 SCROLL TRIGGER - Showing footer:', {
         windowProgress: Math.round(windowProgress),
         contentProgress: Math.round(contentProgress)
       });
-      expandFooter();
+      showFooter();
     }
   }
   
@@ -271,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to close footer manually
 function closeFooter() {
   const footer = document.getElementById('snap-footer');
-  if (footer && footer.classList.contains('expanded')) {
-    footer.classList.remove('expanded');
-    console.log('🔴 GLOBAL FOOTER CLOSED MANUALLY');
+  if (footer) {
+    footer.classList.remove('expanded', 'show');
+    console.log('🔴 FOOTER HIDDEN COMPLETELY');
   }
 }
