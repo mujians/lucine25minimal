@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Simple click to expand
+// FOOTER SNAP FUNCTIONALITY - Bounce/over-scroll to expand
 (function() {
   const footer = document.getElementById('snap-footer');
   if (!footer) {
@@ -211,21 +211,65 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  console.log('🚀 SIMPLE FOOTER SYSTEM INITIALIZED - Always visible, click to expand');
+  console.log('🚀 BOUNCE FOOTER SYSTEM INITIALIZED - Bounce at bottom to expand');
   
   let isFooterExpanded = false;
+  let lastScrollTop = 0;
+  let bounceThreshold = 20; // pixels of over-scroll needed
   
   // Expand footer to fullscreen
   function expandFooter() {
     if (!isFooterExpanded) {
       footer.classList.add('expanded');
       isFooterExpanded = true;
-      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
+      console.log('🟢 FOOTER EXPANDED - Bounce detected!');
     }
   }
   
-  // Click to expand
+  // Click to expand (fallback)
   footer.addEventListener('click', expandFooter);
+  
+  // Bounce/over-scroll detection
+  function handleBounceScroll() {
+    const scrollTop = window.pageYOffset;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+    const maxScroll = scrollHeight - clientHeight;
+    
+    // Debug logging
+    console.log('📱 SCROLL DEBUG:', {
+      scrollTop: Math.round(scrollTop),
+      maxScroll: Math.round(maxScroll),
+      overScroll: Math.round(scrollTop - maxScroll),
+      isAtBottom: scrollTop >= maxScroll - 5,
+      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
+    });
+    
+    // Detect over-scroll (bounce at bottom)
+    const overScroll = scrollTop - maxScroll;
+    const isScrollingDown = scrollTop > lastScrollTop;
+    
+    // Expand on bounce (over-scroll while going down)
+    if (overScroll > bounceThreshold && isScrollingDown && !isFooterExpanded) {
+      console.log('🎾 BOUNCE DETECTED - Expanding footer!', {
+        overScroll: Math.round(overScroll),
+        threshold: bounceThreshold
+      });
+      expandFooter();
+    }
+    
+    lastScrollTop = scrollTop;
+  }
+  
+  // Listen for scroll events
+  window.addEventListener('scroll', handleBounceScroll, { passive: false });
+  
+  // Reset expanded state when navigating
+  window.addEventListener('beforeunload', () => {
+    if (isFooterExpanded) {
+      footer.classList.remove('expanded');
+    }
+  });
 })();
 
 // Function to close footer manually  
@@ -233,6 +277,9 @@ function closeFooter() {
   const footer = document.getElementById('snap-footer');
   if (footer && footer.classList.contains('expanded')) {
     footer.classList.remove('expanded');
-    console.log('🔴 FOOTER COLLAPSED TO NORMAL SIZE');
+    console.log('🔴 FOOTER CLOSED - Back to normal');
+    
+    // Scroll slightly up to get out of bounce zone
+    window.scrollBy(0, -50);
   }
 }
