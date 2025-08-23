@@ -864,8 +864,8 @@ body.footer-expanded {
 }
 
 .navetta-icon {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
   filter: brightness(0) invert(1); /* Make white parts visible on dark background */
   mix-blend-mode: screen; /* Screen blend mode for transparency effect */
