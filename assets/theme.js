@@ -217,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxScrollTop = scrollHeight - clientHeight;
     const scrollPercentage = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * 100 : 0;
     
-    // Show footer when scrolled 60% down OR within 200px of bottom
+    // Show footer when scrolled 40% down OR within 200px of bottom
     const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
-    const scrolledEnough = scrollPercentage >= 60;
+    const scrolledEnough = scrollPercentage >= 40;
     const shouldShow = nearBottom || scrolledEnough;
     
     const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
