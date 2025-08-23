@@ -7,7 +7,8 @@
 /* CUSTOM FONTS */
 @font-face {
   font-family: 'Homemade Apple';
-  src: url('HomemadeApple.woff2') format('woff2');
+  src: url('HomemadeApple-Regular.woff2') format('woff2'),
+       url('HomemadeApple.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -54,7 +55,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v9.4 - HOMEMADE APPLE";
+  content: "LUCINE MINIMAL v9.5 - FONT DEBUG";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -65,6 +66,7 @@ body::before {
   z-index: 999;
   border-radius: 3px;
   pointer-events: none;
+  font-family: 'Homemade Apple', cursive;
 }
 
 /* NAVIGATION CONTAINER */
