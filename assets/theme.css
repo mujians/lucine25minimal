@@ -164,14 +164,14 @@ body::before {
   position: relative;
 }
 
-/* Grain texture for top menu */
+/* Grain texture for top menu - extended to cover scroll area */
 .navigation-container.top .menu-tabs::before {
   content: '';
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: -100px; /* Extend left to cover scroll area */
+  right: -100px; /* Extend right to cover scroll area */
+  height: 60px; /* Cover menu height */
   pointer-events: none;
   z-index: -1;
   opacity: 0.1;
