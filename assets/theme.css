@@ -450,6 +450,77 @@ li {
 .seed-4 .sketch-border rect { stroke-dashoffset: 4; stroke-dasharray: 15 9 7 13; }
 .seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
 
+/* FAQ ACCORDION - Clean & Simple */
+.faq-index {
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.faq-index h4 {
+  color: var(--christmas-gold) !important;
+  margin-bottom: 0.5rem !important;
+  font-size: 1rem !important;
+}
+
+.faq-index ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.faq-index li {
+  margin: 0.25rem 0;
+}
+
+.faq-index a {
+  color: var(--text-white);
+  text-decoration: none;
+}
+
+.faq-index a:hover {
+  color: var(--christmas-gold);
+}
+
+.faq-accordion {
+  margin: 2rem 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid #333;
+  margin-bottom: 0.5rem;
+}
+
+.faq-question {
+  font-family: 'Providence Sans', -apple-system, sans-serif !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--text-white) !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 1rem 0 !important;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  margin: 0 !important;
+}
+
+.faq-question:hover {
+  color: var(--christmas-gold) !important;
+}
+
+.faq-answer {
+  padding: 0 0 1rem 0;
+  display: none;
+}
+
+.faq-answer.active {
+  display: block;
+}
+
 /* FORMATTED CONTENT FROM SHOPIFY PAGES */
 .formatted-content {
   color: var(--text-white);
