@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-/* CUSTOM FONT - PERANDORY */
+/* CUSTOM FONTS */
 @font-face {
   font-family: 'Perandory';
   src: url('PerandorySemiCondensed.otf') format('opentype');
@@ -12,6 +12,8 @@
   font-style: normal;
   font-display: swap;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Providence+Sans:wght@400;500;600&display=swap');
 
 body {
   background: #000;
@@ -287,7 +289,7 @@ p {
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.6;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
 /* CLEAN COLOR PALETTE */
@@ -411,7 +413,7 @@ li {
   margin-bottom: 1.5rem;
   line-height: 1.6;
   color: var(--text-white);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
 .formatted-content ul,
@@ -508,7 +510,7 @@ li {
 
 .info-box {
   background: #1a1a1a;
-  border: 1px solid rgba(255, 215, 0, 0.6);
+  border: none;
   border-radius: 15px;
   padding: 1.5rem;
   text-align: center;
