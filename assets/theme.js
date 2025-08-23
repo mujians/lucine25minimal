@@ -1,160 +1,73 @@
-(function() {
-  const container = document.querySelector('[data-tabs-section]');
+// Navigation controller: menu ha solo 2 posizioni - bottom (homepage) e top (aperto)
+(() => {
+  const container = document.querySelector('.navigation-container');
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
-  const menuTabs = document.querySelector('.menu-tabs');
-  
+
+  if (!container || !tabs.length || !contents.length || !contentArea) {
+    console.log('Navigation elements not found');
+    return;
+  }
+
+  console.log('Navigation initialized - Elements found:', {
+    container: !!container,
+    tabs: tabs.length,
+    contents: contents.length,
+    contentArea: !!contentArea
+  });
+
   let scrollHandlerEnabled = true;
-  
-  
-  // Function to update vertical scroll hint
+
   function updateVerticalHint() {
-    if (!contentArea) return;
-    
-    const isAtTop = contentArea.scrollTop === 0;
-    contentArea.classList.toggle('at-top', isAtTop);
+    // Nessun hint necessario - menu solo aperto/chiuso
   }
-  
-  // Function to center selected tab horizontally
-  function centerActiveTab() {
-    if (!menuTabs) return;
-    
-    const activeTab = menuTabs.querySelector('.tab.active');
-    if (!activeTab) return;
-    
-    const menuTabsRect = menuTabs.getBoundingClientRect();
-    const activeTabRect = activeTab.getBoundingClientRect();
-    
-    const menuCenter = menuTabsRect.width / 2;
-    const tabCenter = activeTabRect.left - menuTabsRect.left + activeTabRect.width / 2;
-    const scrollOffset = tabCenter - menuCenter;
-    
-    menuTabs.scrollTo({
-      left: menuTabs.scrollLeft + scrollOffset,
-      behavior: 'smooth'
-    });
-  }
-  
-  // Single permanent scroll handler
-  const scrollHandler = () => {
-    if (!scrollHandlerEnabled) return;
-    
-    // Update vertical hint
-    updateVerticalHint();
-    
-    if (container.classList.contains('middle') && contentArea.scrollTop > 100) {
-      // Scroll DOWN: menu va in top, content torna all'inizio
-      container.classList.remove('middle');
-      container.classList.add('top');
-      // Disabilita handler durante il reset per evitare bounce back
-      scrollHandlerEnabled = false;
-      // Riposiziona il content all'inizio per vista ottimale
-      setTimeout(() => {
-        contentArea.scrollTop = 0;
-        // Riabilita handler dopo il reset
-        setTimeout(() => {
-          scrollHandlerEnabled = true;
-        }, 200);
-      }, 300); // Aspetta metà animazione per smoothness
-    } else if (container.classList.contains('top') && contentArea.scrollTop === 0) {
-      // Solo quando sei COMPLETAMENTE in cima (scrollTop = 0)
-      // Aggiungi un flag per evitare trigger immediati
-      if (!scrollHandler.atTopFlag) {
-        scrollHandler.atTopFlag = true;
-        setTimeout(() => {
-          // Se dopo 300ms sei ancora a scrollTop = 0, allora chiudi
-          if (contentArea.scrollTop === 0) {
-            container.classList.remove('top');
-            container.classList.add('middle');
-            // Disabilita handler durante il reset
-            scrollHandlerEnabled = false;
-            setTimeout(() => {
-              scrollHandlerEnabled = true;
-            }, 200);
-          }
-          scrollHandler.atTopFlag = false;
-        }, 300);
-      }
-    }
-  };
-  
-  contentArea.addEventListener('scroll', scrollHandler);
-  
-  // Function to activate tab by index
+
+  // Function to activate a tab and update URL
   function activateTab(index) {
-    // Disabilita scroll handler temporaneamente
+    console.log('Activating tab:', index);
+    
+    // Disable scroll handling during tab changes
     scrollHandlerEnabled = false;
     
+    // Update active tab
+    tabs.forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+
     // Update URL hash
+    if (index > 0 && tabs[index]) {
+      const tabName = tabs[index].textContent.toLowerCase().replace(/\s+/g, '-');
+      window.history.pushState(null, null, '#' + tabName);
+    } else {
+      window.history.pushState(null, null, window.location.pathname);
+    }
+
+    // Update content visibility and menu position
+    contents.forEach((content, i) => {
+      content.classList.toggle('show', i === index);
+    });
+
     if (index === 0) {
-      history.replaceState(null, null, window.location.pathname);
-    } else {
-      const tab = document.querySelector(`.tab[data-index="${index}"]`);
-      if (tab && tab.textContent) {
-        const pageName = tab.textContent.toLowerCase().replace(/\s+/g, '-');
-        history.replaceState(null, null, `#${pageName}`);
-      }
-    }
-    
-    // Salva lo stato attuale del menu PRIMA di ogni modifica
-    const wasShowingContent = contentArea.classList.contains('show');
-    const isTop = container.classList.contains('top');
-    
-    // Update active states using data-index
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('active'));
-    
-    const tab = document.querySelector(`.tab[data-index="${index}"]`);
-    if (tab) {
-      tab.classList.add('active');
-    }
-    
-    const activeContent = document.querySelector(`.tab-content[data-index="${index}"]`);
-    if (activeContent) {
-      activeContent.classList.add('active');
-      console.log('Activated content with index:', index);
-    } else {
-      console.log('No content found for index:', index);
-    }
-    
-    // Center the selected tab
-    setTimeout(() => {
-      centerActiveTab();
-    }, 100);
-    
-    if (index === 0 || isNaN(index)) {
-      // Homepage: aggiungi classe bottom e rimuovi altre
-      console.log('Going to homepage');
-      container.classList.remove('middle', 'top');
+      // Homepage: menu in bottom
+      container.classList.remove('top');
       container.classList.add('bottom');
-      contentArea.classList.remove('show');
     } else {
-      console.log('Going to section:', index);
-      // Altre tab: logica di posizionamento
-      container.classList.remove('bottom'); // Rimuovi sempre bottom quando lasci homepage
-      
-      if (wasShowingContent && isTop) {
-        // Mantieni top position e NON resettare scroll
-        container.classList.remove('middle');
-        container.classList.add('top');
-      } else {
-        // Vai a middle e resetta scroll
-        container.classList.remove('top');
-        container.classList.add('middle');
-        contentArea.scrollTop = 0;
-      }
-      
+      // Tab aperta: menu in top
+      container.classList.remove('bottom');
+      container.classList.add('top');
+      contentArea.scrollTop = 0;
       contentArea.classList.add('show');
     }
     
-    // Riabilita scroll handler dopo le transizioni
+    // Re-enable scroll handling
     setTimeout(() => {
       scrollHandlerEnabled = true;
       updateVerticalHint();
     }, 500);
   }
 
+  // Add click handlers
   tabs.forEach((tab) => {
     tab.onclick = (e) => {
       e.preventDefault();
@@ -179,7 +92,7 @@
     return 0; // Default to home if no match
   }
 
-  // Inizializza con tab corretta dall'URL
+  // Initialize with correct tab from URL
   console.log('Initializing - Found tabs:', tabs.length);
   console.log('Found contents:', contents.length);
   
@@ -188,10 +101,10 @@
     const initialTabIndex = getTabFromHash();
     console.log('Initial tab index from URL:', initialTabIndex);
     
-    // Assicurati che il container abbia la classe base
+    // Add base class to container
     container.classList.add('navigation-container');
     
-    // Attiva la tab corretta
+    // Activate correct tab
     activateTab(initialTabIndex);
     
     // Initialize indicators
@@ -200,3 +113,41 @@
     }, 200);
   }
 })();
+
+// BACK TO TOP BUTTON
+function scrollToTop() {
+  const contentArea = document.querySelector('.content.show');
+  if (contentArea) {
+    contentArea.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  } else {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+}
+
+// Show/hide back to top button based on scroll
+function handleBackToTopVisibility() {
+  const backToTopBtn = document.getElementById('back-to-top');
+  const contentArea = document.querySelector('.content.show');
+  
+  if (backToTopBtn && contentArea) {
+    if (contentArea.scrollTop > 300) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+  }
+}
+
+// Add scroll listener for back to top button
+document.addEventListener('DOMContentLoaded', function() {
+  const contentArea = document.querySelector('.content');
+  if (contentArea) {
+    contentArea.addEventListener('scroll', handleBackToTopVisibility);
+  }
+});
