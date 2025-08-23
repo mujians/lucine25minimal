@@ -390,18 +390,65 @@ li {
   margin: 1.5rem 0;
 }
 
-.highlight-box {
-  background: #1a1a1a;
-  padding: 1rem;
-  margin: 1.5rem 0;
-  border-radius: 4px;
+/* SKETCH CARD - handmade style */
+:root {
+  --sketch-ink: #ffffff;    /* bordo bianco */
+  --card-bg: #111;          /* sfondo box */
+  --card-text: #ffffff;     /* testo bianco */
 }
 
-.highlight-box h4 {
-  color: var(--christmas-gold);
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+.sketch-card {
+  position: relative;
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 16px;
+  padding: 20px 22px 24px;
+  margin: 1.5rem 0;
 }
+
+.sketch-card.sketch {
+  color: var(--sketch-ink);
+}
+
+.sketch-border {
+  position: absolute;
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  pointer-events: none;
+}
+
+.sketch-card h4 {
+  font-size: 1.35rem !important;
+  margin: 0 0 0.5rem 0 !important;
+  color: var(--card-text) !important;
+  font-weight: normal !important;
+}
+
+.sketch-card .lead {
+  color: var(--christmas-gold);
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.sketch-card .meta {
+  opacity: 0.85;
+  margin: 0 0 0.75rem;
+}
+
+.sketch-card .cta {
+  color: var(--christmas-gold);
+  text-decoration: none;
+  border-bottom: 2px solid var(--christmas-gold);
+  padding-bottom: 2px;
+}
+
+/* Variazioni seed per bordi diversi */
+.seed-1 .sketch-border rect { stroke-dashoffset: 2; }
+.seed-2 .sketch-border rect { stroke-dashoffset: 6; }
+.seed-3 .sketch-border rect { stroke-dasharray: 12 7 5 11 9 8; }
+.seed-4 .sketch-border rect { stroke-dashoffset: 4; stroke-dasharray: 15 9 7 13; }
+.seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
 
 /* FORMATTED CONTENT FROM SHOPIFY PAGES */
 .formatted-content {
