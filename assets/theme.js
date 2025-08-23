@@ -81,89 +81,118 @@
   
   contentArea.addEventListener('scroll', scrollHandler);
   
+  // Function to activate tab by index
+  function activateTab(index) {
+    // Disabilita scroll handler temporaneamente
+    scrollHandlerEnabled = false;
+    
+    // Update URL hash
+    if (index === 0) {
+      history.replaceState(null, null, window.location.pathname);
+    } else {
+      const tab = document.querySelector(`.tab[data-index="${index}"]`);
+      if (tab && tab.textContent) {
+        const pageName = tab.textContent.toLowerCase().replace(/\s+/g, '-');
+        history.replaceState(null, null, `#${pageName}`);
+      }
+    }
+    
+    // Salva lo stato attuale del menu PRIMA di ogni modifica
+    const wasShowingContent = contentArea.classList.contains('show');
+    const isTop = container.classList.contains('top');
+    
+    // Update active states using data-index
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+    
+    const tab = document.querySelector(`.tab[data-index="${index}"]`);
+    if (tab) {
+      tab.classList.add('active');
+    }
+    
+    const activeContent = document.querySelector(`.tab-content[data-index="${index}"]`);
+    if (activeContent) {
+      activeContent.classList.add('active');
+      console.log('Activated content with index:', index);
+    } else {
+      console.log('No content found for index:', index);
+    }
+    
+    // Center the selected tab
+    setTimeout(() => {
+      centerActiveTab();
+    }, 100);
+    
+    if (index === 0 || isNaN(index)) {
+      // Homepage: aggiungi classe bottom e rimuovi altre
+      console.log('Going to homepage');
+      container.classList.remove('middle', 'top');
+      container.classList.add('bottom');
+      contentArea.classList.remove('show');
+    } else {
+      console.log('Going to section:', index);
+      // Altre tab: logica di posizionamento
+      container.classList.remove('bottom'); // Rimuovi sempre bottom quando lasci homepage
+      
+      if (wasShowingContent && isTop) {
+        // Mantieni top position e NON resettare scroll
+        container.classList.remove('middle');
+        container.classList.add('top');
+      } else {
+        // Vai a middle e resetta scroll
+        container.classList.remove('top');
+        container.classList.add('middle');
+        contentArea.scrollTop = 0;
+      }
+      
+      contentArea.classList.add('show');
+    }
+    
+    // Riabilita scroll handler dopo le transizioni
+    setTimeout(() => {
+      scrollHandlerEnabled = true;
+      updateVerticalHint();
+    }, 500);
+  }
+
   tabs.forEach((tab) => {
     tab.onclick = (e) => {
       e.preventDefault();
-      
-      // Disabilita scroll handler temporaneamente
-      scrollHandlerEnabled = false;
-      
-      // Get index from data attribute
       const index = parseInt(tab.dataset.index);
-      
-      // Salva lo stato attuale del menu PRIMA di ogni modifica
-      const wasShowingContent = contentArea.classList.contains('show');
-      const isTop = container.classList.contains('top');
-      
-      // Update active states using data-index
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      
-      tab.classList.add('active');
-      const activeContent = document.querySelector(`.tab-content[data-index="${index}"]`);
-      if (activeContent) {
-        activeContent.classList.add('active');
-        console.log('Activated content with index:', index);
-      } else {
-        console.log('No content found for index:', index);
-      }
-      
-      // Center the selected tab
-      setTimeout(() => {
-        centerActiveTab();
-      }, 100);
-      
-      if (index === 0 || isNaN(index)) {
-        // Homepage: aggiungi classe bottom e rimuovi altre
-        console.log('Going to homepage');
-        container.classList.remove('middle', 'top');
-        container.classList.add('bottom');
-        contentArea.classList.remove('show');
-      } else {
-        console.log('Going to section:', index);
-        // Altre tab: logica di posizionamento
-        container.classList.remove('bottom'); // Rimuovi sempre bottom quando lasci homepage
-        
-        if (wasShowingContent && isTop) {
-          // Mantieni top position e NON resettare scroll
-          container.classList.remove('middle');
-          container.classList.add('top');
-        } else {
-          // Vai a middle e resetta scroll
-          container.classList.remove('top');
-          container.classList.add('middle');
-          contentArea.scrollTop = 0;
-        }
-        
-        contentArea.classList.add('show');
-      }
-      
-      // Riabilita scroll handler dopo le transizioni
-      setTimeout(() => {
-        scrollHandlerEnabled = true;
-        updateVerticalHint();
-      }, 500);
+      activateTab(index);
     };
   });
   
-  // Inizializza homepage all'avvio
+  // Function to get tab index from URL hash
+  function getTabFromHash() {
+    const hash = window.location.hash.substring(1);
+    if (!hash) return 0;
+    
+    // Find tab by matching text content
+    for (let i = 0; i < tabs.length; i++) {
+      const tab = tabs[i];
+      const tabName = tab.textContent.toLowerCase().replace(/\s+/g, '-');
+      if (tabName === hash) {
+        return parseInt(tab.dataset.index);
+      }
+    }
+    return 0; // Default to home if no match
+  }
+
+  // Inizializza con tab corretta dall'URL
   console.log('Initializing - Found tabs:', tabs.length);
   console.log('Found contents:', contents.length);
   
   if (tabs.length > 0) {
-    const homeTab = document.querySelector('.tab[data-index="0"]');
-    const homeContent = document.querySelector('.tab-content[data-index="0"]');
+    // Check URL hash to determine initial tab
+    const initialTabIndex = getTabFromHash();
+    console.log('Initial tab index from URL:', initialTabIndex);
     
-    console.log('Home tab found:', !!homeTab);
-    console.log('Home content found:', !!homeContent);
+    // Assicurati che il container abbia la classe base
+    container.classList.add('navigation-container');
     
-    if (homeTab) homeTab.classList.add('active');
-    if (homeContent) homeContent.classList.add('active');
-    
-    // Assicurati che il container abbia la classe base e bottom
-    container.classList.add('navigation-container', 'bottom');
-    container.classList.remove('middle', 'top');
-    contentArea.classList.remove('show');
+    // Attiva la tab corretta
+    activateTab(initialTabIndex);
     
     // Initialize indicators
     setTimeout(() => {
