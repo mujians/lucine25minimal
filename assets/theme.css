@@ -1660,7 +1660,7 @@ h6 {
 .faq-nav-link {
   display: inline-block;
   color: var(--text-white) !important;
-  text-decoration: none;
+  text-decoration: none !important;
   font-size: 1rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -1669,16 +1669,8 @@ h6 {
   position: relative;
 }
 
-.faq-nav-link:before {
-  content: '→ ';
-  font-size: 1.1em;
-  margin-right: 0.75rem;
-  color: var(--christmas-red);
-}
-
 .faq-nav-link:hover {
   color: var(--christmas-green) !important;
-  transform: translateX(5px);
 }
 
 /* FAQ Accordion */
@@ -1708,9 +1700,9 @@ h6 {
   font-size: 1.125rem;
   font-weight: 600;
   text-align: left;
-  padding: 1.25rem 4rem 1.25rem 1.5rem; /* Right padding for icon space */
+  padding: 1.25rem 5rem 1.25rem 1.5rem; /* More right padding for icon space */
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease; /* Only transition color, not padding */
   position: relative;
   line-height: 1.4;
 }
@@ -1718,13 +1710,14 @@ h6 {
 .faq-question:after {
   content: '+';
   position: absolute;
-  right: 1.5rem;
+  right: 2rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.5em;
-  font-weight: 300;
+  font-size: 1.8em;
+  font-weight: 400;
   color: var(--christmas-red);
   transition: all 0.3s ease;
+  line-height: 1;
 }
 
 /* FAQ Question Active State */
@@ -1737,7 +1730,7 @@ h6 {
 }
 
 .faq-question:hover:after {
-  transform: translateY(-50%) scale(1.2);
+  transform: translateY(-50%) scale(1.1);
 }
 
 /* FAQ Answer */
@@ -1755,8 +1748,9 @@ h6 {
 
 /* FAQ Active State - question button when answer is open */
 .faq-question.active:after {
-  content: '−';
+  content: '×';
   transform: translateY(-50%) rotate(0deg);
+  font-size: 2em;
 }
 
 .faq-answer p {
