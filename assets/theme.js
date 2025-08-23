@@ -213,33 +213,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollHeight = contentArea ? contentArea.scrollHeight : document.body.scrollHeight;
     const clientHeight = contentArea ? contentArea.clientHeight : window.innerHeight;
     
-    // Check if near bottom (within 200px)
+    // Calculate max scrollable position
+    const maxScrollTop = scrollHeight - clientHeight;
+    const scrollPercentage = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * 100 : 0;
+    
+    // Show footer when scrolled 60% down OR within 200px of bottom
     const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
+    const scrolledEnough = scrollPercentage >= 60;
+    const shouldShow = nearBottom || scrolledEnough;
+    
     const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
     
     // DEBUG LOGS
     console.log('🦶 FOOTER DEBUG:', {
       scrollTop: Math.round(scrollTop),
-      lastScrollTop: Math.round(lastScrollTop),
-      scrollHeight: Math.round(scrollHeight),
-      clientHeight: Math.round(clientHeight),
+      maxScrollTop: Math.round(maxScrollTop),
+      scrollPercentage: Math.round(scrollPercentage),
       distanceFromBottom: Math.round(distanceFromBottom),
       nearBottom,
+      scrolledEnough,
+      shouldShow,
       isFooterVisible,
       contentArea: !!contentArea,
-      usingContentArea: !!contentArea,
-      bodyScrollHeight: document.body.scrollHeight,
-      windowInnerHeight: window.innerHeight,
       scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
     });
     
-    // Show footer when scrolling down and near bottom
-    if (scrollTop > lastScrollTop && nearBottom && !isFooterVisible) {
+    // Show footer when scrolling down and conditions are met
+    if (scrollTop > lastScrollTop && shouldShow && !isFooterVisible) {
       console.log('🟢 SHOWING FOOTER');
       footer.classList.add('show');
       isFooterVisible = true;
     }
-    // Hide footer immediately when scrolling up even slightly
+    // Hide footer when scrolling up even slightly
     else if (scrollTop < lastScrollTop - 5 && isFooterVisible) {
       console.log('🔴 HIDING FOOTER');
       footer.classList.remove('show');
