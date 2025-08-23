@@ -19,6 +19,12 @@
     <h4>Heading 4 (H4) - Titoli Cards</h4>
     <h4 style="color: var(--christmas-green);">Heading 4 Verde</h4>
     
+    <h5>Heading 5 (H5) - Sottotitoli</h5>
+    <h5 style="color: var(--christmas-red);">Heading 5 Rosso</h5>
+    
+    <h6>Heading 6 (H6) - Titoli Piccoli</h6>
+    <h6 style="color: var(--christmas-green);">Heading 6 Verde</h6>
+    
     <p>Paragrafo normale con testo standard. Può contenere <strong>testo in grassetto</strong> e <em>testo in corsivo</em>.</p>
     
     <p class="lead">Paragrafo lead - usato per testi principali nelle cards (verde)</p>
@@ -271,6 +277,231 @@
     </div>
   </section>
 
+  <!-- ========== LISTE E GERARCHIE ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Liste e Gerarchie di Contenuto</h2>
+    
+    <h3>Lista Standard con Punti</h3>
+    <ul>
+      <li>Elemento lista normale</li>
+      <li>Secondo elemento</li>
+      <li>Elemento con <strong>testo in grassetto</strong></li>
+      <li>Elemento con <a href="#">link colorato</a></li>
+    </ul>
+    
+    <h3>Lista Numerata</h3>
+    <ol>
+      <li>Primo elemento numerato</li>
+      <li>Secondo elemento</li>
+      <li>Terzo elemento con dettagli</li>
+    </ol>
+    
+    <h3>Lista Eventi con Immagini - Stile 1 (Concert Style)</h3>
+    <div class="events-list-style-1">
+      <div class="event-item-horizontal">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/babbo-natale.jpg?v=1699206223" alt="Evento" class="event-thumb-large">
+        <div class="event-details">
+          <h4 style="color: var(--christmas-red);">Evento Principale</h4>
+          <p class="event-date" style="color: var(--christmas-green); font-weight: 600;">15 Dicembre 2024</p>
+          <p>Descrizione dettagliata dell'evento con informazioni complete</p>
+          <a class="cta" href="#">Maggiori Info</a>
+        </div>
+      </div>
+      
+      <div class="event-item-horizontal">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/befana.jpg?v=1699206096" alt="Evento" class="event-thumb-large">
+        <div class="event-details">
+          <h4 style="color: var(--christmas-red);">Secondo Evento</h4>
+          <p class="event-date" style="color: var(--christmas-green); font-weight: 600;">20 Dicembre 2024</p>
+          <p>Altra descrizione evento importante</p>
+          <a class="cta" href="#">Dettagli</a>
+        </div>
+      </div>
+    </div>
+    
+    <h3>Lista Eventi - Stile 2 (Grid Compatta)</h3>
+    <div class="events-grid-compact">
+      <div class="event-card-mini">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/coro-oratorio.jpg?v=1699206379" alt="Mini Event">
+        <h5>Evento Compatto</h5>
+        <p class="mini-date">15 DIC</p>
+      </div>
+      <div class="event-card-mini">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/gospel.jpg?v=1732812015" alt="Mini Event">
+        <h5>Secondo Mini</h5>
+        <p class="mini-date">20 DIC</p>
+      </div>
+      <div class="event-card-mini">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/babbo-natale.jpg?v=1699206223" alt="Mini Event">
+        <h5>Terzo Event</h5>
+        <p class="mini-date">22 DIC</p>
+      </div>
+    </div>
+    
+    <h3>Lista Eventi - Stile 3 (Cards Verticali)</h3>
+    <div class="events-cards-vertical">
+      <div class="event-card-full">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/panoramica.jpg?v=1699203224" alt="Evento Full">
+        <div class="event-card-content">
+          <span class="event-category" style="color: var(--christmas-gold);">CATEGORIA</span>
+          <h4>Titolo Evento Completo</h4>
+          <p>Descrizione più lunga dell'evento con molti dettagli e informazioni utili per i visitatori</p>
+          <div class="event-meta">
+            <span>📅 15 Dicembre</span>
+            <span>⏰ 18:00-22:00</span>
+            <span>📍 Centro Storico</span>
+          </div>
+          <a href="#" class="family-cta">Partecipa</a>
+        </div>
+      </div>
+    </div>
+    
+    <h3>Gerarchia Contenuto con Sottosezioni</h3>
+    <div class="content-hierarchy">
+      <h2 style="color: var(--christmas-red);">Sezione Principale</h2>
+      <p>Introduzione alla sezione con contenuto generale</p>
+      
+      <h3 style="color: var(--christmas-green);">Sottosezione Importante</h3>
+      <p>Contenuto della sottosezione con informazioni specifiche</p>
+      
+      <h4>Dettaglio Specifico</h4>
+      <p>Informazioni di dettaglio più specifiche</p>
+      
+      <h5>Punto Particolare</h5>
+      <p>Dettaglio molto specifico</p>
+      
+      <h6>Nota Finale</h6>
+      <p>Informazione di chiusura o nota speciale</p>
+    </div>
+  </section>
+
+  <!-- ========== TABELLE E DATI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Tabelle e Dati Strutturati</h2>
+    
+    <h3>Tabella Orari</h3>
+    <div class="table-container">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th>Giorno</th>
+            <th>Orario</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Lunedì - Venerdì</strong></td>
+            <td>17:30 - 23:00</td>
+            <td>Orario standard</td>
+          </tr>
+          <tr>
+            <td><strong>Weekend</strong></td>
+            <td>15:00 - 23:30</td>
+            <td>Orario esteso</td>
+          </tr>
+          <tr style="background: rgba(220, 38, 38, 0.1);">
+            <td><strong>24 & 31 Dicembre</strong></td>
+            <td>CHIUSO</td>
+            <td>Giorni di chiusura</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <h3>Prezzi Strutturati</h3>
+    <div class="pricing-table">
+      <div class="price-card">
+        <h4>Adulto</h4>
+        <div class="price">€15</div>
+        <ul class="price-features">
+          <li>Accesso completo</li>
+          <li>Tutte le installazioni</li>
+          <li>Mappa inclusa</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <h4>Famiglia</h4>
+        <div class="price">€40</div>
+        <p class="price-note">2 adulti + 2 bambini</p>
+        <ul class="price-features">
+          <li>Risparmio del 33%</li>
+          <li>Accesso prioritario</li>
+          <li>Kit famiglia</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <h4>Bambino</h4>
+        <div class="price">€8</div>
+        <ul class="price-features">
+          <li>3-12 anni</li>
+          <li>Sotto 3 anni gratis</li>
+          <li>Attività dedicate</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FORM E INTERAZIONI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Form e Elementi Interattivi</h2>
+    
+    <h3>Form di Contatto</h3>
+    <form class="contact-form">
+      <div class="form-group">
+        <label for="name">Nome Completo</label>
+        <input type="text" id="name" placeholder="Il tuo nome">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="tua.email@esempio.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="date">Data Visita</label>
+        <select id="date">
+          <option>Seleziona una data</option>
+          <option>15 Dicembre 2024</option>
+          <option>20 Dicembre 2024</option>
+          <option>22 Dicembre 2024</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="message">Messaggio</label>
+        <textarea id="message" placeholder="Il tuo messaggio..."></textarea>
+      </div>
+      
+      <button type="submit" class="form-submit">Invia Richiesta</button>
+    </form>
+    
+    <h3>Bottoni e Stati</h3>
+    <div class="buttons-showcase">
+      <button class="btn-primary">Bottone Primario</button>
+      <button class="btn-secondary">Bottone Secondario</button>
+      <button class="btn-outline">Bottone Outline</button>
+      <button class="btn-disabled" disabled>Disabilitato</button>
+    </div>
+    
+    <h3>Elementi di Notifica</h3>
+    <div class="notification success">
+      <strong>Successo!</strong> La tua prenotazione è stata confermata.
+    </div>
+    
+    <div class="notification warning">
+      <strong>Attenzione!</strong> Posti limitati per questa data.
+    </div>
+    
+    <div class="notification error">
+      <strong>Errore!</strong> Si è verificato un problema durante la prenotazione.
+    </div>
+    
+    <div class="notification info">
+      <strong>Info:</strong> Ricordati di arrivare 15 minuti prima dell'orario.
+    </div>
+  </section>
+
   <!-- ========== SPACING E MARGINI ========== -->
   <section class="location-section">
     <h2 style="color: var(--christmas-red);">Spacing e Margini</h2>
@@ -289,6 +520,305 @@
   </section>
 
 </div>
+
+<!-- TEMPORARY CSS FOR DESIGN SYSTEM ELEMENTS -->
+<style>
+/* Events Lists Styles */
+.events-list-style-1 .event-item-horizontal {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.event-thumb-large {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.events-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.event-card-mini {
+  text-align: center;
+  background: rgba(255,255,255,0.05);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.event-card-mini img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.event-card-mini h5 {
+  margin: 0.5rem 0;
+  color: var(--christmas-red);
+}
+
+.mini-date {
+  color: var(--christmas-green);
+  font-weight: 600;
+  margin: 0;
+}
+
+.events-cards-vertical {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.event-card-full {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.event-card-full img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.event-card-content {
+  padding: 1.5rem;
+}
+
+.event-category {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.event-meta {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.schedule-table th {
+  background: rgba(255,255,255,0.1);
+  color: var(--christmas-red);
+  font-weight: 600;
+}
+
+/* Pricing */
+.pricing-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.price-card {
+  background: rgba(255,255,255,0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.price-card.featured {
+  border: 2px solid var(--christmas-red);
+  transform: scale(1.05);
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--christmas-red);
+  margin: 1rem 0;
+}
+
+.price-features {
+  list-style: none;
+  padding: 0;
+}
+
+.price-features li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Forms */
+.contact-form {
+  max-width: 500px;
+  margin: 2rem 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--christmas-green);
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: white;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-submit {
+  background: var(--christmas-red);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-submit:hover {
+  background: #b91c1c;
+}
+
+/* Buttons */
+.buttons-showcase {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.btn-primary {
+  background: var(--christmas-red);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: var(--christmas-green);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background: transparent;
+  color: white;
+  border: 2px solid var(--christmas-red);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-disabled {
+  background: #666;
+  color: #999;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: not-allowed;
+}
+
+/* Notifications */
+.notification {
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+
+.notification.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-left-color: #22c55e;
+  color: #22c55e;
+}
+
+.notification.warning {
+  background: rgba(251, 191, 36, 0.1);
+  border-left-color: #fbbf24;
+  color: #fbbf24;
+}
+
+.notification.error {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #ef4444;
+  color: #ef4444;
+}
+
+.notification.info {
+  background: rgba(59, 130, 246, 0.1);
+  border-left-color: #3b82f6;
+  color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .events-list-style-1 .event-item-horizontal {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .event-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .buttons-showcase {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
 
 <script>
 function toggleFAQ(button) {
