@@ -1647,27 +1647,38 @@ h6 {
   margin: 2rem 0;
 }
 
+.faq-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.faq-nav-list li {
+  margin-bottom: 0.75rem;
+}
+
 .faq-nav-link {
   display: inline-block;
-  color: var(--christmas-green) !important;
+  color: var(--text-white) !important;
   text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .faq-nav-link:before {
   content: '→ ';
   font-size: 1.1em;
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
+  color: var(--christmas-red);
 }
 
 .faq-nav-link:hover {
-  color: var(--christmas-red) !important;
-  transform: translateX(3px);
+  color: var(--christmas-green) !important;
+  transform: translateX(5px);
 }
 
 /* FAQ Accordion */
@@ -1692,12 +1703,12 @@ h6 {
   width: 100%;
   background: transparent;
   border: none;
-  color: var(--christmas-green) !important;
+  color: var(--text-white) !important;
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.125rem;
   font-weight: 600;
   text-align: left;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 4rem 1.25rem 1.5rem; /* Right padding for icon space */
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -1716,9 +1727,13 @@ h6 {
   transition: all 0.3s ease;
 }
 
+/* FAQ Question Active State */
+.faq-question.active {
+  color: var(--christmas-green) !important;
+}
+
 .faq-question:hover {
-  color: var(--text-white) !important;
-  padding-left: 2rem;
+  color: var(--christmas-green) !important;
 }
 
 .faq-question:hover:after {
@@ -1747,7 +1762,7 @@ h6 {
 .faq-answer p {
   margin-bottom: 1rem;
   color: var(--text-white);
-  font-size: 1rem;
+  font-size: 1.188rem; /* 19px equivalent */
   line-height: 1.6;
 }
 
@@ -1768,7 +1783,7 @@ h6 {
 
 /* FAQ Section Headers */
 .faq-section-header {
-  color: var(--christmas-red) !important;
+  color: var(--text-white) !important;
   margin: 3rem 0 2rem 0;
   font-size: 2rem;
 }
