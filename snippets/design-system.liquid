@@ -1,0 +1,304 @@
+<!-- DESIGN SYSTEM - Tutti gli elementi UI -->
+<div class="formatted-content">
+  <h1>Design System - Lucine di Natale</h1>
+  <p>Guida completa agli elementi del design system utilizzati nel sito</p>
+
+  <!-- ========== TIPOGRAFIA ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Tipografia</h2>
+    
+    <h1>Heading 1 (H1)</h1>
+    <h1 style="color: var(--christmas-red);">Heading 1 Rosso Natale</h1>
+    
+    <h2>Heading 2 (H2)</h2>
+    <h2 style="color: var(--christmas-green);">Heading 2 Verde Natale</h2>
+    
+    <h3>Heading 3 (H3)</h3>
+    <h3 style="color: var(--christmas-red);">Heading 3 Rosso</h3>
+    
+    <h4>Heading 4 (H4) - Titoli Cards</h4>
+    <h4 style="color: var(--christmas-green);">Heading 4 Verde</h4>
+    
+    <p>Paragrafo normale con testo standard. Può contenere <strong>testo in grassetto</strong> e <em>testo in corsivo</em>.</p>
+    
+    <p class="lead">Paragrafo lead - usato per testi principali nelle cards (verde)</p>
+    
+    <p class="meta">Paragrafo meta - informazioni secondarie (opacità ridotta)</p>
+    
+    <p>Testo con <span style="color: var(--christmas-red);">evidenziazione rossa</span> e <span style="color: var(--christmas-green);">evidenziazione verde</span></p>
+    
+    <p>Testo con <span class="highlight-text">highlight-text class</span> per evidenziazioni speciali</p>
+  </section>
+
+  <!-- ========== LINK E CTA ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Link e Call-to-Action</h2>
+    
+    <p>Link normale: <a href="#">Questo è un link standard</a></p>
+    
+    <p>Link colorato: <a href="#" style="color: var(--christmas-red);">Link rosso</a> e <a href="#" style="color: var(--christmas-green);">link verde</a></p>
+    
+    <p>Link email: <a href="mailto:info@lucinedinatale.it">info@lucinedinatale.it</a></p>
+    
+    <div style="margin: 2rem 0;">
+      <a class="cta" href="#">CTA Standard - Vedi mappa</a>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+      <a href="#" class="family-cta">Family CTA - Acquista Biglietti</a>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+      <a href="#" class="family-cta" onclick="document.querySelector('.tab[data-index=\"2\"]').click(); return false;">CTA con azione JS</a>
+    </div>
+  </section>
+
+  <!-- ========== SKETCH CARDS ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Sketch Cards</h2>
+    
+    <!-- Card Standard -->
+    <div class="sketch-card sketch seed-1">
+      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <filter id="wobble-ds-1">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"/>
+            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-1)"/>
+      </svg>
+      <h4>Card Standard (seed-1)</h4>
+      <p class="lead">Testo principale della card</p>
+      <p class="meta">Informazioni secondarie · Dettagli aggiuntivi</p>
+      <a class="cta" href="#">Call to Action</a>
+    </div>
+
+    <!-- Card Navetta -->
+    <div class="sketch-card sketch seed-6">
+      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <filter id="wobble-ds-6">
+            <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="13"/>
+            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="16 10 8 14" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-6)"/>
+      </svg>
+      <div class="navetta-title">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/navetta-lucine-leggiuno-icon-1.gif?v=1755979632" alt="Navetta" class="navetta-icon">
+        <h4>Card con Icona Animata (Navetta)</h4>
+      </div>
+      <p class="lead">Card speciale con GIF centrata</p>
+      <p class="meta">Layout verticale centrato</p>
+      <a class="cta" href="#">Azione</a>
+    </div>
+
+    <!-- Card Natalizia -->
+    <div class="sketch-card sketch seed-2 sketch-card-christmas" style="background: #0f2f1f;">
+      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="color: var(--christmas-red);">
+        <defs>
+          <filter id="wobble-ds-xmas">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="5"/>
+            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-xmas)"/>
+      </svg>
+      <h4 style="color: white;">Card Natalizia (Christmas Theme)</h4>
+      <p class="lead" style="color: var(--christmas-green);">Sfondo verde scuro, bordo rosso</p>
+      <p class="meta" style="color: rgba(255,255,255,0.8);">Tema natalizio con colori specifici</p>
+    </div>
+
+    <!-- Card Citazione -->
+    <div class="sketch-card sketch seed-4">
+      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="color: var(--christmas-red);">
+        <defs>
+          <filter id="wobble-ds-quote">
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="1" seed="7"/>
+            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-quote)"/>
+      </svg>
+      <blockquote>
+        <p style="font-style: italic; color: white; margin-bottom: 1rem;">"Citazione in corsivo per testimonianze o frasi importanti"</p>
+        <footer style="color: var(--christmas-green); font-weight: 600;">— Autore della citazione</footer>
+      </blockquote>
+    </div>
+
+    <!-- Card Centrata con Info -->
+    <div class="sketch-card sketch seed-5">
+      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="color: var(--christmas-red);">
+        <defs>
+          <filter id="wobble-ds-info">
+            <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" seed="9"/>
+            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-info)"/>
+      </svg>
+      <div style="text-align: center;">
+        <h3 style="color: var(--christmas-red); margin-bottom: 1rem;">Card Centrata</h3>
+        <p style="color: var(--christmas-green); font-weight: 600; font-size: 1.1em;">Informazione principale</p>
+        <p style="color: white; margin-top: 0.5rem;">Dettagli aggiuntivi</p>
+        <p style="color: var(--christmas-red); font-weight: 600; margin-top: 1rem;">✨ Elemento decorativo ✨</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IMMAGINI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Immagini</h2>
+    
+    <div class="image-container" style="margin: 2rem 0; text-align: center;">
+      <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/IMG_2996.jpg?v=1699203223" alt="Esempio immagine" style="width: 100%; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    </div>
+    <p style="text-align: center; color: var(--christmas-green);">Immagine con container, border-radius e shadow</p>
+    
+    <img alt="Immagine inline" src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/babbo-natale.jpg?v=1699206223" style="width: 100%; max-width: 400px; border-radius: 12px; margin-bottom: 1rem;">
+    <p>Immagine inline in sketch card o contenuto</p>
+  </section>
+
+  <!-- ========== LAYOUT ELEMENTI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Layout Elementi</h2>
+    
+    <!-- Grid Info -->
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>📅 Titolo Box</h4>
+        <p>Contenuto<br>Su più righe</p>
+      </div>
+      <div class="info-box">
+        <h4>📍 Secondo Box</h4>
+        <p>Info aggiuntive<br>Dettagli</p>
+      </div>
+      <div class="info-box">
+        <h4>🎟️ Terzo Box</h4>
+        <p>Prezzo<br>€40</p>
+      </div>
+    </div>
+    
+    <!-- Event Card -->
+    <div class="event-card">
+      <h3 class="christmas-accent">Event Card</h3>
+      <p>Container per contenuti promozionali con bordi arrotondati e background semi-trasparente</p>
+      <a href="#" class="family-cta">Call to Action</a>
+    </div>
+    
+    <!-- Special Events Container -->
+    <div class="special-events-container">
+      <div class="sketch-card sketch seed-1 sketch-card-christmas" style="background: #0f2f1f;">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="xMidYMid meet" style="color: var(--christmas-red);">
+          <defs>
+            <filter id="wobble-special">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"/>
+              <feDisplacementMap in="SourceGraphic" scale="1"/>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-special)"/>
+        </svg>
+        <div class="special-event-card">
+          <img alt="Special Event" src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/babbo-natale.jpg?v=1699206223" style="width: 100%; max-width: 400px; border-radius: 12px; margin-bottom: 1rem;">
+          <div class="special-event-info">
+            <h3 style="color: var(--christmas-red); font-family: 'Providence Sans', sans-serif; font-size: 1.4em;">🎅 Special Event Card</h3>
+            <p style="font-size: 1em; line-height: 1.5;">Contenitore speciale per eventi in evidenza con immagini</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LISTE E CONCERTI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Liste e Concerti</h2>
+    
+    <div class="concerts-list">
+      <div class="concert-item">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/coro-oratorio.jpg?v=1699206379" alt="Concerto" class="concert-thumb">
+        <div class="concert-info">
+          <h4 style="color: var(--christmas-red); margin: 0; font-family: 'Providence Sans', sans-serif;">Concert Item</h4>
+          <div class="concert-dates">
+            <span class="concert-date">5 DIC ore 17:00</span>
+            <span class="concert-date">6 DIC ore 20:00</span>
+            <span class="concert-date-special">Luogo Speciale</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ E ACCORDION ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">FAQ e Accordion</h2>
+    
+    <div class="faq-accordion">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFAQ(this)" style="color: var(--christmas-green);">Domanda di esempio?</button>
+        <div class="faq-answer">
+          <p>Risposta alla domanda con testo formattato e <a href="#" style="color: var(--christmas-red);">link colorato</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== COLORI E VARIABILI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Colori del Sistema</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+      <div style="background: var(--christmas-red); padding: 2rem; border-radius: 12px; text-align: center; color: white;">
+        <strong>Christmas Red</strong><br>
+        <code>var(--christmas-red)</code>
+      </div>
+      <div style="background: var(--christmas-green); padding: 2rem; border-radius: 12px; text-align: center; color: white;">
+        <strong>Christmas Green</strong><br>
+        <code>var(--christmas-green)</code>
+      </div>
+      <div style="background: var(--christmas-gold); padding: 2rem; border-radius: 12px; text-align: center; color: black;">
+        <strong>Christmas Gold</strong><br>
+        <code>var(--christmas-gold)</code>
+      </div>
+      <div style="background: var(--text-white); padding: 2rem; border-radius: 12px; text-align: center; color: black; border: 1px solid #333;">
+        <strong>Text White</strong><br>
+        <code>var(--text-white)</code>
+      </div>
+      <div style="background: #0f2f1f; padding: 2rem; border-radius: 12px; text-align: center; color: white;">
+        <strong>Background Dark</strong><br>
+        <code>#0f2f1f</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SPACING E MARGINI ========== -->
+  <section class="location-section">
+    <h2 style="color: var(--christmas-red);">Spacing e Margini</h2>
+    
+    <div style="background: rgba(255,255,255,0.1); padding: 1rem; margin: 1rem 0; border-radius: 8px;">
+      <code>.location-section</code> - Sezione principale con margin verticale
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.1); padding: 2.5rem; margin: 2.5rem 0; border-radius: 8px;">
+      <code>.sketch-card</code> - Margin: 2.5rem 0, Padding: 32px 24px 28px
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.1); padding: 1rem; margin: 1rem 0; border-radius: 8px;">
+      <code>.event-card</code> - Container eventi
+    </div>
+  </section>
+
+</div>
+
+<script>
+function toggleFAQ(button) {
+  const answer = button.nextElementSibling;
+  const isActive = answer.classList.contains('active');
+  
+  document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+  
+  if (!isActive) {
+    answer.classList.add('active');
+  }
+}
+</script>
