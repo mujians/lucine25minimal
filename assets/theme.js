@@ -216,13 +216,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if near bottom (within 200px)
     const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
     
+    // DEBUG LOGS
+    console.log('🦶 FOOTER DEBUG:', {
+      scrollTop: Math.round(scrollTop),
+      lastScrollTop: Math.round(lastScrollTop),
+      scrollHeight: Math.round(scrollHeight),
+      clientHeight: Math.round(clientHeight),
+      nearBottom,
+      isFooterVisible,
+      contentArea: !!contentArea,
+      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
+    });
+    
     // Show footer when scrolling down and near bottom
     if (scrollTop > lastScrollTop && nearBottom && !isFooterVisible) {
+      console.log('🟢 SHOWING FOOTER');
       footer.classList.add('show');
       isFooterVisible = true;
     }
     // Hide footer immediately when scrolling up even slightly
     else if (scrollTop < lastScrollTop - 5 && isFooterVisible) {
+      console.log('🔴 HIDING FOOTER');
       footer.classList.remove('show');
       isFooterVisible = false;
     }

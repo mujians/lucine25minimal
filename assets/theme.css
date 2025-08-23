@@ -644,9 +644,9 @@ li {
     border-bottom: none;
   }
   
-  /* Nascondi il menu su mobile - troppo lungo */
+  /* Social visibili su mobile */
   .footer-column:nth-child(2) {
-    display: none;
+    display: block;
   }
   
   /* Social centrati */
