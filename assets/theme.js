@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Trigger bar opens fullscreen menu
+// FOOTER SNAP FUNCTIONALITY - Trigger bar with swipe up, appears at page end
 (function() {
   const footer = document.getElementById('snap-footer');
   const trigger = document.getElementById('footer-trigger');
@@ -216,13 +216,34 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 FOOTER TRIGGER SYSTEM INITIALIZED');
   
   let isFooterExpanded = false;
+  let isTriggerVisible = false;
+  let touchStartY = 0;
+  let touchEndY = 0;
+  
+  // Show trigger bar when at bottom of page
+  function showTrigger() {
+    if (!isTriggerVisible) {
+      trigger.classList.add('show');
+      isTriggerVisible = true;
+      console.log('🟡 TRIGGER BAR APPEARED');
+    }
+  }
+  
+  // Hide trigger bar
+  function hideTrigger() {
+    if (isTriggerVisible && !isFooterExpanded) {
+      trigger.classList.remove('show');
+      isTriggerVisible = false;
+      console.log('🟡 TRIGGER BAR HIDDEN');
+    }
+  }
   
   // Show and expand footer to fullscreen
   function showAndExpandFooter() {
     footer.classList.add('show', 'expanded');
     document.body.classList.add('footer-expanded');
     isFooterExpanded = true;
-    console.log('🟢 FOOTER OPENED FROM TRIGGER');
+    console.log('🟢 FOOTER OPENED FROM SWIPE');
   }
   
   // Hide footer completely
@@ -231,9 +252,42 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.remove('footer-expanded');
     isFooterExpanded = false;
     console.log('🔴 FOOTER CLOSED');
+    
+    // Hide trigger too when footer closes
+    hideTrigger();
   }
   
-  // Click trigger to open footer
+  // Check if at bottom of page
+  function checkPageBottom() {
+    const scrollTop = window.pageYOffset;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+    const maxScroll = scrollHeight - clientHeight;
+    
+    if (scrollTop >= maxScroll - 50) {
+      showTrigger();
+    } else {
+      hideTrigger();
+    }
+  }
+  
+  // Touch events for swipe up detection
+  trigger.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  trigger.addEventListener('touchend', (e) => {
+    touchEndY = e.changedTouches[0].clientY;
+    const swipeDistance = touchStartY - touchEndY;
+    
+    // Swipe up detection (minimum 50px)
+    if (swipeDistance > 50 && !isFooterExpanded) {
+      e.preventDefault();
+      showAndExpandFooter();
+    }
+  });
+  
+  // Fallback click for desktop
   trigger.addEventListener('click', (e) => {
     e.preventDefault();
     if (!isFooterExpanded) {
@@ -241,14 +295,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Click footer background (not content) to expand if not already
-  footer.addEventListener('click', (e) => {
-    if (!e.target.closest('.footer-close-btn') && !e.target.closest('.footer-container')) {
-      if (!isFooterExpanded) {
-        showAndExpandFooter();
-      }
-    }
-  });
+  // Scroll detection for trigger visibility
+  window.addEventListener('scroll', checkPageBottom, { passive: true });
+  
+  // Initial check
+  checkPageBottom();
   
   // Make closeFooter function available globally
   window.closeFooter = function() {

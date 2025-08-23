@@ -27,7 +27,6 @@ body {
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   font-size: 17px;
-  padding-bottom: 50px; /* Space for trigger bar */
   /* Allow natural scrolling - no height restrictions */
 }
 
@@ -802,7 +801,7 @@ body.footer-expanded {
   }
 }
 
-/* FOOTER TRIGGER BAR - Always visible at bottom */
+/* FOOTER TRIGGER BAR - Appears only at page bottom */
 .footer-trigger {
   position: fixed;
   bottom: 0;
@@ -814,7 +813,16 @@ body.footer-expanded {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 999;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.footer-trigger.show {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
 }
 
 .footer-trigger:hover {
@@ -845,6 +853,28 @@ body.footer-expanded {
 
 .footer-trigger:hover .trigger-icon {
   transform: translateY(-2px);
+}
+
+/* NAVETTA SECTION - GIF with title layout */
+.navetta-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.navetta-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Make white parts visible on dark background */
+  mix-blend-mode: screen; /* Screen blend mode for transparency effect */
+  flex-shrink: 0;
+}
+
+.navetta-title h4 {
+  margin: 0 !important;
+  flex: 1;
 }
 
 .footer-link {
