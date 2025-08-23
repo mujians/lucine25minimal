@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY
+// FOOTER SNAP FUNCTIONALITY - New simple approach
 (function() {
   const footer = document.getElementById('snap-footer');
   if (!footer) {
@@ -211,132 +211,41 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  console.log('🚀 FOOTER SYSTEM INITIALIZED:', {
-    footerExists: !!footer,
-    initialBodyHeight: document.body.scrollHeight,
-    initialViewportHeight: window.innerHeight,
-    initialWindowScroll: window.pageYOffset,
-    isMobile: window.innerWidth <= 768,
-    userAgent: navigator.userAgent.substring(0, 50) + '...'
-  });
+  console.log('🚀 FOOTER SYSTEM INITIALIZED - Simple Static Footer');
   
-  let lastScrollTop = 0;
-  let scrollThreshold = 100;
-  let isFooterVisible = false;
+  let isFooterExpanded = false;
   
-  function handleFooterSnap() {
-    const contentArea = document.querySelector('.content.show');
-    const scrollElement = contentArea || window;
-    const scrollTop = contentArea ? contentArea.scrollTop : window.pageYOffset;
-    const scrollHeight = contentArea ? contentArea.scrollHeight : document.body.scrollHeight;
-    const clientHeight = contentArea ? contentArea.clientHeight : window.innerHeight;
-    
-    // Get video and content dimensions for debugging
-    const videoBg = document.querySelector('.video-bg');
-    const video = document.querySelector('.video-bg video');
-    const activeTabContent = document.querySelector('.tab-content.active');
-    
-    // Calculate max scrollable position
-    const maxScrollTop = scrollHeight - clientHeight;
-    const scrollPercentage = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * 100 : 0;
-    
-    // Check if we're at the actual maximum scroll position (with small tolerance)
-    const isAtMaxScroll = scrollTop >= maxScrollTop - 10;
-    
-    // Mobile: more aggressive trigger, Desktop: conservative 
-    const isMobile = window.innerWidth <= 768;
-    const scrollThreshold = isMobile ? 30 : 40; // 30% on mobile, 40% on desktop
-    const bottomThreshold = isMobile ? 400 : 200; // 400px on mobile, 200px on desktop
-    
-    const nearBottom = scrollTop + clientHeight >= scrollHeight - bottomThreshold;
-    const scrolledEnough = scrollPercentage >= scrollThreshold;
-    const shouldShow = nearBottom || scrolledEnough || isAtMaxScroll;
-    
-    const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-    
-    // COMPREHENSIVE DEBUG LOGS
-    console.log('📱 MOBILE SCROLL ANALYSIS:', {
-      // === SCROLL POSITION ===
-      scrollTop: Math.round(scrollTop),
-      lastScrollTop: Math.round(lastScrollTop),
-      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : scrollTop < lastScrollTop ? '⬆️ UP' : '⏸️ STOP',
-      scrollDelta: Math.round(scrollTop - lastScrollTop),
-      
-      // === DIMENSIONS ===
-      scrollHeight: Math.round(scrollHeight),
-      clientHeight: Math.round(clientHeight), 
-      maxScrollTop: Math.round(maxScrollTop),
-      windowInnerHeight: window.innerHeight,
-      documentBodyHeight: document.body.scrollHeight,
-      
-      // === CONTENT ANALYSIS ===
-      usingContentArea: !!contentArea,
-      contentAreaExists: !!contentArea,
-      activeTabContent: !!activeTabContent,
-      activeTabHeight: activeTabContent ? activeTabContent.scrollHeight : 'N/A',
-      
-      // === VIDEO BACKGROUND ===
-      videoBgExists: !!videoBg,
-      videoExists: !!video,
-      videoBgHeight: videoBg ? videoBg.offsetHeight : 'N/A',
-      videoHeight: video ? video.offsetHeight : 'N/A',
-      
-      // === SCROLL CALCULATIONS ===
-      scrollPercentage: Math.round(scrollPercentage),
-      distanceFromBottom: Math.round(distanceFromBottom),
-      canScrollMore: maxScrollTop > scrollTop,
-      scrollableDistance: Math.round(maxScrollTop - scrollTop),
-      
-      // === FOOTER CONDITIONS ===
-      scrollThreshold,
-      bottomThreshold,
-      isAtMaxScroll,
-      nearBottom,
-      scrolledEnough, 
-      shouldShow,
-      isFooterVisible,
-      
-      // === VIEWPORT INFO ===
-      isMobile: window.innerWidth <= 768,
-      viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight
-    });
-    
-    // Show footer when scrolling down and conditions are met
-    if (scrollTop > lastScrollTop && shouldShow && !isFooterVisible) {
-      console.log('🟢 FOOTER SHOWING - Conditions met:', {
-        scrollDirection: 'DOWN',
-        isAtMaxScroll,
-        nearBottom,
-        scrolledEnough,
-        triggerReason: isAtMaxScroll ? 'AT_MAX_SCROLL' : nearBottom ? 'NEAR_BOTTOM' : 'SCROLLED_ENOUGH'
-      });
-      footer.classList.add('show');
-      isFooterVisible = true;
+  // Simple click handler to expand footer to fullscreen
+  function expandFooter() {
+    if (!isFooterExpanded) {
+      footer.classList.add('expanded');
+      isFooterExpanded = true;
+      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
     }
-    // Hide footer when scrolling up even slightly
-    else if (scrollTop < lastScrollTop - 5 && isFooterVisible) {
-      console.log('🔴 FOOTER HIDING - Scroll up detected:', {
-        scrollDirection: 'UP',
-        scrollDelta: Math.round(scrollTop - lastScrollTop),
-        newScrollTop: Math.round(scrollTop)
-      });
-      footer.classList.remove('show');
-      isFooterVisible = false;
-    }
-    
-    lastScrollTop = scrollTop;
   }
   
-  // Attach to both window and content area
-  window.addEventListener('scroll', handleFooterSnap);
+  // Add click listener to footer to expand it
+  footer.addEventListener('click', expandFooter);
   
-  // Monitor for content area changes
+  // Also expand when footer comes into view (scroll detection)
+  function checkFooterInView() {
+    const footerRect = footer.getBoundingClientRect();
+    const isInView = footerRect.top < window.innerHeight && footerRect.bottom > 0;
+    
+    if (isInView && !isFooterExpanded) {
+      console.log('📱 FOOTER IN VIEW - Auto expanding');
+      expandFooter();
+    }
+  }
+  
+  // Simple scroll detection
+  window.addEventListener('scroll', checkFooterInView);
+  
+  // Also check when content changes (tab switches)
   const observer = new MutationObserver(function() {
     const contentArea = document.querySelector('.content.show');
     if (contentArea) {
-      contentArea.removeEventListener('scroll', handleFooterSnap);
-      contentArea.addEventListener('scroll', handleFooterSnap);
+      contentArea.addEventListener('scroll', checkFooterInView);
     }
   });
   
@@ -352,11 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function closeFooter() {
   const footer = document.getElementById('snap-footer');
   if (footer) {
-    footer.classList.remove('show');
-    // Update the global state if the footer snap code is running
-    if (typeof isFooterVisible !== 'undefined') {
-      isFooterVisible = false;
-    }
+    footer.classList.remove('expanded');
     console.log('🔴 FOOTER CLOSED MANUALLY');
   }
 }
