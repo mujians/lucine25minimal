@@ -37,32 +37,42 @@ body {
 body::after {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: -10%;
+  left: -10%;
+  width: 120vw;
+  height: 120vh;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.15;
+  opacity: 0.2;
   background-image: 
-    radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
-    radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
-    radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  animation: grainShift 8s steps(10) infinite;
+    radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.4) 100%),
+    radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.2) 100%),
+    radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.3) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: grainShift 12s linear infinite;
 }
 
 @keyframes grainShift {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -5%); }
-  20% { transform: translate(-10%, 5%); }
-  30% { transform: translate(5%, -10%); }
-  40% { transform: translate(-5%, 15%); }
-  50% { transform: translate(-15%, 5%); }
-  60% { transform: translate(15%, -5%); }
-  70% { transform: translate(-10%, -15%); }
-  80% { transform: translate(10%, 10%); }
-  90% { transform: translate(5%, -10%); }
+  0% { 
+    transform: translate(0, 0) rotate(0deg); 
+    opacity: 0.2;
+  }
+  25% { 
+    transform: translate(-8%, -6%) rotate(1deg); 
+    opacity: 0.15;
+  }
+  50% { 
+    transform: translate(-12%, 8%) rotate(-0.5deg); 
+    opacity: 0.25;
+  }
+  75% { 
+    transform: translate(6%, -10%) rotate(0.8deg); 
+    opacity: 0.18;
+  }
+  100% { 
+    transform: translate(0, 0) rotate(0deg); 
+    opacity: 0.2;
+  }
 }
 
 /* Reset main container */
@@ -151,6 +161,21 @@ body::before {
 /* Menu con sfondo verde solo quando non è in homepage */
 .navigation-container.top .menu-tabs {
   background: #0f2f1f !important;
+  position: relative;
+}
+
+/* Grain texture for top menu */
+.navigation-container.top .menu-tabs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='menuGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23menuGrain)'/%3E%3C/svg%3E");
 }
 
 .tab {
@@ -553,7 +578,23 @@ ul, ol {
 
 li {
   margin: 0.5rem 0;
-  color: var(--soft-white);
+  color: var(--text-white);
+}
+
+/* Custom arrow bullets for lists */
+ul li {
+  list-style: none;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--christmas-red);
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
 /* CLEAN SECTIONS */
@@ -1332,6 +1373,29 @@ body.footer-expanded {
   text-align: center;
 }
 
+/* Typography quotes with Homemade Apple font */
+.quote-content::before,
+.quote-content::after {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 3rem;
+  color: var(--christmas-gold);
+  opacity: 0.7;
+  position: absolute;
+  line-height: 1;
+}
+
+.quote-content::before {
+  content: '"';
+  top: -0.5rem;
+  left: -1rem;
+}
+
+.quote-content::after {
+  content: '"';
+  bottom: -1.5rem;
+  right: -1rem;
+}
+
 .quote-text {
   font-size: 1.2rem !important;
   font-style: italic;
@@ -1339,6 +1403,8 @@ body.footer-expanded {
   margin: 0 0 1rem 0;
   line-height: 1.5;
   font-family: 'Providence Sans', sans-serif;
+  position: relative;
+  z-index: 2;
 }
 
 .quote-author {
