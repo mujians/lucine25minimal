@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Bounce/over-scroll to expand
+// FOOTER SNAP FUNCTIONALITY - Appears at bottom, expands to fullscreen
 (function() {
   const footer = document.getElementById('snap-footer');
   if (!footer) {
@@ -211,76 +211,87 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  console.log('🚀 BOUNCE FOOTER SYSTEM INITIALIZED - Bounce at bottom to expand');
+  console.log('🚀 FOOTER OVERLAY SYSTEM INITIALIZED');
   
+  let isFooterVisible = false;
   let isFooterExpanded = false;
   let lastScrollTop = 0;
-  let bounceThreshold = 20; // pixels of over-scroll needed
   
-  // Expand footer to fullscreen
-  function expandFooter() {
-    if (!isFooterExpanded) {
-      footer.classList.add('expanded');
-      isFooterExpanded = true;
-      console.log('🟢 FOOTER EXPANDED - Bounce detected!');
+  // Show footer (slide up from bottom)
+  function showFooter() {
+    if (!isFooterVisible) {
+      footer.classList.add('show');
+      isFooterVisible = true;
+      console.log('🟢 FOOTER APPEARED');
+      
+      // Auto-expand after short delay
+      setTimeout(() => {
+        if (isFooterVisible && !isFooterExpanded) {
+          expandFooter();
+        }
+      }, 300);
     }
   }
   
-  // Click to expand (fallback)
-  footer.addEventListener('click', expandFooter);
+  // Hide footer completely
+  function hideFooter() {
+    footer.classList.remove('show', 'expanded');
+    document.body.classList.remove('footer-expanded');
+    isFooterVisible = false;
+    isFooterExpanded = false;
+    console.log('🔴 FOOTER HIDDEN');
+  }
   
-  // Bounce/over-scroll detection
-  function handleBounceScroll() {
+  // Expand footer to fullscreen
+  function expandFooter() {
+    if (isFooterVisible && !isFooterExpanded) {
+      footer.classList.add('expanded');
+      document.body.classList.add('footer-expanded');
+      isFooterExpanded = true;
+      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
+    }
+  }
+  
+  // Click to expand (if not already)
+  footer.addEventListener('click', (e) => {
+    if (!e.target.closest('.footer-close-btn')) {
+      expandFooter();
+    }
+  });
+  
+  // Scroll detection
+  function handleScroll() {
     const scrollTop = window.pageYOffset;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = window.innerHeight;
     const maxScroll = scrollHeight - clientHeight;
     
-    // Debug logging
-    console.log('📱 SCROLL DEBUG:', {
-      scrollTop: Math.round(scrollTop),
-      maxScroll: Math.round(maxScroll),
-      overScroll: Math.round(scrollTop - maxScroll),
-      isAtBottom: scrollTop >= maxScroll - 5,
-      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
-    });
-    
-    // Detect natural scroll to bottom
-    const isAtBottom = scrollTop >= maxScroll - 5;
+    // Detect when at bottom
+    const isAtBottom = scrollTop >= maxScroll - 10;
     const isScrollingDown = scrollTop > lastScrollTop;
+    const isScrollingUp = scrollTop < lastScrollTop;
     
-    // Expand when naturally reaching bottom while scrolling down
-    if (isAtBottom && isScrollingDown && !isFooterExpanded) {
-      console.log('🎯 REACHED BOTTOM - Expanding footer overlay!', {
-        scrollTop: Math.round(scrollTop),
-        maxScroll: Math.round(maxScroll),
-        difference: Math.round(maxScroll - scrollTop)
-      });
-      expandFooter();
+    // Show footer when reaching bottom
+    if (isAtBottom && !isFooterVisible) {
+      showFooter();
+    }
+    
+    // Hide footer when scrolling up from bottom
+    if (isScrollingUp && scrollTop < maxScroll - 100 && isFooterVisible) {
+      hideFooter();
     }
     
     lastScrollTop = scrollTop;
   }
   
   // Listen for scroll events
-  window.addEventListener('scroll', handleBounceScroll, { passive: false });
+  window.addEventListener('scroll', handleScroll, { passive: true });
   
-  // Reset expanded state when navigating
-  window.addEventListener('beforeunload', () => {
-    if (isFooterExpanded) {
-      footer.classList.remove('expanded');
-    }
-  });
+  // Make closeFooter function available globally
+  window.closeFooter = function() {
+    hideFooter();
+    // Scroll up slightly to avoid immediate re-trigger
+    window.scrollBy(0, -150);
+  };
 })();
 
-// Function to close footer manually  
-function closeFooter() {
-  const footer = document.getElementById('snap-footer');
-  if (footer && footer.classList.contains('expanded')) {
-    footer.classList.remove('expanded');
-    console.log('🔴 FOOTER CLOSED - Back to normal');
-    
-    // Scroll slightly up to get out of bounce zone
-    window.scrollBy(0, -50);
-  }
-}
