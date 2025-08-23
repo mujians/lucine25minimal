@@ -1,5 +1,12 @@
 <!-- LUCINE MINIMAL v1.4 - FIXED TOP POSITION -->
-<script>console.log('🎯 INDEX.LIQUID TEMPLATE LOADED v1.4');</script>
+<script>
+console.log('🎯 INDEX.LIQUID TEMPLATE LOADED v1.4');
+console.log('📋 MENU ITEMS:');
+{% assign main_menu = linklists['menu-principale'] %}
+{% for link in main_menu.links %}
+console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
+{% endfor %}
+</script>
 
 <!-- Video Background -->
 <div class="video-bg">
