@@ -43,13 +43,13 @@ body::after {
   height: 100vh;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.15;
+  opacity: 0.12;
   background-image: 
     radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
     radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
     radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic)'/%3E%3C/svg%3E");
-  animation: tvStaticFlicker 0.1s steps(2) infinite;
+  animation: tvStaticFlicker 0.3s ease-in-out infinite alternate;
 }
 
 @keyframes tvStaticFlicker {
@@ -59,14 +59,6 @@ body::after {
       radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
       radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic1)'/%3E%3C/svg%3E");
-    opacity: 0.15;
-  }
-  50% { 
-    background-image: 
-      radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
-      radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
-      radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic2)'/%3E%3C/svg%3E");
     opacity: 0.12;
   }
   100% { 
@@ -74,8 +66,25 @@ body::after {
       radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
       radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
       radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic3'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='8'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic3)'/%3E%3C/svg%3E");
-    opacity: 0.18;
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='8'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic2)'/%3E%3C/svg%3E");
+    opacity: 0.16;
+  }
+}
+
+/* Enhanced grain for mobile devices */
+@media (max-width: 768px) {
+  body::after {
+    opacity: 0.18; /* Increased opacity for mobile visibility */
+    animation: tvStaticFlicker 0.4s ease-in-out infinite alternate; /* Slightly slower on mobile */
+  }
+  
+  @keyframes tvStaticFlicker {
+    0% { 
+      opacity: 0.16;
+    }
+    100% { 
+      opacity: 0.22; /* Higher contrast variation for mobile */
+    }
   }
 }
 
@@ -1592,7 +1601,7 @@ h6 {
 .parking-icons {
   display: flex;
   gap: 1rem;
-  margin: 0.5rem 0; /* Reduced vertical margin */
+  margin: 0.25rem 0 0.75rem 0; /* Reduced: Top 0.25rem + p margin-bottom 1.5rem = reasonable spacing */
   flex-wrap: wrap;
   align-items: center;
 }
@@ -1619,7 +1628,7 @@ h6 {
 @media (max-width: 480px) {
   .parking-icons {
     gap: 0.75rem;
-    margin: 0.25rem 0; /* Even less vertical margin on mobile */
+    margin: 0.125rem 0 0.5rem 0; /* Even more reduced for mobile */
   }
   
   .parking-icon {
