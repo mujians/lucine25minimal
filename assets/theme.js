@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', function() {
       footer.classList.add('show');
       isFooterVisible = true;
     }
-    // Hide footer when scrolling up (reduced threshold for easier closing)
-    else if (scrollTop < lastScrollTop && isFooterVisible && !nearBottom) {
+    // Hide footer immediately when scrolling up even slightly
+    else if (scrollTop < lastScrollTop - 5 && isFooterVisible) {
       footer.classList.remove('show');
       isFooterVisible = false;
     }

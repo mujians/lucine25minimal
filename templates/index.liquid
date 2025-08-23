@@ -224,9 +224,8 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 <footer id="snap-footer" class="snap-footer">
   <div class="footer-container">
     
-    <!-- COLONNA 1: Logo e Info Azienda -->
+    <!-- COLONNA 1: Info Azienda -->
     <div class="footer-column">
-      <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/leggiuno-comune-patrocinio.jpg?v=1699297822" alt="Comune di Leggiuno" class="footer-logo" />
       <div class="company-info">
         <h4>SPONDA MAGRA SRL</h4>
         <p>Via Griffi, 6<br>21100 Varese</p>
@@ -236,7 +235,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
     </div>
     
     <!-- COLONNA 2: Menu Navigazione -->
-    <div class="footer-column">
+    <div class="footer-column footer-nav">
       <h4>NAVIGAZIONE</h4>
       <nav class="footer-menu">
         {% for link in main_menu.links %}
@@ -245,16 +244,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
       </nav>
     </div>
     
-    <!-- COLONNA 3: Legal -->
-    <div class="footer-column">
-      <h4>INFORMAZIONI LEGALI</h4>
-      <nav class="footer-legal">
-        <a href="https://lucinedinatale.it/pages/privacy-e-cookie-policy" class="footer-link">Privacy e Cookie Policy</a>
-        <a href="https://lucinedinatale.it/policies/terms-of-service" class="footer-link">Termini di Servizio</a>
-      </nav>
-    </div>
-    
-    <!-- COLONNA 4: Social -->
+    <!-- COLONNA 3: Social -->
     <div class="footer-column">
       <h4>SEGUICI</h4>
       <div class="footer-social">
@@ -281,5 +271,17 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
       </div>
     </div>
     
+  </div>
+  
+  <!-- Legal links in fondo -->
+  <div class="footer-legal">
+    <a href="https://lucinedinatale.it/pages/privacy-e-cookie-policy">Privacy e Cookie Policy</a>
+    <span class="separator">•</span>
+    <a href="https://lucinedinatale.it/policies/terms-of-service">Termini di Servizio</a>
+  </div>
+  
+  <!-- Fascia bianca con logo Comune -->
+  <div class="footer-comune">
+    <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/leggiuno-comune-patrocinio.jpg?v=1699297822" alt="Comune di Leggiuno - Con il patrocinio" />
   </div>
 </footer>
