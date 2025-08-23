@@ -1065,6 +1065,10 @@ body.footer-expanded {
   color: var(--christmas-gold) !important;
 }
 
+.faq-question.active {
+  color: var(--christmas-red) !important;
+}
+
 .faq-answer {
   padding: 0 0 1rem 0;
   display: none;
