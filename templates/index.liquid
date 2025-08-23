@@ -113,6 +113,10 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
                     {% comment %} Design System showcase {% endcomment %}
                     {% render 'design-system' %}
                     
+                  {% when 'Info', 'Informazioni', 'Info & Parcheggi', 'Parcheggi' %}
+                    {% comment %} Info & Parcheggi page {% endcomment %}
+                    {% render 'info-parcheggi' %}
+                    
                   {% when 'Eventi' %}
                     {% comment %} Include rich content for Eventi {% endcomment %}
                     {% render 'eventi-content' %}

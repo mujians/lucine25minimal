@@ -1584,4 +1584,40 @@ h6 {
   font-size: 1rem !important; /* Consistent with other elements */
 }
 
+/* PARKING ICONS STYLING */
+.parking-icons {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.parking-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+  filter: brightness(1.1);
+}
+
+.parking-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  filter: brightness(1.3);
+}
+
+/* Responsive parking icons */
+@media (max-width: 480px) {
+  .parking-icons {
+    gap: 0.5rem;
+  }
+  
+  .parking-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 /* Nessuno spazio extra necessario con absolute positioning */
