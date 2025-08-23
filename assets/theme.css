@@ -399,7 +399,7 @@ li {
 
 .sketch-card {
   position: relative;
-  background: var(--card-bg);
+  background: transparent;
   color: var(--card-text);
   border-radius: 16px;
   padding: 20px 22px 24px;
