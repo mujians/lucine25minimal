@@ -26,8 +26,43 @@ body {
   color: white;
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
-  font-size: 17px;
+  font-size: 18px; /* Increased from 17px */
   /* Allow natural scrolling - no height restrictions */
+  
+  /* Grain texture overlay */
+  position: relative;
+}
+
+/* GRAIN TEXTURE - Applied to body and key areas */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.15;
+  background-image: 
+    radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
+    radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
+    radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: grainShift 8s steps(10) infinite;
+}
+
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-15%, 5%); }
+  60% { transform: translate(15%, -5%); }
+  70% { transform: translate(-10%, -15%); }
+  80% { transform: translate(10%, 10%); }
+  90% { transform: translate(5%, -10%); }
 }
 
 /* Reset main container */
@@ -187,6 +222,21 @@ body::before {
   padding: 10px 20px 20px 20px;
   box-sizing: border-box;
   min-height: 70vh;
+  position: relative;
+}
+
+/* Grain overlay for content areas */
+.navigation-container.top .content.show::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='contentGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23contentGrain)'/%3E%3C/svg%3E");
 }
 
 /* Fix per primo elemento nel content */
@@ -458,8 +508,8 @@ p {
 }
 
 .highlight-text {
-  color: var(--christmas-gold);
-  font-weight: 500;
+  color: var(--christmas-green);
+  font-weight: 600;
 }
 
 .family-cta {
@@ -537,6 +587,21 @@ li {
   border-radius: 16px;
   padding: 32px 24px 28px; /* Increased top padding and overall padding */
   margin: 2.5rem 0; /* Increased spacing between cards */
+}
+
+/* Subtle grain texture for sketch cards */
+.sketch-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.05;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='cardGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cardGrain)'/%3E%3C/svg%3E");
 }
 
 .sketch-card.sketch {
@@ -1154,13 +1219,13 @@ body.footer-expanded {
 }
 
 .formatted-content a {
-  color: var(--christmas-gold);
+  color: var(--christmas-red);
   text-decoration: underline;
   transition: all 0.3s ease;
 }
 
 .formatted-content a:hover {
-  color: var(--christmas-red);
+  color: var(--christmas-gold);
   text-decoration: underline;
 }
 
@@ -1224,6 +1289,137 @@ body.footer-expanded {
   font-weight: 600;
   font-size: 1.25rem;
   margin: 0.5rem;
+}
+
+/* QUOTE CARD WITH SKETCH BACKGROUND */
+.sketch-quote-card {
+  position: relative;
+  background: transparent;
+  color: var(--text-white);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  margin: 2.5rem 0;
+  min-height: 120px;
+}
+
+/* Enhanced grain for quote cards */
+.sketch-quote-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.1;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='quoteGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23quoteGrain)'/%3E%3C/svg%3E");
+}
+
+.quote-sketch-background {
+  position: absolute;
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.quote-text {
+  font-size: 1.2rem !important;
+  font-style: italic;
+  color: var(--text-white);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  font-family: 'Providence Sans', sans-serif;
+}
+
+.quote-author {
+  font-size: 1rem !important;
+  color: var(--christmas-green);
+  font-weight: 600;
+  font-family: 'Providence Sans', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* FONT SIZE IMPROVEMENTS - Ensure minimums */
+body {
+  font-size: 18px; /* Increased from 17px */
+}
+
+p {
+  font-size: 1.2rem; /* Increased from 1.125rem */
+}
+
+/* Ensure Providence Sans never goes below 15px */
+h5 {
+  font-size: 1.25rem !important; /* Minimum 20px at base 16px - increased */
+}
+
+h6 {
+  font-size: 1.125rem !important; /* Minimum 18px at base 16px - increased */
+}
+
+/* Small text elements minimum sizes */
+.event-date {
+  font-size: 1.1em; /* Increased from 1em */
+}
+
+.event-name {
+  font-size: 1em; /* Increased from 0.9em */
+}
+
+.concert-date {
+  font-size: 1em; /* Increased from 0.85em */
+}
+
+.concert-date-special {
+  font-size: 1em; /* Increased from 0.85em */
+}
+
+.footer-column h4 {
+  font-size: 1rem; /* Increased from 0.85em */
+}
+
+.company-info {
+  font-size: 1rem; /* Increased from 0.85em */
+}
+
+.footer-legal {
+  font-size: 0.95em; /* Increased from 0.8em */
+}
+
+.footer-link {
+  font-size: 1rem; /* Increased from 0.95em */
+}
+
+.trigger-content {
+  font-size: 1rem; /* Increased from 0.9em */
+}
+
+.faq-index h4 {
+  font-size: 1.125rem !important; /* Increased from 1rem */
+}
+
+.faq-question {
+  font-size: 1.25rem !important; /* Increased from 1.125rem */
+}
+
+/* Tab button font size */
+.tab {
+  font-size: 17px; /* Increased from 16px */
+}
+
+.tab-content {
+  font-size: 19px; /* Increased from 18px */
 }
 
 /* Nessuno spazio extra necessario con absolute positioning */
