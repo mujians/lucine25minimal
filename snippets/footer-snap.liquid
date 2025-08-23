@@ -15,7 +15,7 @@
       <nav class="footer-menu">
         {% assign main_menu = linklists['menu-principale'] %}
         {% for link in main_menu.links %}
-          <a href="{{ link.url }}" class="footer-link">{{ link.title }}</a>
+          <a href="{{ link.url }}" class="footer-link" target="_self">{{ link.title }}</a>
         {% endfor %}
       </nav>
     </div>

@@ -245,15 +245,16 @@ document.addEventListener('DOMContentLoaded', function() {
       scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
     });
     
-    // Detect over-scroll (bounce at bottom)
-    const overScroll = scrollTop - maxScroll;
+    // Detect natural scroll to bottom
+    const isAtBottom = scrollTop >= maxScroll - 5;
     const isScrollingDown = scrollTop > lastScrollTop;
     
-    // Expand on bounce (over-scroll while going down)
-    if (overScroll > bounceThreshold && isScrollingDown && !isFooterExpanded) {
-      console.log('🎾 BOUNCE DETECTED - Expanding footer!', {
-        overScroll: Math.round(overScroll),
-        threshold: bounceThreshold
+    // Expand when naturally reaching bottom while scrolling down
+    if (isAtBottom && isScrollingDown && !isFooterExpanded) {
+      console.log('🎯 REACHED BOTTOM - Expanding footer overlay!', {
+        scrollTop: Math.round(scrollTop),
+        maxScroll: Math.round(maxScroll),
+        difference: Math.round(maxScroll - scrollTop)
       });
       expandFooter();
     }
