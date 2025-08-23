@@ -1639,3 +1639,158 @@ h6 {
 }
 
 /* Nessuno spazio extra necessario con absolute positioning */
+
+/* ============ FAQ DESIGN SYSTEM ============ */
+
+/* FAQ Category Navigation */
+.faq-navigation {
+  margin: 2rem 0;
+}
+
+.faq-nav-link {
+  display: inline-block;
+  color: var(--christmas-green) !important;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.faq-nav-link:before {
+  content: '→ ';
+  font-size: 1.1em;
+  margin-right: 0.5rem;
+}
+
+.faq-nav-link:hover {
+  color: var(--christmas-red) !important;
+  transform: translateX(3px);
+}
+
+/* FAQ Accordion */
+.faq-accordion {
+  margin: 2rem 0;
+}
+
+.faq-item {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(15, 47, 31, 0.3);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(15, 47, 31, 0.5);
+}
+
+/* FAQ Question Button */
+.faq-question {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--christmas-green) !important;
+  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  line-height: 1.4;
+}
+
+.faq-question:after {
+  content: '+';
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5em;
+  font-weight: 300;
+  color: var(--christmas-red);
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  color: var(--text-white) !important;
+  padding-left: 2rem;
+}
+
+.faq-question:hover:after {
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* FAQ Answer */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.faq-answer.active {
+  max-height: 1000px;
+  padding: 1.5rem;
+}
+
+/* FAQ Active State - question button when answer is open */
+.faq-question.active:after {
+  content: '−';
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.faq-answer p {
+  margin-bottom: 1rem;
+  color: var(--text-white);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+/* FAQ Highlight text */
+.faq-highlight {
+  color: var(--christmas-red) !important;
+  font-weight: 600;
+}
+
+.faq-highlight-green {
+  color: var(--christmas-green) !important;
+  font-weight: 600;
+}
+
+/* FAQ Section Headers */
+.faq-section-header {
+  color: var(--christmas-red) !important;
+  margin: 3rem 0 2rem 0;
+  font-size: 2rem;
+}
+
+/* Mobile FAQ Optimizations */
+@media (max-width: 768px) {
+  .faq-question {
+    font-size: 1rem;
+    padding: 1rem 1.25rem;
+    line-height: 1.3;
+  }
+  
+  .faq-question:after {
+    right: 1.25rem;
+    font-size: 1.3em;
+  }
+  
+  .faq-answer.active {
+    padding: 1.25rem;
+  }
+  
+  .faq-nav-link {
+    font-size: 0.9rem;
+  }
+}

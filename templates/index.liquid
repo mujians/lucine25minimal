@@ -117,6 +117,10 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
                     {% comment %} Info & Parcheggi page {% endcomment %}
                     {% render 'info-parcheggi' %}
                     
+                  {% when 'FAQ', 'Domande Frequenti', 'Domande', 'faq' %}
+                    {% comment %} FAQ page with design system integration {% endcomment %}
+                    {% render 'faq-content' %}
+                    
                   {% when 'Eventi' %}
                     {% comment %} Include rich content for Eventi {% endcomment %}
                     {% render 'eventi-content' %}
