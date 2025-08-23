@@ -50,7 +50,13 @@
 
   // Function to activate a tab and update URL
   function activateTab(index) {
-    console.log('Activating tab:', index);
+    console.log('🔄 TAB ACTIVATION:', {
+      newIndex: index,
+      tabName: tabs[index] ? tabs[index].textContent : 'UNKNOWN',
+      windowScroll: window.pageYOffset,
+      bodyHeight: document.body.scrollHeight,
+      viewportHeight: window.innerHeight
+    });
     
     // Disable scroll handling during tab changes
     scrollHandlerEnabled = false;
@@ -200,7 +206,19 @@ document.addEventListener('DOMContentLoaded', function() {
 // FOOTER SNAP FUNCTIONALITY
 (function() {
   const footer = document.getElementById('snap-footer');
-  if (!footer) return;
+  if (!footer) {
+    console.log('❌ FOOTER NOT FOUND');
+    return;
+  }
+  
+  console.log('🚀 FOOTER SYSTEM INITIALIZED:', {
+    footerExists: !!footer,
+    initialBodyHeight: document.body.scrollHeight,
+    initialViewportHeight: window.innerHeight,
+    initialWindowScroll: window.pageYOffset,
+    isMobile: window.innerWidth <= 768,
+    userAgent: navigator.userAgent.substring(0, 50) + '...'
+  });
   
   let lastScrollTop = 0;
   let scrollThreshold = 100;
@@ -212,6 +230,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollTop = contentArea ? contentArea.scrollTop : window.pageYOffset;
     const scrollHeight = contentArea ? contentArea.scrollHeight : document.body.scrollHeight;
     const clientHeight = contentArea ? contentArea.clientHeight : window.innerHeight;
+    
+    // Get video and content dimensions for debugging
+    const videoBg = document.querySelector('.video-bg');
+    const video = document.querySelector('.video-bg video');
+    const activeTabContent = document.querySelector('.tab-content.active');
     
     // Calculate max scrollable position
     const maxScrollTop = scrollHeight - clientHeight;
@@ -227,30 +250,71 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
     
-    // DEBUG LOGS
-    console.log('🦶 FOOTER DEBUG:', {
+    // COMPREHENSIVE DEBUG LOGS
+    console.log('📱 MOBILE SCROLL ANALYSIS:', {
+      // === SCROLL POSITION ===
       scrollTop: Math.round(scrollTop),
+      lastScrollTop: Math.round(lastScrollTop),
+      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : scrollTop < lastScrollTop ? '⬆️ UP' : '⏸️ STOP',
+      scrollDelta: Math.round(scrollTop - lastScrollTop),
+      
+      // === DIMENSIONS ===
+      scrollHeight: Math.round(scrollHeight),
+      clientHeight: Math.round(clientHeight), 
       maxScrollTop: Math.round(maxScrollTop),
+      windowInnerHeight: window.innerHeight,
+      documentBodyHeight: document.body.scrollHeight,
+      
+      // === CONTENT ANALYSIS ===
+      usingContentArea: !!contentArea,
+      contentAreaExists: !!contentArea,
+      activeTabContent: !!activeTabContent,
+      activeTabHeight: activeTabContent ? activeTabContent.scrollHeight : 'N/A',
+      
+      // === VIDEO BACKGROUND ===
+      videoBgExists: !!videoBg,
+      videoExists: !!video,
+      videoBgHeight: videoBg ? videoBg.offsetHeight : 'N/A',
+      videoHeight: video ? video.offsetHeight : 'N/A',
+      
+      // === SCROLL CALCULATIONS ===
       scrollPercentage: Math.round(scrollPercentage),
       distanceFromBottom: Math.round(distanceFromBottom),
+      canScrollMore: maxScrollTop > scrollTop,
+      scrollableDistance: Math.round(maxScrollTop - scrollTop),
+      
+      // === FOOTER CONDITIONS ===
       isAtMaxScroll,
       nearBottom,
-      scrolledEnough,
+      scrolledEnough, 
       shouldShow,
       isFooterVisible,
-      contentArea: !!contentArea,
-      scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
+      
+      // === VIEWPORT INFO ===
+      isMobile: window.innerWidth <= 768,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight
     });
     
     // Show footer when scrolling down and conditions are met
     if (scrollTop > lastScrollTop && shouldShow && !isFooterVisible) {
-      console.log('🟢 SHOWING FOOTER');
+      console.log('🟢 FOOTER SHOWING - Conditions met:', {
+        scrollDirection: 'DOWN',
+        isAtMaxScroll,
+        nearBottom,
+        scrolledEnough,
+        triggerReason: isAtMaxScroll ? 'AT_MAX_SCROLL' : nearBottom ? 'NEAR_BOTTOM' : 'SCROLLED_ENOUGH'
+      });
       footer.classList.add('show');
       isFooterVisible = true;
     }
     // Hide footer when scrolling up even slightly
     else if (scrollTop < lastScrollTop - 5 && isFooterVisible) {
-      console.log('🔴 HIDING FOOTER');
+      console.log('🔴 FOOTER HIDING - Scroll up detected:', {
+        scrollDirection: 'UP',
+        scrollDelta: Math.round(scrollTop - lastScrollTop),
+        newScrollTop: Math.round(scrollTop)
+      });
       footer.classList.remove('show');
       isFooterVisible = false;
     }
