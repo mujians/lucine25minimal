@@ -83,15 +83,21 @@
     }
 
     if (index === 0) {
-      // Homepage: menu in bottom
+      // Homepage: menu in bottom, nessun contenuto visibile (solo video)
       container.classList.remove('top');
       container.classList.add('bottom');
+      contentArea.classList.remove('show');
+      // Rimuovi active da tutti i contenuti in homepage
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
     } else {
-      // Tab aperta: menu in top
+      // Tab aperta: menu in top, contenuto visibile
       container.classList.remove('bottom');
       container.classList.add('top');
       contentArea.scrollTop = 0;
       contentArea.classList.add('show');
+      // Il contenuto specifico è già attivato sopra
     }
     
     // Center the active tab
