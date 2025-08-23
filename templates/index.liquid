@@ -71,8 +71,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
     {% for link in main_menu.links %}
       <div class="tab-content" data-index="{{ forloop.index }}">
         <div class="content-section">
-          <h2>{{ link.title }}</h2>
-          
           {% comment %} Contenuto con styling natalizio {% endcomment %}
           {% if link.url contains '/pages/' %}
             {% assign page_handle = link.url | split: '/pages/' | last %}
