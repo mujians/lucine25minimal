@@ -116,21 +116,31 @@
       <p class="meta" style="color: rgba(255,255,255,0.8);">Tema natalizio con colori specifici</p>
     </div>
 
-    <!-- Card Citazione -->
-    <div class="sketch-card sketch seed-4">
-      <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="color: var(--christmas-red);">
+    <!-- Card Citazione - Stile Sketch Diverso -->
+    <div class="sketch-quote-card">
+      <svg class="quote-sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
         <defs>
-          <filter id="wobble-ds-quote">
-            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="1" seed="7"/>
-            <feDisplacementMap in="SourceGraphic" scale="1"/>
+          <filter id="wobble-quote-special">
+            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="1" seed="8"/>
+            <feDisplacementMap in="SourceGraphic" scale="1.5"/>
           </filter>
         </defs>
-        <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-ds-quote)"/>
+        <!-- Quote marks sketch style -->
+        <path d="M15,25 Q20,15 25,25 Q30,35 25,45 Q20,50 15,45 Q10,35 15,25 Z" 
+              fill="none" stroke="var(--christmas-gold)" stroke-width="2" 
+              stroke-linecap="round" filter="url(#wobble-quote-special)"/>
+        <path d="M75,25 Q80,15 85,25 Q90,35 85,45 Q80,50 75,45 Q70,35 75,25 Z" 
+              fill="none" stroke="var(--christmas-gold)" stroke-width="2" 
+              stroke-linecap="round" filter="url(#wobble-quote-special)"/>
+        <!-- Decorative sketchy border -->
+        <path d="M10,75 Q50,65 90,75 Q85,80 50,85 Q15,80 10,75 Z" 
+              fill="none" stroke="var(--christmas-red)" stroke-width="1.5" 
+              stroke-linecap="round" stroke-dasharray="3 2" filter="url(#wobble-quote-special)"/>
       </svg>
-      <blockquote>
-        <p style="font-style: italic; color: white; margin-bottom: 1rem;">"Citazione in corsivo per testimonianze o frasi importanti"</p>
-        <footer style="color: var(--christmas-green); font-weight: 600;">— Autore della citazione</footer>
-      </blockquote>
+      <div class="quote-content">
+        <p class="quote-text">"Citazione importante con virgolette sketch integrate nel design"</p>
+        <div class="quote-author">— Autore della citazione</div>
+      </div>
     </div>
 
     <!-- Card Centrata con Info -->
@@ -296,8 +306,29 @@
       <li>Terzo elemento con dettagli</li>
     </ol>
     
-    <h3>Lista Eventi - Layout Ottimizzato</h3>
-    <div class="events-list-optimized">
+    <h3>Eventi Principali in Evidenza</h3>
+    <div class="events-featured">
+      <div class="event-item featured">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/panoramica.jpg?v=1699203224" alt="Evento" class="event-thumb">
+        <div class="event-info">
+          <div class="event-date">6-24 DIC 2024 • 17:30-23:00</div>
+          <h4>✨ Lucine di Natale</h4>
+          <p>Percorso magico illuminato con oltre 1 milione di lucine LED nel centro storico di Leggiuno</p>
+        </div>
+      </div>
+      
+      <div class="event-item featured">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/gospel.jpg?v=1732812015" alt="Evento" class="event-thumb">
+        <div class="event-info">
+          <div class="event-date">23 DIC 2024 • 21:00</div>
+          <h4>🎵 Concerto Gospel</h4>
+          <p>Greensleeves Gospel Choir diretto dal maestro Fausto Caravati - Chiesa Parrocchiale di S. Stefano</p>
+        </div>
+      </div>
+    </div>
+    
+    <h3>Altri Eventi</h3>
+    <div class="events-list-standard">
       <div class="event-item">
         <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/babbo-natale.jpg?v=1699206223" alt="Evento" class="event-thumb">
         <div class="event-info">
@@ -317,29 +348,11 @@
       </div>
       
       <div class="event-item">
-        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/gospel.jpg?v=1732812015" alt="Evento" class="event-thumb">
-        <div class="event-info">
-          <div class="event-date">23 DIC 2024 • 21:00</div>
-          <h4>🎵 Concerto Gospel</h4>
-          <p>Greensleeves Gospel Choir diretto dal maestro Fausto Caravati - Chiesa Parrocchiale</p>
-        </div>
-      </div>
-      
-      <div class="event-item">
         <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/coro-oratorio.jpg?v=1699206379" alt="Evento" class="event-thumb">
         <div class="event-info">
           <div class="event-date">Multiple date • Vari orari</div>
           <h4>🎶 Coro dei Ragazzi</h4>
           <p>Concerti del Coro dei Ragazzi dell'Oratorio in diverse date durante le festività</p>
-        </div>
-      </div>
-      
-      <div class="event-item">
-        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/panoramica.jpg?v=1699203224" alt="Evento" class="event-thumb">
-        <div class="event-info">
-          <div class="event-date">6-24 DIC 2024 • 17:30-23:00</div>
-          <h4>✨ Lucine di Natale</h4>
-          <p>Percorso magico illuminato con oltre 1 milione di lucine LED nel centro storico</p>
         </div>
       </div>
     </div>
@@ -511,8 +524,74 @@
 
 <!-- TEMPORARY CSS FOR DESIGN SYSTEM ELEMENTS -->
 <style>
-/* Events List - Optimized Layout */
-.events-list-optimized .event-item {
+/* Quote Card - New Sketch Style */
+.sketch-quote-card {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin: 2.5rem 0;
+  border-radius: 16px;
+}
+
+.quote-sketch-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.quote-text {
+  font-style: italic;
+  font-size: 1.2rem;
+  color: white;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.quote-author {
+  color: var(--christmas-green);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Events Lists - Featured vs Standard */
+.events-featured .event-item.featured {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.events-featured .event-item.featured:hover {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.4);
+  transform: translateY(-2px);
+}
+
+.events-featured .event-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.events-list-standard .event-item {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
@@ -521,14 +600,14 @@
   transition: all 0.2s ease;
 }
 
-.events-list-optimized .event-item:hover {
+.events-list-standard .event-item:hover {
   background: rgba(255,255,255,0.02);
   padding: 1rem;
   margin: 0 -1rem;
   border-radius: 8px;
 }
 
-.event-thumb {
+.events-list-standard .event-thumb {
   width: 60px;
   height: 60px;
   object-fit: cover;
@@ -550,9 +629,19 @@
   margin-bottom: 0.25rem;
 }
 
+.events-featured .event-date {
+  font-size: 0.9rem;
+  color: var(--christmas-red);
+}
+
 .event-info h4 {
   margin: 0 0 0.5rem 0 !important;
   font-size: 1.1rem !important;
+  color: white !important;
+}
+
+.events-featured .event-info h4 {
+  font-size: 1.3rem !important;
   color: white !important;
 }
 
@@ -561,6 +650,11 @@
   font-size: 0.9rem;
   color: rgba(255,255,255,0.8);
   line-height: 1.4;
+}
+
+.events-featured .event-info p {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .events-grid-compact {

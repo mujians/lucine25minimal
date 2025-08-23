@@ -560,6 +560,9 @@ li {
 .sketch-card .lead {
   color: var(--christmas-green);
   font-weight: 600;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   margin: 0 0 0.25rem;
 }
 
@@ -1129,12 +1132,12 @@ body.footer-expanded {
 
 .formatted-content a {
   color: var(--christmas-gold);
-  text-decoration: none;
+  text-decoration: underline;
   transition: all 0.3s ease;
 }
 
 .formatted-content a:hover {
-  color: var(--christmas-gold);
+  color: var(--christmas-red);
   text-decoration: underline;
 }
 
