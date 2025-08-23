@@ -311,10 +311,15 @@ p {
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
-/* CLEAN COLOR PALETTE */
+/* CHRISTMAS COLOR PALETTE */
 :root {
-  --christmas-gold: #ffd700;
-  --text-white: #ffffff;
+  --christmas-red: #dc2626;    /* rosso natalizio */
+  --christmas-green: #059669;  /* verde abete */
+  --text-white: #ffffff;       /* bianco puro */
+  --text-gray: #e5e7eb;        /* grigio chiaro */
+  
+  /* Backward compatibility */
+  --christmas-gold: var(--christmas-red);
 }
 
 /* CONTENT COMPONENTS */
@@ -390,11 +395,11 @@ li {
   margin: 1.5rem 0;
 }
 
-/* SKETCH CARD - handmade style */
-:root {
-  --sketch-ink: #ffffff;    /* bordo bianco */
-  --card-bg: #111;          /* sfondo box */
-  --card-text: #ffffff;     /* testo bianco */
+/* SKETCH CARD - Christmas theme */
+.sketch-card-christmas {
+  --sketch-ink: var(--christmas-red);    /* bordo rosso */
+  --card-bg: #0f2f1f;                    /* sfondo verde scuro */
+  --card-text: var(--text-white);        /* testo bianco */
 }
 
 .sketch-card {
@@ -427,7 +432,7 @@ li {
 }
 
 .sketch-card .lead {
-  color: var(--christmas-gold);
+  color: var(--christmas-green);
   font-weight: 600;
   margin: 0 0 0.25rem;
 }
@@ -438,9 +443,9 @@ li {
 }
 
 .sketch-card .cta {
-  color: var(--christmas-gold);
+  color: var(--christmas-red);
   text-decoration: none;
-  border-bottom: 2px solid var(--christmas-gold);
+  border-bottom: 2px solid var(--christmas-red);
   padding-bottom: 2px;
 }
 
