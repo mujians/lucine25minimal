@@ -33,45 +33,49 @@ body {
   position: relative;
 }
 
-/* GRAIN TEXTURE - Applied to body and key areas */
+/* GRAIN TEXTURE - TV Static Style */
 body::after {
   content: '';
   position: fixed;
-  top: -10%;
-  left: -10%;
-  width: 120vw;
-  height: 120vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.2;
+  opacity: 0.15;
   background-image: 
-    radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.4) 100%),
-    radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.2) 100%),
-    radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.3) 100%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  animation: grainShift 12s linear infinite;
+    radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
+    radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
+    radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic)'/%3E%3C/svg%3E");
+  animation: tvStaticFlicker 0.1s steps(2) infinite;
 }
 
-@keyframes grainShift {
+@keyframes tvStaticFlicker {
   0% { 
-    transform: translate(0, 0) rotate(0deg); 
-    opacity: 0.2;
-  }
-  25% { 
-    transform: translate(-8%, -6%) rotate(1deg); 
+    background-image: 
+      radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
+      radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
+      radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic1)'/%3E%3C/svg%3E");
     opacity: 0.15;
   }
   50% { 
-    transform: translate(-12%, 8%) rotate(-0.5deg); 
-    opacity: 0.25;
-  }
-  75% { 
-    transform: translate(6%, -10%) rotate(0.8deg); 
-    opacity: 0.18;
+    background-image: 
+      radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
+      radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
+      radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic2)'/%3E%3C/svg%3E");
+    opacity: 0.12;
   }
   100% { 
-    transform: translate(0, 0) rotate(0deg); 
-    opacity: 0.2;
+    background-image: 
+      radial-gradient(circle at 20% 80%, transparent 50%, rgba(120, 119, 198, 0.3) 100%),
+      radial-gradient(circle at 80% 20%, transparent 50%, rgba(255, 255, 255, 0.15) 100%),
+      radial-gradient(circle at 40% 40%, transparent 50%, rgba(120, 198, 120, 0.2) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tvStatic3'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='8'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23tvStatic3)'/%3E%3C/svg%3E");
+    opacity: 0.18;
   }
 }
 
@@ -1587,36 +1591,40 @@ h6 {
 /* PARKING ICONS STYLING */
 .parking-icons {
   display: flex;
-  gap: 0.75rem;
-  margin: 1rem 0;
+  gap: 1rem;
+  margin: 0.5rem 0; /* Reduced vertical margin */
   flex-wrap: wrap;
   align-items: center;
 }
 
 .parking-icon {
-  width: 32px;
-  height: 32px;
+  width: 48px; /* Increased from 32px */
+  height: 48px; /* Increased from 32px */
   object-fit: contain;
-  opacity: 0.8;
+  opacity: 0.9;
   transition: all 0.3s ease;
-  filter: brightness(1.1);
+  filter: brightness(1.1) contrast(1.1);
+  /* Remove any clipping issues */
+  border-radius: 0;
+  background: transparent;
 }
 
 .parking-icon:hover {
   opacity: 1;
   transform: scale(1.1);
-  filter: brightness(1.3);
+  filter: brightness(1.3) contrast(1.2);
 }
 
 /* Responsive parking icons */
 @media (max-width: 480px) {
   .parking-icons {
-    gap: 0.5rem;
+    gap: 0.75rem;
+    margin: 0.25rem 0; /* Even less vertical margin on mobile */
   }
   
   .parking-icon {
-    width: 28px;
-    height: 28px;
+    width: 40px; /* Increased from 28px */
+    height: 40px; /* Increased from 28px */
   }
 }
 
