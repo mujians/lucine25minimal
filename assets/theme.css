@@ -1612,6 +1612,7 @@ h6 {
   object-fit: contain;
   opacity: 0.9;
   transition: all 0.3s ease;
+  margin: 0 !important; /* Override formatted-content img margins */
   filter: brightness(1.1) contrast(1.1);
   /* Remove any clipping issues */
   border-radius: 0;
