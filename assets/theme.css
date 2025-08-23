@@ -306,27 +306,67 @@ body::before {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* MINI EVENT CARDS per layout compatto */
-.mini-event-card {
+/* CONCERT LIST per layout organizzato */
+.concerts-list {
+  margin: 2rem 0;
+}
+
+.concert-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  margin: 1rem 0;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 12px;
   transition: all 0.3s ease;
-  text-align: center;
 }
 
-.mini-event-card:hover {
+.concert-item:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--christmas-red);
-  transform: translateY(-2px);
 }
 
-.mini-event-card img {
-  width: 100%;
+.concert-thumb {
+  width: 80px;
   height: 80px;
+  border-radius: 50%;
   object-fit: cover;
-  display: block;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.concert-info {
+  flex: 1;
+}
+
+.concert-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.concert-date {
+  background: rgba(5, 150, 105, 0.2);
+  color: var(--christmas-green);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-family: 'Providence Sans', sans-serif;
+  border: 1px solid rgba(5, 150, 105, 0.3);
+}
+
+.concert-date-special {
+  background: rgba(220, 38, 38, 0.2);
+  color: var(--christmas-red);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-family: 'Providence Sans', sans-serif;
+  font-style: italic;
+  border: 1px solid rgba(220, 38, 38, 0.3);
 }
 
 @keyframes subtlePulse {
@@ -539,6 +579,125 @@ li {
 .sketch-border rect {
   rx: 8 !important; /* Corner radius fisso invece di rx="12" percentuale */
   ry: 8 !important;
+}
+
+/* FOOTER SNAP */
+.snap-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 998;
+  padding: 1.5rem 0;
+}
+
+.snap-footer.show {
+  transform: translateY(0);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+}
+
+.footer-logo img {
+  height: 60px;
+  width: auto;
+  opacity: 0.9;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.footer-menu {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-link {
+  color: white;
+  text-decoration: none;
+  font-family: 'Providence Sans', sans-serif;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer-link:hover {
+  opacity: 1;
+  color: var(--christmas-red);
+}
+
+.footer-company {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85em;
+  opacity: 0.7;
+  font-family: 'Providence Sans', sans-serif;
+}
+
+.footer-company p {
+  margin: 0;
+}
+
+.footer-company a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-company a:hover {
+  color: var(--christmas-green);
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: var(--christmas-red);
+  border-color: var(--christmas-red);
+  transform: scale(1.1);
 }
 
 /* BACK TO TOP BUTTON */

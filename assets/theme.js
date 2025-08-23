@@ -196,3 +196,56 @@ document.addEventListener('DOMContentLoaded', function() {
     contentArea.addEventListener('scroll', handleBackToTopVisibility);
   }
 });
+
+// FOOTER SNAP FUNCTIONALITY
+(function() {
+  const footer = document.getElementById('snap-footer');
+  if (!footer) return;
+  
+  let lastScrollTop = 0;
+  let scrollThreshold = 100;
+  let isFooterVisible = false;
+  
+  function handleFooterSnap() {
+    const contentArea = document.querySelector('.content.show');
+    const scrollElement = contentArea || window;
+    const scrollTop = contentArea ? contentArea.scrollTop : window.pageYOffset;
+    const scrollHeight = contentArea ? contentArea.scrollHeight : document.body.scrollHeight;
+    const clientHeight = contentArea ? contentArea.clientHeight : window.innerHeight;
+    
+    // Check if near bottom (within 200px)
+    const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
+    
+    // Show footer when scrolling down and near bottom
+    if (scrollTop > lastScrollTop && nearBottom && !isFooterVisible) {
+      footer.classList.add('show');
+      isFooterVisible = true;
+    }
+    // Hide footer when scrolling up significantly
+    else if (scrollTop < lastScrollTop - scrollThreshold && isFooterVisible) {
+      footer.classList.remove('show');
+      isFooterVisible = false;
+    }
+    
+    lastScrollTop = scrollTop;
+  }
+  
+  // Attach to both window and content area
+  window.addEventListener('scroll', handleFooterSnap);
+  
+  // Monitor for content area changes
+  const observer = new MutationObserver(function() {
+    const contentArea = document.querySelector('.content.show');
+    if (contentArea) {
+      contentArea.removeEventListener('scroll', handleFooterSnap);
+      contentArea.addEventListener('scroll', handleFooterSnap);
+    }
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
+})();
