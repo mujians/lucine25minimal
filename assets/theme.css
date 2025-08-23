@@ -665,6 +665,7 @@ li {
   color: var(--christmas-red);
   font-family: 'Providence Sans', sans-serif;
   font-size: 0.85em;
+  font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 0.5rem;
@@ -682,9 +683,10 @@ li {
   color: white;
   font-size: 1em;
   margin-bottom: 0.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: 'Providence Sans', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .company-info p {
@@ -730,6 +732,18 @@ li {
 .footer-legal .separator {
   margin: 0 1rem;
   color: rgba(255, 255, 255, 0.3);
+}
+
+/* Company name styling */
+.footer-legal .company-name {
+  font-family: 'Providence Sans', sans-serif;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+/* Contacts section in legal */
+.footer-legal .contacts {
+  font-family: 'Providence Sans', sans-serif;
 }
 
 /* Fascia bianca con logo Comune */
