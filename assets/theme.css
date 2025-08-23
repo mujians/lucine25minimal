@@ -254,33 +254,33 @@ body::before {
 
 /* TYPOGRAPHY SYSTEM - HOMEMADE APPLE */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Homemade Apple', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  font-weight: normal;
+  font-family: 'Homemade Apple', cursive;
+  font-weight: 400;
   margin: 0 0 1.5rem 0;
-  line-height: 1.3;
+  line-height: 1.4;
   color: var(--text-white);
   letter-spacing: 0.02em;
 }
 
 h1 { 
   font-size: 3rem; 
-  font-weight: normal; 
+  font-weight: 400; 
   margin-bottom: 2rem;
 }
 h2 { 
   font-size: 2.5rem; 
   color: var(--text-white);
-  font-weight: normal;
+  font-weight: 400;
   margin: 3rem 0 1.5rem 0;
 }
 h3 { 
   font-size: 2rem; 
-  font-weight: normal;
+  font-weight: 400;
   margin: 2rem 0 1rem 0;
 }
 h4 { 
   font-size: 1.5rem; 
-  font-weight: normal;
+  font-weight: 400;
 }
 
 p {
