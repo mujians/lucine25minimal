@@ -92,12 +92,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
                   <p>Non perdere la magia delle <span class="highlight-text">Lucine di Natale</span></p>
                   <a href="#" class="family-cta">Acquista Biglietti</a>
                 </div>
-              {% elsif page_handle contains 'info' or page_handle contains 'informazion' %}
-                <div class="event-card" style="margin-top: 2rem;">
-                  <h4 class="christmas-accent">Hai domande?</h4>
-                  <p>Il nostro team è disponibile per aiutarti a pianificare la tua visita.</p>
-                  <a href="/pages/contatti" class="family-cta">Contattaci</a>
-                </div>
               {% endif %}
             {% else %}
               <!-- Contenuto di esempio per {{ link.title }} -->
