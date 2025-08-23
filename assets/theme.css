@@ -419,10 +419,11 @@ li {
 }
 
 .sketch-card h4 {
+  font-family: 'Providence Sans', -apple-system, sans-serif !important;
   font-size: 1.35rem !important;
   margin: 0 0 0.5rem 0 !important;
   color: var(--card-text) !important;
-  font-weight: normal !important;
+  font-weight: 600 !important;
 }
 
 .sketch-card .lead {
