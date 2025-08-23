@@ -43,10 +43,19 @@
       window.history.pushState(null, null, window.location.pathname);
     }
 
-    // Update content visibility and menu position
-    contents.forEach((content, i) => {
-      content.classList.toggle('show', i === index);
+    // Update content visibility - prima rimuovi tutti
+    contents.forEach(content => {
+      content.classList.remove('show');
     });
+    
+    // Poi attiva quello corretto usando data-index
+    const targetContent = document.querySelector(`.tab-content[data-index="${index}"]`);
+    if (targetContent) {
+      targetContent.classList.add('show');
+      console.log('Activated content for index:', index);
+    } else {
+      console.log('No content found for index:', index);
+    }
 
     if (index === 0) {
       // Homepage: menu in bottom

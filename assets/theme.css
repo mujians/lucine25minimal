@@ -62,11 +62,10 @@ body::before {
   color: white;
   padding: 5px 10px;
   font-size: 12px;
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   z-index: 999;
   border-radius: 3px;
   pointer-events: none;
-  font-family: 'Homemade Apple', cursive;
 }
 
 /* NAVIGATION CONTAINER */
@@ -130,6 +129,10 @@ body::before {
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: all 0.3s ease;
   white-space: nowrap;
   flex-shrink: 0;
