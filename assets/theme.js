@@ -215,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Check if near bottom (within 200px)
     const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
+    const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
     
     // DEBUG LOGS
     console.log('🦶 FOOTER DEBUG:', {
@@ -222,9 +223,13 @@ document.addEventListener('DOMContentLoaded', function() {
       lastScrollTop: Math.round(lastScrollTop),
       scrollHeight: Math.round(scrollHeight),
       clientHeight: Math.round(clientHeight),
+      distanceFromBottom: Math.round(distanceFromBottom),
       nearBottom,
       isFooterVisible,
       contentArea: !!contentArea,
+      usingContentArea: !!contentArea,
+      bodyScrollHeight: document.body.scrollHeight,
+      windowInnerHeight: window.innerHeight,
       scrollDirection: scrollTop > lastScrollTop ? '⬇️ DOWN' : '⬆️ UP'
     });
     
