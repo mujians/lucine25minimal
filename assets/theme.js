@@ -203,65 +203,62 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - New simple approach
+// FOOTER SNAP FUNCTIONALITY - Multiple footers approach
 (function() {
-  const footer = document.getElementById('snap-footer');
-  if (!footer) {
-    console.log('❌ FOOTER NOT FOUND');
+  const footers = document.querySelectorAll('.snap-footer');
+  if (!footers.length) {
+    console.log('❌ NO FOOTERS FOUND');
     return;
   }
   
-  console.log('🚀 FOOTER SYSTEM INITIALIZED - Simple Static Footer');
+  console.log('🚀 FOOTER SYSTEM INITIALIZED - Multiple Static Footers:', footers.length);
   
-  let isFooterExpanded = false;
+  let expandedFooter = null;
   
-  // Simple click handler to expand footer to fullscreen
-  function expandFooter() {
-    if (!isFooterExpanded) {
-      footer.classList.add('expanded');
-      isFooterExpanded = true;
-      console.log('🟢 FOOTER EXPANDED TO FULLSCREEN');
+  // Expand footer to fullscreen
+  function expandFooter(footer) {
+    // Close any other expanded footer first
+    if (expandedFooter && expandedFooter !== footer) {
+      expandedFooter.classList.remove('expanded');
     }
-  }
-  
-  // Add click listener to footer to expand it
-  footer.addEventListener('click', expandFooter);
-  
-  // Also expand when footer comes into view (scroll detection)
-  function checkFooterInView() {
-    const footerRect = footer.getBoundingClientRect();
-    const isInView = footerRect.top < window.innerHeight && footerRect.bottom > 0;
     
-    if (isInView && !isFooterExpanded) {
-      console.log('📱 FOOTER IN VIEW - Auto expanding');
-      expandFooter();
-    }
+    footer.classList.add('expanded');
+    expandedFooter = footer;
+    console.log('🟢 FOOTER EXPANDED:', footer.id);
   }
   
-  // Simple scroll detection
-  window.addEventListener('scroll', checkFooterInView);
-  
-  // Also check when content changes (tab switches)
-  const observer = new MutationObserver(function() {
-    const contentArea = document.querySelector('.content.show');
-    if (contentArea) {
-      contentArea.addEventListener('scroll', checkFooterInView);
+  // Setup each footer
+  footers.forEach(footer => {
+    // Add click listener
+    footer.addEventListener('click', () => expandFooter(footer));
+    
+    // Scroll detection for this footer
+    function checkFooterInView() {
+      // Only check if this footer is in an active tab
+      const parentTab = footer.closest('.tab-content');
+      if (parentTab && !parentTab.classList.contains('active')) {
+        return;
+      }
+      
+      const footerRect = footer.getBoundingClientRect();
+      const isInView = footerRect.top < window.innerHeight && footerRect.bottom > 0;
+      
+      if (isInView && expandedFooter !== footer) {
+        console.log('📱 FOOTER IN VIEW - Auto expanding:', footer.id);
+        expandFooter(footer);
+      }
     }
-  });
-  
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['class']
+    
+    // Attach scroll listener for this footer
+    window.addEventListener('scroll', checkFooterInView);
   });
 })();
 
 // Function to close footer manually
 function closeFooter() {
-  const footer = document.getElementById('snap-footer');
-  if (footer) {
-    footer.classList.remove('expanded');
-    console.log('🔴 FOOTER CLOSED MANUALLY');
+  const expandedFooter = document.querySelector('.snap-footer.expanded');
+  if (expandedFooter) {
+    expandedFooter.classList.remove('expanded');
+    console.log('🔴 FOOTER CLOSED MANUALLY:', expandedFooter.id);
   }
 }
