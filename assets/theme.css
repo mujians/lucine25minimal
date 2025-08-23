@@ -158,9 +158,9 @@ body::before {
 }
 
 
-/* Menu con sfondo verde solo quando non è in homepage */
+/* Menu con sfondo trasparente per uniformità */
 .navigation-container.top .menu-tabs {
-  background: #0f2f1f !important;
+  background: transparent !important;
   position: relative;
 }
 
@@ -614,10 +614,10 @@ ul li::before {
   margin: 1.5rem 0;
 }
 
-/* SKETCH CARD - Christmas theme */
+/* SKETCH CARD - Christmas theme (no background) */
 .sketch-card-christmas {
   --sketch-ink: var(--christmas-red);    /* bordo rosso */
-  --card-bg: #0f2f1f;                    /* sfondo verde scuro */
+  --card-bg: transparent;                /* sfondo trasparente */
   --card-text: var(--text-white);        /* testo bianco */
 }
 
