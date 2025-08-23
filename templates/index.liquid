@@ -110,23 +110,8 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
               <div class="formatted-content">
                 {% case link.title %}
                   {% when 'Eventi' %}
-                    <h3>Programma Eventi</h3>
-                    <div class="event-card">
-                      <h4 class="christmas-accent">Spettacolo di Luci</h4>
-                      <p>Ogni sera alle <span class="highlight-text">18:00</span> e <span class="highlight-text">20:00</span></p>
-                      <p>Un magico spettacolo di luci sincronizzate con musiche natalizie che incanterà grandi e piccini.</p>
-                    </div>
-                    
-                    <div class="event-card">
-                      <h4 class="christmas-accent">Laboratori per Bambini</h4>
-                      <p>Tutti i weekend dalle <span class="highlight-text">15:00 alle 17:00</span></p>
-                      <ul>
-                        <li>Decorazioni natalizie fai-da-te</li>
-                        <li>Letterine a Babbo Natale</li>
-                        <li>Biscotti di pan di zenzero</li>
-                      </ul>
-                      <a href="#" class="family-cta">Prenota il laboratorio</a>
-                    </div>
+                    {% comment %} Include rich content for Eventi {% endcomment %}
+                    {% render 'eventi-content' %}
                     
                   {% when 'Biglietti' %}
                     <h3>Tariffe e Biglietti</h3>

@@ -37,14 +37,14 @@ main, #MainContent {
   padding: 0;
 }
 
-/* VIDEO v1.2 */
+/* VIDEO v1.2 - Behind everything */
 .video-bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 0;
 }
 
 .video-bg video {
@@ -74,17 +74,19 @@ body::before {
   position: relative;
   z-index: 10;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 100vh;
+  background: transparent;
 }
 
-/* Homepage state - compact menu */
+/* Homepage state - exactly 100vh, no scroll */
 .navigation-container.bottom {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* Tab open state - full content */
+/* Tab open state - allow natural scroll */
 .navigation-container.top {
-  min-height: auto;
+  min-height: 100vh;
+  background: #0f2f1f;
 }
 
 /* MENU (sempre in cima al container) */
