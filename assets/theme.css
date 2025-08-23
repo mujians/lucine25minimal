@@ -54,7 +54,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v9.7 - COMPACT SPACING";
+  content: "LUCINE MINIMAL v10.0 - SKETCH DESIGN SYSTEM";
   position: fixed;
   top: 10px;
   left: 10px;
