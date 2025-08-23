@@ -54,7 +54,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v9.6 - URL ANCHORS";
+  content: "LUCINE MINIMAL v9.7 - COMPACT SPACING";
   position: fixed;
   top: 10px;
   left: 10px;
@@ -100,8 +100,8 @@ body::before {
 }
 
 .menu-tabs {
-  background: #000;
-  padding: 20px;
+  background: transparent;
+  padding: 15px;
   display: flex;
   gap: 10px;
   justify-content: flex-start;
@@ -117,7 +117,8 @@ body::before {
 }
 
 
-/* Menu sempre con sfondo nero */
+/* Menu con sfondo nero solo quando non è in homepage */
+.navigation-container.middle .menu-tabs,
 .navigation-container.top .menu-tabs {
   background: #000 !important;
 }
@@ -173,12 +174,12 @@ body::before {
 /* MIDDLE POSITION */
 .navigation-container.middle .content.show {
   position: absolute;
-  top: 90px;
+  top: 70px;
   left: 0;
   right: 0;
   bottom: 0;
   background: #000;
-  padding-top: 20px;
+  padding-top: 10px;
   transform: translateY(0);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -195,12 +196,12 @@ body::before {
 /* TOP POSITION - Same approach as middle for consistency */
 .navigation-container.top .content.show {
   position: absolute;
-  top: 90px;
+  top: 70px;
   left: 0;
   right: 0;
   bottom: 0;
   background: #000;
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   box-sizing: border-box;
   overflow-y: auto;
 }
