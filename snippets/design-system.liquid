@@ -127,11 +127,11 @@
             <feDisplacementMap in="SourceGraphic" scale="1.5"/>
           </filter>
         </defs>
-        <!-- Quote marks sketch style -->
-        <path d="M15,25 Q20,15 25,25 Q30,35 25,45 Q20,50 15,45 Q10,35 15,25 Z" 
+        <!-- Real quote marks sketch style -->
+        <path d="M15,20 Q18,15 22,20 Q18,25 15,30 Q12,25 15,20 Z M20,15 Q23,10 27,15 Q23,20 20,25 Q17,20 20,15 Z" 
               fill="none" stroke="var(--christmas-gold)" stroke-width="2" 
               stroke-linecap="round" filter="url(#wobble-quote-special)"/>
-        <path d="M75,25 Q80,15 85,25 Q90,35 85,45 Q80,50 75,45 Q70,35 75,25 Z" 
+        <path d="M73,20 Q76,15 80,20 Q76,25 73,30 Q70,25 73,20 Z M78,15 Q81,10 85,15 Q81,20 78,25 Q75,20 78,15 Z" 
               fill="none" stroke="var(--christmas-gold)" stroke-width="2" 
               stroke-linecap="round" filter="url(#wobble-quote-special)"/>
         <!-- Decorative sketchy border -->
@@ -309,19 +309,19 @@
     </ol>
     
     <h3>Eventi Principali in Evidenza</h3>
-    <div class="events-featured">
-      <div class="event-item featured">
-        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/panoramica.jpg?v=1699203224" alt="Evento" class="event-thumb">
-        <div class="event-info">
+    <div class="events-featured-grid">
+      <div class="featured-event-card">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/panoramica.jpg?v=1699203224" alt="Evento" class="featured-image">
+        <div class="featured-content">
           <div class="event-date">6-24 DIC 2024 • 17:30-23:00</div>
           <h4>✨ Lucine di Natale</h4>
           <p>Percorso magico illuminato con oltre 1 milione di lucine LED nel centro storico di Leggiuno</p>
         </div>
       </div>
       
-      <div class="event-item featured">
-        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/gospel.jpg?v=1732812015" alt="Evento" class="event-thumb">
-        <div class="event-info">
+      <div class="featured-event-card">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/gospel.jpg?v=1732812015" alt="Evento" class="featured-image">
+        <div class="featured-content">
           <div class="event-date">23 DIC 2024 • 21:00</div>
           <h4>🎵 Concerto Gospel</h4>
           <p>Greensleeves Gospel Choir diretto dal maestro Fausto Caravati - Chiesa Parrocchiale di S. Stefano</p>
@@ -566,31 +566,36 @@
   letter-spacing: 0.5px;
 }
 
-/* Events Lists - Featured vs Standard */
-.events-featured .event-item.featured {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  background: rgba(220, 38, 38, 0.05);
-  border: 1px solid rgba(220, 38, 38, 0.2);
+/* Featured Events - Card Layout with Image on Top */
+.events-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.featured-event-card {
+  background: rgba(255,255,255,0.03);
   border-radius: 12px;
+  overflow: hidden;
   transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.events-featured .event-item.featured:hover {
-  background: rgba(220, 38, 38, 0.08);
-  border-color: rgba(220, 38, 38, 0.4);
-  transform: translateY(-2px);
+.featured-event-card:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.2);
 }
 
-.events-featured .event-thumb {
-  width: 80px;
-  height: 80px;
+.featured-image {
+  width: 100%;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
+}
+
+.featured-content {
+  padding: 1.5rem;
 }
 
 .events-list-standard .event-item {
@@ -631,9 +636,26 @@
   margin-bottom: 0.25rem;
 }
 
-.events-featured .event-date {
+.featured-content .event-date {
   font-size: 0.9rem;
-  color: var(--christmas-red);
+  color: var(--christmas-green);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.featured-content h4 {
+  margin: 0 0 1rem 0 !important;
+  font-size: 1.4rem !important;
+  color: white !important;
+}
+
+.featured-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.6;
 }
 
 .event-info h4 {
@@ -642,21 +664,11 @@
   color: white !important;
 }
 
-.events-featured .event-info h4 {
-  font-size: 1.3rem !important;
-  color: white !important;
-}
-
 .event-info p {
   margin: 0;
   font-size: 0.9rem;
   color: rgba(255,255,255,0.8);
   line-height: 1.4;
-}
-
-.events-featured .event-info p {
-  font-size: 1rem;
-  line-height: 1.5;
 }
 
 .events-grid-compact {
