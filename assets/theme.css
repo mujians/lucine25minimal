@@ -152,11 +152,10 @@ body::before {
   border-color: white;
 }
 
-/* CONTENT (sempre sotto il menu) */
+/* CONTENT - No internal scroll, natural page flow */
 .content {
   display: block;
   color: white;
-  overflow-y: auto;
   padding: 20px;
   background: none;
   opacity: 0;
@@ -184,17 +183,13 @@ body::before {
   transform: translateY(0);
 }
 
-/* TOP POSITION - Same approach as middle for consistency */
+/* TOP POSITION - Natural flow, no absolute positioning */
 .navigation-container.top .content.show {
-  position: absolute;
-  top: 70px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: static;
   background: #0f2f1f;
   padding: 10px 20px 20px 20px;
   box-sizing: border-box;
-  overflow-y: auto;
+  min-height: 50vh;
 }
 
 /* Fix per primo elemento nel content */
@@ -582,35 +577,30 @@ li {
   ry: 8 !important;
 }
 
-/* FOOTER SNAP - Always fixed, smooth show/hide */
+/* FOOTER SNAP - Natural position at bottom of page */
 .snap-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: static;
   background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem 0;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 998;
-  max-height: 70vh;
-  overflow-y: auto;
+  margin-top: 2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Footer states */
-.snap-footer.show {
-  transform: translateY(0);
-}
-
+/* Footer expansion state */
 .snap-footer.expanded {
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;
   height: 100vh;
-  max-height: 100vh;
   padding: 4rem 0 2rem 0;
-  transform: translateY(0);
+  overflow-y: auto;
+  margin-top: 0;
 }
 
 @media (max-width: 768px) {

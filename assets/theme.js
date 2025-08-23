@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// FOOTER SNAP FUNCTIONALITY - Global footer with smart scroll detection
+// FOOTER SNAP FUNCTIONALITY - Simple click to expand
 (function() {
   const footer = document.getElementById('snap-footer');
   if (!footer) {
@@ -211,23 +211,12 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  console.log('🚀 GLOBAL FOOTER SYSTEM INITIALIZED');
+  console.log('🚀 SIMPLE FOOTER SYSTEM INITIALIZED - Always visible, click to expand');
   
-  let isFooterVisible = false;
   let isFooterExpanded = false;
-  
-  // Show footer (normal height)
-  function showFooter() {
-    if (!isFooterVisible) {
-      footer.classList.add('show');
-      isFooterVisible = true;
-      console.log('🟢 FOOTER SHOWN');
-    }
-  }
   
   // Expand footer to fullscreen
   function expandFooter() {
-    showFooter(); // Ensure it's visible first
     if (!isFooterExpanded) {
       footer.classList.add('expanded');
       isFooterExpanded = true;
@@ -237,53 +226,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Click to expand
   footer.addEventListener('click', expandFooter);
-  
-  // Smart scroll detection - show footer at 60%, expand at click
-  function checkScrollTrigger() {
-    // Check both window scroll and content area scroll
-    const contentArea = document.querySelector('.content.show');
-    const windowScroll = window.pageYOffset;
-    const contentScroll = contentArea ? contentArea.scrollTop : 0;
-    const maxScroll = contentArea ? contentArea.scrollHeight - contentArea.clientHeight : document.body.scrollHeight - window.innerHeight;
-    
-    // Show footer at 60% scroll in either window or content area
-    const windowProgress = maxScroll > 0 ? (windowScroll / maxScroll) * 100 : 0;
-    const contentProgress = contentArea && contentArea.scrollHeight > contentArea.clientHeight ? (contentScroll / (contentArea.scrollHeight - contentArea.clientHeight)) * 100 : 0;
-    
-    const shouldShow = windowProgress > 60 || contentProgress > 60;
-    
-    if (shouldShow && !isFooterVisible) {
-      console.log('📱 SCROLL TRIGGER - Showing footer:', {
-        windowProgress: Math.round(windowProgress),
-        contentProgress: Math.round(contentProgress)
-      });
-      showFooter();
-    }
-  }
-  
-  // Attach to both window and content scrolls
-  window.addEventListener('scroll', checkScrollTrigger);
-  
-  // Monitor for content area changes (tab switches)
-  const observer = new MutationObserver(function() {
-    const contentArea = document.querySelector('.content.show');
-    if (contentArea) {
-      contentArea.addEventListener('scroll', checkScrollTrigger);
-    }
-  });
-  
-  observer.observe(document.body, {
-    attributes: true,
-    attributeFilter: ['class'],
-    subtree: true
-  });
 })();
 
-// Function to close footer manually
+// Function to close footer manually  
 function closeFooter() {
   const footer = document.getElementById('snap-footer');
-  if (footer) {
-    footer.classList.remove('expanded', 'show');
-    console.log('🔴 FOOTER HIDDEN COMPLETELY');
+  if (footer && footer.classList.contains('expanded')) {
+    footer.classList.remove('expanded');
+    console.log('🔴 FOOTER COLLAPSED TO NORMAL SIZE');
   }
 }
