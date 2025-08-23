@@ -46,7 +46,7 @@ main, #MainContent {
 
 /* DEBUG INFO */
 body::before {
-  content: "LUCINE MINIMAL v8.0 - COMPLETE PAGES";
+  content: "LUCINE MINIMAL v9.0 - ALL PAGES READY";
   position: fixed;
   top: 10px;
   left: 10px;
