@@ -243,9 +243,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if we're at the actual maximum scroll position (with small tolerance)
     const isAtMaxScroll = scrollTop >= maxScrollTop - 10;
     
-    // Show footer when scrolled 40% down OR within 200px of bottom OR at max scroll
-    const nearBottom = scrollTop + clientHeight >= scrollHeight - 200;
-    const scrolledEnough = scrollPercentage >= 40;
+    // Mobile: more aggressive trigger, Desktop: conservative 
+    const isMobile = window.innerWidth <= 768;
+    const scrollThreshold = isMobile ? 30 : 40; // 30% on mobile, 40% on desktop
+    const bottomThreshold = isMobile ? 400 : 200; // 400px on mobile, 200px on desktop
+    
+    const nearBottom = scrollTop + clientHeight >= scrollHeight - bottomThreshold;
+    const scrolledEnough = scrollPercentage >= scrollThreshold;
     const shouldShow = nearBottom || scrolledEnough || isAtMaxScroll;
     
     const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
@@ -284,6 +288,8 @@ document.addEventListener('DOMContentLoaded', function() {
       scrollableDistance: Math.round(maxScrollTop - scrollTop),
       
       // === FOOTER CONDITIONS ===
+      scrollThreshold,
+      bottomThreshold,
       isAtMaxScroll,
       nearBottom,
       scrolledEnough, 
