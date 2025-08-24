@@ -68,7 +68,7 @@ INFO: info@lucinedinatale.it`;
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` // Sicuro nelle env vars!
+        'Authorization': `Bearer ${process.env.OPEN_API_KEY}` // Sicuro nelle env vars!
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
