@@ -1,0 +1,439 @@
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+
+<section id="MainProduct-{{ section.id }}" class="page-width section-{{ section.id }}-padding" data-section="{{ section.id }}">
+  <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }}">
+    
+    <!-- Product Media -->
+    <div class="product__media-wrapper">
+      <div class="product__media media">
+        {%- if product.selected_or_first_available_variant.featured_media -%}
+          <img src="{{ product.selected_or_first_available_variant.featured_media | image_url: width: 600 }}" 
+               alt="{{ product.selected_or_first_available_variant.featured_media.alt | escape }}"
+               width="600" height="600"
+               class="product__media-item">
+        {%- elsif product.featured_media -%}
+          <img src="{{ product.featured_media | image_url: width: 600 }}" 
+               alt="{{ product.featured_media.alt | escape }}"
+               width="600" height="600" 
+               class="product__media-item">
+        {%- else -%}
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/IMG_2996.jpg?v=1699203223" 
+               alt="{{ product.title }}" 
+               width="600" height="600"
+               class="product__media-item">
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="product__info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          
+          {%- when 'title' -%}
+            <div class="product__title" {{ block.shopify_attributes }}>
+              <h1 style="color: var(--christmas-red); font-family: 'Homemade Apple', cursive; margin-bottom: 1rem;">
+                {{ product.title }}
+              </h1>
+            </div>
+
+          {%- when 'price' -%}
+            <div class="sketch-card sketch seed-price" {{ block.shopify_attributes }}>
+              <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                <defs>
+                  <filter id="wobble-price">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5"/>
+                    <feDisplacementMap in="SourceGraphic" scale="1"/>
+                  </filter>
+                </defs>
+                <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-price)"/>
+              </svg>
+              
+              <div class="price" style="text-align: center; padding: 1rem;">
+                <div class="price__container">
+                  {%- if product.compare_at_price_max > product.price -%}
+                    <span class="price__compare" style="color: rgba(255,255,255,0.6); text-decoration: line-through; margin-right: 1rem;">
+                      {{ product.compare_at_price | money }}
+                    </span>
+                  {%- endif -%}
+                  <span class="price__regular" style="font-size: 2rem; font-weight: 700; color: var(--christmas-red);">
+                    {{ product.selected_or_first_available_variant.price | money }}
+                  </span>
+                </div>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--christmas-green); font-weight: 600;">
+                  Prezzo agevolato online • Accesso garantito
+                </p>
+              </div>
+            </div>
+
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <variant-selects class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
+                {%- for option in product.options_with_values -%}
+                  <div class="product-form__input product-form__input--dropdown">
+                    <label class="form__label" style="color: var(--christmas-green); font-weight: 600;">
+                      {{ option.name }}
+                    </label>
+                    <div class="select">
+                      <select id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                              class="select__select"
+                              name="options[{{ option.name | escape }}]"
+                              form="{{ product_form_id }}"
+                              style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; width: 100%;">
+                        {%- for value in option.values -%}
+                          <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                            {{ value }}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              </variant-selects>
+            {%- endunless -%}
+
+          {%- when 'quantity_selector' -%}
+            <div class="product-form__input product-form__input--quantity" {{ block.shopify_attributes }}>
+              <label class="form__label form__label--quantity" style="color: var(--christmas-green); font-weight: 600;">
+                Quantità
+              </label>
+              <quantity-input class="quantity">
+                <button class="quantity__button no-js-hidden" name="minus" type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; cursor: pointer;">
+                  −
+                </button>
+                <input class="quantity__input" type="number" name="quantity" id="Quantity-{{ section.id }}" min="1" value="1" form="{{ product_form_id }}" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; text-align: center; width: 60px; height: 40px;">
+                <button class="quantity__button no-js-hidden" name="plus" type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; cursor: pointer;">
+                  +
+                </button>
+              </quantity-input>
+            </div>
+
+          {%- when 'buy_buttons' -%}
+            <div class="product-form__buttons" {{ block.shopify_attributes }}>
+              {%- liquid
+                assign product_form_id = 'product-form-' | append: section.id
+              -%}
+              
+              <product-form class="product-form">
+                {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+                  
+                  <div class="product-form__buttons">
+                    <button type="submit" name="add" class="product-form__cart-submit btn btn--primary btn--full-width"
+                            style="background: var(--christmas-red); color: white; border: none; padding: 1.2rem 2rem; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);"
+                            {%- if product.selected_or_first_available_variant.available == false -%}disabled{%- endif -%}>
+                      <span>
+                        {%- if product.selected_or_first_available_variant.available -%}
+                          🎟️ Aggiungi al Carrello
+                        {%- else -%}
+                          Non Disponibile
+                        {%- endif -%}
+                      </span>
+                    </button>
+                    
+                    {%- if block.settings.show_dynamic_checkout -%}
+                      {{ form | payment_button }}
+                    {%- endif -%}
+                  </div>
+                {%- endform -%}
+              </product-form>
+            </div>
+
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="product__description rte" {{ block.shopify_attributes }}>
+                {{ product.description }}
+              </div>
+            {%- endif -%}
+
+          {%- when 'custom_liquid' -%}
+            <div class="custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+
+          {%- when 'collapsible_tab' -%}
+            <div class="product__accordion accordion" {{ block.shopify_attributes }}>
+              <details id="Details-{{ block.id }}-{{ section.id }}">
+                <summary role="button" style="color: var(--christmas-green); font-weight: 600; padding: 1rem 0; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                  {{ block.settings.heading | escape }}
+                </summary>
+                <div class="accordion__content rte" id="ProductAccordion-{{ block.id }}-{{ section.id }}" style="padding: 1rem 0;">
+                  {%- if block.settings.content != blank -%}
+                    {{ block.settings.content }}
+                  {%- elsif block.settings.page != blank -%}
+                    {{ pages[block.settings.page].content }}
+                  {%- endif -%}
+                </div>
+              </details>
+            </div>
+
+          {%- when '@app' -%}
+            <!-- APP BLOCKS - Will be styled with our design system -->
+            <div class="app-block sketch-card sketch seed-app" {{ block.shopify_attributes }}>
+              <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                <defs>
+                  <filter id="wobble-app">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="30"/>
+                    <feDisplacementMap in="SourceGraphic" scale="1"/>
+                  </filter>
+                </defs>
+                <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-green)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 8 6 12" vector-effect="non-scaling-stroke" filter="url(#wobble-app)"/>
+              </svg>
+              {% render block %}
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product information",
+  "tag": "section",
+  "class": "section",
+  "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            },
+            {
+              "value": "button",
+              "label": "Buttons"
+            }
+          ],
+          "default": "button",
+          "label": "Type"
+        }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "Show dynamic checkout buttons"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom liquid"
+        }
+      ]
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Collapsible row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Collapsible row",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Row content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Row content from page"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "options": [
+        {
+          "value": "stacked",
+          "label": "Stacked"
+        },
+        {
+          "value": "single",
+          "label": "Single"
+        },
+        {
+          "value": "thumbnail",
+          "label": "Thumbnail"
+        }
+      ],
+      "default": "stacked",
+      "label": "Gallery layout"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "small",
+      "label": "Media size"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Media position"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "default": true,
+      "label": "Enable sticky product information"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_variants",
+      "default": false,
+      "label": "Hide variants"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 44
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+/* Product layout with design system integration */
+.product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  padding: 2rem;
+  background: rgba(15, 47, 31, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin: 2rem 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100vh;
+}
+
+.product__media-wrapper {
+  position: sticky;
+  top: 2rem;
+}
+
+.product__media-item {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.product__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.product-form__buttons button:hover {
+  background: #b91c1c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* App blocks styling */
+.app-block {
+  margin: 2rem 0;
+  padding: 2rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .product {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1rem 0.5rem;
+  }
+}
+</style>
