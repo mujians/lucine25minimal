@@ -294,7 +294,45 @@
       background: transparent !important;
     }
     
-    /* Removed all Evey Events CSS to prevent interference */
+    /* Sketch card SVG borders - restore functionality */
+    .sketch-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    .sketch-border rect {
+      stroke: #2e7d32 !important;
+      stroke-width: 1px !important;
+    }
+    
+    /* Gold border for open ticket card */
+    .sketch-card.seed-9 .sketch-border rect {
+      stroke: #ffb300 !important;
+    }
+    
+    .sketch-quote-card {
+      position: relative;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+    }
+    
+    .quote-sketch-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      stroke: #d32f2f !important;
+    }
+    
+    /* Removed Evey Events CSS to prevent interference with app functionality */
   </style>
 
   {%- style -%}
