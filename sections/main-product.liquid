@@ -193,6 +193,51 @@
 
             {% endcase %}
           {% endfor %}
+          
+          {% else %}
+            <!-- DEFAULT CONTENT WHEN NO BLOCKS -->
+            <div class="product-header">
+              <h1 style="color: var(--christmas-red); margin-bottom: 1rem; font-family: 'Homemade Apple', cursive;">{{ product.title }}</h1>
+              <p class="product-subtitle" style="font-size: 1.1rem; color: rgba(255,255,255,0.9); margin: 0;">{{ section.settings.subtitle | default: "Garantisciti l'accesso alle Lucine di Natale con prezzo agevolato e posto riservato" }}</p>
+            </div>
+            
+            <!-- Basic product form for fallback -->
+            {% form 'product', product, id: 'product-form-basic' %}
+              <div class="sketch-card sketch seed-1">
+                <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                  <defs>
+                    <filter id="wobble-basic">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5"/>
+                      <feDisplacementMap in="SourceGraphic" scale="1"/>
+                    </filter>
+                  </defs>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-basic)"/>
+                </svg>
+                
+                <div style="text-align: center; padding: 1rem;">
+                  <p style="font-size: 2rem; font-weight: 700; color: var(--christmas-red); margin-bottom: 1rem;">
+                    {{ product.selected_or_first_available_variant.price | money }}
+                  </p>
+                  
+                  {% unless product.has_only_default_variant %}
+                    <div style="margin-bottom: 1rem;">
+                      <select name="id" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                        {% for variant in product.variants %}
+                          <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                            {{ variant.title }} - {{ variant.price | money }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% endunless %}
+                  
+                  <button type="submit" name="add" style="background: var(--christmas-red); color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">
+                    🎟️ Aggiungi al Carrello
+                  </button>
+                </div>
+              </div>
+            {% endform %}
+          {% endif %}
 
         </div>
       </section>
