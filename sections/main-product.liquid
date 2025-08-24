@@ -227,7 +227,26 @@
       pointer-events: none;
     }
     
-    /* Media gallery controls */
+    /* Media gallery layout fixes */
+    .product__media-gallery {
+      position: relative;
+    }
+    
+    .product__media {
+      position: relative;
+      margin-bottom: 1rem;
+      max-width: 100%;
+    }
+    
+    .product__media img {
+      width: 100%;
+      height: auto;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    
+    /* Gallery controls */
     .product__media-gallery .icon,
     .product__media .icon,
     .media-gallery .icon {
@@ -239,11 +258,36 @@
       background: #2e7d32;
       border: 2px solid #2e7d32;
       color: white;
+      border-radius: 6px;
+      padding: 0.5rem;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
     }
     
     .product__media-toggle:hover {
       background: #d32f2f;
       border-color: #d32f2f;
+    }
+    
+    /* Hide duplicate/broken elements */
+    .media-gallery .media:not(:first-child) {
+      display: none;
+    }
+    
+    /* Modal button styling */
+    .product__modal-opener {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+    }
+    
+    /* Remove conflicting styles */
+    .media--transparent {
+      background: transparent !important;
     }
     
     /* Evey Events app buttons - comprehensive targeting */
