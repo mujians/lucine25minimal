@@ -131,12 +131,11 @@
       border-color: #d32f2f !important;
     }
     
-    /* Evey scheduler button styling */
-    .evey-scheduler-container {
-      margin: 1rem 0;
-    }
     
-    .evey-scheduler-container .btn {
+    /* Evey app block styling - ensure buttons are visible */
+    [data-evey-string], 
+    .evey-scheduler-button,
+    button[data-evey-trigger] {
       background: #ffb300 !important;
       border-color: #ffb300 !important;
       color: #0d1b0f !important;
@@ -144,14 +143,19 @@
       padding: 1rem !important;
       border-radius: 8px !important;
       font-size: 1rem !important;
+      width: 100% !important;
+      margin: 1rem 0 !important;
+      display: block !important;
+      text-align: center !important;
     }
     
-    .evey-scheduler-container .btn:hover {
+    [data-evey-string]:hover,
+    .evey-scheduler-button:hover,
+    button[data-evey-trigger]:hover {
       background: #d32f2f !important;
       border-color: #d32f2f !important;
       color: white !important;
     }
-    
     
     /* Variant buttons styling */
     .variant-input {
@@ -851,15 +855,6 @@
                   </volume-pricing>
                 {%- endif -%}
               </div>
-            
-            {%- comment -%} Add Evey scheduler button after quantity selector {%- endcomment -%}
-            {%- when 'evey_scheduler_button' -%}
-              <div class="evey-scheduler-container" {{ block.shopify_attributes }}>
-                <button role="button" class="btn desaturated action-button button Button Button--secondary" data-evey-string="scheduler_button_label" data-evey-trigger="scheduler" data-evey-scheduled-info="content" style="width:100%;">
-                  {{ block.settings.button_text | default: "Seleziona data e ora" }}
-                </button>
-              </div>
-            
             {%- when 'popup' -%}
               <modal-opener
                 class="product-popup-modal__opener no-js-hidden quick-add-hidden"
@@ -1273,19 +1268,6 @@
       "type": "quantity_selector",
       "name": "t:sections.main-product.blocks.quantity_selector.name",
       "limit": 1
-    },
-    {
-      "type": "evey_scheduler_button",
-      "name": "Evey Scheduler Button",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "button_text",
-          "label": "Button Text",
-          "default": "Seleziona data e ora"
-        }
-      ]
     },
     {
       "type": "variant_picker",
