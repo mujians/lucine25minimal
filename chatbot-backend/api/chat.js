@@ -65,6 +65,14 @@ SERVIZI:
 INFO: info@lucinedinatale.it`;
 
   try {
+    // Debug delle variabili d'ambiente
+    console.log('Available env vars:', Object.keys(process.env));
+    console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
+    
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY not found in environment variables');
+    }
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
