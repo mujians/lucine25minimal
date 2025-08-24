@@ -1655,6 +1655,12 @@ h6 {
 
 .faq-nav-list li {
   margin-bottom: 0.75rem;
+  position: relative;
+}
+
+/* Disable general arrow rule for FAQ navigation */
+.faq-nav-list li::before {
+  display: none !important;
 }
 
 .faq-nav-link {
@@ -1697,12 +1703,12 @@ h6 {
   border: none;
   color: var(--text-white) !important;
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 1.125rem;
+  font-size: 1.188rem !important; /* 19px equivalent */
   font-weight: 600;
   text-align: left;
-  padding: 1.25rem 5rem 1.25rem 1.5rem; /* More right padding for icon space */
+  padding: 1.25rem 6rem 1.25rem 1.5rem !important; /* Much more right padding - NEVER change */
   cursor: pointer;
-  transition: color 0.3s ease; /* Only transition color, not padding */
+  transition: none !important; /* NO transitions at all */
   position: relative;
   line-height: 1.4;
 }
@@ -1710,14 +1716,17 @@ h6 {
 .faq-question:after {
   content: '+';
   position: absolute;
-  right: 2rem;
+  right: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.8em;
-  font-weight: 400;
+  font-size: 2em;
+  font-weight: 300;
   color: var(--christmas-red);
-  transition: all 0.3s ease;
+  transition: none !important;
   line-height: 1;
+  width: 2rem;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; /* Force system font for icons */
 }
 
 /* FAQ Question Active State */
@@ -1725,12 +1734,9 @@ h6 {
   color: var(--christmas-green) !important;
 }
 
+/* Simple hover - NO sliding, NO scaling, NO transforms */
 .faq-question:hover {
   color: var(--christmas-green) !important;
-}
-
-.faq-question:hover:after {
-  transform: translateY(-50%) scale(1.1);
 }
 
 /* FAQ Answer */
@@ -1748,9 +1754,11 @@ h6 {
 
 /* FAQ Active State - question button when answer is open */
 .faq-question.active:after {
-  content: '×';
+  content: '-';
   transform: translateY(-50%) rotate(0deg);
-  font-size: 2em;
+  font-size: 2.5em;
+  font-weight: 200;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; /* Force system font for icons */
 }
 
 .faq-answer p {
@@ -1785,8 +1793,8 @@ h6 {
 /* Mobile FAQ Optimizations */
 @media (max-width: 768px) {
   .faq-question {
-    font-size: 1rem;
-    padding: 1rem 1.25rem;
+    font-size: 1.125rem !important; /* 18px for mobile */
+    padding: 1rem 5rem 1rem 1.25rem !important;
     line-height: 1.3;
   }
   
