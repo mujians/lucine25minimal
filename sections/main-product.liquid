@@ -43,17 +43,11 @@
       color: #2e7d32;
     }
     
-    /* Adjust column widths on desktop - use width not grid-template-columns */
-    @media screen and (min-width: 750px) {
-      .product .grid__item.product__media-wrapper {
-        width: 58% !important; /* More space for images */
-        max-width: 58% !important;
-      }
-      .product .grid__item.product__info-wrapper {
-        width: 42% !important; /* Less space for info */
-        max-width: 42% !important;
-      }
+    /* Force two columns on desktop and fix image sizes */
+    @media screen and (min-width: 990px) {
       .product.grid--2-col-tablet {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 3rem;
       }
     }
@@ -76,35 +70,16 @@
       padding: 0 2rem;
     }
     
-    /* Fix oversized icons - be specific to avoid breaking Evey */
+    /* Fix oversized icons */
+    .icon, 
+    svg,
     .accordion summary .icon,
-    .slider-button .icon,
-    .product__view-details .icon,
-    .header .icon,
-    .footer .icon {
+    .quantity__button .icon,
+    .slider-button .icon {
       width: 16px !important;
       height: 16px !important;
       max-width: 16px !important;
       max-height: 16px !important;
-    }
-    
-    /* Let all quantity buttons (Shopify and Evey) manage themselves */
-    /* Removed all quantity button CSS to avoid breaking Evey Events */
-    
-    /* Hide skip to product info completely */
-    .skip-to-content-link {
-      display: none !important;
-    }
-    
-    /* Disable animated borders that cause icons to flicker */
-    .sketch-border rect {
-      animation: none !important;
-      stroke-dashoffset: 0 !important;
-    }
-    
-    /* Hide only problematic slider list markers without breaking Evey Events */
-    .product__media-item.slider__slide::before {
-      display: none !important;
     }
     
     /* Quantity buttons styling */
@@ -232,24 +207,8 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
+      stroke: #2e7d32;
     }
-    
-    .sketch-border rect {
-      stroke-width: 1.5px !important; /* Thinner borders like original */
-    }
-    
-    /* Default sketch card colors */
-    .sketch-card.seed-1 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-2 .sketch-border rect { stroke: #2e7d32 !important; }  
-    .sketch-card.seed-3 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-4 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-5 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-6 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-7 .sketch-border rect { stroke: #2e7d32 !important; }
-    .sketch-card.seed-8 .sketch-border rect { stroke: #2e7d32 !important; }
-    
-    /* Gold border for special open ticket only */
-    .sketch-card.seed-9 .sketch-border rect { stroke: #ffb300 !important; }
     
     .sketch-quote-card {
       position: relative;
