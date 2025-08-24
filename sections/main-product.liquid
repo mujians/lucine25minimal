@@ -43,23 +43,25 @@
       color: #2e7d32;
     }
     
-    /* Force two-column layout on desktop */
-    @media screen and (min-width: 750px) {
-      .product.grid--2-col-tablet {
-        display: grid !important;
-        grid-template-columns: 58% 42% !important;
-        gap: 3rem !important;
-      }
-      
-      .product .grid__item.product__media-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-      }
-      
-      .product .grid__item.product__info-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-      }
+    /* Single column layout with image on top */
+    .product.grid--2-col-tablet {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2rem !important;
+      max-width: 800px !important;
+      margin: 0 auto !important;
+    }
+    
+    .product .grid__item.product__media-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      order: 1 !important; /* Image first */
+    }
+    
+    .product .grid__item.product__info-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      order: 2 !important; /* Info below image */
     }
     
     /* Limit image sizes */
@@ -92,11 +94,15 @@
       max-height: 16px !important;
     }
     
-    /* Specifically for standard quantity buttons */
+    /* Specifically for standard quantity buttons - make sure they're visible */
     .quantity__button .icon-minus,
-    .quantity__button .icon-plus {
-      width: 12px !important;
-      height: 12px !important;
+    .quantity__button .icon-plus,
+    .quantity__button .icon {
+      width: 16px !important;
+      height: 16px !important;
+      display: inline-block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
     
     /* Let Evey Events manage its own icons */
@@ -259,7 +265,7 @@
     }
     
     .sketch-border rect {
-      stroke-width: 1.5px !important; /* Thinner borders like original */
+      stroke-width: 1px !important; /* Much thinner borders like design system */
     }
     
     /* Default sketch card colors */
