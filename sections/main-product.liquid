@@ -143,6 +143,89 @@
       width: 14px !important;
       height: 14px !important;
     }
+    
+    /* Slider/Carousel buttons */
+    .slider-button {
+      background: #2e7d32;
+      border: 2px solid #2e7d32;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .slider-button:hover {
+      background: #d32f2f;
+      border-color: #d32f2f;
+    }
+    
+    .slider-button .icon {
+      width: 12px !important;
+      height: 12px !important;
+    }
+    
+    /* Product modal dialog */
+    .product-media-modal__dialog {
+      background: #0d1b0f;
+      border: 2px solid #2e7d32;
+    }
+    
+    /* View full details link */
+    .product__view-details {
+      color: #2e7d32;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .product__view-details:hover {
+      color: #d32f2f;
+    }
+    
+    .product__view-details .icon {
+      width: 16px !important;
+      height: 16px !important;
+    }
+    
+    /* Fix sketch cards - ensure they display properly */
+    .sketch-card {
+      position: relative;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+    }
+    
+    .sketch-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      stroke: #2e7d32;
+    }
+    
+    .sketch-quote-card {
+      position: relative;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+    }
+    
+    .quote-sketch-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
   </style>
 
   {%- style -%}
