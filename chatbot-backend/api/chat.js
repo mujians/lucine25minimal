@@ -1,5 +1,6 @@
 // Vercel Serverless Function - /api/chat.js
 // Questo file va nella cartella api/ del tuo progetto Vercel
+// Updated to fix env vars
 
 export default async function handler(req, res) {
   // CORS headers per permettere chiamate dal tuo sito
