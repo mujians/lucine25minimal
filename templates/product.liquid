@@ -1,5 +1,7 @@
 <!-- PRODUCT TEMPLATE - Biglietti Lucine di Natale -->
-<div class="formatted-content">
+<div class="page-container" style="min-height: 100vh; padding: 2rem 1rem;">
+  <div class="content-wrapper" style="max-width: 1200px; margin: 0 auto;">
+    <div class="formatted-content" style="background: rgba(15, 47, 31, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
   
   <!-- BREADCRUMB -->
   <nav class="breadcrumb">
@@ -66,57 +68,33 @@
         
         <form action="/cart/add" method="post" enctype="multipart/form-data" id="product-form">
           
-          {% unless product.has_only_default_variant %}
-          <div class="variant-options">
-            {% for option in product.options_with_values %}
-              <div class="option-group">
-                <label class="option-label">{{ option.name }}</label>
-                <div class="option-values">
-                  {% for value in option.values %}
-                    <input type="radio" 
-                           id="{{ option.name | handleize }}-{{ value | handleize }}" 
-                           name="properties[{{ option.name }}]" 
-                           value="{{ value }}"
-                           {% if forloop.first %}checked{% endif %}
-                           onchange="updateVariant()">
-                    <label for="{{ option.name | handleize }}-{{ value | handleize }}" class="variant-label">
-                      <span class="variant-type">{{ value }}</span>
-                      <span class="variant-price" data-price="{% if value == 'Intero' %}15{% elsif value == 'Ridotto' %}10{% elsif value == 'Saltafila' %}20{% endif %}">
-                        {% if value == 'Intero' %}€15,00{% elsif value == 'Ridotto' %}€10,00{% elsif value == 'Saltafila' %}€20,00{% endif %}
-                      </span>
-                    </label>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-          {% else %}
-          <!-- Default variant options for fallback -->
+          {% if product.variants.size > 1 %}
           <div class="variant-options">
             <div class="option-group">
               <label class="option-label">Tipo Biglietto</label>
               <div class="option-values">
-                <input type="radio" id="intero" name="variant-type" value="intero" checked onchange="updateVariant()">
-                <label for="intero" class="variant-label">
-                  <span class="variant-type">🎫 Biglietto Intero</span>
-                  <span class="variant-price" data-price="15">€15,00</span>
-                </label>
-                
-                <input type="radio" id="ridotto" name="variant-type" value="ridotto" onchange="updateVariant()">
-                <label for="ridotto" class="variant-label">
-                  <span class="variant-type">🎟️ Biglietto Ridotto</span>
-                  <span class="variant-price" data-price="10">€10,00</span>
-                </label>
-                
-                <input type="radio" id="saltafila" name="variant-type" value="saltafila" onchange="updateVariant()">
-                <label for="saltafila" class="variant-label">
-                  <span class="variant-type">⚡ Biglietto Saltafila</span>
-                  <span class="variant-price" data-price="20">€20,00</span>
-                </label>
+                {% for variant in product.variants %}
+                  <input type="radio" 
+                         id="variant-{{ variant.id }}" 
+                         name="id" 
+                         value="{{ variant.id }}"
+                         data-price="{{ variant.price | money_without_currency }}"
+                         {% if forloop.first %}checked{% endif %}
+                         onchange="updateVariant(this)">
+                  <label for="variant-{{ variant.id }}" class="variant-label">
+                    <span class="variant-type">
+                      {% if variant.title contains 'Ridotto' %}🎟️{% elsif variant.title contains 'Saltafila' %}⚡{% else %}🎫{% endif %}
+                      {{ variant.title }}
+                    </span>
+                    <span class="variant-price">{{ variant.price | money }}</span>
+                  </label>
+                {% endfor %}
               </div>
             </div>
           </div>
-          {% endunless %}
+          {% else %}
+          <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+          {% endif %}
           
           <!-- QUANTITY & ADD TO CART -->
           <div class="purchase-section">
@@ -131,11 +109,9 @@
             
             <button type="submit" class="add-to-cart-btn" id="add-to-cart">
               <span>🎟️ Aggiungi al Carrello</span>
-              <span class="btn-price" id="total-price">€15,00</span>
+              <span class="btn-price" id="total-price">{{ product.selected_or_first_available_variant.price | money }}</span>
             </button>
           </div>
-          
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         </form>
       </div>
 
@@ -225,7 +201,9 @@
     </div>
   </section>
 
-</div>
+    </div><!-- chiude formatted-content -->
+  </div><!-- chiude content-wrapper -->
+</div><!-- chiude page-container -->
 
 <style>
 /* Product Page Styles */
@@ -538,14 +516,11 @@
 
 <script>
 // Variant and Price Management
-function updateVariant() {
-  const selectedVariant = document.querySelector('input[name="properties[Tipo]"]:checked') || 
-                           document.querySelector('input[name="variant-type"]:checked');
-  
-  if (selectedVariant) {
-    const priceElement = selectedVariant.parentNode.querySelector('.variant-price');
-    const price = priceElement.dataset.price || priceElement.textContent.replace('€', '').replace(',00', '');
-    document.getElementById('variant-price').textContent = '€' + price + ',00';
+function updateVariant(element) {
+  if (element) {
+    const price = element.dataset.price;
+    const priceFormatted = parseFloat(price).toFixed(2).replace('.', ',');
+    document.getElementById('variant-price').textContent = '€' + priceFormatted;
     updateTotalPrice();
   }
 }
@@ -563,8 +538,8 @@ function changeQuantity(change) {
 
 function updateTotalPrice() {
   const priceText = document.getElementById('variant-price').textContent;
-  const price = parseFloat(priceText.replace('€', '').replace(',', '.'));
-  const quantity = parseInt(document.getElementById('quantity').value);
+  const price = parseFloat(priceText.replace('€', '').replace(',', '.').trim());
+  const quantity = parseInt(document.getElementById('quantity').value) || 1;
   const total = (price * quantity).toFixed(2);
   document.getElementById('total-price').textContent = '€' + total.replace('.', ',');
 }
