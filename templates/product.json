@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -6,6 +15,16 @@
         "title": {
           "type": "title",
           "settings": {}
+        },
+        "evey_events_tickets_multi_variant_selector_bqMPJU": {
+          "type": "shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8",
+          "settings": {
+            "show_service_fees": true,
+            "sold_out_color": "#FF0000",
+            "limit_reached_color": "#777777",
+            "padding_x": 0,
+            "padding_y": 0
+          }
         },
         "discount_info": {
           "type": "custom_liquid",
@@ -34,12 +53,6 @@
           "type": "quantity_selector",
           "settings": {}
         },
-        "evey_scheduler_button": {
-          "type": "evey_scheduler_button",
-          "settings": {
-            "button_text": "Seleziona data e ora"
-          }
-        },
         "share": {
           "type": "share",
           "disabled": true,
@@ -53,16 +66,6 @@
           "settings": {
             "show_dynamic_checkout": true,
             "show_gift_card_recipient": true
-          }
-        },
-        "evey_events_tickets_multi_variant_selector_3GT6jh": {
-          "type": "shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8",
-          "settings": {
-            "show_service_fees": false,
-            "sold_out_color": "#ff0000",
-            "limit_reached_color": "#777777",
-            "padding_x": 0,
-            "padding_y": 0
           }
         },
         "email_alert": {
@@ -104,15 +107,14 @@
       },
       "block_order": [
         "title",
+        "evey_events_tickets_multi_variant_selector_bqMPJU",
         "discount_info",
         "instructions_info",
         "price",
         "variant_picker",
         "quantity_selector",
-        "evey_scheduler_button",
         "share",
         "buy_buttons",
-        "evey_events_tickets_multi_variant_selector_3GT6jh",
         "email_alert",
         "ticket_guide",
         "open_ticket",
@@ -133,9 +135,14 @@
         "padding_top": 36,
         "padding_bottom": 44
       }
+    },
+    "17560537542266cc0c": {
+      "type": "apps",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "17560537542266cc0c"
   ]
 }
