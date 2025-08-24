@@ -1,0 +1,11 @@
+{% comment %}
+  Product Template - Loads main-product section
+  Fallback template that Shopify will recognize
+{% endcomment %}
+
+{% section 'main-product' %}
+
+{% comment %} Load product recommendations if section exists {% endcomment %}
+{% if sections.settings.show_recommendations %}
+  {% section 'product-recommendations' %}
+{% endif %}

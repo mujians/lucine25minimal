@@ -33,9 +33,10 @@
         <!-- PRODUCT INFO -->
         <div class="product-info">
           
-          <!-- RENDER BLOCKS -->
-          {% for block in section.blocks %}
-            {% case block.type %}
+          <!-- RENDER BLOCKS OR DEFAULT CONTENT -->
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              {% case block.type %}
               
               {% when 'title' %}
                 <div class="product-header" {{ block.shopify_attributes }}>
@@ -294,7 +295,7 @@
             {"value": "", "label": "None"},
             {"value": "check_mark", "label": "Check Mark"}
           ],
-          "default": "none"
+          "default": ""
         },
         {
           "type": "richtext",
