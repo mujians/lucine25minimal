@@ -331,7 +331,18 @@
   <div class="container">
   <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper{% if section.settings.media_position == 'right' %} medium-hide large-up-hide{% endif %}">
-      {% render 'product-media-gallery', variant_images: variant_images %}
+      {% if product.media.size > 0 %}
+        {% render 'product-media-gallery', variant_images: variant_images %}
+      {% else %}
+        <div class="product__media-placeholder" style="background: rgba(255,255,255,0.1); border: 2px dashed #2e7d32; border-radius: 12px; padding: 3rem; text-align: center; color: #2e7d32; min-height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21,15 16,10 5,21"/>
+          </svg>
+          <p style="margin: 1rem 0 0 0; font-weight: 600;">Nessuna immagine disponibile</p>
+        </div>
+      {% endif %}
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <product-info
