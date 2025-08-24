@@ -1536,12 +1536,10 @@ h6 {
 
 .faq-question:hover {
   color: var(--christmas-green) !important;
-  transform: translateX(5px) !important;
 }
 
 .faq-question.active {
   color: var(--christmas-red) !important;
-  transform: translateX(8px) !important;
 }
 
 .faq-answer {
@@ -1654,8 +1652,9 @@ h6 {
 }
 
 .faq-nav-list li {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   position: relative;
+  padding-left: 0; /* No indent */
 }
 
 /* Disable general arrow rule for FAQ navigation */
@@ -1667,11 +1666,11 @@ h6 {
   display: inline-block;
   color: var(--text-white) !important;
   text-decoration: none !important;
-  font-size: 1rem;
+  font-size: 1.125rem !important; /* 18px - bigger */
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   position: relative;
 }
 
@@ -1729,14 +1728,14 @@ h6 {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; /* Force system font for icons */
 }
 
-/* FAQ Question Active State */
+/* FAQ Question Active State - Keep white, don't change color */
 .faq-question.active {
-  color: var(--christmas-green) !important;
+  color: var(--text-white) !important;
 }
 
-/* Simple hover - NO sliding, NO scaling, NO transforms */
+/* Simple hover - Keep white, don't change color */
 .faq-question:hover {
-  color: var(--christmas-green) !important;
+  color: var(--text-white) !important;
 }
 
 /* FAQ Answer */
