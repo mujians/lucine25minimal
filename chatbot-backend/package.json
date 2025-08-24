@@ -1,0 +1,13 @@
+{
+  "name": "lucine-chatbot-backend",
+  "version": "1.0.0",
+  "description": "Backend sicuro per chatbot Lucine di Natale",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
