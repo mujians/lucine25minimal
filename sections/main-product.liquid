@@ -191,6 +191,25 @@
                   </div>
                 </details>
 
+              {% when '@app' %}
+                <!-- APP BLOCKS (Evey Events, etc.) -->
+                <div class="app-block-wrapper" {{ block.shopify_attributes }}>
+                  <div class="sketch-card sketch seed-app">
+                    <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                      <defs>
+                        <filter id="wobble-app">
+                          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="30"/>
+                          <feDisplacementMap in="SourceGraphic" scale="1"/>
+                        </filter>
+                      </defs>
+                      <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-green)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 8 6 12" vector-effect="non-scaling-stroke" filter="url(#wobble-app)"/>
+                    </svg>
+                    
+                    <!-- Render the app block content -->
+                    {% render block %}
+                  </div>
+                </div>
+
             {% endcase %}
           {% endfor %}
           
