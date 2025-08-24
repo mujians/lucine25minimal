@@ -1,10 +1,10 @@
 <div class="formatted-content">
-  <h1>Menu e Stand Gastronomici</h1>
+  <h1>Menu Ristoro</h1>
   <p>Scopri le delizie disponibili presso i nostri stand gastronomici durante le <strong>Lucine di Natale 2025</strong>.</p>
 
   <!-- BEVANDE CALDE -->
   <section class="location-section">
-    <h2 style="color: var(--christmas-red);">🍫 Bevande Calde</h2>
+    <h3 style="color: var(--christmas-red);">🍫 Bevande Calde</h3>
     
     <div class="menu-category">
       <div class="menu-item-row">
@@ -31,7 +31,7 @@
         <div class="menu-price">€ 4,00</div>
       </div>
       
-      <div class="menu-item-row special">
+      <div class="menu-item-row featured">
         <div class="menu-item-info">
           <h4>☕ + 🏺 Cioccolata + Tazza ceramica</h4>
           <p class="meta">Combo perfetta per le serate fredde</p>
@@ -39,7 +39,7 @@
         <div class="menu-price">€ 7,00</div>
       </div>
       
-      <div class="menu-item-row special">
+      <div class="menu-item-row featured">
         <div class="menu-item-info">
           <h4>🍷 + 🏺 Vin brulè + Tazza ceramica</h4>
           <p class="meta">Combo perfetta per le serate fredde</p>
@@ -51,7 +51,7 @@
 
   <!-- PANINI E STREET FOOD -->
   <section class="location-section">
-    <h2 style="color: var(--christmas-green);">🥪 Panini e Street Food</h2>
+    <h3 style="color: var(--christmas-green);">🥪 Panini e Street Food</h3>
     
     <div class="menu-category">
       <div class="menu-item-row">
@@ -98,10 +98,10 @@
 
   <!-- PRIMI PIATTI -->
   <section class="location-section">
-    <h2 style="color: var(--christmas-red);">🍝 Primi Piatti</h2>
+    <h3 style="color: var(--christmas-red);">🍝 Primi Piatti</h3>
     
     <div class="menu-category">
-      <div class="menu-item-row featured">
+      <div class="menu-item-row">
         <div class="menu-item-info">
           <h4>🥔 Pizzoccheri alla valtellinese</h4>
           <p class="meta">Specialità lombarda con verze, patate e formaggio</p>
@@ -137,7 +137,7 @@
 
   <!-- DOLCI -->
   <section class="location-section">
-    <h2 style="color: var(--christmas-green);">🍰 Dolci</h2>
+    <h3 style="color: var(--christmas-green);">🍰 Dolci</h3>
     
     <div class="menu-category">
       <div class="menu-item-row">
@@ -160,10 +160,10 @@
 
   <!-- ALTRE BEVANDE -->
   <section class="location-section">
-    <h2 style="color: var(--christmas-red);">🥤 Altre Bevande</h2>
+    <h3 style="color: var(--christmas-red);">🥤 Altre Bevande</h3>
     
     <div class="menu-category">
-      <div class="menu-item-row special">
+      <div class="menu-item-row">
         <div class="menu-item-info">
           <h4>🍭 Zucchero filato</h4>
           <p class="meta">Dolcezza per i più piccoli</p>
@@ -200,20 +200,14 @@
   <!-- INFO BOX -->
   <section class="location-section">
     <div class="sketch-quote-card">
-      <svg class="quote-sketch-background" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+      <svg class="quote-sketch-background" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
         <defs>
           <filter id="wobble-quote-menu">
-            <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1" seed="30"/>
-            <feDisplacementMap in="SourceGraphic" scale="0.8"/>
+            <feturbulence type="fractalNoise" basefrequency="0.3" numoctaves="1" seed="30"></feturbulence>
+            <fedisplacementmap in="SourceGraphic" scale="0.8"></fedisplacementmap>
           </filter>
         </defs>
-        <path d="M8,8 Q25,5 50,8 Q75,5 92,8 Q95,25 92,50 Q95,75 92,92 Q75,95 50,92 Q25,95 8,92 Q5,75 8,50 Q5,25 8,8 Z" 
-              fill="rgba(255,255,255,0.04)" 
-              stroke="var(--christmas-gold)" 
-              stroke-width="1" 
-              stroke-linecap="round" 
-              stroke-dasharray="2 1" 
-              filter="url(#wobble-quote-menu)"/>
+        <path d="M8,8 Q25,5 50,8 Q75,5 92,8 Q95,25 92,50 Q95,75 92,92 Q75,95 50,92 Q25,95 8,92 Q5,75 8,50 Q5,25 8,8 Z" fill="rgba(255,255,255,0.04)" stroke="var(--christmas-gold)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 1" filter="url(#wobble-quote-menu)"></path>
       </svg>
       <div class="quote-content">
         <p class="quote-text">🍴 I nostri stand gastronomici sono aperti durante tutto l'orario dell'evento • Pagamenti in contanti o carta • Piatti serviti caldi e preparati al momento</p>
@@ -287,22 +281,6 @@
   color: var(--christmas-gold);
 }
 
-.menu-item-row.special {
-  background: rgba(220, 38, 38, 0.05);
-  border-radius: 8px;
-  margin: 0.5rem 0;
-  padding: 1.25rem 1rem;
-  border: 1px solid rgba(220, 38, 38, 0.2);
-}
-
-.menu-item-row.special .menu-item-info h4 {
-  color: var(--christmas-red) !important;
-}
-
-.menu-item-row.special .menu-price {
-  color: var(--christmas-red);
-  font-size: 1.4rem;
-}
 
 @media (max-width: 768px) {
   .menu-item-row {
