@@ -203,21 +203,42 @@ function getSuggestions(userMessage, knowledgeBase) {
 
 async function logConversation(sessionId, userMessage, botReply, req) {
   try {
-    const logData = {
+    // Log direttamente nel file invece di chiamare l'API
+    const { writeFileSync, readFileSync, existsSync } = await import('fs');
+    const LOGS_FILE = '/tmp/chatbot_logs.json';
+    
+    const logEntry = {
       sessionId: sessionId || generateSessionId(),
+      timestamp: new Date().toISOString(),
       userMessage,
       botReply,
-      timestamp: new Date().toISOString(),
       userAgent: req.headers['user-agent'],
       ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
     };
 
-    // Chiamata al servizio di logging
-    await fetch(`${req.headers.host}/api/logs`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(logData)
-    });
+    // Leggi logs esistenti
+    let logs = [];
+    if (existsSync(LOGS_FILE)) {
+      try {
+        const data = readFileSync(LOGS_FILE, 'utf8');
+        logs = JSON.parse(data);
+      } catch (e) {
+        console.error('Error reading logs:', e);
+      }
+    }
+
+    // Aggiungi nuovo log
+    logs.push(logEntry);
+
+    // Mantieni solo gli ultimi 1000 log
+    if (logs.length > 1000) {
+      logs = logs.slice(-1000);
+    }
+
+    // Salva
+    writeFileSync(LOGS_FILE, JSON.stringify(logs, null, 2));
+    console.log('Log saved:', logEntry.sessionId, userMessage.substring(0, 50));
+    
   } catch (error) {
     console.error('Logging error:', error);
   }
