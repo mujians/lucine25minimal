@@ -127,13 +127,17 @@
       stroke-dashoffset: 0 !important;
     }
     
-    /* Remove unwanted list markers/arrows */
-    ul, ol {
+    /* Remove unwanted list markers/arrows - but don't break Evey Events */
+    .product__info ul:not([class*="evey"]):not([id*="evey"]), 
+    .product__info ol:not([class*="evey"]):not([id*="evey"]) {
       list-style: none !important;
     }
-    ul::before, ol::before,
-    ul::after, ol::after,
-    li::before, li::after {
+    
+    /* Don't hide pseudo-elements from Evey Events */
+    .product__info ul:not([class*="evey"]):not([id*="evey"])::before,
+    .product__info ul:not([class*="evey"]):not([id*="evey"])::after,
+    .product__info li:not([class*="evey"]):not([id*="evey"])::before,
+    .product__info li:not([class*="evey"]):not([id*="evey"])::after {
       display: none !important;
     }
     
