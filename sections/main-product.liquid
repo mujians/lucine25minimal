@@ -106,6 +106,27 @@
       max-height: 20px;
     }
     
+    /* Hide skip to product info completely */
+    .skip-to-content-link {
+      display: none !important;
+    }
+    
+    /* Disable animated borders that cause icons to flicker */
+    .sketch-border rect {
+      animation: none !important;
+      stroke-dashoffset: 0 !important;
+    }
+    
+    /* Remove unwanted list markers/arrows */
+    ul, ol {
+      list-style: none !important;
+    }
+    ul::before, ol::before,
+    ul::after, ol::after,
+    li::before, li::after {
+      display: none !important;
+    }
+    
     /* Quantity buttons styling */
     .quantity__button {
       background: #2e7d32;
@@ -234,14 +255,21 @@
     }
     
     .sketch-border rect {
-      stroke: #2e7d32 !important; /* Green for most cards */
-      stroke-width: 2px !important;
+      stroke-width: 1.5px !important; /* Thinner borders like original */
     }
     
-    /* Gold border for special open ticket */
-    .sketch-card.seed-9 .sketch-border rect {
-      stroke: #ffb300 !important;
-    }
+    /* Default sketch card colors */
+    .sketch-card.seed-1 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-2 .sketch-border rect { stroke: #2e7d32 !important; }  
+    .sketch-card.seed-3 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-4 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-5 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-6 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-7 .sketch-border rect { stroke: #2e7d32 !important; }
+    .sketch-card.seed-8 .sketch-border rect { stroke: #2e7d32 !important; }
+    
+    /* Gold border for special open ticket only */
+    .sketch-card.seed-9 .sketch-border rect { stroke: #ffb300 !important; }
     
     .sketch-quote-card {
       position: relative;
