@@ -115,43 +115,14 @@ main, #MainContent {
   pointer-events: none;
 }
 
-/* ANIMATED BORDER - Bordo che scorre per CTA */
-@keyframes borderFlow {
+/* ANIMATED BORDER - Trattini che scorrono */
+@keyframes dashFlow {
   0% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 60; }
+  100% { stroke-dashoffset: -50; }
 }
 
 .sketch-card.seed-animated .sketch-border rect {
-  stroke-dasharray: 15 9 7 13;
-  animation: borderFlow 2s linear infinite;
-}
-
-/* Glow effect for animated CTA */
-.sketch-card.seed-animated {
-  position: relative;
-}
-
-.sketch-card.seed-animated::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, 
-    var(--christmas-red), 
-    var(--christmas-gold), 
-    var(--christmas-red), 
-    var(--christmas-gold));
-  border-radius: 16px;
-  opacity: 0.3;
-  z-index: -1;
-  animation: glowRotate 3s linear infinite;
-}
-
-@keyframes glowRotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  animation: dashFlow 2s linear infinite;
 }
 
 /* NAVIGATION CONTAINER - Natural flow */
