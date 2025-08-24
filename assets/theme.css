@@ -1725,7 +1725,8 @@ h6 {
   line-height: 1;
   width: 2rem;
   text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; /* Force system font for icons */
+  font-family: 'Homemade Apple', cursive !important; /* Sketch effect font */
+  letter-spacing: 0.1em;
 }
 
 /* FAQ Question Active State - Keep white, don't change color */
@@ -1753,11 +1754,12 @@ h6 {
 
 /* FAQ Active State - question button when answer is open */
 .faq-question.active:after {
-  content: '-';
+  content: '×';
   transform: translateY(-50%) rotate(0deg);
-  font-size: 2.5em;
-  font-weight: 200;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; /* Force system font for icons */
+  font-size: 2.2em;
+  font-weight: 400;
+  font-family: 'Homemade Apple', cursive !important; /* Sketch effect font */
+  letter-spacing: 0;
 }
 
 .faq-answer p {
