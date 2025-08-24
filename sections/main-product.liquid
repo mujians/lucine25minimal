@@ -43,18 +43,22 @@
       color: #2e7d32;
     }
     
-    /* Adjust column widths on desktop - use width not grid-template-columns */
+    /* Force two-column layout on desktop */
     @media screen and (min-width: 750px) {
-      .product .grid__item.product__media-wrapper {
-        width: 58% !important; /* More space for images */
-        max-width: 58% !important;
-      }
-      .product .grid__item.product__info-wrapper {
-        width: 42% !important; /* Less space for info */
-        max-width: 42% !important;
-      }
       .product.grid--2-col-tablet {
-        gap: 3rem;
+        display: grid !important;
+        grid-template-columns: 58% 42% !important;
+        gap: 3rem !important;
+      }
+      
+      .product .grid__item.product__media-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      
+      .product .grid__item.product__info-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
       }
     }
     
