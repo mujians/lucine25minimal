@@ -88,40 +88,8 @@
       max-height: 16px !important;
     }
     
-    /* Force quantity button icons to be visible and properly sized */
-    .quantity__button .icon,
-    .quantity__button .icon-minus,
-    .quantity__button .icon-plus,
-    .quantity__button svg {
-      width: 16px !important;
-      height: 16px !important;
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      color: white !important;
-    }
-    
-    /* Make sure SVG paths inside quantity buttons are white */
-    .quantity__button svg path {
-      fill: white !important;
-    }
-    
-    /* Let Evey Events manage its own icons - but ensure paths are visible */
-    .evey-events svg,
-    .evey-events .icon,
-    [class*="evey"] svg,
-    [id*="evey"] svg {
-      width: auto !important;
-      height: auto !important;
-      max-width: 20px;
-      max-height: 20px;
-    }
-    
-    /* Fix Evey quantity button paths specifically */
-    [class*="evey"] .quantity__button svg path,
-    [id*="evey"] .quantity__button svg path {
-      fill: white !important;
-    }
+    /* Let all quantity buttons (Shopify and Evey) manage themselves */
+    /* Removed all quantity button CSS to avoid breaking Evey Events */
     
     /* Hide skip to product info completely */
     .skip-to-content-link {
