@@ -140,61 +140,6 @@
                 {% endif %}
               </div>
               
-              <!-- Shipping Calculator -->
-              <div style="padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <label style="color: var(--christmas-green); font-weight: 600; display: block; margin-bottom: 0.5rem;">📍 Calcola Spedizione</label>
-                <select id="shipping-country" 
-                        style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                  <option value="">Seleziona paese...</option>
-                  <option value="IT">Italia</option>
-                  <option value="CH">Svizzera</option>
-                  <option value="FR">Francia</option>
-                  <option value="DE">Germania</option>
-                  <option value="AT">Austria</option>
-                </select>
-                <input type="text" 
-                       id="shipping-zip" 
-                       placeholder="CAP / Codice postale"
-                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px;">
-                <button type="button" 
-                        onclick="calculateShipping()"
-                        style="width: 100%; margin-top: 0.5rem; background: transparent; color: var(--christmas-green); border: 1px solid var(--christmas-green); padding: 0.75rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;"
-                        onmouseover="this.style.background='rgba(139, 195, 74, 0.1)'"
-                        onmouseout="this.style.background='transparent'">
-                  Calcola Spedizione
-                </button>
-              </div>
-              
-              <!-- Gift Options -->
-              <div style="padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <label style="color: var(--christmas-green); font-weight: 600; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                  <input type="checkbox" 
-                         id="gift-wrap" 
-                         name="attributes[gift-wrap]"
-                         onchange="toggleGiftOptions()"
-                         style="width: 20px; height: 20px; cursor: pointer;">
-                  🎁 È un regalo?
-                </label>
-                <div id="gift-options" style="display: none; margin-top: 0.75rem;">
-                  <textarea name="attributes[gift-message]" 
-                            placeholder="Messaggio regalo (opzionale)..."
-                            style="width: 100%; min-height: 60px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; resize: vertical;"></textarea>
-                  <p style="color: var(--christmas-gold); font-size: 0.9rem; margin-top: 0.5rem;">
-                    ✨ Confezione regalo gratuita
-                  </p>
-                </div>
-              </div>
-              
-              <!-- Note -->
-              <div>
-                <label for="cart-note" style="color: var(--christmas-green); font-weight: 600; display: block; margin-bottom: 0.5rem;">Note per l'ordine (opzionale)</label>
-                <textarea name="note" 
-                          id="cart-note" 
-                          form="cart-form"
-                          placeholder="Aggiungi eventuali note..."
-                          style="width: 100%; min-height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; resize: vertical;">{{ cart.note }}</textarea>
-              </div>
-              
               <!-- Total -->
               <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--christmas-gold);">
                 <span style="color: var(--christmas-gold); font-size: 1.3rem; font-weight: 700;">TOTALE</span>
@@ -316,30 +261,6 @@ function applyDiscount() {
   }
 }
 
-// Calculate shipping (placeholder - needs Shopify Shipping API)
-function calculateShipping() {
-  const country = document.getElementById('shipping-country').value;
-  const zip = document.getElementById('shipping-zip').value;
-  
-  if (country && zip) {
-    // Placeholder: mostra messaggio
-    alert('Per i biglietti digitali non sono previste spese di spedizione!');
-  } else {
-    alert('Inserisci paese e CAP per calcolare la spedizione');
-  }
-}
-
-// Toggle gift options
-function toggleGiftOptions() {
-  const giftWrap = document.getElementById('gift-wrap').checked;
-  const giftOptions = document.getElementById('gift-options');
-  
-  if (giftWrap) {
-    giftOptions.style.display = 'block';
-  } else {
-    giftOptions.style.display = 'none';
-  }
-}
 
 // Auto-update cart when quantity input changes
 document.addEventListener('DOMContentLoaded', function() {
@@ -350,13 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Save note when it changes
-  const noteField = document.getElementById('cart-note');
-  if (noteField) {
-    noteField.addEventListener('change', function() {
-      document.getElementById('update-cart-btn').click();
-    });
-  }
   
   // Handle Enter key on discount code
   const discountInput = document.getElementById('discount-code');
