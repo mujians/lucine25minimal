@@ -107,7 +107,6 @@
       },
       "block_order": [
         "title",
-        "evey_events_tickets_multi_variant_selector_bqMPJU",
         "discount_info",
         "instructions_info",
         "price",
@@ -115,6 +114,7 @@
         "quantity_selector",
         "share",
         "buy_buttons",
+        "evey_events_tickets_multi_variant_selector_bqMPJU",
         "email_alert",
         "ticket_guide",
         "open_ticket",
