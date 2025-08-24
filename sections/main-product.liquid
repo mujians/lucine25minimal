@@ -43,11 +43,17 @@
       color: #2e7d32;
     }
     
-    /* Force two columns on desktop and fix image sizes */
-    @media screen and (min-width: 990px) {
+    /* Adjust column widths on desktop - use width not grid-template-columns */
+    @media screen and (min-width: 750px) {
+      .product .grid__item.product__media-wrapper {
+        width: 58% !important; /* More space for images */
+        max-width: 58% !important;
+      }
+      .product .grid__item.product__info-wrapper {
+        width: 42% !important; /* Less space for info */
+        max-width: 42% !important;
+      }
       .product.grid--2-col-tablet {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
         gap: 3rem;
       }
     }
@@ -70,16 +76,34 @@
       padding: 0 2rem;
     }
     
-    /* Fix oversized icons */
-    .icon, 
-    svg,
+    /* Fix oversized icons - be specific to avoid breaking Evey */
     .accordion summary .icon,
-    .quantity__button .icon,
-    .slider-button .icon {
+    .slider-button .icon,
+    .product__view-details .icon,
+    .header .icon,
+    .footer .icon {
       width: 16px !important;
       height: 16px !important;
       max-width: 16px !important;
       max-height: 16px !important;
+    }
+    
+    /* Specifically for standard quantity buttons */
+    .quantity__button .icon-minus,
+    .quantity__button .icon-plus {
+      width: 12px !important;
+      height: 12px !important;
+    }
+    
+    /* Let Evey Events manage its own icons */
+    .evey-events svg,
+    .evey-events .icon,
+    [class*="evey"] svg,
+    [id*="evey"] svg {
+      width: auto !important;
+      height: auto !important;
+      max-width: 20px;
+      max-height: 20px;
     }
     
     /* Quantity buttons styling */
@@ -207,7 +231,16 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      stroke: #2e7d32;
+    }
+    
+    .sketch-border rect {
+      stroke: #2e7d32 !important; /* Green for most cards */
+      stroke-width: 2px !important;
+    }
+    
+    /* Gold border for special open ticket */
+    .sketch-card.seed-9 .sketch-border rect {
+      stroke: #ffb300 !important;
     }
     
     .sketch-quote-card {
