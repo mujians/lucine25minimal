@@ -1,53 +1,27 @@
-import { readFileSync, existsSync } from 'fs';
-
 export default async function handler(req, res) {
-  // Simple admin page for viewing logs
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   
   if (req.method !== 'GET') {
     return res.status(405).send('Method not allowed');
   }
 
-  // Simple password check via URL parameter (for testing)
+  // Simple password check
   const { password } = req.query;
   if (password !== 'lucine2024') {
     return res.send(`
       <html>
-        <head><title>Admin - Chatbot Logs</title></head>
-        <body style="font-family: Arial, sans-serif; padding: 20px;">
-          <h1>🔒 Admin Access</h1>
-          <p>Inserisci la password:</p>
-          <form method="GET">
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Accedi</button>
-          </form>
+        <head><title>Admin - Chatbot Manager</title></head>
+        <body style="font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5;">
+          <div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h1 style="text-align: center; color: #333;">🔒 Admin Access</h1>
+            <form method="GET" style="text-align: center;">
+              <input type="password" name="password" placeholder="Password" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
+              <button type="submit" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Accedi</button>
+            </form>
+          </div>
         </body>
       </html>
     `);
-  }
-
-  // Load logs
-  const LOGS_FILE = '/tmp/chatbot_logs.json';
-  let logs = [];
-  let stats = {};
-
-  if (existsSync(LOGS_FILE)) {
-    try {
-      const data = readFileSync(LOGS_FILE, 'utf8');
-      logs = JSON.parse(data);
-      
-      // Calculate stats
-      stats = {
-        totalConversations: logs.length,
-        uniqueSessions: [...new Set(logs.map(l => l.sessionId))].length,
-        lastHour: logs.filter(l => 
-          new Date(l.timestamp) > new Date(Date.now() - 60 * 60 * 1000)
-        ).length,
-        topQuestions: getTopQuestions(logs).slice(0, 5)
-      };
-    } catch (e) {
-      console.error('Error reading logs:', e);
-    }
   }
 
   // Generate HTML
@@ -59,97 +33,84 @@ export default async function handler(req, res) {
       <meta charset="utf-8">
       <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .stat-card h3 { margin: 0; color: #333; }
-        .stat-card .number { font-size: 2rem; font-weight: bold; color: #007bff; margin: 10px 0; }
-        .logs { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .log-header { background: #007bff; color: white; padding: 15px; font-weight: bold; }
-        .log-item { padding: 15px; border-bottom: 1px solid #eee; }
-        .log-item:last-child { border-bottom: none; }
-        .user-msg { background: #e3f2fd; padding: 8px 12px; border-radius: 15px; margin: 5px 0; display: inline-block; }
-        .bot-msg { background: #f1f8e9; padding: 8px 12px; border-radius: 15px; margin: 5px 0; display: inline-block; }
-        .timestamp { color: #666; font-size: 0.9em; }
-        .session-id { color: #999; font-family: monospace; font-size: 0.8em; }
-        .top-questions li { margin: 5px 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .info-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .info-card h3 { margin: 0 0 15px 0; color: #333; }
+        .status { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 5px; margin: 10px 0; }
+        .instruction { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 12px; border-radius: 5px; margin: 10px 0; }
+        .code { background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px 12px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
         .refresh-btn { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
         .refresh-btn:hover { background: #218838; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
       </style>
     </head>
     <body>
       <div class="container">
-        <h1>📊 Chatbot Analytics - Lucine di Natale</h1>
+        <h1>📊 Chatbot Admin - Lucine di Natale</h1>
         
-        <button class="refresh-btn" onclick="location.reload()">🔄 Aggiorna</button>
+        <button class="refresh-btn" onclick="location.reload()">🔄 Aggiorna Pagina</button>
         
-        <div class="stats">
-          <div class="stat-card">
-            <h3>💬 Conversazioni Totali</h3>
-            <div class="number">${stats.totalConversations || 0}</div>
+        <div class="info-card">
+          <h3>✅ Sistema di Logging Semplificato</h3>
+          <div class="status">
+            <strong>Status:</strong> Il chatbot ora usa un sistema di logging semplificato tramite console.log
           </div>
-          <div class="stat-card">
-            <h3>👥 Sessioni Uniche</h3>
-            <div class="number">${stats.uniqueSessions || 0}</div>
+          
+          <div class="instruction">
+            <strong>Come visualizzare i log:</strong><br>
+            1. Vai su <a href="https://vercel.com/dashboard" target="_blank">Vercel Dashboard</a><br>
+            2. Seleziona il progetto "chatbot-backend"<br>
+            3. Vai nella sezione "Functions" → "api/chat.js"<br>
+            4. Clicca su "View Function Logs" per vedere tutti i log in tempo reale
           </div>
-          <div class="stat-card">
-            <h3>⏰ Ultima Ora</h3>
-            <div class="number">${stats.lastHour || 0}</div>
-          </div>
-          <div class="stat-card">
-            <h3>🔥 Top Domande</h3>
-            <ol class="top-questions">
-              ${stats.topQuestions?.map(q => `<li>${q.question} (${q.count})</li>`).join('') || '<li>Nessuna domanda ancora</li>'}
-            </ol>
+          
+          <p><strong>Formato dei log:</strong></p>
+          <div class="code">
+=== CHAT LOG ===<br>
+Time: 2024-01-15T10:30:00.000Z<br>
+Session: abc123<br>
+User: Quanto costano i biglietti?<br>
+Bot: I biglietti costano €15 per adulti...<br>
+IP: 93.45.123.45<br>
+================
           </div>
         </div>
 
-        <div class="logs">
-          <div class="log-header">
-            📝 Ultime ${Math.min(logs.length, 20)} Conversazioni
-          </div>
-          ${logs.slice(-20).reverse().map(log => `
-            <div class="log-item">
-              <div class="timestamp">${new Date(log.timestamp).toLocaleString('it-IT')}</div>
-              <div class="session-id">Session: ${log.sessionId}</div>
-              <div style="margin: 10px 0;">
-                <div class="user-msg"><strong>User:</strong> ${escapeHtml(log.userMessage)}</div>
-                <div class="bot-msg"><strong>Bot:</strong> ${escapeHtml(log.botReply).replace(/\\n\\n/g, '<br>')}</div>
-              </div>
-              ${log.ip ? `<div class="session-id">IP: ${log.ip}</div>` : ''}
-            </div>
-          `).join('')}
+        <div class="info-card">
+          <h3>🔗 Link Utili</h3>
+          <ul>
+            <li><a href="https://vercel.com/dashboard" target="_blank">Vercel Dashboard</a> - Per visualizzare i log</li>
+            <li><a href="https://lucinedinatale.it/pages/faq" target="_blank">FAQ Page</a> - Chatbot in azione</li>
+            <li>Password admin: <code class="code">lucine2024</code></li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>⚙️ Configurazione Attuale</h3>
+          <p><strong>✅ OpenAI API:</strong> Configurata</p>
+          <p><strong>✅ Knowledge Base:</strong> Caricata</p>
+          <p><strong>✅ Rate Limiting:</strong> 10 richieste/minuto per IP</p>
+          <p><strong>✅ Escape Routes:</strong> Email e WhatsApp automatici</p>
+          <p><strong>✅ Logging:</strong> Console-based (Vercel Dashboard)</p>
         </div>
         
-        ${logs.length === 0 ? '<p>Nessuna conversazione ancora. Il bot deve essere usato per generare log.</p>' : ''}
+        <div class="info-card">
+          <h3>💡 Come Funziona</h3>
+          <p>Il chatbot ora logga tutte le conversazioni direttamente nella console di Vercel. Ogni volta che qualcuno usa il chatbot, vedrai un log strutturato con:</p>
+          <ul>
+            <li>Timestamp della conversazione</li>
+            <li>ID sessione unico</li>
+            <li>Messaggio dell'utente</li>
+            <li>Risposta del bot</li>
+            <li>Indirizzo IP dell'utente</li>
+          </ul>
+          <p>Questo sistema è molto più semplice e affidabile del precedente sistema basato su file.</p>
+        </div>
       </div>
     </body>
     </html>
   `;
 
   return res.send(html);
-}
-
-function getTopQuestions(logs) {
-  const questions = {};
-  logs.forEach(log => {
-    const q = log.userMessage?.toLowerCase().trim();
-    if (q && q.length > 3) {
-      questions[q] = (questions[q] || 0) + 1;
-    }
-  });
-  
-  return Object.entries(questions)
-    .sort(([,a], [,b]) => b - a)
-    .map(([question, count]) => ({ question, count }));
-}
-
-function escapeHtml(text) {
-  if (!text) return '';
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }

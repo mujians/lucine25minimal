@@ -1,6 +1,6 @@
-<!-- LUCINE MINIMAL v1.4 - FIXED TOP POSITION -->
+<!-- LUCINE MINIMAL -->
 <script>
-console.log('🎯 INDEX.LIQUID TEMPLATE LOADED v1.4');
+console.log('🎯 INDEX.LIQUID TEMPLATE LOADED');
 console.log('📋 MENU ITEMS:');
 {% assign main_menu = linklists['menu-principale'] %}
 {% for link in main_menu.links %}
@@ -97,14 +97,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
                 {{ page.content }}
               </div>
               
-              {% comment %} Aggiungi CTA se la pagina contiene info specifiche {% endcomment %}
-              {% if page_handle contains 'bigliett' or page_handle contains 'ticket' %}
-                <div class="event-card" style="margin-top: 2rem; text-align: center;">
-                  <h3 class="christmas-accent">Prenota Ora</h3>
-                  <p>Non perdere la magia delle <span class="highlight-text">Lucine di Natale</span></p>
-                  <a href="#" class="family-cta">Acquista Biglietti</a>
-                </div>
-              {% endif %}
             {% else %}
               <!-- Contenuto di esempio per {{ link.title }} -->
               <div class="formatted-content">
@@ -125,26 +117,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
                     {% comment %} Include rich content for Eventi {% endcomment %}
                     {% render 'eventi-content' %}
                     
-                  {% when 'Biglietti' %}
-                    <h3>Tariffe e Biglietti</h3>
-                    <div class="info-grid">
-                      <div class="info-box">
-                        <h4>Adulti</h4>
-                        <p class="price-tag">€15</p>
-                      </div>
-                      <div class="info-box">
-                        <h4>Bambini (3-12)</h4>
-                        <p class="price-tag">€10</p>
-                      </div>
-                      <div class="info-box">
-                        <h4>Famiglia (2+2)</h4>
-                        <p class="price-tag">€40</p>
-                      </div>
-                    </div>
-                    <div class="event-card" style="text-align: center; margin-top: 2rem;">
-                      <p>I biglietti includono accesso a tutti gli spettacoli e attività</p>
-                      <a href="#" class="family-cta">Acquista Online</a>
-                    </div>
                     
                   {% when 'Info', 'Informazioni' %}
                     <h3>Informazioni Pratiche</h3>

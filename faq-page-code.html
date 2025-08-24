@@ -164,6 +164,42 @@
   margin-bottom: 0.5rem;
 }
 
+/* Suggestions */
+.chat-suggestions {
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+.suggestions-label {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.suggestions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.suggestion-btn {
+  background: rgba(139, 195, 74, 0.15);
+  color: var(--christmas-green);
+  border: 1px solid var(--christmas-green);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Providence Sans', -apple-system, sans-serif;
+}
+
+.suggestion-btn:hover {
+  background: rgba(139, 195, 74, 0.25);
+  transform: translateY(-1px);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .chat-messages {
@@ -177,6 +213,15 @@
   
   .chat-send-btn {
     padding: 1rem 1.5rem;
+  }
+
+  .suggestions-buttons {
+    flex-direction: column;
+  }
+  
+  .suggestion-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
   }
 }
 </style>
@@ -225,21 +270,28 @@
 
 <script>
 // CONFIGURAZIONE - Backend Vercel deployato
-const BACKEND_URL = 'https://chatbot-backend-j9s36gr62-brunos-projects-075c84f2.vercel.app/api/chat';
+const BACKEND_URL = 'https://chatbot-backend-oxw60jhy4-brunos-projects-075c84f2.vercel.app/api/chat';
+
+// Variabili globali per sessione
+let sessionId = generateSessionId();
 
 // Funzione per inviare messaggi (SICURA - nessuna API key esposta)
-async function sendMessage() {
+async function sendMessage(messageText) {
   const input = document.getElementById('chatInput');
   const messagesDiv = document.getElementById('chatMessages');
   const sendBtn = document.getElementById('sendBtn');
   const typingIndicator = document.getElementById('typingIndicator');
   
-  const userMessage = input.value.trim();
+  // Usa il messaggio passato come parametro o quello nell'input
+  const userMessage = messageText || input.value.trim();
   if (!userMessage) return;
   
   // Rimuovi welcome message se presente
   const welcome = messagesDiv.querySelector('.chat-welcome');
   if (welcome) welcome.remove();
+  
+  // Rimuovi suggerimenti precedenti
+  removeSuggestions();
   
   // Aggiungi messaggio utente
   messagesDiv.innerHTML += `
@@ -258,31 +310,53 @@ async function sendMessage() {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
   
   try {
-    // Chiamata al backend Vercel (sicuro)
+    // Chiamata al backend Vercel con sessionId
     const response = await fetch(BACKEND_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Session-ID': sessionId
       },
       body: JSON.stringify({
-        message: userMessage
+        message: userMessage,
+        sessionId: sessionId
       })
     });
     
     const data = await response.json();
     
+    if (response.status === 429) {
+      // Rate limiting
+      showRateLimitMessage(data);
+      return;
+    }
+    
     if (data.error) {
       throw new Error(data.error);
+    }
+    
+    // Aggiorna sessionId se fornito
+    if (data.sessionId) {
+      sessionId = data.sessionId;
     }
     
     const botReply = data.reply;
     
     // Aggiungi risposta bot
-    messagesDiv.innerHTML += `
-      <div class="chat-message bot">
-        <div class="message-bubble">${escapeHtml(botReply)}</div>
-      </div>
+    const botMessageDiv = document.createElement('div');
+    botMessageDiv.className = 'chat-message bot';
+    botMessageDiv.innerHTML = `
+      <div class="message-bubble">${escapeHtml(botReply).replace(/\n\n/g, '<br><br>').replace(/📧|📱/g, '<strong>$&</strong>')}</div>
     `;
+    messagesDiv.appendChild(botMessageDiv);
+    
+    // Aggiungi suggerimenti se presenti
+    if (data.suggestions && data.suggestions.length > 0) {
+      showSuggestions(data.suggestions);
+    }
+    
+    // Rendi cliccabili i link WhatsApp
+    makeWhatsAppLinksClickable(messagesDiv);
     
   } catch (error) {
     // Messaggio di errore user-friendly
@@ -290,7 +364,8 @@ async function sendMessage() {
       <div class="chat-message bot">
         <div class="message-bubble">
           Mi dispiace, c'è stato un problema di connessione. 
-          Riprova tra qualche istante o contatta <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a>
+          <br><br><strong>📧</strong> <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a>
+          <br><strong>📱</strong> <a href="https://wa.me/393123456789" target="_blank" style="color: var(--christmas-green);">WhatsApp</a>
         </div>
       </div>
     `;
@@ -305,6 +380,63 @@ async function sendMessage() {
     // Scroll to bottom
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
+}
+
+function showRateLimitMessage(data) {
+  const messagesDiv = document.getElementById('chatMessages');
+  const escapeRoutes = data.escapeRoutes || [
+    "Hai fatto troppe domande di seguito.",
+    "📧 info@lucinedinatale.it", 
+    "📱 https://wa.me/393123456789"
+  ];
+  
+  messagesDiv.innerHTML += `
+    <div class="chat-message bot">
+      <div class="message-bubble" style="border-color: orange;">
+        ${escapeRoutes.map(route => escapeHtml(route)).join('<br><br>')}
+      </div>
+    </div>
+  `;
+  
+  makeWhatsAppLinksClickable(messagesDiv);
+}
+
+function showSuggestions(suggestions) {
+  const messagesDiv = document.getElementById('chatMessages');
+  
+  const suggestionsDiv = document.createElement('div');
+  suggestionsDiv.className = 'chat-suggestions';
+  suggestionsDiv.innerHTML = `
+    <div class="suggestions-label">Domande correlate:</div>
+    <div class="suggestions-buttons">
+      ${suggestions.map(suggestion => `
+        <button class="suggestion-btn" onclick="sendMessage('${escapeHtml(suggestion)}')">${escapeHtml(suggestion)}</button>
+      `).join('')}
+    </div>
+  `;
+  
+  messagesDiv.appendChild(suggestionsDiv);
+}
+
+function removeSuggestions() {
+  const suggestions = document.querySelector('.chat-suggestions');
+  if (suggestions) {
+    suggestions.remove();
+  }
+}
+
+function makeWhatsAppLinksClickable(container) {
+  const links = container.querySelectorAll('.message-bubble');
+  links.forEach(bubble => {
+    bubble.innerHTML = bubble.innerHTML.replace(
+      /https:\/\/wa\.me\/\d+/g, 
+      '<a href="$&" target="_blank" style="color: var(--christmas-green); text-decoration: underline;">$&</a>'
+    );
+  });
+}
+
+function generateSessionId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
 // Funzione per escape HTML (sicurezza)

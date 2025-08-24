@@ -95,7 +95,7 @@ main, #MainContent {
   padding: 0;
 }
 
-/* VIDEO v1.2 - Behind everything */
+/* VIDEO - Behind everything */
 .video-bg {
   position: fixed;
   top: 0;
@@ -111,20 +111,18 @@ main, #MainContent {
   object-fit: cover;
 }
 
-/* DEBUG INFO */
-body::before {
-  content: "LUCINE MINIMAL v10.0 - SKETCH DESIGN SYSTEM";
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  z-index: 999;
   border-radius: 3px;
   pointer-events: none;
+}
+
+/* ANIMATED BORDER - Bordo che scorre per CTA */
+@keyframes borderFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 100; }
+}
+
+.sketch-card.seed-animated .animated-border rect {
+  animation: borderFlow 3s linear infinite;
 }
 
 /* NAVIGATION CONTAINER - Natural flow */

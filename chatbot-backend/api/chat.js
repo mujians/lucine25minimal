@@ -82,8 +82,14 @@ export default async function handler(req, res) {
       reply = formatEscapeResponse(knowledgeBase.escape_routes.no_answer);
     }
 
-    // Log della conversazione (chiamata asincrona per non rallentare la risposta)
-    logConversation(sessionId, message, reply, req).catch(console.error);
+    // Log semplice nella console di Vercel (visibile in realtime)
+    console.log('=== CHAT LOG ===');
+    console.log('Time:', new Date().toISOString());
+    console.log('Session:', sessionId);
+    console.log('User:', message);
+    console.log('Bot:', reply);
+    console.log('IP:', req.headers['x-forwarded-for'] || 'unknown');
+    console.log('================');
 
     // Aggiungi suggerimenti se appropriato
     const suggestions = getSuggestions(message, knowledgeBase);
@@ -201,48 +207,6 @@ function getSuggestions(userMessage, knowledgeBase) {
   return suggestions.slice(0, 3);
 }
 
-async function logConversation(sessionId, userMessage, botReply, req) {
-  try {
-    // Log direttamente nel file invece di chiamare l'API
-    const { writeFileSync, readFileSync, existsSync } = await import('fs');
-    const LOGS_FILE = '/tmp/chatbot_logs.json';
-    
-    const logEntry = {
-      sessionId: sessionId || generateSessionId(),
-      timestamp: new Date().toISOString(),
-      userMessage,
-      botReply,
-      userAgent: req.headers['user-agent'],
-      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    };
-
-    // Leggi logs esistenti
-    let logs = [];
-    if (existsSync(LOGS_FILE)) {
-      try {
-        const data = readFileSync(LOGS_FILE, 'utf8');
-        logs = JSON.parse(data);
-      } catch (e) {
-        console.error('Error reading logs:', e);
-      }
-    }
-
-    // Aggiungi nuovo log
-    logs.push(logEntry);
-
-    // Mantieni solo gli ultimi 1000 log
-    if (logs.length > 1000) {
-      logs = logs.slice(-1000);
-    }
-
-    // Salva
-    writeFileSync(LOGS_FILE, JSON.stringify(logs, null, 2));
-    console.log('Log saved:', logEntry.sessionId, userMessage.substring(0, 50));
-    
-  } catch (error) {
-    console.error('Logging error:', error);
-  }
-}
 
 function generateSessionId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
