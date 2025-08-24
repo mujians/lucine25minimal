@@ -88,11 +88,18 @@
       max-height: 16px !important;
     }
     
-    /* Specifically for standard quantity buttons */
+    /* Force quantity button icons to be visible and properly sized */
+    .quantity__button .icon,
     .quantity__button .icon-minus,
-    .quantity__button .icon-plus {
-      width: 12px !important;
-      height: 12px !important;
+    .quantity__button .icon-plus,
+    .quantity__button svg {
+      width: 16px !important;
+      height: 16px !important;
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      fill: currentColor !important;
+      color: white !important;
     }
     
     /* Let Evey Events manage its own icons */
@@ -117,7 +124,10 @@
       stroke-dashoffset: 0 !important;
     }
     
-    /* Note: Removed overly aggressive list styling that was breaking Evey Events */
+    /* Hide only problematic slider list markers without breaking Evey Events */
+    .product__media-item.slider__slide::before {
+      display: none !important;
+    }
     
     /* Quantity buttons styling */
     .quantity__button {
