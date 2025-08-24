@@ -121,9 +121,8 @@ main, #MainContent {
   100% { stroke-dashoffset: -48; }
 }
 
-.sketch-card.seed-animated .sketch-border rect,
-.sketch-card.seed-animated .animated-border rect {
-  stroke-dasharray: 16 10 8 14 !important;
+/* CTA buttons with animated borders in biglietti page */
+.sketch-card.seed-6 .sketch-border rect[stroke-dasharray="16 10 8 14"] {
   animation: dashFlow 2s linear infinite;
 }
 
