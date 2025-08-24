@@ -118,10 +118,11 @@ main, #MainContent {
 /* ANIMATED BORDER - Trattini che scorrono */
 @keyframes dashFlow {
   0% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -50; }
+  100% { stroke-dashoffset: -49; }
 }
 
 .sketch-card.seed-animated .sketch-border rect {
+  stroke-dasharray: 15 9 7 13;
   animation: dashFlow 2s linear infinite;
 }
 
