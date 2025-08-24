@@ -43,25 +43,19 @@
       color: #2e7d32;
     }
     
-    /* Single column layout with image on top */
-    .product.grid--2-col-tablet {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 2rem !important;
-      max-width: 800px !important;
-      margin: 0 auto !important;
-    }
-    
-    .product .grid__item.product__media-wrapper {
-      width: 100% !important;
-      max-width: 100% !important;
-      order: 1 !important; /* Image first */
-    }
-    
-    .product .grid__item.product__info-wrapper {
-      width: 100% !important;
-      max-width: 100% !important;
-      order: 2 !important; /* Info below image */
+    /* Adjust column widths on desktop - use width not grid-template-columns */
+    @media screen and (min-width: 750px) {
+      .product .grid__item.product__media-wrapper {
+        width: 58% !important; /* More space for images */
+        max-width: 58% !important;
+      }
+      .product .grid__item.product__info-wrapper {
+        width: 42% !important; /* Less space for info */
+        max-width: 42% !important;
+      }
+      .product.grid--2-col-tablet {
+        gap: 3rem;
+      }
     }
     
     /* Limit image sizes */
@@ -94,15 +88,11 @@
       max-height: 16px !important;
     }
     
-    /* Specifically for standard quantity buttons - make sure they're visible */
+    /* Specifically for standard quantity buttons */
     .quantity__button .icon-minus,
-    .quantity__button .icon-plus,
-    .quantity__button .icon {
-      width: 16px !important;
-      height: 16px !important;
-      display: inline-block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
+    .quantity__button .icon-plus {
+      width: 12px !important;
+      height: 12px !important;
     }
     
     /* Let Evey Events manage its own icons */
@@ -127,17 +117,13 @@
       stroke-dashoffset: 0 !important;
     }
     
-    /* Remove unwanted list markers/arrows - but don't break Evey Events */
-    .product__info ul:not([class*="evey"]):not([id*="evey"]), 
-    .product__info ol:not([class*="evey"]):not([id*="evey"]) {
+    /* Remove unwanted list markers/arrows */
+    ul, ol {
       list-style: none !important;
     }
-    
-    /* Don't hide pseudo-elements from Evey Events */
-    .product__info ul:not([class*="evey"]):not([id*="evey"])::before,
-    .product__info ul:not([class*="evey"]):not([id*="evey"])::after,
-    .product__info li:not([class*="evey"]):not([id*="evey"])::before,
-    .product__info li:not([class*="evey"]):not([id*="evey"])::after {
+    ul::before, ol::before,
+    ul::after, ol::after,
+    li::before, li::after {
       display: none !important;
     }
     
@@ -269,7 +255,7 @@
     }
     
     .sketch-border rect {
-      stroke-width: 1px !important; /* Much thinner borders like design system */
+      stroke-width: 1.5px !important; /* Thinner borders like original */
     }
     
     /* Default sketch card colors */
