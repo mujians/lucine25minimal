@@ -3,6 +3,13 @@
 // Updated to fix env vars
 
 export default async function handler(req, res) {
+  // Debug immediato delle env vars
+  console.log('=== DEBUG ENV VARS ===');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('VERCEL:', process.env.VERCEL);
+  console.log('OPENAI_API_KEY length:', process.env.OPENAI_API_KEY?.length || 'undefined');
+  console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('OPENAI')));
+  
   // CORS headers per permettere chiamate dal tuo sito
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', 'https://lucinedinatale.it');
