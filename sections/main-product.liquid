@@ -1,0 +1,756 @@
+<!-- MAIN PRODUCT SECTION - Shopify Sections Compatible -->
+<div class="page-container" style="min-height: 100vh; padding: 2rem 1rem;">
+  <div class="content-wrapper" style="max-width: 1200px; margin: 0 auto;">
+    <div class="formatted-content" style="background: rgba(15, 47, 31, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+      
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb">
+        <a href="/">Home</a> / <a href="/collections/all">Biglietti</a> / <span>{{ product.title }}</span>
+      </nav>
+
+      <!-- PRODUCT HEADER -->
+      <section class="product-header">
+        <h1>{{ product.title }}</h1>
+        <p class="product-subtitle">{{ section.settings.subtitle | default: "Garantisciti l'accesso alle Lucine di Natale con prezzo agevolato e posto riservato" }}</p>
+      </section>
+
+      <!-- MAIN PRODUCT SECTION -->
+      <section class="product-main">
+        
+        <!-- PRODUCT IMAGES -->
+        <div class="product-images">
+          <div class="main-image">
+            {% if product.featured_image %}
+              <img src="{{ product.featured_image | img_url: '600x600' }}" alt="{{ product.title }}" class="product-image-main">
+            {% else %}
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/IMG_2996.jpg?v=1699203223" alt="{{ product.title }}" class="product-image-main">
+            {% endif %}
+          </div>
+          
+          {% if product.images.size > 1 %}
+          <div class="product-thumbnails">
+            {% for image in product.images limit: 4 %}
+              <img src="{{ image | img_url: '150x150' }}" alt="{{ product.title }}" class="product-thumbnail" onclick="changeMainImage(this)">
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- PRODUCT INFO -->
+        <div class="product-info">
+          
+          <!-- PRICE SECTION -->
+          <div class="sketch-card sketch seed-1">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <defs>
+                <filter id="wobble-price">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5"/>
+                  <feDisplacementMap in="SourceGraphic" scale="1"/>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-price)"/>
+            </svg>
+            
+            <div class="product-price-section">
+              <div class="price-display">
+                {% if product.compare_at_price > product.price %}
+                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span class="price-current" id="variant-price">
+                  {{ product.selected_or_first_available_variant.price | money }}
+                </span>
+              </div>
+              <p class="price-note">{{ section.settings.price_note | default: "Prezzo agevolato online • Accesso garantito" }}</p>
+            </div>
+          </div>
+
+          <!-- PRODUCT FORM -->
+          {% form 'product', product, id: 'product-form', class: 'product-form' %}
+            
+            <!-- VARIANT SELECTION -->
+            {% unless product.has_only_default_variant %}
+              <div class="product-variants">
+                <h3 style="color: var(--christmas-green); margin-bottom: 1rem;">🎫 Scegli il tuo biglietto</h3>
+                
+                {% for option in product.options_with_values %}
+                  <div class="variant-selector">
+                    <label class="variant-selector__label">{{ option.name }}</label>
+                    {% assign option_index = forloop.index0 %}
+                    <div class="variant-selector__options">
+                      {% for value in option.values %}
+                        <input 
+                          type="radio" 
+                          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                          name="{{ option.name }}" 
+                          value="{{ value | escape }}"
+                          form="{{ product_form_id }}"
+                          {% if option.selected_value == value %}checked{% endif %}
+                          data-option-index="{{ option_index }}"
+                          data-option-value="{{ value | escape }}"
+                          onchange="updateVariant()"
+                        >
+                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="variant-label">
+                          <span class="variant-type">
+                            {% if value contains 'Ridotto' %}🎟️{% elsif value contains 'Saltafila' %}⚡{% else %}🎫{% endif %}
+                            {{ value }}
+                          </span>
+                          {% for variant in product.variants %}
+                            {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
+                              <span class="variant-price">{{ variant.price | money }}</span>
+                              {% break %}
+                            {% endif %}
+                          {% endfor %}
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endunless %}
+            
+            <!-- QUANTITY SELECTOR -->
+            <div class="product-quantity">
+              <label for="Quantity-{{ section.id }}">Quantità</label>
+              <div class="quantity-controls">
+                <button type="button" name="minus" class="quantity__button" onclick="changeQuantity(-1)">−</button>
+                <input 
+                  class="quantity__input"
+                  type="number" 
+                  name="quantity" 
+                  id="Quantity-{{ section.id }}"
+                  min="1" 
+                  value="1"
+                  form="{{ product_form_id }}"
+                >
+                <button type="button" name="plus" class="quantity__button" onclick="changeQuantity(1)">+</button>
+              </div>
+            </div>
+            
+            <!-- DYNAMIC CHECKOUT BUTTONS -->
+            <div class="product-form__buttons">
+              <button
+                type="submit" 
+                name="add"
+                class="btn product-form__cart-submit"
+                {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+              >
+                <span>
+                  {% if product.selected_or_first_available_variant.available %}
+                    🎟️ Aggiungi al Carrello
+                  {% else %}
+                    Non Disponibile
+                  {% endif %}
+                </span>
+                <span class="btn-price" id="total-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+              </button>
+              
+              {% if section.settings.enable_dynamic_checkout %}
+                {{ form | payment_button }}
+              {% endif %}
+            </div>
+
+            <!-- VARIANT DATA -->
+            <script type="application/json" id="product-variants">
+              {{ product.variants | json }}
+            </script>
+            
+          {% endform %}
+
+          <!-- PRODUCT DESCRIPTION -->
+          {% if section.settings.show_description %}
+          <div class="product-description">
+            <h3 style="color: var(--christmas-red);">ℹ️ Dettagli del biglietto</h3>
+            <div class="description-content">
+              {% if product.description != blank %}
+                {{ product.description }}
+              {% else %}
+                <p><strong>Il tuo biglietto per le Lucine di Natale 2025!</strong></p>
+                <ul>
+                  <li>Accesso al percorso illuminato completo</li>
+                  <li>Oltre 1 milione di lucine LED</li>
+                  <li>Percorso accessibile per carrozzine</li>
+                  <li>Valido per la data e fascia oraria scelta</li>
+                  <li>Biglietto inviato via email</li>
+                </ul>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- INFO SECTIONS -->
+      {% if section.settings.show_info_cards %}
+      <section class="product-info-cards">
+        
+        <!-- ORARI E DATE -->
+        <div class="sketch-card sketch seed-2">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <filter id="wobble-schedule">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="7"/>
+                <feDisplacementMap in="SourceGraphic" scale="1"/>
+              </filter>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-schedule)"/>
+          </svg>
+          <h4 style="color: var(--christmas-green);">📅 Orari e Date</h4>
+          <p><strong>Periodo:</strong> {{ section.settings.event_period | default: "Dal 6 dicembre 2025 al 6 gennaio 2026" }}</p>
+          <p><strong>Orari:</strong> {{ section.settings.event_hours | default: "Dalle 17:30 alle 23:00 (ultimo ingresso ore 22:30)" }}</p>
+          <p><strong>Chiusure:</strong> {{ section.settings.event_closures | default: "24 e 31 dicembre" }}</p>
+        </div>
+        
+        <!-- INFORMAZIONI PRATICHE -->
+        <div class="sketch-card sketch seed-3">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <filter id="wobble-info">
+                <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="9"/>
+                <feDisplacementMap in="SourceGraphic" scale="1"/>
+              </filter>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="12 7 5 11 9 8" vector-effect="non-scaling-stroke" filter="url(#wobble-info)"/>
+          </svg>
+          <h4 style="color: var(--christmas-red);">💡 Info Utili</h4>
+          <ul>
+            <li>Percorso accessibile per carrozzine e passeggini</li>
+            <li>Animali ammessi con guinzaglio</li>
+            <li>Parcheggi gratuiti disponibili</li>
+            <li>Stand gastronomici durante l'evento</li>
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- IMPORTANT NOTICE -->
+      {% if section.settings.show_notice %}
+      <section class="location-section">
+        <div class="sketch-quote-card">
+          <svg class="quote-sketch-background" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <filter id="wobble-quote-product">
+                <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1" seed="15"/>
+                <feDisplacementMap in="SourceGraphic" scale="0.8"/>
+              </filter>
+            </defs>
+            <path d="M8,8 Q25,5 50,8 Q75,5 92,8 Q95,25 92,50 Q95,75 92,92 Q75,95 50,92 Q25,95 8,92 Q5,75 8,50 Q5,25 8,8 Z" 
+                  fill="rgba(255,255,255,0.04)" 
+                  stroke="var(--christmas-gold)" 
+                  stroke-width="1" 
+                  stroke-linecap="round" 
+                  stroke-dasharray="2 1" 
+                  filter="url(#wobble-quote-product)"/>
+          </svg>
+          <div class="quote-content">
+            <p class="quote-text">{{ section.settings.notice_text | default: "🎟️ Conferma immediata via email • In caso di maltempo riceverai un codice per una nuova prenotazione gratuita • L'orario sul biglietto è per l'accesso, puoi rimanere tutto il tempo necessario" }}</p>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "tag": "section",
+  "class": "section-main-product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Product Subtitle",
+      "default": "Garantisciti l'accesso alle Lucine di Natale con prezzo agevolato e posto riservato"
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Price Note",
+      "default": "Prezzo agevolato online • Accesso garantito"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Product Description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_info_cards",
+      "label": "Show Info Cards",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_notice",
+      "label": "Show Notice Quote",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_dynamic_checkout",
+      "label": "Enable Dynamic Checkout",
+      "default": true,
+      "info": "Shows express payment options like PayPal, Apple Pay, etc."
+    },
+    {
+      "type": "text",
+      "id": "event_period",
+      "label": "Event Period",
+      "default": "Dal 6 dicembre 2025 al 6 gennaio 2026"
+    },
+    {
+      "type": "text",
+      "id": "event_hours",
+      "label": "Event Hours",
+      "default": "Dalle 17:30 alle 23:00 (ultimo ingresso ore 22:30)"
+    },
+    {
+      "type": "text",
+      "id": "event_closures",
+      "label": "Event Closures",
+      "default": "24 e 31 dicembre"
+    },
+    {
+      "type": "textarea",
+      "id": "notice_text",
+      "label": "Notice Text",
+      "default": "🎟️ Conferma immediata via email • In caso di maltempo riceverai un codice per una nuova prenotazione gratuita • L'orario sul biglietto è per l'accesso, puoi rimanere tutto il tempo necessario"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+/* Product Page Styles */
+.breadcrumb {
+  margin: 1rem 0 2rem 0;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.breadcrumb a {
+  color: var(--christmas-green);
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: white;
+}
+
+.product-header {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.product-header h1 {
+  color: var(--christmas-red);
+  margin-bottom: 1rem;
+}
+
+.product-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+}
+
+.product-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin: 3rem 0;
+}
+
+/* Product Images */
+.product-images {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-image-main {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.product-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.product-thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.product-thumbnail:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Product Info */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.product-price-section {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.price-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.price-compare {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.6);
+  text-decoration: line-through;
+}
+
+.price-current {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--christmas-red);
+}
+
+.price-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--christmas-green);
+  font-weight: 600;
+}
+
+/* Variants */
+.product-variants {
+  margin: 1rem 0;
+}
+
+.variant-selector {
+  margin-bottom: 1.5rem;
+}
+
+.variant-selector__label {
+  font-weight: 600;
+  color: var(--christmas-green);
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.variant-selector__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.variant-selector__options input[type="radio"] {
+  display: none;
+}
+
+.variant-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.variant-label:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--christmas-green);
+}
+
+.variant-selector__options input[type="radio"]:checked + .variant-label {
+  background: rgba(139, 195, 74, 0.1);
+  border-color: var(--christmas-green);
+  box-shadow: 0 0 0 1px var(--christmas-green);
+}
+
+.variant-type {
+  font-weight: 600;
+  color: white;
+}
+
+.variant-price {
+  font-weight: 700;
+  color: var(--christmas-red);
+  font-size: 1.1rem;
+}
+
+/* Quantity */
+.product-quantity {
+  margin: 1rem 0;
+}
+
+.product-quantity label {
+  color: var(--christmas-green);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.quantity__button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.quantity__button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.quantity__input {
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 60px;
+  height: 40px;
+  font-size: 1.1rem;
+}
+
+/* Form Buttons */
+.product-form__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--christmas-red);
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+}
+
+.btn:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Dynamic Checkout Buttons */
+.shopify-payment-button {
+  margin-top: 1rem;
+}
+
+.shopify-payment-button__button {
+  border-radius: 8px !important;
+}
+
+/* Description */
+.product-description h3 {
+  margin-bottom: 1rem;
+}
+
+.description-content ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.description-content li {
+  margin: 0.5rem 0;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Info Cards */
+.product-info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .product-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .price-display {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .product-form__buttons {
+    position: sticky;
+    bottom: 1rem;
+    background: rgba(15, 47, 31, 0.95);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .quantity-controls {
+    justify-content: center;
+    margin: 1rem auto;
+  }
+  
+  .product-info-cards {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+// Variant Management
+function updateVariant() {
+  const selectedOptions = {};
+  
+  // Get selected options
+  document.querySelectorAll('.variant-selector input[type="radio"]:checked').forEach(input => {
+    const optionIndex = input.dataset.optionIndex;
+    selectedOptions[`option${parseInt(optionIndex) + 1}`] = input.value;
+  });
+  
+  // Find matching variant
+  const variants = JSON.parse(document.getElementById('product-variants').textContent);
+  const selectedVariant = variants.find(variant => {
+    return Object.keys(selectedOptions).every(key => 
+      variant[key] === selectedOptions[key]
+    );
+  });
+  
+  if (selectedVariant) {
+    // Update price
+    const priceFormatted = new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(selectedVariant.price / 100);
+    
+    document.getElementById('variant-price').textContent = priceFormatted;
+    updateTotalPrice();
+    
+    // Update form variant id
+    const form = document.getElementById('product-form');
+    let variantInput = form.querySelector('input[name="id"]');
+    if (!variantInput) {
+      variantInput = document.createElement('input');
+      variantInput.type = 'hidden';
+      variantInput.name = 'id';
+      form.appendChild(variantInput);
+    }
+    variantInput.value = selectedVariant.id;
+    
+    // Update button availability
+    const addButton = form.querySelector('button[type="submit"]');
+    if (selectedVariant.available) {
+      addButton.disabled = false;
+      addButton.querySelector('span').textContent = '🎟️ Aggiungi al Carrello';
+    } else {
+      addButton.disabled = true;
+      addButton.querySelector('span').textContent = 'Non Disponibile';
+    }
+  }
+}
+
+function changeQuantity(change) {
+  const quantityInput = document.querySelector('.quantity__input');
+  let currentQty = parseInt(quantityInput.value) || 1;
+  let newQty = currentQty + change;
+  
+  if (newQty >= 1 && newQty <= 10) {
+    quantityInput.value = newQty;
+    updateTotalPrice();
+  }
+}
+
+function updateTotalPrice() {
+  const priceText = document.getElementById('variant-price').textContent;
+  const price = parseFloat(priceText.replace('€', '').replace(',', '.').replace('\u00A0', '').trim());
+  const quantity = parseInt(document.querySelector('.quantity__input').value) || 1;
+  const total = price * quantity;
+  
+  const totalFormatted = new Intl.NumberFormat('it-IT', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(total);
+  
+  const totalPriceElement = document.getElementById('total-price');
+  if (totalPriceElement) {
+    totalPriceElement.textContent = totalFormatted;
+  }
+}
+
+function changeMainImage(thumbnail) {
+  const mainImage = document.querySelector('.product-image-main');
+  mainImage.src = thumbnail.src.replace('150x150', '600x600');
+  
+  // Update active thumbnail
+  document.querySelectorAll('.product-thumbnail').forEach(thumb => {
+    thumb.style.opacity = '0.7';
+  });
+  thumbnail.style.opacity = '1';
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  updateVariant();
+  updateTotalPrice();
+  
+  // Handle quantity input changes
+  const quantityInput = document.querySelector('.quantity__input');
+  if (quantityInput) {
+    quantityInput.addEventListener('input', updateTotalPrice);
+  }
+});
+</script>
