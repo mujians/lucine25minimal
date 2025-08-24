@@ -43,12 +43,22 @@
       color: #2e7d32;
     }
     
-    /* Force two columns on desktop and fix image sizes */
+    /* Force single column layout - image on top, info below */
     @media screen and (min-width: 990px) {
       .product.grid--2-col-tablet {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .product__media-wrapper {
+        order: 1;
+      }
+      
+      .product__info-wrapper {
+        order: 2;
       }
     }
     
@@ -70,16 +80,29 @@
       padding: 0 2rem;
     }
     
-    /* Fix oversized icons */
-    .icon, 
-    svg,
+    /* Fix oversized icons - but keep Evey quantity icons visible */
+    .icon:not([class*="evey"]):not(.evey__variant-container .icon), 
+    svg:not([class*="evey"]):not(.evey__variant-container svg),
     .accordion summary .icon,
-    .quantity__button .icon,
     .slider-button .icon {
       width: 16px !important;
       height: 16px !important;
       max-width: 16px !important;
       max-height: 16px !important;
+    }
+    
+    /* Ensure Evey quantity button icons are visible */
+    .evey__variant-container .quantity__button svg,
+    .evey__variant-container .quantity__plus svg,
+    .evey__variant-container .quantity__minus svg {
+      width: 16px !important;
+      height: 16px !important;
+      stroke: white !important;
+      stroke-width: 2 !important;
+      fill: none !important;
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
     
     /* Quantity buttons styling */
@@ -314,7 +337,7 @@
     
     .sketch-border rect {
       stroke: #2e7d32 !important;
-      stroke-width: 1px !important;
+      stroke-width: 1 !important;
       fill: none !important;
     }
     
