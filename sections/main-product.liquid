@@ -91,37 +91,67 @@
       max-height: 16px !important;
     }
     
-    /* Ensure Evey quantity button icons are visible */
+    /* Ensure all quantity button icons are visible - both Evey and regular */
+    .quantity__button svg,
+    .quantity__button .icon,
     .evey__variant-container .quantity__button svg,
     .evey__variant-container .quantity__plus svg,
-    .evey__variant-container .quantity__minus svg {
+    .evey__variant-container .quantity__minus svg,
+    .quantity input[type="number"] ~ button svg,
+    quantity-input .quantity__button svg,
+    quantity-input .quantity__button .icon {
       width: 16px !important;
       height: 16px !important;
-      stroke: white !important;
+      stroke: currentColor !important;
+      fill: currentColor !important;
       stroke-width: 2 !important;
-      fill: none !important;
       display: block !important;
       opacity: 1 !important;
       visibility: visible !important;
     }
     
     /* Quantity buttons styling */
-    .quantity__button {
-      background: #2e7d32;
-      color: white;
-      border: 2px solid #2e7d32;
-      border-radius: 6px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .quantity__button,
+    quantity-input .quantity__button {
+      background: #2e7d32 !important;
+      border: 1px solid #2e7d32 !important;
+      color: white !important;
+      border-radius: 4px !important;
+      padding: 8px !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
     
-    .quantity__button:hover {
-      background: #d32f2f;
-      border-color: #d32f2f;
+    .quantity__button:hover,
+    quantity-input .quantity__button:hover {
+      background: #d32f2f !important;
+      border-color: #d32f2f !important;
     }
+    
+    /* Evey scheduler button styling */
+    .evey-scheduler-container {
+      margin: 1rem 0;
+    }
+    
+    .evey-scheduler-container .btn {
+      background: #ffb300 !important;
+      border-color: #ffb300 !important;
+      color: #0d1b0f !important;
+      font-weight: 600 !important;
+      padding: 1rem !important;
+      border-radius: 8px !important;
+      font-size: 1rem !important;
+    }
+    
+    .evey-scheduler-container .btn:hover {
+      background: #d32f2f !important;
+      border-color: #d32f2f !important;
+      color: white !important;
+    }
+    
     
     /* Variant buttons styling */
     .variant-input {
@@ -821,6 +851,15 @@
                   </volume-pricing>
                 {%- endif -%}
               </div>
+            
+            {%- comment -%} Add Evey scheduler button after quantity selector {%- endcomment -%}
+            {%- when 'evey_scheduler_button' -%}
+              <div class="evey-scheduler-container" {{ block.shopify_attributes }}>
+                <button role="button" class="btn desaturated action-button button Button Button--secondary" data-evey-string="scheduler_button_label" data-evey-trigger="scheduler" data-evey-scheduled-info="content" style="width:100%;">
+                  {{ block.settings.button_text | default: "Seleziona data e ora" }}
+                </button>
+              </div>
+            
             {%- when 'popup' -%}
               <modal-opener
                 class="product-popup-modal__opener no-js-hidden quick-add-hidden"
@@ -1234,6 +1273,19 @@
       "type": "quantity_selector",
       "name": "t:sections.main-product.blocks.quantity_selector.name",
       "limit": 1
+    },
+    {
+      "type": "evey_scheduler_button",
+      "name": "Evey Scheduler Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Seleziona data e ora"
+        }
+      ]
     },
     {
       "type": "variant_picker",

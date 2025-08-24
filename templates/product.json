@@ -34,6 +34,12 @@
           "type": "quantity_selector",
           "settings": {}
         },
+        "evey_scheduler_button": {
+          "type": "evey_scheduler_button",
+          "settings": {
+            "button_text": "Seleziona data e ora"
+          }
+        },
         "share": {
           "type": "share",
           "disabled": true,
@@ -103,6 +109,7 @@
         "price",
         "variant_picker",
         "quantity_selector",
+        "evey_scheduler_button",
         "share",
         "buy_buttons",
         "evey_events_tickets_multi_variant_selector_3GT6jh",
