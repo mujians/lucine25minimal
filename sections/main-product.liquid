@@ -98,11 +98,15 @@
       display: block !important;
       opacity: 1 !important;
       visibility: visible !important;
-      fill: currentColor !important;
       color: white !important;
     }
     
-    /* Let Evey Events manage its own icons */
+    /* Make sure SVG paths inside quantity buttons are white */
+    .quantity__button svg path {
+      fill: white !important;
+    }
+    
+    /* Let Evey Events manage its own icons - but ensure paths are visible */
     .evey-events svg,
     .evey-events .icon,
     [class*="evey"] svg,
@@ -111,6 +115,12 @@
       height: auto !important;
       max-width: 20px;
       max-height: 20px;
+    }
+    
+    /* Fix Evey quantity button paths specifically */
+    [class*="evey"] .quantity__button svg path,
+    [id*="evey"] .quantity__button svg path {
+      fill: white !important;
     }
     
     /* Hide skip to product info completely */
