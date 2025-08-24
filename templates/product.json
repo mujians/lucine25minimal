@@ -1,0 +1,154 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "custom_liquid_discount_info": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n  .info-box-arancio {\n    padding: 20px;\n    background-color: #fff3cd; /* Giallo chiaro aranciato */\n    color: #856404; /* Marrone/arancio per il testo */\n    margin: 10px -10px; /* Per allinearsi al layout delle card */\n    border: 1px solid #ffecb5; /* Bordo aranciato leggermente più scuro */\n    border-radius: 4px;\n    font-size: 16px;\n    line-height: 1.3em;\n  }\n</style>\n\n<div class=\"info-box-arancio\">\n  Acquista i biglietti online e approfitta di un prezzo scontato rispetto all'acquisto in loco!\n</div>"
+          }
+        },
+        "custom_liquid_instructions": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n  .info-box {\n    padding: 20px;\n    background-color: #d9edf7; /* Azzurro chiaro */\n    color: #31708f; /* Blu per il testo */\n    margin: 10px -10px; /* Per allinearsi al layout delle card */\n    border: 1px solid #9acfea; /* Bordo blu leggermente più scuro */\n    border-radius: 4px;\n    font-size: 16px;\n    line-height: 1.3em;\n  }\n</style>\n\n<div class=\"info-box\">Scegli la data e l'orario che preferisci <b>cliccando sul pulsante qui sotto</b> \"seleziona data e ora d'ingresso\" e aggiungi al carrello i tuoi biglietti. </div>"
+          }
+        },
+        "price": {
+          "type": "price",
+          "disabled": true,
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "disabled": true,
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "disabled": true,
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "evey_events_tickets_multi_variant_selector_3GT6jh": {
+          "type": "shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8",
+          "settings": {
+            "show_service_fees": false,
+            "sold_out_color": "#ff0000",
+            "limit_reached_color": "#777777",
+            "padding_x": 0,
+            "padding_y": 0
+          }
+        },
+        "custom_liquid_email_alert": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n.alert-box {\n    background-color: #f4f4f4; /* Sfondo grigio */\n    border-left: 5px solid #d02d26; /* Bordo sinistro rosso */\n    padding: 20px;\n    margin: 10px 0; /* Margini per separare dagli altri elementi */\n    display: flex;\n    align-items: center; /* Allinea verticalmente gli elementi all'interno */\n}\n\n.alert-box i {\n    margin-right: 10px; /* Spazio tra l'icona e il testo */\n    color: #ffa500; /* Colore arancione per l'icona */\n}\n\n.alert-box p {\n    margin: 0; /* Rimuove i margini di default del paragrafo */\n    color: #333; /* Colore del testo scuro per migliorare la leggibilità */\n    line-height: 1.3em;\n}\n</style>\n\n<div class=\"alert-box\">\n    <p><strong>Importante:</strong> invieremo i tuoi biglietti all'indirizzo e-mail da te indicato. Nella fase di checkout inserisci indirizzi di posta elettronica validi e di uso frequente.</p>\n</div>"
+          }
+        },
+        "custom_liquid_ticket_guide": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n  .card-container {\n    display: flex;\n    flex-direction: column; /* Disposizione in colonna */\n    gap: 10px;\n    margin: 40px 0;\n  }\n\n  .card {\n    padding: 40px 15px;\n    margin-bottom: 0px !important;\n    width: 100%;\n    border: none !important;\n  }\n\n  .card h3 {\n    font-size: 1.2em;\n    margin-bottom: 10px;\n  }\n\n  .card p {\n    font-size: 1em;\n    line-height: 1.4;\n  }\n\n  .card .emoji {\n    font-size: 1.5em;\n    margin-right: 10px;\n  }\n</style>\n\n<div class=\"card-container\">\n\n<h3 class=\"accordion__title inline-richtext\">Guida ai Biglietti</h3>\n\n  <div class=\"card\">\n    <h3>\n      <span role=\"img\" aria-label=\"Baby\">👶</span> Gratuito\n    </h3>\n    <p>Per bimbi da 0 a 2 anni. Non è necessario l'acquisto del biglietto, l'ingresso viene garantito direttamente all'entrata del parco.</p>\n  </div>\n\n  <div class=\"card\">\n    <h3>\n      <span role=\"img\" aria-label=\"Ticket\">🎫</span> Biglietto Intero\n    </h3>\n    <p>N. 1 ingresso nel giorno e nella fascia oraria da te selezionata durante l'acquisto.</p>\n  </div>\n\n  <div class=\"card\">\n    <h3>\n      <span role=\"img\" aria-label=\"Ticket\">🎟️</span> Biglietto Ridotto\n    </h3>\n    <p>N. 1 ingresso nel giorno e nella fascia oraria da te selezionata durante l'acquisto, per bambini dai 3 ai 12 anni e disabili.</p>\n\n<p>Per coloro in possesso di una documentazione di invalidità/disabilità (da mostrare all'ingresso) avranno diritto al biglietto ridotto anche n° 1 accompagnatore. L'accesso sarà prioritario tramite ingresso separato.</p>\n</div>\n\n  <div class=\"card\">\n    <h3>\n      <span role=\"img\" aria-label=\"Lightning bolt\">⚡</span> Biglietto Saltafila\n    </h3>\n    <p>N. 1 ingresso con accesso prioritario, ovvero salta-fila, all'ingresso del parco, nel giorno e nella fascia oraria da te selezionata durante l'acquisto.</p>\n  </div>\n\n<div class=\"card\">\n  <h3>\n    <span role=\"img\" aria-label=\"Group\">🧑‍🤝‍🧑</span> Gruppi & Comitive\n  </h3>\n  <p>10% di sconto applicato automaticamente per un acquisto minimo di 20 ingressi.</p>\n</div>\n\n<div class=\"card\">\n  <h3>\n    <span role=\"img\" aria-label=\"House\">🏠</span> Residenti\n  </h3>\n  <p>Non è necessaria la prenotazione.</p> <p>L'amministrazione comunale e l'organizzazione hanno convenuto l'ingresso a prezzo agevolato: <br>\nadulti €5 - bambini €4.\nValido tutti i giorni presentandosi alla cassa con un documento attestante la residenza.</p>\n</div>\n</div>"
+          }
+        },
+        "custom_liquid_open_ticket": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"card open-ticket\">\n  <div class=\"ticket-image\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0605/2983/6205/files/open-pass.jpg?v=1730481582\" alt=\"Biglietto Open\">\n  </div>\n  <div class=\"content\">\n    <h3>\n      <span role=\"img\" aria-label=\"Ticket\">🥇</span> Biglietto Open\n    </h3>\n    <p>Pass esclusivo per accedere quando preferisci senza la necessità di prenotare la tua visita per un giorno e un orario specifico.</p>\n    <a href=\"https://lucinedinatale.it/products/biglietto-open-2024-2025\" class=\"btn\">Acquistalo Ora</a>\n  </div>\n</div>\n\n<style>\n  .card.open-ticket {\n    display: flex;\n    align-items: center;\n    background-color: #dbe6ed;\n    border: 1px solid #68add8;\n    padding: 20px;\n    margin-top: 10px;\n    margin-bottom: 20px !important;\n    border-radius: 4px;\n  }\n\n  .card.open-ticket a.btn {\n    display: inline-block;\n    padding: 10px 15px;\n    background-color: #68add8;\n    color: #FFF;\n    text-decoration: none;\n    border-radius: 40px;\n    margin-top: 10px;\n  }\n\n  .card.open-ticket .ticket-image {\n    width: 130px;\n    height: 130px;\n    border-radius: 50%;\n    overflow: hidden;\n    margin-right: 20px;\n  }\n\n  .card.open-ticket .ticket-image img {\n    width: 100%;\n    height: 100%;\n    object-fit: cover;\n  }\n\n  .card.open-ticket .content {\n    flex: 1;\n  }\n\n  @media (max-width: 768px) {\n    .card.open-ticket {\n      flex-direction: column;\n      align-items: flex-start;\n    }\n    .card.open-ticket .ticket-image {\n      margin-right: 0;\n      margin-bottom: 10px;\n    }\n  }\n</style>"
+          }
+        },
+        "collapsible_tab_parking": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Info & Parcheggi",
+            "icon": "check_mark",
+            "content": "",
+            "page": "info-parcheggi-lucine-leggiuno"
+          }
+        },
+        "collapsible_tab_faq": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Domande Frequenti",
+            "icon": "check_mark",
+            "content": "",
+            "page": "faq"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "custom_liquid_discount_info",
+        "custom_liquid_instructions",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "share",
+        "buy_buttons",
+        "evey_events_tickets_multi_variant_selector_3GT6jh",
+        "custom_liquid_email_alert",
+        "custom_liquid_ticket_guide",
+        "custom_liquid_open_ticket",
+        "collapsible_tab_parking",
+        "collapsible_tab_faq"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "media_size": "small",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "media_position": "left",
+        "image_zoom": "none",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 44
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "background-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 68
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products"
+  ]
+}
