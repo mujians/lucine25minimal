@@ -1,8 +1,4 @@
 <script>
-  // Date selection message - disabled (not needed)
-  function showDateSelectionMessage(show) {
-    // No message needed - disabled
-  }
 
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
@@ -18,7 +14,6 @@
               container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
-            showDateSelectionMessage(true);
             }else{
                 eveyVariantContainers.forEach(container => {
                   container.style.pointerEvents = 'all';
@@ -26,7 +21,6 @@
                   container.style.filter = 'none';
                 });
                 eveyVariants.style.cursor = 'auto';
-                showDateSelectionMessage(false);
             }
       });
     });
@@ -59,7 +53,6 @@
               container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
-            showDateSelectionMessage(true);
             blockMultiTicket();
         }
     });
@@ -67,27 +60,55 @@
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
 
-  // Add "Biglietti Parco" title inside Evey box
+  // Add "Biglietti Parco" title inside Evey box - more robust approach
   function addBigliettParcoTitle() {
-    const eveyMultiVariant = document.querySelector('.evey__multi-variant-selector');
-    if (eveyMultiVariant && !eveyMultiVariant.querySelector('.biglietti-parco-title')) {
-      const title = document.createElement('h3');
-      title.className = 'biglietti-parco-title';
-      title.style.cssText = `
-        color: #ffb300;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0 0 1.5rem 0;
-        text-align: center;
-      `;
-      title.textContent = 'Biglietti Parco';
-      
-      eveyMultiVariant.insertBefore(title, eveyMultiVariant.firstChild);
+    const eveySelectors = [
+      '.evey__multi-variant-selector',
+      '.evey__variants',
+      '[class*="evey"]'
+    ];
+    
+    for (let selector of eveySelectors) {
+      const eveyContainer = document.querySelector(selector);
+      if (eveyContainer && !document.querySelector('.biglietti-parco-title')) {
+        const title = document.createElement('h3');
+        title.className = 'biglietti-parco-title';
+        title.style.cssText = `
+          color: #ffb300;
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin: 0 0 1.5rem 0;
+          text-align: center;
+          display: block;
+        `;
+        title.textContent = 'Biglietti Parco';
+        
+        eveyContainer.insertBefore(title, eveyContainer.firstChild);
+        break;
+      }
     }
   }
   
-  // Add title when Evey loads
+  // Add title with multiple attempts
+  setTimeout(addBigliettParcoTitle, 1000);
   setTimeout(addBigliettParcoTitle, 2000);
+  setTimeout(addBigliettParcoTitle, 3000);
+  
+  // Monitor for Evey loading and add title
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length > 0) {
+        addBigliettParcoTitle();
+      }
+    });
+  });
+  
+  if (document.querySelector('#MainContent')) {
+    observer.observe(document.querySelector('#MainContent'), {
+      childList: true,
+      subtree: true
+    });
+  }
 
   // Add smart tooltips - hover on desktop, click on mobile
   function addTicketTooltips() {
