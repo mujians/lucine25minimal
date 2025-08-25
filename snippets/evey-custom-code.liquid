@@ -33,10 +33,11 @@
       
       // Hide immediately and keep hiding
       hideEveyContent();
-      setInterval(hideEveyContent, 100);
+      const hidingInterval = setInterval(hideEveyContent, 100);
       
-      // After 3 seconds: remove loader, show Evey, stop hiding
+      // After 3 seconds: STOP hiding, remove loader, show Evey
       setTimeout(() => {
+        clearInterval(hidingInterval); // STOP hiding!
         loader.remove();
         document.querySelectorAll('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]').forEach(el => {
           el.style.display = 'block';
