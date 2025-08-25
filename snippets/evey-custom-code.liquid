@@ -1,40 +1,7 @@
 <script>
-  // Function to show/hide date selection message
+  // Date selection message - disabled (not needed)
   function showDateSelectionMessage(show) {
-    let messageElement = document.getElementById('evey-date-selection-message');
-    if (show) {
-      if (!messageElement) {
-        messageElement = document.createElement('div');
-        messageElement.id = 'evey-date-selection-message';
-        messageElement.className = 'sketch-card sketch seed-alert';
-        messageElement.style.cssText = `
-          margin: 1rem 0;
-          padding: 1rem;
-          background: rgba(255, 179, 0, 0.1);
-          border: 2px dashed #ffb300;
-          border-radius: 8px;
-          text-align: center;
-          color: #d32f2f;
-          font-weight: 600;
-          position: relative;
-        `;
-        messageElement.innerHTML = `
-          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; pointer-events: none;">
-            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 6 4 10" stroke="#ffb300" opacity="0.7"/>
-          </svg>
-          <div style="position: relative; z-index: 1;">
-            📅 <strong>Prima seleziona data e ora</strong> cliccando su "Seleziona data e ora d'ingresso" per abilitare la selezione delle quantità
-          </div>
-        `;
-        const eveyVariants = document.querySelector('.evey__variants');
-        if (eveyVariants) {
-          eveyVariants.parentNode.insertBefore(messageElement, eveyVariants);
-        }
-      }
-      messageElement.style.display = 'block';
-    } else if (messageElement) {
-      messageElement.style.display = 'none';
-    }
+    // No message needed - disabled
   }
 
    function blockMultiTicket(){
@@ -100,11 +67,33 @@
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
 
-  // Add simple tooltips to ticket types 
+  // Add "Biglietti Parco" title inside Evey box
+  function addBigliettParcoTitle() {
+    const eveyMultiVariant = document.querySelector('.evey__multi-variant-selector');
+    if (eveyMultiVariant && !eveyMultiVariant.querySelector('.biglietti-parco-title')) {
+      const title = document.createElement('h3');
+      title.className = 'biglietti-parco-title';
+      title.style.cssText = `
+        color: #ffb300;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 1.5rem 0;
+        text-align: center;
+      `;
+      title.textContent = 'Biglietti Parco';
+      
+      eveyMultiVariant.insertBefore(title, eveyMultiVariant.firstChild);
+    }
+  }
+  
+  // Add title when Evey loads
+  setTimeout(addBigliettParcoTitle, 2000);
+
+  // Add smart tooltips - hover on desktop, click on mobile
   function addTicketTooltips() {
     const ticketInfo = {
       'Intero': 'Biglietto standard per adulti. Include l\'accesso completo al parco nel giorno e orario selezionato.',
-      'Ridotto': 'Per bambini 3-12 anni e persone con disabilità. Include accompagnatore gratuito per disabili con accesso prioritario.',
+      'Ridotto': 'Per bambini 3-12 anni e disabili. L\'accompagnatore di una persona disabile può anch\'esso acquistare un biglietto ridotto (1 disabile + 1 accompagnatore = 2 biglietti ridotti). Accesso prioritario.',
       'SaltaFila': 'Accesso prioritario senza code all\'ingresso. Include tutti i vantaggi del biglietto intero.',
       'Saltafila': 'Accesso prioritario senza code all\'ingresso. Include tutti i vantaggi del biglietto intero.'
     };
@@ -120,6 +109,24 @@
           tooltip.textContent = ticketInfo[ticketType];
           
           nameElement.appendChild(tooltip);
+          
+          // Mobile: click to show/hide
+          if (window.innerWidth <= 768) {
+            nameElement.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              // Hide all other tooltips first
+              document.querySelectorAll('.ticket-tooltip').forEach(t => {
+                if (t !== tooltip) {
+                  t.classList.remove('show-mobile');
+                }
+              });
+              
+              // Toggle this tooltip
+              tooltip.classList.toggle('show-mobile');
+            });
+          }
         }
       });
     }, 1000);
@@ -424,9 +431,20 @@ button[name="add"][type="submit"]::after {
   opacity: 0.7;
 }
 
-.evey__variant-container:hover .ticket-tooltip {
-  opacity: 1;
-  visibility: visible;
+/* Desktop: hover only on variant name text, not quantity buttons */
+@media (min-width: 769px) {
+  .evey__variant-name:hover .ticket-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Mobile: click to show/hide */
+@media (max-width: 768px) {
+  .ticket-tooltip.show-mobile {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .ticket-tooltip {
@@ -446,6 +464,7 @@ button[name="add"][type="submit"]::after {
   visibility: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  pointer-events: none;
 }
 
 /* Prevent flash of old content */
