@@ -186,14 +186,22 @@
                 </div>
                 
                 <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                  <div class="lucine-quantity-controls">
-                    <button type="button" class="lucine-qty-btn" data-action="minus" data-symbol="−"></button>
-                    <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="lucine-qty-input">
-                    <button type="button" class="lucine-qty-btn" data-action="plus" data-symbol="+"></button>
+                  <div class="quantity" style="display: flex; border-radius: var(--inputs-radius); min-height: calc((var(--inputs-border-width) * 2) + 4.5rem);">
+                    <button type="button" class="quantity__button no-js-hidden" name="minus" data-action="minus">
+                      <svg class="icon icon-minus" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 2" fill="none">
+                        <path d="M0 1h10" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="quantity__input" style="text-align: center; background-color: transparent; border: 0; padding: 0 0.5rem; width: 100%; flex-grow: 1;">
+                    <button type="button" class="quantity__button no-js-hidden" name="plus" data-action="plus">
+                      <svg class="icon icon-plus" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" fill="none">
+                        <path d="M5 0v10M0 5h10" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
                   </div>
                   
                   <input type="hidden" name="id" value="${variantId}">
-                  <button type="submit" id="open-add-to-cart" style="background: linear-gradient(135deg, #ffb300, #ff8f00); color: #0d1b0f; padding: 20px 32px; border: 3px solid #ffb300; border-radius: 16px; display: inline-flex; align-items: center; font-weight: 700; font-size: 16px; box-shadow: 0 6px 24px rgba(255,179,0,0.4); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex: 1; min-width: 160px; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.background='linear-gradient(135deg, #d32f2f, #c62828)'; this.style.borderColor='#d32f2f'; this.style.color='white'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 32px rgba(211,47,47,0.5)'" onmouseout="this.style.background='linear-gradient(135deg, #ffb300, #ff8f00)'; this.style.borderColor='#ffb300'; this.style.color='#0d1b0f'; this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 24px rgba(255,179,0,0.4)'">
+                  <button type="submit" id="open-add-to-cart" style="background: #2e7d32; color: white; border: 2px solid #2e7d32; border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; cursor: pointer; flex: 1; min-width: 160px; text-align: center;" onmouseover="this.style.background='#d32f2f'; this.style.borderColor='#d32f2f';" onmouseout="this.style.background='#2e7d32'; this.style.borderColor='#2e7d32';">
                     <span id="open-cart-text">Aggiungi al Carrello</span>
                   </button>
                 </div>
@@ -211,14 +219,14 @@
   }
 
   function initializeOpenTicketForm() {
-    // New quantity controls using lucine-qty-btn class
-    document.querySelectorAll('.lucine-qty-btn').forEach(btn => {
+    // Quantity controls using standard Shopify quantity__button class
+    document.querySelectorAll('#open-ticket-form .quantity__button').forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         const input = document.getElementById('open-quantity');
-        const action = this.getAttribute('data-action');
+        const action = this.getAttribute('data-action') || this.getAttribute('name');
         let value = parseInt(input.value) || 1;
         
         if (action === 'plus' && value < 10) {
