@@ -2013,24 +2013,22 @@ h6 {
 
 .event-item {
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  gap: 1rem;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  padding: 1.5rem;
 }
 
 /* Removed hover - events are not clickable */
 
-.event-item .event-thumb {
+.event-thumb {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
-  margin: 0 !important;
 }
 
 .event-item .event-info {
