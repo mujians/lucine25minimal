@@ -5,10 +5,15 @@
     const style = document.createElement('style');
     style.textContent = `
       .evey-content-hidden {
-        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
       }
       .evey-content-ready {
-        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
         animation: fadeIn 0.5s ease;
       }
       @keyframes fadeIn {
@@ -37,42 +42,7 @@
   // Initialize preloader immediately
   initializePreloader();
   
-  // Show loading immediately if we're on a product page
-  if (window.location.pathname.includes('/products/')) {
-    setTimeout(() => {
-      if (!document.querySelector('.evey-loading-overlay')) {
-        // Create a temporary loading overlay on the entire product area
-        const productForm = document.querySelector('.product-form, .main-product, #MainContent');
-        if (productForm) {
-          const tempLoader = document.createElement('div');
-          tempLoader.className = 'evey-temp-loading';
-          tempLoader.innerHTML = '⏳ Caricamento sistema biglietti...';
-          tempLoader.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #ffb300;
-            padding: 20px 40px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            z-index: 10000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-          `;
-          document.body.appendChild(tempLoader);
-          
-          // Remove temp loader after a bit
-          setTimeout(() => {
-            if (document.querySelector('.evey-temp-loading')) {
-              tempLoader.remove();
-            }
-          }, 3000);
-        }
-      }
-    }, 100);
-  }
+  // Remove the temporary loader system - using only the placeholder now
 
   // Function to show loading placeholder and hide content until ready
   function showEveyLoader() {
@@ -123,25 +93,24 @@
         const dateButtonText = hasDateButton ? hasDateButton.textContent.trim() : '';
         const hasItalianText = dateButtonText.includes('Seleziona') || dateButtonText.includes('data') || dateButtonText.length === 0;
         
+        console.log('Content check:', { hasVariants, hasDateButton, hasTitle, hasTooltips, hasItalianText, attempts, dateButtonText });
+        
         if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
+          console.log('All content ready - showing Evey content');
           // Remove placeholder
           placeholder.remove();
-          // Also remove temp loader if present
-          const tempLoader = document.querySelector('.evey-temp-loading');
-          if (tempLoader) tempLoader.remove();
           
           // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
         } else if (attempts < maxAttempts) {
           // Not ready yet, try again
+          console.log('Not ready yet, retrying in 500ms');
           setTimeout(checkReady, 500);
         } else {
+          console.log('Max attempts reached - force showing content');
           // Force show after max attempts
           placeholder.remove();
-          // Also remove temp loader if present
-          const tempLoader = document.querySelector('.evey-temp-loading');
-          if (tempLoader) tempLoader.remove();
           
           // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
