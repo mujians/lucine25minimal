@@ -535,6 +535,9 @@
             {%- when '@app' -%}
               <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
               {% render block %}
+            {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
+              <script>console.log("Rendering Evey block directly");</script>
+              {% render block %}
             {%- when 'text' -%}
               <p
                 class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"

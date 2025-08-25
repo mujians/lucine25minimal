@@ -63,7 +63,20 @@
         clearInterval(checkEveyScheduler);
       }
       
+      // Check for Evey elements
       const eveyScheduler = document.querySelector('[data-evey-string]');
+      const eveyContainer = document.querySelector('.evey__variants');
+      const eveyApp = document.querySelector('[data-evey-app]');
+      
+      if (counter % 10 === 0) { // Log every 5 seconds
+        console.log("Looking for Evey elements:", {
+          scheduler: eveyScheduler,
+          container: eveyContainer,
+          app: eveyApp,
+          anyEveyClass: document.querySelector('[class*="evey"]')
+        });
+      }
+      
       if(eveyScheduler){
         if(!eveyScheduler.disabled){
           if (atcBtn) atcBtn.removeAttribute("disabled")
