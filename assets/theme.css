@@ -640,7 +640,6 @@ ul li::before {
   border-radius: 16px;
   padding: 32px 24px 28px; /* Increased top padding and overall padding */
   margin: 2.5rem 0; /* Increased spacing between cards */
-  z-index: 1; /* Ensure cards stay above background elements */
 }
 
 /* Subtle grain texture for sketch cards */
