@@ -1,51 +1,4 @@
 <script>
-  // IMMEDIATELY show loading and hide any Evey content that loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Create loading placeholder immediately  
-    const targetArea = document.querySelector('.product-form, #MainContent');
-    if (targetArea) {
-      const loader = document.createElement('div');
-      loader.className = 'evey-loading-simple';
-      loader.innerHTML = '⏳ Caricamento biglietti...';
-      loader.style.cssText = `
-        background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
-        border: 2px solid rgba(255,179,0,0.3);
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        color: #ffb300;
-        font-size: 18px;
-        font-weight: 700;
-        min-height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-      `;
-      targetArea.appendChild(loader);
-      
-      // Hide any Evey content that appears
-      const hideEveyContent = () => {
-        document.querySelectorAll('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]').forEach(el => {
-          el.style.display = 'none';
-        });
-      };
-      
-      // Hide immediately and keep hiding
-      hideEveyContent();
-      const hidingInterval = setInterval(hideEveyContent, 100);
-      
-      // After 3 seconds: STOP hiding, remove loader, show Evey
-      setTimeout(() => {
-        clearInterval(hidingInterval); // STOP hiding!
-        loader.remove();
-        document.querySelectorAll('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]').forEach(el => {
-          el.style.display = 'block';
-        });
-        console.log('Evey content shown after 3 seconds');
-      }, 3000);
-    }
-  });
 
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
@@ -95,11 +48,11 @@
         if (eveyVariantContainers && eveyVariants && fetchEventId) {
             pbObserver.disconnect();
             
-            // Add our custom elements after 4 seconds (after content is shown)
+            // Add our custom elements when Evey loads
             setTimeout(() => {
               addBigliettParcoTitle();
               addTicketTooltips();
-            }, 4000);
+            }, 2000);
             
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
