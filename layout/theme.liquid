@@ -21,6 +21,7 @@
 
   
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'component-quantity.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
 </head>
 <body class="template-{{ request.page_type | handle }}">

@@ -352,6 +352,22 @@
 
   // Initialize Open ticket form when page loads (faster timing)
   setTimeout(addOpenTicketForm, 800);
+
+  // Replace ticket guide with collapsible version
+  function replaceTicketGuide() {
+    const ticketGuide = document.querySelector('[style*="Guida ai Biglietti"]');
+    if (ticketGuide && ticketGuide.innerHTML.includes('Guida ai Biglietti')) {
+      fetch('/snippets/ticket-guide-collapsible.liquid')
+        .then(response => response.text())
+        .then(html => {
+          ticketGuide.outerHTML = html;
+        })
+        .catch(error => console.log('Could not load collapsible guide'));
+    }
+  }
+  
+  // Initialize collapsible guide
+  setTimeout(replaceTicketGuide, 500);
 </script>
 
 <style>
