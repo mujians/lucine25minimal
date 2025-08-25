@@ -81,7 +81,7 @@
         const title = document.createElement('h3');
         title.className = 'biglietti-parco-title';
         title.style.cssText = `
-          color: #ffb300;
+          color: var(--christmas-gold);
           font-size: 1.5rem;
           font-weight: 700;
           margin: 0 0 1.5rem 0;
@@ -161,31 +161,39 @@
       const variantId = '10082871050579'; // Known working variant ID
       
       const formHTML = `
-        <div class="open-ticket-card" id="open-ticket-form" style="background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%); border: 2px solid #ffb300; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; position: relative; overflow: visible;">
-          <div style="position: absolute; top: -30px; right: -30px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+        <div class="sketch-card sketch seed-9" id="open-ticket-form">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <filter id="wobble-open-ticket">
+                <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="13"/>
+                <feDisplacementMap in="SourceGraphic" scale="1"/>
+              </filter>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="16 10 8 14" vector-effect="non-scaling-stroke" filter="url(#wobble-open-ticket)"/>
+          </svg>
           
           <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data">
             <div class="open-form-content" style="position: relative; z-index: 1;">
               <div class="open-details" style="width: 100%;">
-                <div class="open-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-                  <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
-                  <span style="background: #d32f2f; color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;">ESCLUSIVO</span>
+                <div class="open-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                  <h3 style="color: var(--christmas-gold); margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
+                  <span style="background: var(--christmas-red); color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;">ESCLUSIVO</span>
                 </div>
                 
-                <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 16px;">
+                <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1.5rem 0; font-size: 16px;">
                   <strong>Pass esclusivo senza prenotazione</strong> - accedi quando preferisci!<br>
                   Nessun vincolo di orario o data specifica<br>
                   Accesso prioritario ed immediato al parco<br>
                   Esperienza premium senza code
                 </p>
                 
-                <div class="open-pricing" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div class="open-pricing" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
                   <div style="display: flex; align-items: center; gap: 0.25rem;">
-                    <span style="color: #ffb300; font-weight: 700; font-size: 1.25rem;">€15,00</span>
+                    <span style="color: var(--christmas-gold); font-weight: 700; font-size: 1.25rem;">€15,00</span>
                   </div>
                 </div>
                 
-                <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="open-actions" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
                   <quantity-input class="quantity cart-quantity">
                     <button class="quantity__button no-js-hidden" name="minus" type="button">
                       <span class="visually-hidden">Diminuisci quantità</span>
