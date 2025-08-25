@@ -186,19 +186,21 @@
                 </div>
                 
                 <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                  <div class="quantity">
-                    <button type="button" class="quantity__button no-js-hidden" name="minus" data-action="minus">
+                  <quantity-input class="quantity cart-quantity">
+                    <button class="quantity__button no-js-hidden" name="minus" type="button">
+                      <span class="visually-hidden">Diminuisci quantità</span>
                       <svg class="icon icon-minus" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 2" fill="none">
                         <path d="M0 1h10" stroke="currentColor" stroke-width="1.5"/>
                       </svg>
                     </button>
-                    <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="quantity__input">
-                    <button type="button" class="quantity__button no-js-hidden" name="plus" data-action="plus">
+                    <input class="quantity__input" type="number" name="quantity" value="1" min="1" max="10" id="open-quantity">
+                    <button class="quantity__button no-js-hidden" name="plus" type="button">
+                      <span class="visually-hidden">Aumenta quantità</span>
                       <svg class="icon icon-plus" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" fill="none">
                         <path d="M5 0v10M0 5h10" stroke="currentColor" stroke-width="1.5"/>
                       </svg>
                     </button>
-                  </div>
+                  </quantity-input>
                   
                   <input type="hidden" name="id" value="${variantId}">
                   <button type="submit" id="open-add-to-cart" style="background: #2e7d32; color: white; border: 2px solid #2e7d32; border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; cursor: pointer; flex: 1; min-width: 160px; text-align: center;" onmouseover="this.style.background='#d32f2f'; this.style.borderColor='#d32f2f';" onmouseout="this.style.background='#2e7d32'; this.style.borderColor='#2e7d32';">
