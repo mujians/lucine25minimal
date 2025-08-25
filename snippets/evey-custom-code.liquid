@@ -6,15 +6,11 @@
     style.textContent = `
       .evey-content-hidden {
         opacity: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
+        transition: opacity 0.3s ease;
       }
       .evey-content-ready {
         opacity: 1;
-        max-height: 1000px;
-        overflow: visible;
-        transition: all 0.5s ease;
+        transition: opacity 0.5s ease;
       }
       @keyframes fadeIn {
         from { opacity: 0; }
@@ -100,17 +96,9 @@
           // Remove placeholder
           placeholder.remove();
           
-          // Show Evey content
+          // Show Evey content with simple opacity change
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
-          
-          // Force visibility in case CSS doesn't work
-          setTimeout(() => {
-            eveyContainer.style.opacity = '1';
-            eveyContainer.style.maxHeight = 'none';
-            eveyContainer.style.overflow = 'visible';
-            console.log('Forced visibility applied');
-          }, 100);
         } else if (attempts < maxAttempts) {
           // Not ready yet, try again
           console.log('Not ready yet, retrying in 500ms');
@@ -120,17 +108,9 @@
           // Force show after max attempts
           placeholder.remove();
           
-          // Show Evey content
+          // Show Evey content with simple opacity change
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
-          
-          // Force visibility
-          setTimeout(() => {
-            eveyContainer.style.opacity = '1';
-            eveyContainer.style.maxHeight = 'none';
-            eveyContainer.style.overflow = 'visible';
-            console.log('Forced visibility applied (fallback)');
-          }, 100);
         }
       }
     }
