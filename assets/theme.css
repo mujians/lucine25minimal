@@ -668,7 +668,6 @@ ul li::before {
   width: calc(100% + 20px);
   height: calc(100% + 20px);
   pointer-events: none;
-  z-index: -1; /* Keep borders behind content */
 }
 
 .sketch-card h4 {
@@ -714,6 +713,11 @@ ul li::before {
   animation: dashRotate 8s linear infinite;
 }
 
+/* CTA buttons with animated borders - more specific selector */
+.sketch-card.seed-6 .sketch-border rect[stroke-dasharray="16 10 8 14"] {
+  animation: dashFlow 2s linear infinite;
+}
+
 @keyframes dashRotate {
   0% { 
     stroke-dashoffset: 0; 
@@ -721,6 +725,11 @@ ul li::before {
   100% { 
     stroke-dashoffset: 48; /* Sum of dasharray values for smooth loop */
   }
+}
+
+@keyframes dashFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -48; }
 }
 
 /* Fix border radius per forme rettangolari */
