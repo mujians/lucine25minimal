@@ -17,7 +17,7 @@
   <style>
     /* Our design system colors/fonts */
     #MainProduct-{{ section.id }} {
-      background: #0d1b0f;
+      background: transparent;
     }
     
     .product__title {
@@ -62,22 +62,46 @@
       }
     }
     
-    /* Limit image sizes */
-    .product__media img {
-      max-width: 100%;
-      max-height: 600px;
-      object-fit: contain;
+    /* Hide product media completely */
+    .product__media-wrapper {
+      display: none !important;
     }
     
-    .product__media {
-      max-width: 500px;
+    /* Ensure single column layout without media */
+    .product.grid--2-col-tablet {
+      grid-template-columns: 1fr !important;
     }
     
-    /* Container width */
+    /* Container styling - cleaner, more modern */
     .container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 2rem;
+    }
+    
+    /* Product info wrapper - card-like design */
+    .product__info-wrapper {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-radius: 20px !important;
+      padding: 2.5rem !important;
+      backdrop-filter: blur(15px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* Enhanced typography */
+    .product__title {
+      text-align: center !important;
+      font-size: 2.5rem !important;
+      margin-bottom: 2rem !important;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Price styling */
+    .price {
+      text-align: center !important;
+      font-size: 1.8rem !important;
+      margin-bottom: 2rem !important;
     }
     
     /* Fix oversized icons - but keep Evey quantity icons visible */
@@ -157,42 +181,55 @@
       color: white !important;
     }
     
-    /* Variant buttons styling */
+    /* Modern variant buttons styling */
     .variant-input {
-      background: #2e7d32;
+      background: linear-gradient(135deg, #2e7d32, #388e3c);
       color: white;
       border: 2px solid #2e7d32;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      padding: 16px 24px;
       font-weight: 600;
-      transition: all 0.3s ease;
+      font-size: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(46, 125, 50, 0.3);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
     
     .variant-input:hover,
     .variant-input:checked + label {
-      background: #d32f2f;
+      background: linear-gradient(135deg, #d32f2f, #e53935);
       border-color: #d32f2f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
     }
     
-    /* Add to cart and checkout buttons */
+    /* Modern Add to cart and checkout buttons */
     .product-form__buttons .btn,
     .shopify-payment-button__button {
-      background: #2e7d32 !important;
-      color: white !important;
-      border: 2px solid #2e7d32 !important;
-      border-radius: 8px !important;
-      padding: 1rem 2rem !important;
-      font-weight: 600 !important;
-      font-size: 1.1rem !important;
-      transition: all 0.3s ease !important;
-      text-transform: none !important;
+      background: linear-gradient(135deg, #ffb300, #ff8f00) !important;
+      color: #0d1b0f !important;
+      border: 3px solid #ffb300 !important;
+      border-radius: 16px !important;
+      padding: 20px 32px !important;
+      font-weight: 700 !important;
+      font-size: 18px !important;
+      text-align: center !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      cursor: pointer !important;
+      box-shadow: 0 6px 24px rgba(255, 179, 0, 0.4) !important;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
     }
     
     .product-form__buttons .btn:hover,
     .shopify-payment-button__button:hover {
-      background: #d32f2f !important;
+      background: linear-gradient(135deg, #d32f2f, #c62828) !important;
       border-color: #d32f2f !important;
-      transform: translateY(-2px) !important;
+      color: white !important;
+      transform: translateY(-3px) !important;
+      box-shadow: 0 8px 32px rgba(211, 47, 47, 0.5) !important;
     }
     
     /* Accordion icons */

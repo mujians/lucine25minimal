@@ -75,9 +75,20 @@
   margin-right: calc(var(--inputs-border-width));
 }
 
-.quantity__button svg {
-  width: 1rem;
+.quantity__button svg,
+.quantity__button .icon {
+  width: 1rem !important;
+  height: 1rem !important;
   pointer-events: none;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* Ensure icons are visible in all contexts */
+.quantity__button svg path,
+.quantity__button .icon path {
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
 
 .quantity__button:focus-visible,
