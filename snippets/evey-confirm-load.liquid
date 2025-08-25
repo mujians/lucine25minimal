@@ -19,29 +19,33 @@
    
    console.log("Start evey-confirm-load script...")
    let counter = 1;
-   const atcBtn = document.querySelector('#ProductSubmitButton-template--19963928248659__main')
+   const atcBtn = document.querySelector('.product-form__submit, button[name="add"], button[type="submit"][name="add"]')
    const dynamicBtn = document.querySelector('.shopify-payment-button')
-   dynamicBtn.disabled = true;
+   if (dynamicBtn) dynamicBtn.disabled = true;
    
     let checkEveyScheduler = setInterval(function(){
     if(counter > 120){
-      atcBtn.removeAttribute("disabled")
-      dynamicBtn.removeAttribute("disabled")
-      enableBtnCSS(dynamicBtn)
+      if (atcBtn) atcBtn.removeAttribute("disabled")
+      if (dynamicBtn) {
+        dynamicBtn.removeAttribute("disabled")
+        enableBtnCSS(dynamicBtn)
+      }
       console.log("Evey scheduler timeout, re-enabling add to cart and dynamic payment button.")
       clearInterval(checkEveyScheduler);
     }
     const eveyScheduler = document.querySelector('[data-evey-string]');
     if(eveyScheduler){
       if(!eveyScheduler.disabled){
-        atcBtn.removeAttribute("disabled")
-        dynamicBtn.removeAttribute("disabled")
-        enableBtnCSS(dynamicBtn)
+        if (atcBtn) atcBtn.removeAttribute("disabled")
+        if (dynamicBtn) {
+          dynamicBtn.removeAttribute("disabled")
+          enableBtnCSS(dynamicBtn)
+        }
         console.log("Evey scheduler loaded, re-enabling add to cart and dynamic payment button.")
         clearInterval(checkEveyScheduler);
       }else{
-        atcBtn.setAttribute('disabled','disabled')
-        dynamicBtn.setAttribute('disabled','disabled')
+        if (atcBtn) atcBtn.setAttribute('disabled','disabled')
+        if (dynamicBtn) dynamicBtn.setAttribute('disabled','disabled')
       }
     }
     counter++
