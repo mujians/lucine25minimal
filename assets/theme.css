@@ -707,24 +707,8 @@ ul li::before {
 .seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
 
 /* Animated border for navetta card (seed-6) */
-.seed-6 .sketch-border rect { 
-  stroke-dasharray: 16 10 8 14; 
-  stroke-dashoffset: 10;
-  animation: dashRotate 8s linear infinite;
-}
-
-/* CTA buttons with animated borders - more specific selector */
 .sketch-card.seed-6 .sketch-border rect[stroke-dasharray="16 10 8 14"] {
   animation: dashFlow 2s linear infinite;
-}
-
-@keyframes dashRotate {
-  0% { 
-    stroke-dashoffset: 0; 
-  }
-  100% { 
-    stroke-dashoffset: 48; /* Sum of dasharray values for smooth loop */
-  }
 }
 
 @keyframes dashFlow {
