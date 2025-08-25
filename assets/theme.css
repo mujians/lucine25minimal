@@ -1965,11 +1965,7 @@ h6 {
   transition: all 0.3s ease;
 }
 
-.featured-event-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--christmas-red);
-  transform: translateY(-4px);
-}
+/* Removed hover - events are not clickable */
 
 .featured-event-card .featured-image {
   width: 100%;
@@ -2026,11 +2022,7 @@ h6 {
   transition: all 0.3s ease;
 }
 
-.event-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--christmas-green);
-  transform: translateY(-2px);
-}
+/* Removed hover - events are not clickable */
 
 .event-item .event-thumb {
   width: 80px;
