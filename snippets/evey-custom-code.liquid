@@ -89,7 +89,16 @@
         const dateButtonText = hasDateButton ? hasDateButton.textContent.trim() : '';
         const hasItalianText = dateButtonText.includes('Seleziona') || dateButtonText.includes('data') || dateButtonText.length === 0;
         
-        console.log('Content check:', { hasVariants, hasDateButton, hasTitle, hasTooltips, hasItalianText, attempts, dateButtonText });
+        console.log('Content check:', { 
+          hasVariants, 
+          hasDateButton: !!hasDateButton, 
+          hasTitle: !!hasTitle, 
+          hasTooltips, 
+          hasItalianText, 
+          attempts, 
+          dateButtonText,
+          ready: hasVariants && hasDateButton && hasTitle && hasTooltips && hasItalianText
+        });
         
         if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
           console.log('All content ready - showing Evey content');
@@ -183,6 +192,18 @@
               addTicketTooltips();
               hideEveyLoader();
             }, 2000);
+            
+            // Emergency fallback - force show content after 8 seconds
+            setTimeout(() => {
+              const hiddenContent = document.querySelector('.evey-content-hidden');
+              if (hiddenContent) {
+                console.log('Emergency fallback - force showing content');
+                hiddenContent.classList.remove('evey-content-hidden');
+                hiddenContent.classList.add('evey-content-ready');
+                const placeholder = document.querySelector('.evey-loading-placeholder');
+                if (placeholder) placeholder.remove();
+              }
+            }, 8000);
         }
     });
 
