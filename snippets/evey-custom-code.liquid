@@ -1,4 +1,42 @@
 <script>
+  // Function to show/hide date selection message
+  function showDateSelectionMessage(show) {
+    let messageElement = document.getElementById('evey-date-selection-message');
+    if (show) {
+      if (!messageElement) {
+        messageElement = document.createElement('div');
+        messageElement.id = 'evey-date-selection-message';
+        messageElement.className = 'sketch-card sketch seed-alert';
+        messageElement.style.cssText = `
+          margin: 1rem 0;
+          padding: 1rem;
+          background: rgba(255, 179, 0, 0.1);
+          border: 2px dashed #ffb300;
+          border-radius: 8px;
+          text-align: center;
+          color: #d32f2f;
+          font-weight: 600;
+          position: relative;
+        `;
+        messageElement.innerHTML = `
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; pointer-events: none;">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 6 4 10" stroke="#ffb300" opacity="0.7"/>
+          </svg>
+          <div style="position: relative; z-index: 1;">
+            📅 <strong>Prima seleziona data e ora</strong> cliccando su "Seleziona data e ora d'ingresso" per abilitare la selezione delle quantità
+          </div>
+        `;
+        const eveyVariants = document.querySelector('.evey__variants');
+        if (eveyVariants) {
+          eveyVariants.parentNode.insertBefore(messageElement, eveyVariants);
+        }
+      }
+      messageElement.style.display = 'block';
+    } else if (messageElement) {
+      messageElement.style.display = 'none';
+    }
+  }
+
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
     const eveyVariantContainers = document.querySelectorAll('.evey__variant-container');
@@ -7,16 +45,21 @@
       mutations.forEach((mutation) => {
           
         if (document.querySelector('input[name="properties[_event_id]"]').value == '') {
-            // console.log(document.querySelector('input[name="properties[_event_id]"]').value)
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
+              container.style.opacity = '0.6';
+              container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
+            showDateSelectionMessage(true);
             }else{
                 eveyVariantContainers.forEach(container => {
                   container.style.pointerEvents = 'all';
+                  container.style.opacity = '1';
+                  container.style.filter = 'none';
                 });
                 eveyVariants.style.cursor = 'auto';
+                showDateSelectionMessage(false);
             }
       });
     });
@@ -34,12 +77,7 @@
 
   
   const fetchEveyMetaData = {{ product.metafields.evey.event.value | default: product.metafields.evey.event | json }};
-  console.log("Evey MetaData:", fetchEveyMetaData);
-  console.log("Product Type:", "{{ product.type }}");
-  console.log("Product ID:", {{ product.id }});
-  
   if (fetchEveyMetaData && fetchEveyMetaData.date_type === "recurring") {
-    console.log("Product is event with recurring dates");
     let productBlocks = document.querySelector("#MainContent");
     let pbObserver = new MutationObserver(function () {
         // const checkForEveyScheduler = document.querySelector('#evey-schedule-calendar-modal');
@@ -50,9 +88,11 @@
             pbObserver.disconnect();
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
+              container.style.opacity = '0.6';
+              container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
-            console.log("Evey Scheduler Loaded 123");
+            showDateSelectionMessage(true);
             blockMultiTicket();
         }
     });
@@ -60,3 +100,49 @@
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
 </script>
+
+<style>
+/* Enhanced UX for disabled Evey elements */
+.evey__multi-variant-selector button[type="submit"][name="add"]:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  position: relative;
+}
+
+.evey__multi-variant-selector button[type="submit"][name="add"]:disabled::after {
+  content: "🔒";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+}
+
+/* Tooltip for disabled add to cart button */
+.evey__multi-variant-selector button[type="submit"][name="add"]:disabled:hover::before {
+  content: "Seleziona prima data, ora e quantità";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 5px;
+}
+
+.evey__multi-variant-selector button[type="submit"][name="add"]:disabled:hover::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+  z-index: 1000;
+}
+</style>
