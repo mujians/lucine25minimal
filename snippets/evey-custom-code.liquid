@@ -1,129 +1,43 @@
 <script>
-  // Preloading system - hide Evey content until fully loaded
-  function initializePreloader() {
-    // Add CSS to completely hide Evey content while loading
-    const style = document.createElement('style');
-    style.textContent = `
-      /* Hide ALL Evey content immediately */
-      .evey__multi-variant-selector,
-      .evey__variants,
-      [class*="evey__"] {
-        opacity: 0 !important;
-        transition: opacity 0.3s ease;
-      }
-      
-      .evey-content-ready {
-        opacity: 1 !important;
-        transition: opacity 0.5s ease;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .evey-loading-placeholder {
-        background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
-        border: 2px solid rgba(255,179,0,0.3);
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        color: #ffb300;
-        font-size: 18px;
-        font-weight: 700;
-        min-height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  // Initialize preloader immediately
-  initializePreloader();
-  
-  // Remove the temporary loader system - using only the placeholder now
-
-  // Function to show loading placeholder - content already hidden by CSS
-  function showEveyLoader() {
-    const eveySelectors = [
-      '.evey__multi-variant-selector',
-      '.evey__variants',
-      '[class*="evey__"]',
-      '[id*="evey"]'
-    ];
-    
-    for (let selector of eveySelectors) {
-      const eveyContainer = document.querySelector(selector);
-      if (eveyContainer && !document.querySelector('.evey-loading-placeholder')) {
-        // Create loading placeholder (content already hidden by CSS)
-        const placeholder = document.createElement('div');
-        placeholder.className = 'evey-loading-placeholder';
-        placeholder.innerHTML = '⏳ Caricamento biglietti...';
-        
-        // Insert placeholder before the Evey container
-        eveyContainer.parentNode.insertBefore(placeholder, eveyContainer);
-        console.log('Evey placeholder added before:', selector);
-        break;
-      }
+  // SIMPLE: just show loading for 3 seconds, then show everything
+  const style = document.createElement('style');
+  style.textContent = `
+    .evey-loading-simple {
+      background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
+      border: 2px solid rgba(255,179,0,0.3);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffb300;
+      font-size: 18px;
+      font-weight: 700;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
     }
-  }
+  `;
+  document.head.appendChild(style);
 
-  // Function to hide loader and show content when ready
-  function hideEveyLoader() {
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    function checkReady() {
-      attempts++;
-      const eveyContainer = document.querySelector('.evey__multi-variant-selector, .evey__variants, [class*="evey__"], [id*="evey"]');
-      const placeholder = document.querySelector('.evey-loading-placeholder');
+  function showSimpleLoader() {
+    const eveyContainer = document.querySelector('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]');
+    if (eveyContainer && !document.querySelector('.evey-loading-simple')) {
+      eveyContainer.style.display = 'none';
       
-      if (eveyContainer && placeholder) {
-        // Check if content is actually ready
-        const hasVariants = document.querySelectorAll('.evey__variant-container').length > 0;
-        const hasDateButton = document.querySelector('.evey__schedule-selector-button, [class*="schedule"], [class*="seleziona"]');
-        const hasTitle = document.querySelector('.biglietti-parco-title');
-        const hasTooltips = document.querySelectorAll('.ticket-tooltip').length > 0;
-        
-        // Also check if date button has Italian text (not English)
-        const dateButtonText = hasDateButton ? hasDateButton.textContent.trim() : '';
-        const hasItalianText = dateButtonText.includes('Seleziona') || dateButtonText.includes('data') || dateButtonText.length === 0;
-        
-        console.log('Content check:', { 
-          hasVariants, 
-          hasDateButton: !!hasDateButton, 
-          hasTitle: !!hasTitle, 
-          hasTooltips, 
-          hasItalianText, 
-          attempts, 
-          dateButtonText,
-          ready: hasVariants && hasDateButton && hasTitle && hasTooltips && hasItalianText
-        });
-        
-        if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
-          console.log('All content ready - showing Evey content');
-          // Remove placeholder
-          placeholder.remove();
-          
-          // Show Evey content by adding ready class (overrides CSS opacity: 0)
-          eveyContainer.classList.add('evey-content-ready');
-        } else if (attempts < maxAttempts) {
-          // Not ready yet, try again
-          console.log('Not ready yet, retrying in 500ms');
-          setTimeout(checkReady, 500);
-        } else {
-          console.log('Max attempts reached - force showing content');
-          // Force show after max attempts
-          placeholder.remove();
-          
-          // Show Evey content by adding ready class
-          eveyContainer.classList.add('evey-content-ready');
-        }
-      }
+      const loader = document.createElement('div');
+      loader.className = 'evey-loading-simple';
+      loader.innerHTML = '⏳ Caricamento biglietti...';
+      
+      eveyContainer.parentNode.insertBefore(loader, eveyContainer);
+      
+      // Show content after 3 seconds, period
+      setTimeout(() => {
+        loader.remove();
+        eveyContainer.style.display = 'block';
+        console.log('Content shown after 3 seconds');
+      }, 3000);
     }
-    
-    setTimeout(checkReady, 300);
   }
 
    function blockMultiTicket(){
@@ -174,8 +88,14 @@
         if (eveyVariantContainers && eveyVariants && fetchEventId) {
             pbObserver.disconnect();
             
-            // Show loading overlay first
-            showEveyLoader();
+            // Simple loader that shows for 3 seconds
+            showSimpleLoader();
+            
+            // Add our stuff while loading
+            setTimeout(() => {
+              addBigliettParcoTitle();
+              addTicketTooltips();
+            }, 1000);
             
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
@@ -184,24 +104,6 @@
             });
             eveyVariants.style.cursor = 'not-allowed';
             blockMultiTicket();
-            
-            // Wait for everything to load, then show content
-            setTimeout(() => {
-              addBigliettParcoTitle();
-              addTicketTooltips();
-              hideEveyLoader();
-            }, 2000);
-            
-            // Emergency fallback - force show content after 8 seconds
-            setTimeout(() => {
-              const eveyContent = document.querySelector('.evey__multi-variant-selector');
-              if (eveyContent && !eveyContent.classList.contains('evey-content-ready')) {
-                console.log('Emergency fallback - force showing content');
-                eveyContent.classList.add('evey-content-ready');
-                const placeholder = document.querySelector('.evey-loading-placeholder');
-                if (placeholder) placeholder.remove();
-              }
-            }, 8000);
         }
     });
 
