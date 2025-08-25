@@ -17,49 +17,77 @@
       input.style.opacity = 1
     }
    
-   console.log("Start evey-confirm-load script...")
-   let counter = 1;
-   // Try multiple selectors to find the add to cart button
-   const atcBtn = document.querySelector('[id^="ProductSubmitButton-"]') || 
-                  document.querySelector('.product-form__submit') || 
-                  document.querySelector('button[name="add"]') || 
-                  document.querySelector('button[type="submit"][name="add"]')
-   const dynamicBtn = document.querySelector('.shopify-payment-button')
-   
-   if (atcBtn) {
-     console.log("Found add to cart button:", atcBtn)
-   } else {
-     console.log("Could not find add to cart button")
-   }
-   
-   if (dynamicBtn) dynamicBtn.disabled = true;
+   // Wait for DOM to be ready
+   function waitForAddToCartButton() {
+     console.log("Start evey-confirm-load script...")
+     let counter = 1;
+     
+     // Function to find the button
+     function findButtons() {
+       // Try multiple selectors to find the add to cart button
+       const atcBtn = document.querySelector('[id^="ProductSubmitButton-"]') || 
+                      document.querySelector('.product-form__submit') || 
+                      document.querySelector('button[name="add"]') || 
+                      document.querySelector('button[type="submit"][name="add"]')
+       const dynamicBtn = document.querySelector('.shopify-payment-button')
+       
+       if (atcBtn) {
+         console.log("Found add to cart button:", atcBtn)
+       } else {
+         console.log("Could not find add to cart button - will retry")
+       }
+       
+       if (dynamicBtn) dynamicBtn.disabled = true;
+       
+       return { atcBtn, dynamicBtn };
+     }
+     
+     // Try to find buttons immediately
+     let { atcBtn, dynamicBtn } = findButtons();
    
     let checkEveyScheduler = setInterval(function(){
-    if(counter > 120){
-      if (atcBtn) atcBtn.removeAttribute("disabled")
-      if (dynamicBtn) {
-        dynamicBtn.removeAttribute("disabled")
-        enableBtnCSS(dynamicBtn)
+      // Retry finding buttons if not found initially
+      if (!atcBtn) {
+        const buttons = findButtons();
+        atcBtn = buttons.atcBtn;
+        dynamicBtn = buttons.dynamicBtn;
       }
-      console.log("Evey scheduler timeout, re-enabling add to cart and dynamic payment button.")
-      clearInterval(checkEveyScheduler);
-    }
-    const eveyScheduler = document.querySelector('[data-evey-string]');
-    if(eveyScheduler){
-      if(!eveyScheduler.disabled){
+      
+      if(counter > 120){
         if (atcBtn) atcBtn.removeAttribute("disabled")
         if (dynamicBtn) {
           dynamicBtn.removeAttribute("disabled")
           enableBtnCSS(dynamicBtn)
         }
-        console.log("Evey scheduler loaded, re-enabling add to cart and dynamic payment button.")
+        console.log("Evey scheduler timeout, re-enabling add to cart and dynamic payment button.")
         clearInterval(checkEveyScheduler);
-      }else{
-        if (atcBtn) atcBtn.setAttribute('disabled','disabled')
-        if (dynamicBtn) dynamicBtn.setAttribute('disabled','disabled')
       }
-    }
-    counter++
-  }, 500);
+      
+      const eveyScheduler = document.querySelector('[data-evey-string]');
+      if(eveyScheduler){
+        if(!eveyScheduler.disabled){
+          if (atcBtn) atcBtn.removeAttribute("disabled")
+          if (dynamicBtn) {
+            dynamicBtn.removeAttribute("disabled")
+            enableBtnCSS(dynamicBtn)
+          }
+          console.log("Evey scheduler loaded, re-enabling add to cart and dynamic payment button.")
+          clearInterval(checkEveyScheduler);
+        }else{
+          if (atcBtn) atcBtn.setAttribute('disabled','disabled')
+          if (dynamicBtn) dynamicBtn.setAttribute('disabled','disabled')
+        }
+      }
+      counter++
+    }, 500);
+  }
+  
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForAddToCartButton);
+  } else {
+    // DOM is already ready
+    setTimeout(waitForAddToCartButton, 100);
+  }
  </script>
 {% endif %} 
