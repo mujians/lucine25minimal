@@ -139,6 +139,18 @@
   function addOpenTicketForm() {
     const openTicketBox = document.querySelector('.sketch-card.seed-9');
     if (openTicketBox && !document.getElementById('open-ticket-form')) {
+      
+      // Immediately hide the old content and show loading
+      openTicketBox.style.opacity = '0.3';
+      openTicketBox.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: #ffb300;">
+          <div style="font-size: 2rem; margin-bottom: 1rem;">🎟️</div>
+          <div style="color: rgba(255,255,255,0.8);">Caricamento Biglietto Open...</div>
+        </div>
+      `;
+      
+      // Add smooth transition
+      openTicketBox.style.transition = 'all 0.3s ease';
       // Try multiple possible product handles and search methods  
       const possibleHandles = [
         'biglietto-open-2025',  // Correct handle provided by user
@@ -239,10 +251,21 @@
             </div>
           `;
           
-          openTicketBox.outerHTML = formHTML;
-          
-          // Initialize form functionality after insertion
-          setTimeout(initializeOpenTicketForm, 100);
+          // Smooth transition to new content
+          openTicketBox.style.opacity = '0';
+          setTimeout(() => {
+            openTicketBox.outerHTML = formHTML;
+            const newForm = document.getElementById('open-ticket-form');
+            if (newForm) {
+              newForm.style.opacity = '0';
+              newForm.style.transition = 'opacity 0.3s ease';
+              setTimeout(() => {
+                newForm.style.opacity = '1';
+              }, 50);
+            }
+            // Initialize form functionality after insertion
+            setTimeout(initializeOpenTicketForm, 150);
+          }, 150);
         })
         .catch(error => {
           console.error('Open ticket product not available:', error);
@@ -258,7 +281,19 @@
             </div>
           `;
           
-          openTicketBox.outerHTML = errorHTML;
+          // Smooth transition to error state
+          openTicketBox.style.opacity = '0';
+          setTimeout(() => {
+            openTicketBox.outerHTML = errorHTML;
+            const errorDiv = document.querySelector('.open-ticket-error');
+            if (errorDiv) {
+              errorDiv.style.opacity = '0';
+              errorDiv.style.transition = 'opacity 0.3s ease';
+              setTimeout(() => {
+                errorDiv.style.opacity = '1';
+              }, 50);
+            }
+          }, 150);
         });
     }
   }
@@ -315,8 +350,8 @@
     }
   }
 
-  // Initialize Open ticket form when page loads
-  setTimeout(addOpenTicketForm, 1500);
+  // Initialize Open ticket form when page loads (faster timing)
+  setTimeout(addOpenTicketForm, 800);
 </script>
 
 <style>
@@ -469,6 +504,16 @@
   left: 20px;
   border: 6px solid transparent;
   border-bottom-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Prevent flash of old content */
+.sketch-card.seed-9 {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.open-ticket-loading {
+  opacity: 0.5 !important;
 }
 
 /* Enhanced Open Ticket responsive design */
