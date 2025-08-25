@@ -28,16 +28,6 @@
           "type": "price",
           "settings": {}
         },
-        "variant_picker": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "button"
-          }
-        },
-        "quantity_selector": {
-          "type": "quantity_selector",
-          "settings": {}
-        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -66,8 +56,6 @@
         "discount_info",
         "custom_liquid_NkmUjk",
         "price",
-        "variant_picker",
-        "quantity_selector",
         "buy_buttons",
         "evey_events_tickets_multi_variant_selector_9ixpHJ",
         "open_ticket"

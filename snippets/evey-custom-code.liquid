@@ -292,77 +292,9 @@
   // Initialize Open ticket form when page loads (faster timing)
   setTimeout(addOpenTicketForm, 800);
 
-  // Force Italian localization for Evey calendar
-  function forceItalianCalendar() {
-    // Override common English strings in Evey calendar
-    const eveyStringsMap = {
-      'Select Date': 'Seleziona Data',
-      'Select Time': 'Seleziona Ora',
-      'Select': 'Seleziona',
-      'January': 'Gennaio', 'February': 'Febbraio', 'March': 'Marzo', 'April': 'Aprile',
-      'May': 'Maggio', 'June': 'Giugno', 'July': 'Luglio', 'August': 'Agosto',
-      'September': 'Settembre', 'October': 'Ottobre', 'November': 'Novembre', 'December': 'Dicembre',
-      'Monday': 'Lunedì', 'Tuesday': 'Martedì', 'Wednesday': 'Mercoledì', 'Thursday': 'Giovedì',
-      'Friday': 'Venerdì', 'Saturday': 'Sabato', 'Sunday': 'Domenica',
-      'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mer', 'Thu': 'Gio', 'Fri': 'Ven', 'Sat': 'Sab', 'Sun': 'Dom',
-      'Available': 'Disponibile', 'Sold Out': 'Esaurito', 'Choose Time': 'Scegli Orario'
-    };
+  // Calendar translation removed - keeping Evey original
 
-    // Monitor for new DOM elements (Evey calendar)
-    const observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        mutation.addedNodes.forEach(function(node) {
-          if (node.nodeType === 1) { // Element node
-            translateEveyCalendar(node, eveyStringsMap);
-          }
-        });
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Initial translation
-    setTimeout(() => translateEveyCalendar(document, eveyStringsMap), 1000);
-  }
-
-  function translateEveyCalendar(element, stringsMap) {
-    // Find and translate text nodes
-    const walker = document.createTreeWalker(
-      element, 
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-
-    let node;
-    while (node = walker.nextNode()) {
-      const text = node.textContent.trim();
-      if (stringsMap[text]) {
-        node.textContent = stringsMap[text];
-      }
-    }
-
-    // Also check for attributes and specific selectors
-    element.querySelectorAll && element.querySelectorAll('[title], [placeholder], [aria-label]').forEach(el => {
-      if (el.title && stringsMap[el.title]) el.title = stringsMap[el.title];
-      if (el.placeholder && stringsMap[el.placeholder]) el.placeholder = stringsMap[el.placeholder];
-      if (el.getAttribute('aria-label') && stringsMap[el.getAttribute('aria-label')]) {
-        el.setAttribute('aria-label', stringsMap[el.getAttribute('aria-label')]);
-      }
-    });
-  }
-
-  // Initialize calendar translation
-  setTimeout(forceItalianCalendar, 500);
-
-  // Minimal Evey fixes - keep it as original as possible
-  // Just ensure add to cart buttons work when date is selected
-  function ensureEveyFunctionality() {
-    // Let Evey handle everything naturally - minimal intervention
-    console.log('Evey functionality preserved in original form');
-  }
-  
-  setTimeout(ensureEveyFunctionality, 1000);
+  // Evey functionality - let app handle everything naturally
 
   // Replace ticket guide with collapsible version
   function replaceTicketGuide() {
@@ -416,10 +348,7 @@ button[name="add"][type="submit"]::after {
   height: 100%;
 }
 
-/* Fix excessive padding on product media */
-.product__media.media.media--transparent {
-  padding-top: 20px !important;
-}
+/* Product media padding removed - not needed as media is hidden */
 
 /* Card style ONLY for Evey block */
 .evey__multi-variant-selector {
@@ -489,12 +418,8 @@ button[name="add"][type="submit"]::after {
   border-color: rgba(255, 179, 0, 0.3) !important;
 }
 
-/* Mobile optimizations */
+/* Mobile optimizations - media hiding removed as handled in main-product.liquid */
 @media screen and (max-width: 768px) {
-  .product__media {
-    display: none !important;
-  }
-  
   .ticket_guide,
   .collapsible-row {
     display: none !important;

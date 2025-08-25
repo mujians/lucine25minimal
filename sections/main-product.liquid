@@ -4,15 +4,7 @@
   data-section="{{ section.id }}"
 >
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
-  {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
-  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
-  {{ 'component-rating.css' | asset_url | stylesheet_tag }}
-  {{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
-  {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
-  {%- if product.quantity_price_breaks_configured? -%}
-    {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
-  {%- endif -%}
 
   <style>
     /* Our design system colors/fonts */
@@ -564,7 +556,7 @@
   <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper{% if section.settings.media_position == 'right' %} medium-hide large-up-hide{% endif %}">
       {% if product.media.size > 0 %}
-        {% render 'product-media-gallery', variant_images: variant_images %}
+        <!-- Media gallery removed - hidden on mobile, not needed -->
       {% else %}
         <div class="product__media-placeholder" style="background: rgba(255,255,255,0.1); border: 2px dashed #2e7d32; border-radius: 12px; padding: 3rem; text-align: center; color: #2e7d32; min-height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
           <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2">
@@ -1075,15 +1067,12 @@
       </product-info>
     </div>
     {%- if section.settings.media_position == 'right' -%}
-      {% comment %} Duplicate gallery to display after product content on tablet/desktop breakpoint {% endcomment %}
-      <div class="grid__item product__media-wrapper small-hide">
-        {% render 'product-media-gallery', variant_images: variant_images, is_duplicate: true %}
-      </div>
+      {% comment %} Duplicate gallery removed - not needed {% endcomment %}
     {%- endif -%}
   </div>
   </div>
 
-  {% render 'product-media-modal' variant_images: variant_images %}
+  <!-- Product media modal removed - not needed -->
 
   {% assign popups = section.blocks | where: 'type', 'popup' %}
   {%- for block in popups -%}
