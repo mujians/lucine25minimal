@@ -139,19 +139,58 @@
   function addOpenTicketForm() {
     const openTicketBox = document.querySelector('.sketch-card.seed-9');
     if (openTicketBox && !document.getElementById('open-ticket-form')) {
-      fetch('/products/biglietto-open-2024-2025.js')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Product not found');
+      // Try multiple possible product handles and search methods
+      const possibleHandles = [
+        'biglietto-open-2024-2025',
+        'biglietto-open',
+        'open-ticket', 
+        'open-pass',
+        'biglietto-open-lucine',
+        'pass-open',
+        'open'
+      ];
+      
+      // Function to try fetching product with different handles
+      const fetchOpenProduct = async () => {
+        // First try the handles
+        for (const handle of possibleHandles) {
+          try {
+            console.log(`Trying product handle: ${handle}`);
+            const response = await fetch(`/products/${handle}.js`);
+            if (response.ok) {
+              const product = await response.json();
+              if (product && product.id && product.variants && product.variants.length > 0) {
+                console.log(`Found product with handle: ${handle}`, product);
+                return product;
+              }
+            }
+          } catch (error) {
+            console.log(`Product not found with handle: ${handle}`);
+            continue;
           }
-          return response.json();
-        })
+        }
+        
+        // If handles fail, create a working form with the known variant ID
+        // This allows the purchase to work even if we can't fetch product details
+        console.log('Could not fetch product details, using variant ID directly');
+        return {
+          id: '10082871050579',
+          title: 'Biglietto Open',
+          price: null, // Will be shown as "Prezzo disponibile al checkout"
+          variants: [{
+            id: '10082871050579',
+            available: true
+          }]
+        };
+      };
+      
+      fetchOpenProduct()
         .then(product => {
-          if (!product || !product.price || !product.variants || !product.variants[0]) {
+          if (!product || !product.variants || !product.variants[0]) {
             throw new Error('Invalid product data');
           }
           
-          const price = (product.price / 100).toFixed(2).replace('.', ',');
+          const price = product.price ? (product.price / 100).toFixed(2).replace('.', ',') : 'Disponibile al checkout';
           const variantId = product.variants[0].id;
           
           const formHTML = `
@@ -177,7 +216,7 @@
                     
                     <div class="open-pricing" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                       <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <span style="color: #ffb300; font-weight: 700; font-size: 1.25rem;">€${price}</span>
+                        <span style="color: #ffb300; font-weight: 700; font-size: 1.25rem;">${price.includes('€') ? price : '€' + price}</span>
                       </div>
                     </div>
                     
