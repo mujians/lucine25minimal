@@ -5,16 +5,16 @@
     const style = document.createElement('style');
     style.textContent = `
       .evey-content-hidden {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
       }
       .evey-content-ready {
-        visibility: visible !important;
-        opacity: 1 !important;
-        height: auto !important;
-        animation: fadeIn 0.5s ease;
+        opacity: 1;
+        max-height: 1000px;
+        overflow: visible;
+        transition: all 0.5s ease;
       }
       @keyframes fadeIn {
         from { opacity: 0; }
@@ -103,6 +103,14 @@
           // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
+          
+          // Force visibility in case CSS doesn't work
+          setTimeout(() => {
+            eveyContainer.style.opacity = '1';
+            eveyContainer.style.maxHeight = 'none';
+            eveyContainer.style.overflow = 'visible';
+            console.log('Forced visibility applied');
+          }, 100);
         } else if (attempts < maxAttempts) {
           // Not ready yet, try again
           console.log('Not ready yet, retrying in 500ms');
@@ -115,6 +123,14 @@
           // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
+          
+          // Force visibility
+          setTimeout(() => {
+            eveyContainer.style.opacity = '1';
+            eveyContainer.style.maxHeight = 'none';
+            eveyContainer.style.overflow = 'visible';
+            console.log('Forced visibility applied (fallback)');
+          }, 100);
         }
       }
     }
