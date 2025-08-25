@@ -239,15 +239,15 @@
                     </div>
                     
                     <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                      <div class="qty-selector" style="display: flex; align-items: center; border: 1px solid rgba(255,179,0,0.3); border-radius: 6px; background: rgba(255,255,255,0.05);">
-                        <button type="button" class="open-qty-btn" data-action="minus" style="background: none; border: none; color: #ffb300; font-size: 16px; font-weight: bold; padding: 8px 10px; cursor: pointer;">−</button>
-                        <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" style="background: none; border: none; text-align: center; width: 40px; color: white; font-size: 14px; font-weight: 600;">
-                        <button type="button" class="open-qty-btn" data-action="plus" style="background: none; border: none; color: #ffb300; font-size: 16px; font-weight: bold; padding: 8px 10px; cursor: pointer;">+</button>
+                      <div class="lucine-quantity-controls">
+                        <button type="button" class="lucine-qty-btn" data-action="minus" data-symbol="−"></button>
+                        <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="lucine-qty-input">
+                        <button type="button" class="lucine-qty-btn" data-action="plus" data-symbol="+"></button>
                       </div>
                       
                       <input type="hidden" name="id" value="${variantId}">
-                      <button type="submit" id="open-add-to-cart" style="background: linear-gradient(45deg, #ffb300, #d32f2f); color: white; padding: 10px 16px; border: none; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; box-shadow: 0 3px 10px rgba(255,179,0,0.3); cursor: pointer; transition: transform 0.2s ease; flex: 1; min-width: 140px; justify-content: center;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <span>🛒</span> <span id="open-cart-text">Aggiungi al Carrello</span>
+                      <button type="submit" id="open-add-to-cart" style="background: linear-gradient(135deg, #ffb300, #ff8f00); color: #0d1b0f; padding: 20px 32px; border: 3px solid #ffb300; border-radius: 16px; display: inline-flex; align-items: center; font-weight: 700; font-size: 16px; box-shadow: 0 6px 24px rgba(255,179,0,0.4); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex: 1; min-width: 160px; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.background='linear-gradient(135deg, #d32f2f, #c62828)'; this.style.borderColor='#d32f2f'; this.style.color='white'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 32px rgba(211,47,47,0.5)'" onmouseout="this.style.background='linear-gradient(135deg, #ffb300, #ff8f00)'; this.style.borderColor='#ffb300'; this.style.color='#0d1b0f'; this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 24px rgba(255,179,0,0.4)'"
+                        <span id="open-cart-text">Aggiungi al Carrello</span>
                       </button>
                     </div>
                   </div>
@@ -304,9 +304,12 @@
   }
 
   function initializeOpenTicketForm() {
-    // Quantity controls
-    document.querySelectorAll('.open-qty-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
+    // New quantity controls using lucine-qty-btn class
+    document.querySelectorAll('.lucine-qty-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const input = document.getElementById('open-quantity');
         const action = this.getAttribute('data-action');
         let value = parseInt(input.value) || 1;
@@ -358,6 +361,69 @@
   // Initialize Open ticket form when page loads (faster timing)
   setTimeout(addOpenTicketForm, 800);
 
+  // Force Italian localization for Evey calendar
+  function forceItalianCalendar() {
+    // Override common English strings in Evey calendar
+    const eveyStringsMap = {
+      'Select Date': 'Seleziona Data',
+      'Select Time': 'Seleziona Ora',
+      'Select': 'Seleziona',
+      'January': 'Gennaio', 'February': 'Febbraio', 'March': 'Marzo', 'April': 'Aprile',
+      'May': 'Maggio', 'June': 'Giugno', 'July': 'Luglio', 'August': 'Agosto',
+      'September': 'Settembre', 'October': 'Ottobre', 'November': 'Novembre', 'December': 'Dicembre',
+      'Monday': 'Lunedì', 'Tuesday': 'Martedì', 'Wednesday': 'Mercoledì', 'Thursday': 'Giovedì',
+      'Friday': 'Venerdì', 'Saturday': 'Sabato', 'Sunday': 'Domenica',
+      'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mer', 'Thu': 'Gio', 'Fri': 'Ven', 'Sat': 'Sab', 'Sun': 'Dom',
+      'Available': 'Disponibile', 'Sold Out': 'Esaurito', 'Choose Time': 'Scegli Orario'
+    };
+
+    // Monitor for new DOM elements (Evey calendar)
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) { // Element node
+            translateEveyCalendar(node, eveyStringsMap);
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial translation
+    setTimeout(() => translateEveyCalendar(document, eveyStringsMap), 1000);
+  }
+
+  function translateEveyCalendar(element, stringsMap) {
+    // Find and translate text nodes
+    const walker = document.createTreeWalker(
+      element, 
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    let node;
+    while (node = walker.nextNode()) {
+      const text = node.textContent.trim();
+      if (stringsMap[text]) {
+        node.textContent = stringsMap[text];
+      }
+    }
+
+    // Also check for attributes and specific selectors
+    element.querySelectorAll && element.querySelectorAll('[title], [placeholder], [aria-label]').forEach(el => {
+      if (el.title && stringsMap[el.title]) el.title = stringsMap[el.title];
+      if (el.placeholder && stringsMap[el.placeholder]) el.placeholder = stringsMap[el.placeholder];
+      if (el.getAttribute('aria-label') && stringsMap[el.getAttribute('aria-label')]) {
+        el.setAttribute('aria-label', stringsMap[el.getAttribute('aria-label')]);
+      }
+    });
+  }
+
+  // Initialize calendar translation
+  setTimeout(forceItalianCalendar, 500);
+
   // Replace ticket guide with collapsible version
   function replaceTicketGuide() {
     const ticketGuide = document.querySelector('[style*="Guida ai Biglietti"]');
@@ -408,20 +474,7 @@
   justify-content: center;
 }
 
-/* Simple note above add to cart button */
-.evey__multi-variant-selector::before {
-  content: "💡 Prima seleziona data, ora e quantità dei biglietti";
-  display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 13px;
-  color: #666;
-  text-align: center;
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  background: rgba(102, 102, 102, 0.08);
-  border-radius: 6px;
-  font-weight: 400;
-}
+/* Remove hint box - layout is now clear enough */
 
 /* Override Evey English text with Italian translations using CSS content */
 button[data-evey-trigger]::before {
@@ -435,8 +488,8 @@ button[data-evey-trigger] {
 }
 
 button[data-evey-trigger]::before {
-  content: "📅 Seleziona Data e Ora d'Ingresso";
-  font-size: 14px !important;
+  content: "Seleziona Data e Ora d'Ingresso";
+  font-size: 16px !important;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -453,8 +506,8 @@ button[name="add"][type="submit"] {
 }
 
 button[name="add"][type="submit"]::after {
-  content: "🛒 Aggiungi al Carrello";
-  font-size: 14px !important;
+  content: "Aggiungi al Carrello";
+  font-size: 16px !important;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -593,43 +646,47 @@ button[name="add"][type="submit"]::after {
   opacity: 0.7;
 }
 
-.evey__variant-container:hover .ticket-tooltip {
+.evey__variant-container:hover .ticket-tooltip:not(.tooltip-disabled) {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
 .ticket-tooltip {
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) translateY(-10px);
-  min-width: 280px;
-  max-width: 400px;
+  transform: translate(-50%, -50%) translateY(-10px);
+  min-width: 320px;
+  max-width: 450px;
   background: rgba(0, 0, 0, 0.95);
   color: white;
-  padding: 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  z-index: 1000;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  z-index: 10000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  margin-top: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,179,0,0.3);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  border: 2px solid rgba(255,179,0,0.4);
   white-space: normal;
+}
+
+/* Disable tooltips when clicking quantity buttons */
+.evey__variant-container.tooltip-disabled .ticket-tooltip {
+  display: none !important;
 }
 
 .ticket-tooltip::before {
   content: '';
   position: absolute;
-  top: -6px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-bottom-color: rgba(0, 0, 0, 0.95);
+  border: 8px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.95);
 }
 
 /* Prevent flash of old content */
