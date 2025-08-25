@@ -35,18 +35,84 @@
 
   // Initialize preloader immediately
   initializePreloader();
+  
+  // Show loading immediately if we're on a product page
+  if (window.location.pathname.includes('/products/')) {
+    setTimeout(() => {
+      if (!document.querySelector('.evey-loading-overlay')) {
+        // Create a temporary loading overlay on the entire product area
+        const productForm = document.querySelector('.product-form, .main-product, #MainContent');
+        if (productForm) {
+          const tempLoader = document.createElement('div');
+          tempLoader.className = 'evey-temp-loading';
+          tempLoader.innerHTML = '⏳ Caricamento sistema biglietti...';
+          tempLoader.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffb300;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            z-index: 10000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+          `;
+          document.body.appendChild(tempLoader);
+          
+          // Remove temp loader after a bit
+          setTimeout(() => {
+            if (document.querySelector('.evey-temp-loading')) {
+              tempLoader.remove();
+            }
+          }, 3000);
+        }
+      }
+    }, 100);
+  }
 
   // Function to show loading and hide content until ready
   function showEveyLoader() {
-    const eveyContainer = document.querySelector('.evey__multi-variant-selector');
-    if (eveyContainer && !eveyContainer.querySelector('.evey-loading-overlay')) {
-      eveyContainer.classList.add('evey-content-hidden');
-      
-      const loader = document.createElement('div');
-      loader.className = 'evey-loading-overlay';
-      loader.innerHTML = '⏳ Caricamento biglietti...';
-      
-      eveyContainer.appendChild(loader);
+    const eveySelectors = [
+      '.evey__multi-variant-selector',
+      '.evey__variants',
+      '[class*="evey__"]',
+      '[id*="evey"]'
+    ];
+    
+    for (let selector of eveySelectors) {
+      const eveyContainer = document.querySelector(selector);
+      if (eveyContainer && !document.querySelector('.evey-loading-overlay')) {
+        eveyContainer.style.position = 'relative';
+        eveyContainer.classList.add('evey-content-hidden');
+        
+        const loader = document.createElement('div');
+        loader.className = 'evey-loading-overlay';
+        loader.innerHTML = '⏳ Caricamento biglietti...';
+        loader.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          color: #ffb300;
+          font-size: 18px;
+          font-weight: 700;
+          border-radius: 8px;
+          min-height: 200px;
+        `;
+        
+        eveyContainer.appendChild(loader);
+        console.log('Evey loader added to:', selector);
+        break;
+      }
     }
   }
 
@@ -57,7 +123,7 @@
     
     function checkReady() {
       attempts++;
-      const eveyContainer = document.querySelector('.evey__multi-variant-selector');
+      const eveyContainer = document.querySelector('.evey__multi-variant-selector, .evey__variants, [class*="evey__"], [id*="evey"]');
       const loader = document.querySelector('.evey-loading-overlay');
       
       if (eveyContainer && loader) {
@@ -73,6 +139,10 @@
         
         if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
           loader.remove();
+          // Also remove temp loader if present
+          const tempLoader = document.querySelector('.evey-temp-loading');
+          if (tempLoader) tempLoader.remove();
+          
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
         } else if (attempts < maxAttempts) {
@@ -81,6 +151,10 @@
         } else {
           // Force show after max attempts
           loader.remove();
+          // Also remove temp loader if present
+          const tempLoader = document.querySelector('.evey-temp-loading');
+          if (tempLoader) tempLoader.remove();
+          
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
         }
