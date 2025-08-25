@@ -91,7 +91,7 @@
   stroke: currentColor !important;
 }
 
-/* Force Evey quantity buttons to show icons properly */
+/* Force Evey quantity buttons to show icons properly - FIXED */
 .evey__variant-container .quantity__button {
   background: #2e7d32 !important;
   border: 1px solid #2e7d32 !important;
@@ -111,18 +111,21 @@
   border-color: #d32f2f !important;
 }
 
-/* If Evey buttons don't have icons, add text symbols */
-.evey__variant-container .quantity__button:not(:has(svg)):not(:has(.icon)) {
-  font-family: monospace !important;
-  line-height: 1 !important;
+/* Make sure SVG icons are visible and properly styled */
+.evey__variant-container .quantity__button svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: white !important;
+  stroke: white !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.evey__variant-container .quantity__button[name="minus"]:not(:has(svg)):not(:has(.icon))::before {
-  content: "−" !important;
-}
-
-.evey__variant-container .quantity__button[name="plus"]:not(:has(svg)):not(:has(.icon))::before {
-  content: "+" !important;
+.evey__variant-container .quantity__button svg path {
+  fill: white !important;
+  stroke: white !important;
+  opacity: 1 !important;
 }
 
 .quantity__button:focus-visible,
