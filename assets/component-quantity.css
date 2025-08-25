@@ -91,6 +91,40 @@
   stroke: currentColor !important;
 }
 
+/* Force Evey quantity buttons to show icons properly */
+.evey__variant-container .quantity__button {
+  background: #2e7d32 !important;
+  border: 1px solid #2e7d32 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  width: 45px !important;
+  height: 45px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+.evey__variant-container .quantity__button:hover {
+  background: #d32f2f !important;
+  border-color: #d32f2f !important;
+}
+
+/* If Evey buttons don't have icons, add text symbols */
+.evey__variant-container .quantity__button:not(:has(svg)):not(:has(.icon)) {
+  font-family: monospace !important;
+  line-height: 1 !important;
+}
+
+.evey__variant-container .quantity__button[name="minus"]:not(:has(svg)):not(:has(.icon))::before {
+  content: "−" !important;
+}
+
+.evey__variant-container .quantity__button[name="plus"]:not(:has(svg)):not(:has(.icon))::before {
+  content: "+" !important;
+}
+
 .quantity__button:focus-visible,
 .quantity__input:focus-visible {
   background-color: rgb(var(--color-background));

@@ -100,7 +100,7 @@
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
 
-  // Add tooltips to ticket types
+  // Add tooltips to ticket types with close functionality
   function addTicketTooltips() {
     const ticketInfo = {
       'Intero': 'Biglietto standard per adulti. Include l\'accesso completo al parco nel giorno e orario selezionato.',
@@ -117,11 +117,55 @@
           
           const tooltip = document.createElement('div');
           tooltip.className = 'ticket-tooltip';
-          tooltip.textContent = ticketInfo[ticketType];
+          tooltip.innerHTML = `
+            <div class="tooltip-content">${ticketInfo[ticketType]}</div>
+            <button class="tooltip-close">×</button>
+          `;
           
           nameElement.appendChild(tooltip);
+          
+          // Add close functionality
+          const closeBtn = tooltip.querySelector('.tooltip-close');
+          closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            tooltip.style.opacity = '0';
+            tooltip.style.visibility = 'hidden';
+            
+            // Mark tooltip as disabled for a short time
+            tooltip.classList.add('tooltip-disabled');
+            setTimeout(() => {
+              tooltip.classList.remove('tooltip-disabled');
+            }, 3000);
+          });
         }
       });
+      
+      // Prevent tooltip from opening when clicking quantity buttons
+      document.querySelectorAll('.quantity__button').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          // Temporarily disable tooltips in this container
+          const container = this.closest('.evey__variant-container');
+          if (container) {
+            container.classList.add('tooltip-disabled');
+            setTimeout(() => {
+              container.classList.remove('tooltip-disabled');
+            }, 1000);
+          }
+        });
+      });
+      
+      // Close tooltip when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.evey__variant-name')) {
+          document.querySelectorAll('.ticket-tooltip').forEach(tooltip => {
+            tooltip.style.opacity = '0';
+            tooltip.style.visibility = 'hidden';
+          });
+        }
+      });
+      
     }, 1000);
   }
 
@@ -211,25 +255,18 @@
               <div style="position: absolute; top: -30px; right: -30px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
               
               <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data">
-                <div class="open-form-content" style="display: flex; align-items: flex-start; gap: 1.5rem; position: relative; z-index: 1;">
-                  <div class="open-image" style="flex-shrink: 0;">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #ffb300; padding: 3px; background: white;">
-                      <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/open-pass.jpg?v=1730481582" alt="Biglietto Open" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    </div>
-                  </div>
-                  
-                  <div class="open-details" style="flex: 1; min-width: 0;">
+                <div class="open-form-content" style="position: relative; z-index: 1;">
+                  <div class="open-details" style="width: 100%;">
                     <div class="open-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-                      <span style="font-size: 1.5rem;">🥇</span>
-                      <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.25rem;">Biglietto Open</h3>
-                      <span style="background: #d32f2f; color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 600;">ESCLUSIVO</span>
+                      <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
+                      <span style="background: #d32f2f; color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;">ESCLUSIVO</span>
                     </div>
                     
-                    <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 14px;">
-                      🎟️ <strong>Pass esclusivo senza prenotazione</strong> - accedi quando preferisci!<br>
-                      ⏰ Nessun vincolo di orario o data specifica<br>
-                      🚪 Accesso prioritario ed immediato al parco<br>
-                      ✨ Esperienza premium senza code
+                    <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 16px;">
+                      <strong>Pass esclusivo senza prenotazione</strong> - accedi quando preferisci!<br>
+                      Nessun vincolo di orario o data specifica<br>
+                      Accesso prioritario ed immediato al parco<br>
+                      Esperienza premium senza code
                     </p>
                     
                     <div class="open-pricing" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
@@ -423,6 +460,145 @@
 
   // Initialize calendar translation
   setTimeout(forceItalianCalendar, 500);
+
+  // Fix Evey date selection persistence - CRITICAL FIX
+  function fixEveyDateSelection() {
+    console.log('🗓️ Initializing Evey calendar fix...');
+    
+    // Store selected date globally
+    window.eveySelectedDate = null;
+    window.eveySelectedTime = null;
+    
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        // Look for any Evey calendar elements
+        const eveyElements = document.querySelectorAll('[class*="evey"], [data-evey], .evey-calendar, .evey__calendar, .calendar, [id*="evey"]');
+        
+        eveyElements.forEach(element => {
+          // Remove existing listeners to avoid duplicates
+          element.removeEventListener('click', handleEveyClick, true);
+          // Add click listener to catch date selections
+          element.addEventListener('click', handleEveyClick, true); // Use capture phase
+        });
+      });
+    });
+    
+    function handleEveyClick(e) {
+      console.log('📅 Calendar click detected:', e.target);
+      
+      // Check if clicked element is a date or time
+      const isDateElement = e.target.matches('[data-date], .date-cell, .calendar-date, [class*="date"], td, button, .day, [class*="time"], .time-slot');
+      
+      if (isDateElement) {
+        console.log('🎯 Date/Time element clicked:', e.target);
+        
+        setTimeout(() => {
+          // Try multiple methods to get selected date/time
+          const selectedValue = e.target.textContent?.trim() || 
+                               e.target.getAttribute('data-date') ||
+                               e.target.getAttribute('data-time') ||
+                               e.target.getAttribute('aria-label') ||
+                               e.target.title ||
+                               e.target.value;
+          
+          if (selectedValue) {
+            console.log('✅ Value captured:', selectedValue);
+            
+            // Determine if it's a date or time
+            if (selectedValue.match(/\d{1,2}:\d{2}/) || selectedValue.toLowerCase().includes('am') || selectedValue.toLowerCase().includes('pm')) {
+              window.eveySelectedTime = selectedValue;
+              console.log('⏰ Time selected:', selectedValue);
+            } else if (selectedValue.match(/\d/)) {
+              window.eveySelectedDate = selectedValue;
+              console.log('📅 Date selected:', selectedValue);
+            }
+            
+            // Find and update trigger buttons
+            const triggerButtons = document.querySelectorAll('[data-evey-trigger], .evey-trigger, button[class*="evey"], [class*="evey-button"]');
+            triggerButtons.forEach(btn => {
+              btn.setAttribute('data-selected-date', window.eveySelectedDate || '');
+              btn.setAttribute('data-selected-time', window.eveySelectedTime || '');
+              btn.style.background = '#2e7d32 !important';
+              btn.style.borderColor = '#2e7d32 !important';
+              btn.style.color = 'white !important';
+              
+              // Update button text to show selection
+              const dateStr = window.eveySelectedDate ? ` ${window.eveySelectedDate}` : '';
+              const timeStr = window.eveySelectedTime ? ` ${window.eveySelectedTime}` : '';
+              if (dateStr || timeStr) {
+                btn.style.fontSize = '14px';
+                btn.innerHTML = `Selezionato:${dateStr}${timeStr}`;
+              }
+            });
+            
+            // Enable add to cart buttons
+            const addToCartButtons = document.querySelectorAll('[name="add"], .btn-add-to-cart, button[type="submit"], [class*="add-to-cart"]');
+            addToCartButtons.forEach(btn => {
+              btn.disabled = false;
+              btn.style.opacity = '1';
+              btn.style.pointerEvents = 'auto';
+              btn.style.cursor = 'pointer';
+            });
+            
+            // Force form validation update
+            const forms = document.querySelectorAll('form[action*="cart"]');
+            forms.forEach(form => {
+              const event = new Event('change', { bubbles: true });
+              form.dispatchEvent(event);
+              
+              // Also trigger input events on Evey fields
+              const eveyInputs = form.querySelectorAll('input[name*="_event"], input[name*="properties"]');
+              eveyInputs.forEach(input => {
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+              });
+            });
+            
+            // Force update Evey internal state (if accessible)
+            try {
+              if (window.Evey && window.Evey.updateSelection) {
+                window.Evey.updateSelection();
+              }
+            } catch (e) {
+              console.log('Evey API not accessible, using fallback method');
+            }
+          }
+        }, 200); // Increased delay for better reliability
+      }
+    }
+    
+    // Start observing
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'data-date', 'data-time', 'aria-label', 'value']
+    });
+    
+    // Also add direct event delegation for maximum coverage
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.evey-calendar, .evey__calendar, [class*="evey"], [id*="evey"]')) {
+        console.log('🔍 Direct calendar click via delegation:', e.target);
+        
+        if (e.target.matches('[data-date], .date-cell, .calendar-date, td, .day, button, [class*="time"], .time-slot')) {
+          const value = e.target.textContent?.trim() || e.target.getAttribute('data-date') || e.target.getAttribute('data-time');
+          if (value && value.match(/\d/)) {
+            console.log('📌 Value selected via delegation:', value);
+            
+            if (value.match(/\d{1,2}:\d{2}/)) {
+              window.eveySelectedTime = value;
+            } else {
+              window.eveySelectedDate = value;
+            }
+          }
+        }
+      }
+    }, true);
+    
+    console.log('✅ Evey calendar fix initialized');
+  }
+
+  // Initialize Evey date selection fix
+  setTimeout(fixEveyDateSelection, 1000);
 
   // Replace ticket guide with collapsible version
   function replaceTicketGuide() {
@@ -687,6 +863,37 @@ button[name="add"][type="submit"]::after {
   transform: translateX(-50%);
   border: 8px solid transparent;
   border-top-color: rgba(0, 0, 0, 0.95);
+}
+
+/* Tooltip close button */
+.tooltip-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: rgba(255, 179, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  color: #0d1b0f;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.tooltip-close:hover {
+  background: #d32f2f;
+  color: white;
+  transform: scale(1.1);
+}
+
+.tooltip-content {
+  padding-right: 30px;
 }
 
 /* Prevent flash of old content */
