@@ -72,21 +72,30 @@
       grid-template-columns: 1fr !important;
     }
     
-    /* Container styling - cleaner, more modern */
+    /* Container styling - full width for content freedom */
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
     }
     
-    /* Product info wrapper - card-like design */
+    /* Info blocks and guides - full width, not cards */
+    .product-block__content,
+    .accordion {
+      max-width: 100%;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    
+    /* Product info wrapper - clean, no card */
     .product__info-wrapper {
-      background: rgba(255, 255, 255, 0.05) !important;
-      border-radius: 20px !important;
-      padding: 2.5rem !important;
-      backdrop-filter: blur(15px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      background: transparent !important;
+      padding: 2rem 0 !important;
+      max-width: 100% !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
     }
     
     /* Enhanced typography */

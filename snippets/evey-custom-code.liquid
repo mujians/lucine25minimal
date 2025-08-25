@@ -469,12 +469,72 @@ button[name="add"][type="submit"]::after {
   padding-top: 20px !important;
 }
 
-/* Improve overall interface clarity with better spacing */
-.product__info-wrapper {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
+/* Card style ONLY for Evey block */
+.evey__multi-variant-selector {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px !important;
+  padding: 2rem !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  margin: 2rem 0 !important;
+  position: relative;
+  overflow: visible;
+}
+
+/* Add a subtle glow effect to Evey card */
+.evey__multi-variant-selector::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ffb300, #d32f2f, #2e7d32, #ffb300);
+  border-radius: 20px;
+  opacity: 0.3;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+/* Style custom liquid blocks - keep them full width unless they are purchase-related */
+.shopify-block[id*="custom_liquid"],
+.product-block__content {
+  background: transparent !important;
+  max-width: 100% !important;
+  padding: 1.5rem 0 !important;
+}
+
+/* Only specific alert/important boxes get card treatment */
+.alert-box,
+.info-box-arancio,
+.info-box {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* Ticket guide cards - keep them in a nice grid */
+.card-container {
+  max-width: 100% !important;
+  background: transparent !important;
+}
+
+.card-container .card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1rem !important;
+  transition: all 0.3s ease;
+}
+
+.card-container .card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  transform: translateX(5px);
+  border-color: rgba(255, 179, 0, 0.3) !important;
 }
 
 /* Mobile optimizations */
