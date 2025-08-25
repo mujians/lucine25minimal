@@ -34,8 +34,12 @@
 
   
   const fetchEveyMetaData = {{ product.metafields.evey.event.value | default: product.metafields.evey.event | json }};
+  console.log("Evey MetaData:", fetchEveyMetaData);
+  console.log("Product Type:", "{{ product.type }}");
+  console.log("Product ID:", {{ product.id }});
+  
   if (fetchEveyMetaData && fetchEveyMetaData.date_type === "recurring") {
-    console.log("Product is event");
+    console.log("Product is event with recurring dates");
     let productBlocks = document.querySelector("#MainContent");
     let pbObserver = new MutationObserver(function () {
         // const checkForEveyScheduler = document.querySelector('#evey-schedule-calendar-modal');
