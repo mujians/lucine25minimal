@@ -99,6 +99,41 @@
 
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
+
+  // Add tooltips to ticket types
+  function addTicketTooltips() {
+    const ticketInfo = {
+      'Intero': 'Biglietto standard per adulti. Include l\'accesso completo al parco nel giorno e orario selezionato.',
+      'Ridotto': 'Per bambini 3-12 anni e persone con disabilità. Include accompagnatore gratuito per disabili con accesso prioritario.',
+      'SaltaFila': 'Accesso prioritario senza code all\'ingresso. Include tutti i vantaggi del biglietto intero.',
+      'Saltafila': 'Accesso prioritario senza code all\'ingresso. Include tutti i vantaggi del biglietto intero.'
+    };
+
+    setTimeout(() => {
+      document.querySelectorAll('.evey__variant-name').forEach(nameElement => {
+        const ticketType = nameElement.textContent.trim();
+        if (ticketInfo[ticketType] && !nameElement.querySelector('.ticket-tooltip')) {
+          nameElement.style.position = 'relative';
+          
+          const tooltip = document.createElement('div');
+          tooltip.className = 'ticket-tooltip';
+          tooltip.textContent = ticketInfo[ticketType];
+          
+          nameElement.appendChild(tooltip);
+        }
+      });
+    }, 1000);
+  }
+
+  // Initialize tooltips when page loads and when Evey loads
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addTicketTooltips);
+  } else {
+    addTicketTooltips();
+  }
+
+  // Re-add tooltips when Evey content changes
+  setTimeout(addTicketTooltips, 2000);
 </script>
 
 <style>
@@ -109,40 +144,147 @@
   position: relative;
 }
 
-.evey__multi-variant-selector button[type="submit"][name="add"]:disabled::after {
-  content: "🔒";
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2em;
+/* Fix quantity button icons visibility */
+.evey__variant-container .quantity__button svg,
+.evey__variant-container .quantity__button .icon {
+  width: 16px !important;
+  height: 16px !important;
+  stroke: currentColor !important;
+  fill: currentColor !important;
+  stroke-width: 2 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* Tooltip for disabled add to cart button */
-.evey__multi-variant-selector button[type="submit"][name="add"]:disabled:hover::before {
-  content: "Seleziona prima data, ora e quantità";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
+.evey__variant-container .quantity__button {
+  background: #2e7d32 !important;
+  border: 1px solid #2e7d32 !important;
+  color: white !important;
+  border-radius: 4px !important;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Simple note above add to cart button */
+.evey__multi-variant-selector::before {
+  content: "💡 Prima seleziona data, ora e quantità dei biglietti";
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 12px;
   padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
-  margin-bottom: 5px;
+  background: rgba(102, 102, 102, 0.08);
+  border-radius: 6px;
+  font-weight: 400;
 }
 
-.evey__multi-variant-selector button[type="submit"][name="add"]:disabled:hover::after {
-  content: "";
+/* Fix excessive padding on product media */
+.product__media.media.media--transparent {
+  padding-top: 20px !important;
+}
+
+/* Improve overall interface clarity with better spacing */
+.product__info-wrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+/* Mobile optimizations */
+@media screen and (max-width: 768px) {
+  .product__media {
+    display: none !important;
+  }
+  
+  .ticket_guide,
+  .collapsible-row {
+    display: none !important;
+  }
+  
+  .sketch-card:not(.open-ticket):not(.seed-alert) {
+    display: none !important;
+  }
+  
+  .product__info-wrapper {
+    padding: 1rem;
+  }
+}
+
+/* Improved Open ticket box styling */
+.open-ticket-card,
+.sketch-card.seed-9 {
+  background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%) !important;
+  border: 2px solid #ffb300 !important;
+  border-radius: 16px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.open-ticket-card::before,
+.sketch-card.seed-9::before {
+  content: '';
   position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: #333;
+  top: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Tooltip system for ticket types */
+.evey__variant-name {
+  position: relative;
+  cursor: help;
+}
+
+.evey__variant-name::after {
+  content: 'ℹ️';
+  font-size: 12px;
+  margin-left: 6px;
+  opacity: 0.7;
+}
+
+.evey__variant-container:hover .ticket-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ticket-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.ticket-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  border: 6px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.9);
 }
 </style>
