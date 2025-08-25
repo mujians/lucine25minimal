@@ -1,33 +1,34 @@
 <script>
   // Preloading system - hide Evey content until fully loaded
   function initializePreloader() {
-    // Add loading overlay to Evey container
+    // Add CSS to completely hide Evey content while loading
     const style = document.createElement('style');
     style.textContent = `
-      .evey-loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.8);
+      .evey-content-hidden {
+        display: none !important;
+      }
+      .evey-content-ready {
+        display: block !important;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .evey-loading-placeholder {
+        background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
+        border: 2px solid rgba(255,179,0,0.3);
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        color: #ffb300;
+        font-size: 18px;
+        font-weight: 700;
+        min-height: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
-        color: #ffb300;
-        font-size: 16px;
-        font-weight: 600;
-      }
-      .evey__multi-variant-selector {
-        position: relative;
-      }
-      .evey-content-hidden {
-        opacity: 0;
-        transition: opacity 0.5s ease;
-      }
-      .evey-content-ready {
-        opacity: 1;
+        margin: 20px 0;
       }
     `;
     document.head.appendChild(style);
@@ -73,7 +74,7 @@
     }, 100);
   }
 
-  // Function to show loading and hide content until ready
+  // Function to show loading placeholder and hide content until ready
   function showEveyLoader() {
     const eveySelectors = [
       '.evey__multi-variant-selector',
@@ -84,33 +85,18 @@
     
     for (let selector of eveySelectors) {
       const eveyContainer = document.querySelector(selector);
-      if (eveyContainer && !document.querySelector('.evey-loading-overlay')) {
-        eveyContainer.style.position = 'relative';
+      if (eveyContainer && !document.querySelector('.evey-loading-placeholder')) {
+        // Hide the actual Evey content
         eveyContainer.classList.add('evey-content-hidden');
         
-        const loader = document.createElement('div');
-        loader.className = 'evey-loading-overlay';
-        loader.innerHTML = '⏳ Caricamento biglietti...';
-        loader.style.cssText = `
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.9);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          color: #ffb300;
-          font-size: 18px;
-          font-weight: 700;
-          border-radius: 8px;
-          min-height: 200px;
-        `;
+        // Create loading placeholder
+        const placeholder = document.createElement('div');
+        placeholder.className = 'evey-loading-placeholder';
+        placeholder.innerHTML = '⏳ Caricamento biglietti...';
         
-        eveyContainer.appendChild(loader);
-        console.log('Evey loader added to:', selector);
+        // Insert placeholder before the hidden Evey container
+        eveyContainer.parentNode.insertBefore(placeholder, eveyContainer);
+        console.log('Evey placeholder added before:', selector);
         break;
       }
     }
@@ -124,9 +110,9 @@
     function checkReady() {
       attempts++;
       const eveyContainer = document.querySelector('.evey__multi-variant-selector, .evey__variants, [class*="evey__"], [id*="evey"]');
-      const loader = document.querySelector('.evey-loading-overlay');
+      const placeholder = document.querySelector('.evey-loading-placeholder');
       
-      if (eveyContainer && loader) {
+      if (eveyContainer && placeholder) {
         // Check if content is actually ready
         const hasVariants = document.querySelectorAll('.evey__variant-container').length > 0;
         const hasDateButton = document.querySelector('.evey__schedule-selector-button, [class*="schedule"], [class*="seleziona"]');
@@ -138,11 +124,13 @@
         const hasItalianText = dateButtonText.includes('Seleziona') || dateButtonText.includes('data') || dateButtonText.length === 0;
         
         if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
-          loader.remove();
+          // Remove placeholder
+          placeholder.remove();
           // Also remove temp loader if present
           const tempLoader = document.querySelector('.evey-temp-loading');
           if (tempLoader) tempLoader.remove();
           
+          // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
         } else if (attempts < maxAttempts) {
@@ -150,11 +138,12 @@
           setTimeout(checkReady, 500);
         } else {
           // Force show after max attempts
-          loader.remove();
+          placeholder.remove();
           // Also remove temp loader if present
           const tempLoader = document.querySelector('.evey-temp-loading');
           if (tempLoader) tempLoader.remove();
           
+          // Show Evey content
           eveyContainer.classList.remove('evey-content-hidden');
           eveyContainer.classList.add('evey-content-ready');
         }
