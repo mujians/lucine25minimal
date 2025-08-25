@@ -1918,9 +1918,7 @@ h6 {
   margin-bottom: 0.5rem;
 }
 
-.event-minor-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
+/* Removed hover - events are not clickable */
 
 .event-minor-item img {
   width: 64px !important;
