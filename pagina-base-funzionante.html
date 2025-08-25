@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)file:///Users/brnobtt/Desktop/lucine-minimal/pagina-base-funzionante.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base Funzionante - Menu + Eventi</title>
+  
+  <style>
+    /* CSS BASE */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @font-face {
+      font-family: 'Providence Sans';
+      src: url('assets/ProvidenceSansRegular.ttf') format('truetype');
+      font-weight: normal; font-style: normal; font-display: swap;
+    }
+
+    body {
+      background: #0f2f1f; color: white;
+      font-family: 'Providence Sans', -apple-system, sans-serif;
+      line-height: 1.7; font-size: 18px;
+      padding: 2rem;
+    }
+
+    /* NOSTRE CLASSI FUNZIONANTI */
+    .menu-section-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .menu-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.75rem 0;
+    }
+
+    .menu-item-row h4 {
+      font-size: 1.125rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .menu-item-row p {
+      font-size: 1.125rem;
+      margin: 0;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.2;
+    }
+
+    .menu-price {
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: #f59e0b;
+    }
+
+    .menu-price--special {
+      color: #dc2626;
+    }
+
+    .event-minor-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-minor-item img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .event-minor-item p {
+      margin-bottom: 0;
+    }
+
+    .no-margin {
+      margin: 0 !important;
+    }
+
+    /* STILI BASE */
+    .formatted-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 { font-size: 2.5rem; margin: 0 0 1rem 0; text-align: center; }
+    h2 { font-size: 2rem; margin: 2rem 0 1rem 0; color: #dc2626; }
+    h3 { 
+      font-size: 32px; 
+      font-weight: 400; 
+      color: white; 
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      line-height: 44.8px;
+      margin: 32px 0 16px 0;
+    }
+    h4 { 
+      font-size: 1.125rem; 
+      margin: 0.5rem 0; 
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    p { font-size: 1.125rem; margin: 0 0 1rem 0; }
+    
+    .heading-3 { 
+      font-size: 32px; 
+      font-weight: 400; 
+      color: white; 
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      line-height: 44.8px;
+      margin: 0;
+    }
+
+    /* SKETCH CARDS ORIGINALI DA GIT */
+    .sketch-card {
+      position: relative; background: transparent; color: white;
+      border-radius: 16px; padding: 32px 24px 28px; margin: 2.5rem 0;
+    }
+
+    .sketch-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none; z-index: -2; opacity: 0.05; border-radius: inherit;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='cardGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cardGrain)'/%3E%3C/svg%3E");
+    }
+
+    .sketch-border {
+      position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); pointer-events: none;
+    }
+
+    .sketch-card h4 {
+      font-size: 1.35rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .sketch-card .lead {
+      color: #059669; font-weight: 600; font-size: 1.2rem;
+      text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 0.25rem;
+    }
+
+    .sketch-card .meta { opacity: 0.85; margin: 0 0 0.75rem; }
+
+    /* CTA */
+    .cta {
+      background: #dc2626; color: white; padding: 1rem 2rem; border-radius: 8px; 
+      text-decoration: none; display: inline-block; font-weight: 600; font-size: 1.1rem;
+    }
+
+    /* CSS VARIABLES */
+    :root {
+      --christmas-red: #dc2626;
+      --christmas-green: #059669;
+      --christmas-gold: #f59e0b;
+    }
+
+    /* ANIMAZIONE TRATTEGGI */
+    @keyframes dashFlow {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -48; }
+    }
+
+    .sketch-card.seed-6 .sketch-border rect[stroke-dasharray="16 10 8 14"] {
+      animation: dashFlow 2s linear infinite;
+    }
+
+    /* QUOTE CARDS */
+    .sketch-quote-card {
+      position: relative;
+      margin: 2rem 0;
+      padding: 2rem;
+    }
+
+    .quote-sketch-background {
+      position: absolute;
+      inset: -10px;
+      width: calc(100% + 20px);
+      height: calc(100% + 20px);
+      pointer-events: none;
+    }
+
+    .quote-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-text {
+      font-style: italic;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: #f59e0b;
+    }
+
+    .quote-author {
+      text-align: right;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    /* LOCATION IMAGES */
+    .location-image {
+      width: 100%;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+
+    /* STRONG COLORATI */
+    strong {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    /* PARKING ICONS */
+    .parking-icons {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .parking-icon {
+      width: 47.9948px;
+      height: 47.9948px;
+      object-fit: contain;
+      border-radius: 15px;
+      filter: brightness(1.1) contrast(1.1);
+      opacity: 0.9;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .navetta-icon {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .navetta-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .navetta-title h4 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .navetta-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 15px;
+      mix-blend-mode: screen;
+      text-align: center;
+      margin: 0 auto 0 auto;
+    }
+
+    .navetta-title {
+      display: block;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* LINK STYLING */
+    a {
+      color: #dc2626;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #b91c1c;
+    }
+
+    /* VEDI MAPPA LINKS - Solo per quelli con testo "Vedi mappa" */
+    a.cta[href*="maps"] {
+      background: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      display: inline !important;
+      font-weight: normal !important;
+      font-size: inherit !important;
+      color: #dc2626 !important;
+      text-decoration: underline !important;
+    }
+
+    a.cta[href*="maps"]:after {
+      content: " →";
+    }
+
+    /* EVENTI FEATURED GRID */
+    .events-featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .featured-event-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .featured-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .featured-content {
+      padding: 1.5rem;
+    }
+
+    .event-date {
+      color: #059669;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* EVENTI STANDARD LIST */
+    .events-list-standard {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .event-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .event-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .event-info {
+      flex: 1;
+    }
+
+    /* FAQ STYLES */
+    .faq-highlight {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .faq-highlight-green {
+      color: #059669;
+      font-weight: 600;
+    }
+
+
+    .faq-accordion {
+      margin-bottom: 2rem;
+    }
+
+    .faq-item {
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: white;
+      padding: 1.5rem 4rem 1.5rem 1.5rem;
+      text-align: left;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-family: 'Providence Sans', -apple-system, sans-serif;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .faq-question::after {
+      content: "+";
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #dc2626;
+      font-size: 2em;
+      font-weight: 300;
+      transition: none;
+      line-height: 1;
+      width: 2rem;
+      text-align: center;
+      font-family: 'Homemade Apple', cursive;
+      letter-spacing: 0.1em;
+    }
+
+    .faq-question.active::after {
+      content: "×";
+      transform: translateY(-50%) rotate(0deg);
+      font-size: 2.2em;
+      font-weight: 400;
+      font-family: 'Homemade Apple', cursive;
+      letter-spacing: 0;
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .faq-question.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .faq-answer {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-answer.active {
+      padding: 1.5rem;
+      max-height: 500px;
+    }
+
+    .faq-answer p {
+      margin: 0 0 1rem 0;
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* MOBILE RESPONSIVE - CART */
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 1rem !important;
+      }
+      
+      .cart-item > div {
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .item-quantity {
+        justify-content: center !important;
+        margin: 1rem 0;
+      }
+      
+      .item-price {
+        text-align: center !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="formatted-content">
+  <h1>🎄 Lucine di Natale 2025 🎄</h1>
+  
+  <!-- ===================
+       MENU RISTORO - FUNZIONANTE
+       =================== -->
+  <section>
+    <h2 style="color: #dc2626;">MENU RISTORO</h2>
+    
+    <!-- CARD SEZIONE BEVANDE -->
+    <div class="menu-section-card">
+      <h3 class="heading-3 no-margin">Bevande Calde</h3>
+      
+      <div class="menu-item-row">
+        <div>
+          <h4>Cioccolata calda</h4>
+          <p>In bicchiere monouso</p>
+        </div>
+        <div class="menu-price">€ 3,50</div>
+      </div>
+      
+      <div class="menu-item-row">
+        <div>
+          <h4>Vin brulè</h4>
+          <p>In bicchiere monouso</p>
+        </div>
+        <div class="menu-price">€ 3,50</div>
+      </div>
+      
+      <div class="menu-item-row">
+        <div>
+          <h4>Tazza ceramica</h4>
+          <p>Edizione Lucine 2025</p>
+        </div>
+        <div class="menu-price menu-price--special">€ 4,00</div>
+      </div>
+    </div>
+
+    <!-- CARD SEZIONE PANINI -->
+    <div class="menu-section-card">
+      <h3 class="heading-3 no-margin">Panini e Street Food</h3>
+      
+      <div class="menu-item-row">
+        <div>
+          <h4>Panino salamella</h4>
+          <p>Con senape e ketchup</p>
+        </div>
+        <div class="menu-price">€ 5,50</div>
+      </div>
+      
+      <div class="menu-item-row">
+        <div>
+          <h4>Panino porchetta</h4>
+          <p>Con verdure grigliate</p>
+        </div>
+        <div class="menu-price">€ 6,50</div>
+      </div>
+    </div>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       EVENTI MINORI - FUNZIONANTI
+       =================== -->
+  <section>
+    <h2 style="color: #059669;">EVENTI MINORI</h2>
+    
+    <div class="event-minor-item">
+      <img src="./bruno_files/coro-oratorio.jpg" alt="Coro">
+      <div>
+        <div style="font-size: 1.125rem; color: #059669; font-weight: 600; text-transform: uppercase; margin: 0;">6 DIC • 17:00</div>
+        <h4 style="margin: 0; font-size: 1.125rem; line-height: 1.2;">🎶 Coro dei Ragazzi</h4>
+        <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 1.125rem; line-height: 1.2;">Concerto con repertorio natalizio</p>
+      </div>
+    </div>
+    
+    <div class="event-minor-item">
+      <img src="./bruno_files/befana.jpg" alt="Befana">
+      <div>
+        <div style="font-size: 1.125rem; color: #059669; font-weight: 600; text-transform: uppercase; margin: 0;">6 GEN • 17:00</div>
+        <h4 style="margin: 0; font-size: 1.125rem; line-height: 1.2;">🧙‍♀️ Arriva la Befana</h4>
+        <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 1.125rem; line-height: 1.2;">La Befana sarà disponibile per foto</p>
+      </div>
+    </div>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       BIGLIETTI (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #059669;">BIGLIETTI</h2>
+    
+    <h1>Biglietti e Prenotazioni</h1>
+    <p>Acquista il tuo biglietto online per garantirti l'accesso alle <strong>Lucine di Natale 2025</strong> con prezzo agevolato e posto riservato.</p>
+
+    <!-- Main CTA Top -->
+    <section class="location-section">
+      <div class="sketch-card sketch seed-6" style="text-align: center;">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="color: var(--christmas-red);">
+          <defs>
+            <filter id="wobble-6">
+              <feturbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="13"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="16 10 8 14" vector-effect="non-scaling-stroke" filter="url(#wobble-6)"></rect>
+        </svg>
+        <h3 style="color: var(--christmas-red); margin-bottom: 1rem;">🎟️ Seleziona Data e Ora d'Ingresso</h3>
+        <p style="color: var(--christmas-green); font-weight: 600; font-size: 1.125rem; margin-bottom: 1.5rem;">Scegli la data e l'orario che preferisci • Aggiungi al carrello i tuoi biglietti</p>
+        <a class="cta" href="https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025">Prenota Ora →</a>
+        <p style="color: rgba(255,255,255,0.8); margin-top: 1rem; font-size: 1.125rem;">Biglietti inviati via email • Conferma immediata</p>
+      </div>
+    </section>
+
+    <!-- Guida ai Biglietti -->
+    <section class="location-section">
+      <h3>Guida ai Biglietti</h3>
+
+      <!-- Gratuito -->
+      <div class="sketch-card sketch seed-1">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-gratuito">
+              <feturbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-gratuito)"></rect>
+        </svg>
+        <h4>👶 Gratuito (0-2 anni)</h4>
+        <p class="lead">Per bimbi da 0 a 2 anni</p>
+        <p class="meta">Non è necessario l'acquisto del biglietto • L'ingresso viene garantito direttamente all'entrata del parco</p>
+      </div>
+
+      <!-- Biglietto Intero -->
+      <div class="sketch-card sketch seed-2">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-intero">
+              <feturbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="5"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-intero)"></rect>
+        </svg>
+        <h4>🎫 Biglietto Intero</h4>
+        <p class="lead">N. 1 ingresso nel giorno e nella fascia oraria selezionata</p>
+        <p class="meta">Valido per adulti • Accesso standard</p>
+      </div>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       LE LUCINE DI NATALE (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #f59e0b;">LE LUCINE DI NATALE</h2>
+    
+    <h1>Le Lucine di Natale</h1>
+    
+    <section id="storia-lucine">    
+      <img class="location-image" src="./bruno_files/IMG_2996.jpg" alt="Lucine di Natale Leggiuno">
+      
+      <p>Le Lucine di Natale hanno radici lontane e nascono da un'idea del Leggiunese <strong>Lino Betti</strong>, originario del borgo di 3600 abitanti noto per l'Eremo di Santa Caterina del Sasso situato sulla sponda Lombarda del Lago Maggiore. Le prime luci le ha acquistate in una città del Brasile, paese natale della moglie: con 100 dollari prese le prime 10.000. Era il <strong>1999</strong> e da quel giorno, ogni anno, la collezione si è arricchita fino a toccare quota <strong>1 milione di lucine</strong>.</p>
+      
+      <div class="sketch-quote-card">
+        <svg class="quote-sketch-background" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-quote-bg">
+              <feturbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1" seed="12"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="0.8"></fedisplacementmap>
+            </filter>
+          </defs>
+          <path d="M8,8 Q25,5 50,8 Q75,5 92,8 Q95,25 92,50 Q95,75 92,92 Q75,95 50,92 Q25,95 8,92 Q5,75 8,50 Q5,25 8,8 Z" fill="rgba(255,255,255,0.04)" stroke="var(--christmas-red)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 1" filter="url(#wobble-quote-bg)"></path>
+        </svg>
+        <div class="quote-content">
+          <p style="font-style: italic; font-size: 1.25rem; margin-bottom: 1rem; color: white;">"Da quel primo fascio di lucine, di strada ne abbiamo fatta tanta e credo di essere riuscito, insieme ai tanti collaboratori, a dare vita a uno spettacolo emozionante."</p>
+          <div style="text-align: center; font-weight: 600; color: white;">— Lino Betti</div>
+        </div>
+      </div>
+      
+      <p>Anno dopo anno, il signor Lino ha trasformato Leggiuno nel <strong>borgo delle Lucine di Natale</strong>: casa sua e il suo giardino in breve tempo sono diventati una vera attrazione per tanti bambini (e non solo!).</p>
+      
+      <p>Da lì, come nelle favole natalizie, il fautore dell'iniziativa ha deciso con l'aiuto di molti collaboratori di <strong>illuminare l'intero borgo</strong>: grotte glaciali, castelli fiabeschi, prati fioriti, alberi, renne, senza tralasciare piccoli dettagli come funghi e lumachine luminose.</p>
+      
+      <img class="location-image" src="./bruno_files/panoramica.jpg" alt="Lucine di Leggiuno">
+      
+      <p>Con sempre nuove sagome e nuovi suggestivi allestimenti per un evento mai ripetitivo, le Lucine di Natale sono per locali e amanti del Natale un <strong>appuntamento irrinunciabile</strong> che riscuote ad ogni sua edizione un enorme successo.</p>
+
+      <img class="location-image" src="./bruno_files/IMG_20181208_174324.jpg" alt="Lucine di Natale Leggiuno">
+      
+      <p>Per anni l'incanto delle Lucine di Natale ha fatto sognare <strong>migliaia di visitatori</strong> nella cittadina di Leggiuno e anche quest'anno la magia continua dove il centro del borgo di Leggiuno sarà trasformato in un meraviglioso <strong>villaggio incantato</strong> popolato da incredibili installazioni e "creature" luminose.</p>
+      
+      <p>Per respirare la magia del Natale non serve quindi andare lontano. A pochi kilometri da Milano c'è un posto magico: renne, slitte, babbi natale, stelle comete e abeti luminosi illumineranno a festa il paese di Leggiuno.</p>
+      
+      <p>Solcando il portale d'ingresso vi ritroverete immerrsi nella <strong>magia e nel calore del Natale</strong>: seguite ora il percorso illuminato e lasciatevi emozionare!</p>
+      
+      <p>Le Lucine di Natale è un evento dedicato a tutti: <strong>bambini, ragazzi, adulti, nonni, famiglie</strong>.</p>
+      
+      <p>È un'occasione per emozionarsi tutti insieme: i grandi si sorprenderanno a sognare, i piccoli rimarranno incantati.</p>
+      
+      <div class="sketch-quote-card">
+        <svg class="quote-sketch-background" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-quote-final">
+              <feturbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1" seed="15"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="0.8"></fedisplacementmap>
+            </filter>
+          </defs>
+          <path d="M8,8 Q25,5 50,8 Q75,5 92,8 Q95,25 92,50 Q95,75 92,92 Q75,95 50,92 Q25,95 8,92 Q5,75 8,50 Q5,25 8,8 Z" fill="rgba(255,255,255,0.04)" stroke="var(--christmas-gold)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 1" filter="url(#wobble-quote-final)"></path>
+        </svg>
+        <div class="quote-content">
+          <h2>Qui puoi vivere la vera magia del natale, ti aspettiamo!</h2>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       INFO & PARCHEGGI (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #dc2626;">INFO &amp; PARCHEGGI</h2>
+    
+    <h1>Info &amp; Parcheggi</h1>
+    
+    <section class="location-section">
+      <h3>Apertura</h3>
+      <p>L'evento si terrà dal <strong>05/12/2024</strong> al <strong>06/01/2025</strong>, con chiusura il <strong>24/12</strong> e <strong>31/12</strong>.</p>
+      
+      <h3>Orari</h3>
+      <p>Aperto tutti i giorni dalle <strong>17:30 alle 23:00</strong>. Ultimo ingresso alle <strong>22:30</strong>.</p>
+      
+      <h3>Posizione</h3>
+      <p>Le Lucine di Natale si trovano a <a href="https://www.google.es/maps/place/Lucine+di+Natale/@45.8754965,8.616261,1591m/data=!3m2!1e3!5s0x478677d16897a89d:0xffc727058b2ff665!4m15!1m8!3m7!1s0x4786763337856641:0x4960edf4bd04b67c!2s21038+Leggiuno+VA,+Italia!3b1!8m2!3d45.874841!4d8.6207265!16zL20vMGYycmg2!3m5!1s0x478677d27d256b93:0x705477973c2d4edc!8m2!3d45.8776751!4d8.62088!16s%2Fg%2F11h2g2dbsk?entry=ttu&amp;g_ep=EgoyMDI0MTExNy4wIKXMDSoJLDEwMjExMjMzSAFQAw%3D%3D">Leggiuno</a>, sul Lago Maggiore, in provincia di Varese. <a class="cta" href="https://www.google.es/maps/place/Lucine+di+Natale/@45.8754965,8.616261,1648m/data=!3m2!1e3!5s0x478677d16897a89d:0xffc727058b2ff665!4m15!1m8!3m7!1s0x4786763337856641:0x4960edf4bd04b67c!2s21038+Leggiuno+VA!3b1!8m2!3d45.874841!4d8.6207265!16zL20vMGYycmg2!3m5!1s0x478677d27d256b93:0x705477973c2d4edc!8m2!3d45.8776751!4d8.62088!16s%2Fg%2F11h2g2dbsk?entry=ttu&amp;g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D">Vedi mappa</a></p>
+    </section>
+
+    <section class="location-section">
+      <div class="sketch-card sketch seed-6">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-6-info">
+              <feturbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="13"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="16 10 8 14" vector-effect="non-scaling-stroke" filter="url(#wobble-6-info)"></rect>
+        </svg>
+        <div class="navetta-title">
+          <img src="./bruno_files/navetta-lucine-leggiuno-icon-1.gif" alt="Navetta" class="navetta-icon">
+          <h4>Servizio Navetta Gratuito!</h4>
+        </div>
+        <p class="lead">Operativo tutti i giorni dalle <strong>16:30 alle 22:30</strong></p>
+        <p class="meta">Servendo i parcheggi P2, P4 e P5 · Ogni 15 minuti.</p>
+        <p><a class="cta" href="https://www.google.com/maps?q=45.8772,8.59997">Vedi mappa</a></p>
+      </div>
+    </section>
+
+    <section class="location-section">
+      <h3>Parcheggi Disponibili</h3>
+      
+      <!-- P1 - Campo Sportivo: Auto + Camper -->
+      <div class="sketch-card sketch seed-1">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-1-info">
+              <feturbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-1-info)"></rect>
+        </svg>
+        <h4>P1 – Campo Sportivo Leggiuno</h4>
+        <p class="lead">Parcheggio auto gratuito</p>
+        <p class="meta">Camper ammessi - area non attrezzata · 10 min a piedi</p>
+        <div class="parking-icons">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio.png" alt="Parcheggio Auto" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-camper.png" alt="Camper" class="parking-icon">
+        </div>
+        <a class="cta" href="https://www.google.com/maps?q=45.87312,8.615">Vedi mappa</a>
+      </div>
+
+      <!-- P2 - Manifattura: Auto + Navetta -->
+      <div class="sketch-card sketch seed-2">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-2-info">
+              <feturbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="5"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-2-info)"></rect>
+        </svg>
+        <h4>P2 – Manifattura</h4>
+        <p class="lead">Parcheggio auto gratuito</p>
+        <p class="meta">Servizio navetta</p>
+        <div class="parking-icons">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio.png" alt="Parcheggio Auto" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-navetta.png" alt="Servizio Navetta" class="parking-icon">
+        </div>
+        <a class="cta" href="https://www.google.com/maps?q=45.86887,8.62794">Vedi mappa</a>
+      </div>
+
+      <!-- P3 - Chiesa S. Stefano: Auto + Disabili -->
+      <div class="sketch-card sketch seed-3">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-3-info">
+              <feturbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="7"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="12 7 5 11 9 8" vector-effect="non-scaling-stroke" filter="url(#wobble-3-info)"></rect>
+        </svg>
+        <h4>P3 – Chiesa S. Stefano</h4>
+        <p class="lead">Parcheggio auto gratuito</p>
+        <p class="meta"> Parcheggio disabili · Meno di 2 min a piedi</p>
+        <div class="parking-icons">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio.png" alt="Parcheggio Auto" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio-disabili.png" alt="Parcheggio Disabili" class="parking-icon">
+        </div>
+        <a class="cta" href="https://www.google.com/maps?q=45.87712,8.62236">Vedi mappa</a>
+      </div>
+
+      <!-- P4 - Scuole medie: Auto + Navetta + Camper -->
+      <div class="sketch-card sketch seed-4">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-4-info">
+              <feturbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="9"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="15 9 7 13" vector-effect="non-scaling-stroke" filter="url(#wobble-4-info)"></rect>
+        </svg>
+        <h4>P4 – Scuole medie</h4>
+        <p class="lead">Parcheggio auto gratuito</p> <p class="meta">Servizio navetta · Camper ammessi - area non attrezzata</p>
+        <div class="parking-icons">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio.png" alt="Parcheggio Auto" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-navetta.png" alt="Servizio Navetta" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-camper.png" alt="Camper" class="parking-icon">
+        </div>
+        <a class="cta" href="https://www.google.com/maps?q=45.86816,8.62443">Vedi mappa</a>
+      </div>
+
+      <!-- P5 - S. Caterina: Auto + Navetta + Camper + Bus -->
+      <div class="sketch-card sketch seed-5">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-5-info">
+              <feturbulence type="fractalNoise" baseFrequency="1.0" numOctaves="1" seed="11"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="13 6 8 10 11 7" vector-effect="non-scaling-stroke" filter="url(#wobble-5-info)"></rect>
+        </svg>
+        <h4>P5 – S. Caterina</h4>
+        <p class="lead">Parcheggio auto gratuito</p>
+        <p class="meta">Servizio navetta · Camper ammessi - area non attrezzata · Area riservata alla sosta dei bus turistici</p>
+        <div class="parking-icons">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-parcheggio.png" alt="Parcheggio Auto" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-navetta.png" alt="Servizio Navetta" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-camper.png" alt="Camper" class="parking-icon">
+          <img src="./bruno_files/lucine-di-natale-leggiuno-icona-bus.png" alt="Bus Turistici" class="parking-icon">
+        </div>
+        <a class="cta" href="https://www.google.com/maps?q=45.8772,8.59997">Vedi mappa</a>
+      </div>
+    </section>
+
+    <section class="location-section">
+      <h3>Assistenza</h3>
+      <p>Per assistenza, contattare il servizio clienti via email a <a href="mailto:info@lucinedinatale.it">info@lucinedinatale.it</a>.</p>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       NEI DINTORNI (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #f59e0b;">NEI DINTORNI</h2>
+    
+    <h1>Cosa visitare nei dintorni</h1>
+    <p>Se venite da lontano per ammirare le <strong>storiche lucine di Natale di Leggiuno</strong>, vi consigliamo di esplorare questi luoghi suggestivi nei dintorni per rendere il vostro viaggio ancora più speciale.</p>
+
+    <section class="location-section">
+      <h3>Eremo di Santa Caterina del Sasso</h3>
+      <img class="location-image" alt="Eremo di Santa Caterina del Sasso" src="./bruno_files/IMG-20211231-WA0001.jpg">
+      <p>Prima di ammirare le lucine, visitate l'<strong>Eremo di Santa Caterina del Sasso</strong>, abbarbicato su uno strapiombo roccioso a picco sul Lago Maggiore. Questo luogo offre uno scenario unico, ideale per godersi un magnifico tramonto.</p>
+      <div class="sketch-card sketch seed-1">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-eremo">
+              <feturbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-eremo)"></rect>
+        </svg>
+        <h4>Aperture Straordinarie</h4>
+        <p class="lead">Dalle <strong>9:30 alle 20:30</strong> (ultimo ingresso ore 20)</p>
+        <p class="meta">7, 8 dicembre · 27, 28, 29 dicembre · 1, 3, 4, 5, 6 gennaio</p>
+      </div>
+      <p>Con una vista panoramica mozzafiato e affreschi di straordinaria bellezza, l'eremo è una perla di arte e spiritualità da non perdere.</p>
+      <p><a href="https://www.eremosantacaterina.it/">www.eremosantacaterina.it</a></p>
+    </section>
+
+    <section class="location-section">
+      <h3>Chiostro di Voltorre</h3>
+      <img class="location-image" src="./bruno_files/presepi-gavirate.jpg" alt="Chiostro di Voltorre">
+      <p>Sito a Gavirate, il <strong>Chiostro di Voltorre</strong> è un magnifico esempio di architettura romanica lombarda, risalente al XII secolo. Oggi ospita eventi culturali e mostre in un'atmosfera di pace e storia.</p>
+      <p><a href="https://presepigavirate.it/">presepigavirate.it</a></p>
+    </section>
+
+    <section class="location-section">
+      <h3>Rocca di Angera</h3>
+      <img class="location-image" alt="Rocca di Angera" src="./bruno_files/angera.jpg">
+      <p>Affacciata sul Lago Maggiore, la <strong>Rocca di Angera</strong> è una maestosa fortezza medievale che ospita sale storiche affrescate, il Museo della Bambola e un giardino medievale. Offre una vista mozzafiato sul lago e un viaggio nel tempo.</p>
+    </section>
+
+    <section class="location-section">
+      <h3>Presepe sommerso di Laveno</h3>
+      <img class="location-image" alt="Presepe sommerso di Laveno" src="./bruno_files/presepe.jpg">
+      <p>Unico nel suo genere, il <strong>Presepe sommerso di Laveno</strong> si trova nelle acque del Lago Maggiore. Le statue, illuminate durante il periodo natalizio, creano un'atmosfera magica visibile dal pontile.</p>
+    </section>
+
+    <section class="location-section">
+      <h3>Villa Bozzolo</h3>
+      <img class="location-image" alt="Villa Bozzolo" src="./bruno_files/bozzolo.webp">
+      <p>A Casalzuigno, la splendida <strong>Villa Bozzolo</strong>, una villa settecentesca circondata da un parco monumentale, presenta affreschi eleganti e arredi d'epoca. È oggi proprietà del FAI e meta di eventi e visite guidate.</p>
+    </section>
+
+    <section class="location-section">
+      <h3>Sacro Monte di Varese</h3>
+      <img class="location-image" alt="Sacro Monte di Varese" src="./bruno_files/sacromonte.jpg">
+      <p>Patrimonio UNESCO, il <strong>Sacro Monte di Varese</strong> è un complesso spirituale e culturale con 14 cappelle che conducono al Santuario di Santa Maria del Monte. È immerso in un paesaggio naturale mozzafiato e offre un'esperienza unica di pace e bellezza.</p>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       EVENTI SPECIALI (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #059669;">EVENTI SPECIALI</h2>
+    
+    <h1>Eventi Speciali</h1>
+    <p>Scopri tutti gli eventi speciali che accompagneranno le <strong>Lucine di Natale 2025</strong> durante il periodo delle festività.</p>
+
+    <!-- EVENTI PRINCIPALI IN EVIDENZA -->
+    <section class="location-section">
+      
+      <div class="events-featured-grid">
+        <!-- Babbo Natale -->
+        <div class="featured-event-card">
+          <img src="./bruno_files/babbo-natale.jpg" alt="Incontra Babbo Natale" class="featured-image">
+          <div class="featured-content">
+            <div class="event-date">6-23 DIC 2025</div>
+            <h4>🎅 Incontra Babbo Natale</h4>
+            <p>Babbo Natale aspetta tutti i bambini per ascoltare i loro desideri e scattare foto ricordo magiche insieme</p>
+          </div>
+        </div>
+        
+        <!-- La Befana -->
+        <div class="featured-event-card">
+          <img src="./bruno_files/befana.jpg" alt="Arriva la Befana" class="featured-image">
+          <div class="featured-content">
+            <div class="event-date">26 DIC 2025 - 6 GEN 2026</div>
+            <h4>🧙‍♀️ Arriva la Befana</h4>
+            <p>La simpatica Befana sarà disponibile per foto e racconti magici per tutti i bambini durante le vacanze</p>
+          </div>
+        </div>
+        
+        <!-- Concerto Gospel Speciale -->
+        <div class="featured-event-card">
+          <img src="./bruno_files/gospel.jpg" alt="Concerto Gospel" class="featured-image">
+          <div class="featured-content">
+            <div class="event-date">23 DIC 2025 • 21:00</div>
+            <h4>🎵 Concerto Gospel Speciale</h4>
+            <p>Greensleeves Gospel Choir diretto dal maestro Fausto Caravati - Chiesa Parrocchiale di S. Stefano, Via L. Riva 10</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRAMMA EVENTI COMPLETO IN ORDINE CRONOLOGICO -->
+    <section class="location-section">
+      <div class="events-list-standard">
+        
+        <!-- 6 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">6 DIC • 17:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 7 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">7 DIC • 20:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 8 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">8 DIC • 20:30</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 13 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">13 DIC • 20:30</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 15 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">15 DIC • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 20 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">20 DIC • 20:30</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 22 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">22 DIC • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 23 DIC - Gospel -->
+        <div class="event-item">
+          <img src="./bruno_files/gospel.jpg" alt="Coro Gospel di Varese" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">23 DIC • 21:00</div>
+            <h4>🎤 Concerto Gospel Speciale</h4>
+            <p>Greensleeves Gospel Choir diretto dal maestro Fausto Caravati presso Chiesa Parrocchiale di S. Stefano</p>
+          </div>
+        </div>
+        
+        <!-- 26 DIC - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">26 DIC • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 28 DIC - San Giovanni Battista -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-caravate.jpg" alt="Coro San Giovanni Battista" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">28 DIC • 18:30</div>
+            <h4>🎵 Coro San Giovanni Battista di Caravate</h4>
+            <p>Concerto del coro parrocchiale di Caravate con repertorio natalizio tradizionale</p>
+          </div>
+        </div>
+        
+        <!-- 3 GEN - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">3 GEN • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 4 GEN - San Giovanni Battista -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-caravate.jpg" alt="Coro San Giovanni Battista" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">4 GEN • 18:30</div>
+            <h4>🎵 Coro San Giovanni Battista di Caravate</h4>
+            <p>Concerto del coro parrocchiale di Caravate con repertorio natalizio tradizionale</p>
+          </div>
+        </div>
+        
+        <!-- 5 GEN - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">5 GEN • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+        <!-- 6 GEN - Coro Oratorio -->
+        <div class="event-item">
+          <img src="./bruno_files/coro-oratorio.jpg" alt="Coro dei Ragazzi dell&#39;Oratorio" class="event-thumb">
+          <div class="event-info">
+            <div class="event-date">6 GEN • 18:00</div>
+            <h4>🎶 Coro dei Ragazzi dell'Oratorio</h4>
+            <p>Concerto del coro dei ragazzi con repertorio natalizio</p>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       FAQ (PAGINA ORIGINALE ESATTA)
+       =================== -->
+  <section>
+    <h2 style="color: #f59e0b;">FAQ</h2>
+    
+    <h1>Domande Frequenti</h1>
+    <p style="font-size: 1.188rem;">Risposte alle domande più comuni sui <span class="faq-highlight">biglietti, orari e servizi</span>.</p>
+
+    <!-- BIGLIETTI E PRENOTAZIONI -->
+    <section id="biglietti" class="location-section">
+      <h3 class="faq-section-header">Biglietti e Prenotazioni</h3>
+      
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È necessario prenotare la visita al Parco?</button>
+          <div class="faq-answer">
+            <p>Gli ingressi sono contingentati e su base oraria, suggeriamo quindi caldamente la prenotazione online così da avere la certezza di trovare posto (e risparmiare!)</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile acquistare i biglietti online?</button>
+          <div class="faq-answer">
+            <p>Certo! Anzi è assolutamente consigliato per essere certi di poter visitare le meravigliose installazioni senza problemi!</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Perché prenotare online?</button>
+          <div class="faq-answer">
+            <p>Prenotando il biglietto online hai diritto a un <span class="faq-highlight">prezzo agevolato</span> e non dovrai fare la coda alla cassa in loco!</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Cosa è incluso nel biglietto acquistato?</button>
+          <div class="faq-answer">
+            <p>Il biglietto di ingresso alle lucine prevede la visita dell'intero percorso all'interno del Parco. La casa illuminata e la zona dell'oratorio con mercatini e stand gastronomico sono invece ad accesso libero.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile modificare le date dei biglietti?</button>
+          <div class="faq-answer">
+            <p>Sì, è possibile modificare la data per i biglietti che hai acquistato. Scrivi a <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a> con le informazioni utili per cambiare data/ora dei biglietti.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BIGLIETTI SPECIALI -->
+    <section id="saltafila" class="location-section">
+      <h3 class="faq-section-header">Biglietti Speciali</h3>    
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile saltare le code in biglietteria o all'ingresso?</button>
+          <div class="faq-answer">
+            <p>Sì, solo ed esclusivamente acquistando online il biglietto <span class="faq-highlight">SALTAFILA</span> o <span class="faq-highlight">OPEN</span>.</p>
+            <p><span class="faq-highlight-green">Il BIGLIETTO SALTAFILA comprende:</span></p>
+            <p>• 1 ingresso alle Lucine di Natale<br>
+            • Accesso prioritario nella fascia oraria scelta al momento dell'acquisto</p>
+            <p><span class="faq-highlight-green">Il BIGLIETTO OPEN comprende:</span></p>
+            <p>• 1 ingresso alle Lucine di Natale<br>
+            • Ingresso con data e ora a scelta libera senza prenotazione<br>
+            • Accesso prioritario sempre</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Ho acquistato un biglietto SALTAFILA per me adulto e un biglietto ridotto. Possiamo usufruire entrambi dell'ingresso prioritario?</button>
+          <div class="faq-answer">
+            <p>No, solo i possessori dei biglietti SALTAFILA e OPEN possono usufruire dell'ingresso prioritario.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESSIBILITÀ, FAMIGLIE E SERVIZI -->
+    <section id="accessibilita" class="location-section">
+      <h3>Accessibilità, Famiglie e Servizi</h3>
+      
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">La visita è possibile per le persone diversamente abili?</button>
+          <div class="faq-answer">
+            <p>La visita è adatta a tutti i portatori di handicap. Il percorso ha capienza e larghezza sufficiente per carrozzine.</p>
+            <p>Hanno diritto alla riduzione sul biglietto coloro in possesso di una documentazione di invalidità/disabilità (da mostrare all'ingresso). La riduzione è valida anche per 1 accompagnatore. L'accesso sarà prioritario tramite ingresso dedicato.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È prevista un'area di sosta dedicata ai portatori di handicap?</button>
+          <div class="faq-answer">
+            <p>Sì, all'interno del P3 c'è un'area dedicata. <a href="file:///Users/brnobtt/Desktop/lucine-minimal/pagina-base-funzionante.html#info-parcheggi" style="color: var(--christmas-red);">Maggiori info sui parcheggi</a></p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile l'ingresso con passeggini e carrozzine?</button>
+          <div class="faq-answer">
+            <p>Certamente! Le Lucine di Natale sono un evento dedicato a tutta la famiglia, dai più piccoli alle persone con limitata mobilità, grazie ad un'ampia passerella che vi guiderà alla visita di ogni installazione luminosa presente nel parco.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile portare animali domestici?</button>
+          <div class="faq-answer">
+            <p>Certo! I cani vanno tenuti al guinzaglio e, se di grossa taglia, devono indossare anche la museruola. Sarà vostra cura fare attenzione che il vostro miglior amico si comporti da vero "gentilcane" all'interno dell'area!</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Il vin brulè può essere servito a minorenni?</button>
+          <div class="faq-answer">
+            <p>No, si ricorda che è fatto divieto di vendita e di somministrazione di bevande alcoliche ai minori di anni 18.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISITA E ORARI -->
+    <section id="visita" class="location-section">
+      <h3>Visita e Orari</h3>
+      
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Quanto dura la visita alle Lucine di Natale?</button>
+          <div class="faq-answer">
+            <p>È possibile permanere all'interno del parco il tempo necessario per visitare le Lucine e completare il percorso. La fascia oraria indicata sul biglietto è relativa alla fascia temporale in cui è possibile accedere alle Lucine di Natale, non al tempo massimo in cui potete stare all'interno dell'area.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">È possibile nell'arco di una stessa giornata entrare ed uscire dalle Lucine di Natale più volte?</button>
+          <div class="faq-answer">
+            <p>Il biglietto è valido solo per un'entrata nell'orario indicato sul biglietto.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Quali sono gli orari delle Lucine di Natale?</button>
+          <div class="faq-answer">
+            <p>Tutte le informazioni su orari e giornate di chiusura le trovi nella sezione <a href="file:///Users/brnobtt/Desktop/lucine-minimal/pagina-base-funzionante.html#info-parcheggi" style="color: var(--christmas-red);">Info &amp; Parcheggi</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METEO -->
+    <section id="meteo" class="location-section">
+      <h3>Condizioni Meteo</h3>
+      
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Cosa succede se piove il giorno in cui ho acquistato il biglietto?</button>
+          <div class="faq-answer">
+            <p>In caso di annullamento dell'evento nella data per cui hai scelto il biglietto ti verrà fornito un codice per poter prenotare gratuitamente per una nuova data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COSA VISITARE -->
+    <section id="dintorni" class="location-section">
+      <h3>Cosa Visitare</h3>
+      
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Cosa posso visitare durante il giorno prima di venire alle Lucine?</button>
+          <div class="faq-answer">
+            <p>Ci sono diversi luoghi d'interesse a pochi km dalle Lucine che puoi visitare durante il giorno. Maggiori informazioni nella sezione <a href="file:///Users/brnobtt/Desktop/lucine-minimal/pagina-base-funzionante.html#nei-dintorni" style="color: var(--christmas-red);">Nei Dintorni</a></p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">Dove posso andare a mangiare dopo aver visitato le Lucine di Natale?</button>
+          <div class="faq-answer">
+            <p>Ci sono diversi ristoranti partner delle Lucine di Natale: <a href="https://www.google.com/maps/d/viewer?mid=1_5wD0-jDWWYiXu_Ilw9aA3aFSyjBxxw&amp;ll=45.885422107847916%2C8.610271050000016&amp;z=13" style="color: var(--christmas-red);">Scopri i ristoranti partner</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVIZIO CLIENTI -->
+    <section class="location-section">
+      <h3>Servizio Clienti</h3>
+      <p>Scrivi a <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a> per ottenere eventuali ulteriori informazioni non presenti nelle nostre FAQ.</p>
+    </section>
+  </section>
+
+  <hr style="margin: 2rem 0; opacity: 0.3;">
+
+  <!-- ===================
+       CARRELLO (SIMULAZIONE)
+       =================== -->
+  <section>
+    <h2 style="color: #dc2626;">CARRELLO</h2>
+    
+    <h1 style="color: var(--christmas-red); text-align: center;">🛒 Il Tuo Carrello</h1>
+    
+    <!-- CART ITEMS (DEMO) -->
+    <section style="margin: 2rem 0;">
+      <!-- Demo Cart Item 1 -->
+      <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;">
+        <!-- Item Info -->
+        <div style="flex: 1;">
+          <h4 style="color: white; margin: 0 0 0.5rem 0;">Biglietto Parco Lucine di Natale 2025</h4>
+          <p style="margin: 0 0 0.5rem 0; color: rgba(255,255,255,0.8); font-size: 1.125rem;">
+            <strong>Tipo:</strong> Biglietto Intero
+          </p>
+          <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 1.125rem;">
+            <strong>Data:</strong> 15 Dicembre 2025 - 18:00
+          </p>
+        </div>
+        
+        <!-- Quantity Controls -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">−</button>
+          <input type="number" value="2" min="0" style="width: 50px; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem; border-radius: 6px;">
+          <button type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">+</button>
+        </div>
+        
+        <!-- Item Price -->
+        <div style="text-align: right; min-width: 100px;">
+          <p style="margin: 0; color: var(--christmas-red); font-size: 1.2rem; font-weight: 700;">
+            €22,00
+          </p>
+        </div>
+        
+        <!-- Remove Button -->
+        <div>
+          <button type="button" style="background: transparent; border: 1px solid rgba(220, 38, 38, 0.5); color: var(--christmas-red); padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+      <!-- Demo Cart Item 2 -->
+      <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;">
+        <div style="flex: 1;">
+          <h4 style="color: white; margin: 0 0 0.5rem 0;">Biglietto Parco Lucine di Natale 2025</h4>
+          <p style="margin: 0 0 0.5rem 0; color: rgba(255,255,255,0.8); font-size: 1.125rem;">
+            <strong>Tipo:</strong> Biglietto Ridotto (Bambini)
+          </p>
+          <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 1.125rem;">
+            <strong>Data:</strong> 15 Dicembre 2025 - 18:00
+          </p>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">−</button>
+          <input type="number" value="1" min="0" style="width: 50px; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem; border-radius: 6px;">
+          <button type="button" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">+</button>
+        </div>
+        
+        <div style="text-align: right; min-width: 100px;">
+          <p style="margin: 0; color: var(--christmas-red); font-size: 1.2rem; font-weight: 700;">
+            €8,00
+          </p>
+        </div>
+        
+        <div>
+          <button type="button" style="background: transparent; border: 1px solid rgba(220, 38, 38, 0.5); color: var(--christmas-red); padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CART SUMMARY -->
+    <section>
+      <div class="sketch-card sketch seed-1">
+        <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <filter id="wobble-summary">
+              <feturbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="7"></feturbulence>
+              <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-summary)"></rect>
+        </svg>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Subtotal -->
+          <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span style="color: rgba(255,255,255,0.9); font-size: 1.125rem;">Subtotale</span>
+            <span style="color: white; font-size: 1.125rem; font-weight: 600;">€30,00</span>
+          </div>
+          
+          <!-- Discount Code -->
+          <div style="padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <label style="color: var(--christmas-green); font-weight: 600; display: block; margin-bottom: 0.5rem;">🎁 Codice Sconto</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" placeholder="Inserisci codice..." style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; font-size: 1.125rem;">
+              <button type="button" style="background: var(--christmas-green); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.125rem; font-family: &#39;Providence Sans&#39;, sans-serif !important;">APPLICA</button>
+            </div>
+          </div>
+          
+          <!-- Total -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--christmas-gold);">
+            <span style="color: var(--christmas-gold); font-size: 1.3rem; font-weight: 700;">TOTALE</span>
+            <span style="color: var(--christmas-red); font-size: 1.5rem; font-weight: 700;">€30,00</span>
+          </div>
+          
+          <!-- Checkout Button -->
+          <button type="button" style="background: var(--christmas-red); color: white; border: none; padding: 1.2rem 2rem; border-radius: 12px; font-size: 1.125rem; font-weight: 600; cursor: pointer; margin-top: 1rem; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); font-family: &#39;Providence Sans&#39;, sans-serif !important;">
+            PROCEDI AL CHECKOUT
+          </button>
+          
+          <!-- Continue Shopping -->
+          <a href="file:///Users/brnobtt/Desktop/lucine-minimal/pagina-base-funzionante.html#biglietti" style="text-align: center; color: var(--christmas-green); text-decoration: underline; display: block; margin-top: 0.5rem; font-size: 1.125rem;">
+            ← Torna ai Biglietti
+          </a>
+        </div>
+      </div>
+    </section>
+  </section>
+
+</div>
+
+<script>
+function toggleFAQ(button) {
+  const answer = button.nextElementSibling;
+  const isActive = answer.classList.contains('active');
+  
+  // Close all answers
+  document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+  
+  // Open clicked one if it wasn't already open
+  if (!isActive) {
+    answer.classList.add('active');
+    button.classList.add('active');
+  }
+}
+</script>
+
+
+</body></html>
