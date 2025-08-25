@@ -79,7 +79,15 @@ export default async function handler(req, res) {
     
     // Controlla se la risposta è troppo generica o indica incertezza
     if (!reply || isLowConfidenceReply(reply)) {
-      reply = formatEscapeResponse(knowledgeBase.escape_routes.no_answer);
+      // Prova escalation automatica al sistema ticket
+      const ticketResult = await tryCreateTicket(message, sessionId, req);
+      
+      if (ticketResult.success) {
+        reply = `🎫 ${ticketResult.message}\n\nTicket ID: #${ticketResult.ticket_id}\n\n📧 Riceverai risposta via email entro 24h.`;
+      } else {
+        // Fallback al comportamento originale
+        reply = formatEscapeResponse(knowledgeBase.escape_routes.no_answer);
+      }
     }
 
     // Log semplice nella console di Vercel (visibile in realtime)
@@ -210,6 +218,53 @@ function getSuggestions(userMessage, knowledgeBase) {
 
 function generateSessionId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+async function tryCreateTicket(message, sessionId, req) {
+  try {
+    const ticketResponse = await fetch('https://ticket-system-chat.onrender.com/api/chat/request-operator', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: sessionId || generateSessionId(),
+        user_email: 'utente@lucinedinatale.it', // Email generica, in produzione dovrebbe essere raccolta
+        user_phone: null,
+        question: message,
+        priority: 'medium',
+        source: 'chatbot_escalation'
+      })
+    });
+
+    if (!ticketResponse.ok) {
+      return { success: false };
+    }
+
+    const result = await ticketResponse.json();
+    
+    if (result.success && result.type === 'ticket_created') {
+      console.log('✅ Ticket creato automaticamente:', result.ticket_id);
+      return {
+        success: true,
+        message: result.message,
+        ticket_id: result.ticket_id
+      };
+    }
+    
+    if (result.success && result.type === 'operator_assigned') {
+      console.log('✅ Operatore assegnato:', result.session_id);
+      return {
+        success: true,
+        message: "Un operatore ti contatterà a breve. Controlla la chat!",
+        ticket_id: null
+      };
+    }
+
+    return { success: false };
+
+  } catch (error) {
+    console.error('❌ Errore creazione ticket:', error);
+    return { success: false };
+  }
 }
 
 function getDefaultKnowledgeBase() {
