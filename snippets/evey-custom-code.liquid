@@ -1,5 +1,41 @@
 <script>
-  // Date selection message disabled - not needed
+  // Function to show/hide date selection message
+  function showDateSelectionMessage(show) {
+    let messageElement = document.getElementById('evey-date-selection-message');
+    if (show) {
+      if (!messageElement) {
+        messageElement = document.createElement('div');
+        messageElement.id = 'evey-date-selection-message';
+        messageElement.className = 'sketch-card sketch seed-alert';
+        messageElement.style.cssText = `
+          margin: 1rem 0;
+          padding: 1rem;
+          background: rgba(255, 179, 0, 0.1);
+          border: 2px dashed #ffb300;
+          border-radius: 8px;
+          text-align: center;
+          color: #d32f2f;
+          font-weight: 600;
+          position: relative;
+        `;
+        messageElement.innerHTML = `
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; pointer-events: none;">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 6 4 10" stroke="#ffb300" opacity="0.7"/>
+          </svg>
+          <div style="position: relative; z-index: 1;">
+            📅 <strong>Prima seleziona data e ora</strong> cliccando su "Seleziona data e ora d'ingresso" per abilitare la selezione delle quantità
+          </div>
+        `;
+        const eveyVariants = document.querySelector('.evey__variants');
+        if (eveyVariants) {
+          eveyVariants.parentNode.insertBefore(messageElement, eveyVariants);
+        }
+      }
+      messageElement.style.display = 'block';
+    } else if (messageElement) {
+      messageElement.style.display = 'none';
+    }
+  }
 
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
@@ -15,7 +51,7 @@
               container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
-            // Date message disabled
+            showDateSelectionMessage(true);
             }else{
                 eveyVariantContainers.forEach(container => {
                   container.style.pointerEvents = 'all';
@@ -23,7 +59,7 @@
                   container.style.filter = 'none';
                 });
                 eveyVariants.style.cursor = 'auto';
-                // Date message disabled
+                showDateSelectionMessage(false);
             }
       });
     });
@@ -56,42 +92,16 @@
               container.style.filter = 'grayscale(50%)';
             });
             eveyVariants.style.cursor = 'not-allowed';
-            // Date message disabled
+            showDateSelectionMessage(true);
             blockMultiTicket();
-            
-            // Add "Biglietti Parco" title to Evey box
-            addBigliettParcoTitle();
         }
     });
 
     pbObserver.observe(productBlocks, { attributes: false, childList: true, subtree: true });
   }
-  
-  // Add "Biglietti Parco" title inside Evey box
-  function addBigliettParcoTitle() {
-    const eveyMultiVariant = document.querySelector('.evey__multi-variant-selector');
-    if (eveyMultiVariant && !eveyMultiVariant.querySelector('.biglietti-parco-title')) {
-      const title = document.createElement('h3');
-      title.className = 'biglietti-parco-title';
-      title.style.cssText = `
-        color: #ffb300;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0 0 1.5rem 0;
-        text-align: center;
-      `;
-      title.textContent = 'Biglietti Parco';
-      
-      eveyMultiVariant.insertBefore(title, eveyMultiVariant.firstChild);
-    }
-  }
-  
-  // Also add title when Evey loads normally
-  setTimeout(addBigliettParcoTitle, 2000);
 
-  // Add tooltips to ticket types with close functionality
+  // Add simple tooltips to ticket types 
   function addTicketTooltips() {
-    console.log('🔍 Adding tooltips...');
     const ticketInfo = {
       'Intero': 'Biglietto standard per adulti. Include l\'accesso completo al parco nel giorno e orario selezionato.',
       'Ridotto': 'Per bambini 3-12 anni e persone con disabilità. Include accompagnatore gratuito per disabili con accesso prioritario.',
@@ -100,68 +110,18 @@
     };
 
     setTimeout(() => {
-      const nameElements = document.querySelectorAll('.evey__variant-name');
-      console.log('🎯 Found variant names:', nameElements.length);
-      
-      nameElements.forEach(nameElement => {
+      document.querySelectorAll('.evey__variant-name').forEach(nameElement => {
         const ticketType = nameElement.textContent.trim();
-        console.log('🏷️ Processing ticket type:', ticketType);
-        
         if (ticketInfo[ticketType] && !nameElement.querySelector('.ticket-tooltip')) {
-          console.log('✅ Adding tooltip for:', ticketType);
           nameElement.style.position = 'relative';
           
           const tooltip = document.createElement('div');
           tooltip.className = 'ticket-tooltip';
-          tooltip.innerHTML = `
-            <div class="tooltip-content">${ticketInfo[ticketType]}</div>
-            <button class="tooltip-close">×</button>
-          `;
+          tooltip.textContent = ticketInfo[ticketType];
           
           nameElement.appendChild(tooltip);
-          
-          // Add close functionality
-          const closeBtn = tooltip.querySelector('.tooltip-close');
-          closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            tooltip.style.opacity = '0';
-            tooltip.style.visibility = 'hidden';
-            
-            // Mark tooltip as disabled for a short time
-            tooltip.classList.add('tooltip-disabled');
-            setTimeout(() => {
-              tooltip.classList.remove('tooltip-disabled');
-            }, 3000);
-          });
         }
       });
-      
-      // Prevent tooltip from opening when clicking quantity buttons
-      document.querySelectorAll('.quantity__button').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          
-          // Temporarily disable tooltips in this container
-          const container = this.closest('.evey__variant-container');
-          if (container) {
-            container.classList.add('tooltip-disabled');
-            setTimeout(() => {
-              container.classList.remove('tooltip-disabled');
-            }, 1000);
-          }
-        });
-      });
-      
-      // Close tooltip when clicking outside
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.evey__variant-name')) {
-          document.querySelectorAll('.ticket-tooltip').forEach(tooltip => {
-            tooltip.style.opacity = '0';
-            tooltip.style.visibility = 'hidden';
-          });
-        }
-      });
-      
     }, 1000);
   }
 
@@ -172,10 +132,8 @@
     addTicketTooltips();
   }
 
-  // Re-add tooltips when Evey content changes - multiple attempts
+  // Re-add tooltips when Evey content changes
   setTimeout(addTicketTooltips, 2000);
-  setTimeout(addTicketTooltips, 4000);
-  setTimeout(addTicketTooltips, 6000);
 
   // Simple open ticket box - no loading states or complex logic
   function addOpenTicketForm() {
@@ -291,10 +249,6 @@
 
   // Initialize Open ticket form when page loads (faster timing)
   setTimeout(addOpenTicketForm, 800);
-
-  // Calendar translation removed - keeping Evey original
-
-  // Evey functionality - let app handle everything naturally
 
   // Replace ticket guide with collapsible version
   function replaceTicketGuide() {
@@ -457,7 +411,7 @@ button[name="add"][type="submit"]::after {
   pointer-events: none;
 }
 
-/* Tooltip system for ticket types */
+/* Simple tooltip system */
 .evey__variant-name {
   position: relative;
   cursor: help;
@@ -470,78 +424,28 @@ button[name="add"][type="submit"]::after {
   opacity: 0.7;
 }
 
-.evey__variant-container:hover .ticket-tooltip:not(.tooltip-disabled) {
+.evey__variant-container:hover .ticket-tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
 }
 
 .ticket-tooltip {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) translateY(-10px);
-  min-width: 320px;
-  max-width: 450px;
-  background: rgba(0, 0, 0, 0.95);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  max-width: 300px;
+  background: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 20px;
-  border-radius: 16px;
-  font-size: 15px;
-  line-height: 1.6;
-  z-index: 10000;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
-  border: 2px solid rgba(255,179,0,0.4);
-  white-space: normal;
-}
-
-/* Disable tooltips when clicking quantity buttons */
-.evey__variant-container.tooltip-disabled .ticket-tooltip {
-  display: none !important;
-}
-
-.ticket-tooltip::before {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 8px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.95);
-}
-
-/* Tooltip close button */
-.tooltip-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: rgba(255, 179, 0, 0.8);
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  color: #0d1b0f;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.tooltip-close:hover {
-  background: #d32f2f;
-  color: white;
-  transform: scale(1.1);
-}
-
-.tooltip-content {
-  padding-right: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 /* Prevent flash of old content */
