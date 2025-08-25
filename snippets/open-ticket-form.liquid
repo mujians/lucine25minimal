@@ -1,0 +1,138 @@
+<div class="open-ticket-card" id="open-ticket-form" style="background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%); border: 2px solid #ffb300; border-radius: 16px; padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden;">
+  <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+  
+  <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <div style="display: flex; align-items: flex-start; gap: 2rem; position: relative; z-index: 1;">
+      <div style="flex-shrink: 0;">
+        <div style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid #ffb300; padding: 4px; background: white;">
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/open-pass.jpg?v=1730481582" alt="Biglietto Open" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+        </div>
+      </div>
+      
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+          <span style="font-size: 2rem;">🥇</span>
+          <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
+          <span style="background: #d32f2f; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">ESCLUSIVO</span>
+        </div>
+        
+        <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 16px;">Pass premium per accedere <strong>senza prenotazione</strong> in qualsiasi giorno e orario disponibile.</p>
+        
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: #ffb300; font-weight: 700; font-size: 1.4rem;" id="open-ticket-price">€25,00</span>
+            <span style="color: rgba(255,255,255,0.7); text-decoration: line-through; font-size: 1rem;">€30,00</span>
+          </div>
+          <div style="background: rgba(46,125,50,0.2); color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">SCONTO ONLINE</div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="display: flex; align-items: center; border: 1px solid rgba(255,179,0,0.3); border-radius: 8px; background: rgba(255,255,255,0.05);">
+            <button type="button" class="open-qty-btn" data-action="minus" style="background: none; border: none; color: #ffb300; font-size: 18px; font-weight: bold; padding: 10px 12px; cursor: pointer;">−</button>
+            <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" style="background: none; border: none; text-align: center; width: 50px; color: white; font-size: 16px; font-weight: 600;">
+            <button type="button" class="open-qty-btn" data-action="plus" style="background: none; border: none; color: #ffb300; font-size: 18px; font-weight: bold; padding: 10px 12px; cursor: pointer;">+</button>
+          </div>
+          
+          <input type="hidden" name="id" value="10082871050579">
+          <button type="submit" id="open-add-to-cart" style="background: linear-gradient(45deg, #ffb300, #d32f2f); color: white; padding: 12px 24px; border: none; border-radius: 25px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(255,179,0,0.3); cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <span>🛒</span> <span id="open-cart-text">Aggiungi al Carrello</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+// Load Open ticket product data and update price
+fetch('/products/biglietto-open-2024-2025.js')
+  .then(response => response.json())
+  .then(product => {
+    if (product && product.price) {
+      const priceElement = document.getElementById('open-ticket-price');
+      if (priceElement) {
+        const price = (product.price / 100).toFixed(2);
+        priceElement.textContent = '€' + price.replace('.', ',');
+      }
+      
+      // Update variant ID if different
+      const variantId = product.variants && product.variants[0] ? product.variants[0].id : '10082871050579';
+      const hiddenInput = document.querySelector('#open-ticket-product-form input[name="id"]');
+      if (hiddenInput) {
+        hiddenInput.value = variantId;
+      }
+    }
+  })
+  .catch(error => {
+    console.log('Could not fetch Open ticket price, using default');
+  });
+
+// Open ticket quantity controls
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.open-qty-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const input = document.getElementById('open-quantity');
+      const action = this.getAttribute('data-action');
+      let value = parseInt(input.value) || 1;
+      
+      if (action === 'plus' && value < 10) {
+        input.value = value + 1;
+      } else if (action === 'minus' && value > 1) {
+        input.value = value - 1;
+      }
+    });
+  });
+
+  // Open ticket form submission
+  const form = document.getElementById('open-ticket-product-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const addBtn = document.getElementById('open-add-to-cart');
+      const btnText = document.getElementById('open-cart-text');
+      
+      if (addBtn) addBtn.disabled = true;
+      if (btnText) btnText.textContent = 'Aggiungendo...';
+      
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (btnText) btnText.textContent = 'Aggiunto! ✓';
+        setTimeout(() => {
+          window.location.href = '/cart';
+        }, 800);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        if (btnText) btnText.textContent = 'Errore - Riprova';
+        if (addBtn) addBtn.disabled = false;
+        setTimeout(() => {
+          if (btnText) btnText.textContent = 'Aggiungi al Carrello';
+        }, 2000);
+      });
+    });
+  }
+});
+</script>
+
+<style>
+@media (max-width: 768px) {
+  .open-ticket-card form > div {
+    flex-direction: column !important;
+    text-align: center;
+    gap: 1.5rem !important;
+  }
+  .open-ticket-card h3 {
+    font-size: 1.3rem !important;
+  }
+  .open-ticket-card form > div > div:last-child > div:last-child {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+}
+</style>
