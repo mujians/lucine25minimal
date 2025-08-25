@@ -2088,3 +2088,8 @@ h6 {
 .concerts-list {
   /* Keep existing styles */
 }
+
+/* VEDI MAPPA LINKS - Add arrows to map links */
+a.cta[href*="maps"]:after {
+  content: " →";
+}
