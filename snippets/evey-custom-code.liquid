@@ -23,7 +23,7 @@
             <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 6 4 10" stroke="#ffb300" opacity="0.7"/>
           </svg>
           <div style="position: relative; z-index: 1;">
-            📅 <strong>Prima seleziona data e ora</strong> cliccando su "Seleziona data e ora d'ingresso" per abilitare la selezione delle quantità
+            <strong>Prima seleziona data e ora</strong> per abilitare la selezione delle quantità
           </div>
         `;
         const eveyVariants = document.querySelector('.evey__variants');
@@ -127,6 +127,7 @@
 
   // Add tooltips to ticket types with close functionality
   function addTicketTooltips() {
+    console.log('🔍 Adding tooltips...');
     const ticketInfo = {
       'Intero': 'Biglietto standard per adulti. Include l\'accesso completo al parco nel giorno e orario selezionato.',
       'Ridotto': 'Per bambini 3-12 anni e persone con disabilità. Include accompagnatore gratuito per disabili con accesso prioritario.',
@@ -135,9 +136,15 @@
     };
 
     setTimeout(() => {
-      document.querySelectorAll('.evey__variant-name').forEach(nameElement => {
+      const nameElements = document.querySelectorAll('.evey__variant-name');
+      console.log('🎯 Found variant names:', nameElements.length);
+      
+      nameElements.forEach(nameElement => {
         const ticketType = nameElement.textContent.trim();
+        console.log('🏷️ Processing ticket type:', ticketType);
+        
         if (ticketInfo[ticketType] && !nameElement.querySelector('.ticket-tooltip')) {
+          console.log('✅ Adding tooltip for:', ticketType);
           nameElement.style.position = 'relative';
           
           const tooltip = document.createElement('div');
@@ -201,167 +208,65 @@
     addTicketTooltips();
   }
 
-  // Re-add tooltips when Evey content changes
+  // Re-add tooltips when Evey content changes - multiple attempts
   setTimeout(addTicketTooltips, 2000);
+  setTimeout(addTicketTooltips, 4000);
+  setTimeout(addTicketTooltips, 6000);
 
-  // Replace open ticket box with interactive form
+  // Simple open ticket box - no loading states or complex logic
   function addOpenTicketForm() {
     const openTicketBox = document.querySelector('.sketch-card.seed-9');
     if (openTicketBox && !document.getElementById('open-ticket-form')) {
+      // Direct creation - no fetching, no loading states
+      const variantId = '10082871050579'; // Known working variant ID
       
-      // Immediately hide the old content and show loading
-      openTicketBox.style.opacity = '0.3';
-      openTicketBox.innerHTML = `
-        <div style="text-align: center; padding: 2rem; color: #ffb300;">
-          <div style="font-size: 2rem; margin-bottom: 1rem;">🎟️</div>
-          <div style="color: rgba(255,255,255,0.8);">Caricamento Biglietto Open...</div>
+      const formHTML = `
+        <div class="open-ticket-card" id="open-ticket-form" style="background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%); border: 2px solid #ffb300; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; position: relative; overflow: visible;">
+          <div style="position: absolute; top: -30px; right: -30px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+          
+          <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data">
+            <div class="open-form-content" style="position: relative; z-index: 1;">
+              <div class="open-details" style="width: 100%;">
+                <div class="open-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                  <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
+                  <span style="background: #d32f2f; color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;">ESCLUSIVO</span>
+                </div>
+                
+                <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 16px;">
+                  <strong>Pass esclusivo senza prenotazione</strong> - accedi quando preferisci!<br>
+                  Nessun vincolo di orario o data specifica<br>
+                  Accesso prioritario ed immediato al parco<br>
+                  Esperienza premium senza code
+                </p>
+                
+                <div class="open-pricing" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                  <div style="display: flex; align-items: center; gap: 0.25rem;">
+                    <span style="color: #ffb300; font-weight: 700; font-size: 1.25rem;">Prezzo al checkout</span>
+                  </div>
+                </div>
+                
+                <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                  <div class="lucine-quantity-controls">
+                    <button type="button" class="lucine-qty-btn" data-action="minus" data-symbol="−"></button>
+                    <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="lucine-qty-input">
+                    <button type="button" class="lucine-qty-btn" data-action="plus" data-symbol="+"></button>
+                  </div>
+                  
+                  <input type="hidden" name="id" value="${variantId}">
+                  <button type="submit" id="open-add-to-cart" style="background: linear-gradient(135deg, #ffb300, #ff8f00); color: #0d1b0f; padding: 20px 32px; border: 3px solid #ffb300; border-radius: 16px; display: inline-flex; align-items: center; font-weight: 700; font-size: 16px; box-shadow: 0 6px 24px rgba(255,179,0,0.4); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex: 1; min-width: 160px; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.background='linear-gradient(135deg, #d32f2f, #c62828)'; this.style.borderColor='#d32f2f'; this.style.color='white'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 32px rgba(211,47,47,0.5)'" onmouseout="this.style.background='linear-gradient(135deg, #ffb300, #ff8f00)'; this.style.borderColor='#ffb300'; this.style.color='#0d1b0f'; this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 24px rgba(255,179,0,0.4)'">
+                    <span id="open-cart-text">Aggiungi al Carrello</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       `;
       
-      // Add smooth transition
-      openTicketBox.style.transition = 'all 0.3s ease';
-      // Try multiple possible product handles and search methods  
-      const possibleHandles = [
-        'biglietto-open-2025',  // Correct handle provided by user
-        'biglietto-open-2024-2025',
-        'biglietto-open',
-        'open-ticket', 
-        'open-pass',
-        'biglietto-open-lucine',
-        'pass-open',
-        'open'
-      ];
-      
-      // Function to try fetching product with different handles
-      const fetchOpenProduct = async () => {
-        // First try the handles
-        for (const handle of possibleHandles) {
-          try {
-            console.log(`Trying product handle: ${handle}`);
-            const response = await fetch(`/products/${handle}.js`);
-            if (response.ok) {
-              const product = await response.json();
-              if (product && product.id && product.variants && product.variants.length > 0) {
-                console.log(`Found product with handle: ${handle}`, product);
-                return product;
-              }
-            }
-          } catch (error) {
-            console.log(`Product not found with handle: ${handle}`);
-            continue;
-          }
-        }
-        
-        // If handles fail, create a working form with the known variant ID
-        // This allows the purchase to work even if we can't fetch product details
-        console.log('Could not fetch product details, using variant ID directly');
-        return {
-          id: '10082871050579',
-          title: 'Biglietto Open',
-          price: null, // Will be shown as "Prezzo disponibile al checkout"
-          variants: [{
-            id: '10082871050579',
-            available: true
-          }]
-        };
-      };
-      
-      fetchOpenProduct()
-        .then(product => {
-          if (!product || !product.variants || !product.variants[0]) {
-            throw new Error('Invalid product data');
-          }
-          
-          const price = product.price ? (product.price / 100).toFixed(2).replace('.', ',') : 'Disponibile al checkout';
-          const variantId = product.variants[0].id;
-          
-          const formHTML = `
-            <div class="open-ticket-card" id="open-ticket-form" style="background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%); border: 2px solid #ffb300; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; position: relative; overflow: visible;">
-              <div style="position: absolute; top: -30px; right: -30px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(255,179,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
-              
-              <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data">
-                <div class="open-form-content" style="position: relative; z-index: 1;">
-                  <div class="open-details" style="width: 100%;">
-                    <div class="open-header" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-                      <h3 style="color: #ffb300; margin: 0; font-weight: 700; font-size: 1.5rem;">Biglietto Open</h3>
-                      <span style="background: #d32f2f; color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;">ESCLUSIVO</span>
-                    </div>
-                    
-                    <p style="color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0 0 1rem 0; font-size: 16px;">
-                      <strong>Pass esclusivo senza prenotazione</strong> - accedi quando preferisci!<br>
-                      Nessun vincolo di orario o data specifica<br>
-                      Accesso prioritario ed immediato al parco<br>
-                      Esperienza premium senza code
-                    </p>
-                    
-                    <div class="open-pricing" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                      <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <span style="color: #ffb300; font-weight: 700; font-size: 1.25rem;">${price.includes('€') ? price : '€' + price}</span>
-                      </div>
-                    </div>
-                    
-                    <div class="open-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                      <div class="lucine-quantity-controls">
-                        <button type="button" class="lucine-qty-btn" data-action="minus" data-symbol="−"></button>
-                        <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" class="lucine-qty-input">
-                        <button type="button" class="lucine-qty-btn" data-action="plus" data-symbol="+"></button>
-                      </div>
-                      
-                      <input type="hidden" name="id" value="${variantId}">
-                      <button type="submit" id="open-add-to-cart" style="background: linear-gradient(135deg, #ffb300, #ff8f00); color: #0d1b0f; padding: 20px 32px; border: 3px solid #ffb300; border-radius: 16px; display: inline-flex; align-items: center; font-weight: 700; font-size: 16px; box-shadow: 0 6px 24px rgba(255,179,0,0.4); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex: 1; min-width: 160px; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.background='linear-gradient(135deg, #d32f2f, #c62828)'; this.style.borderColor='#d32f2f'; this.style.color='white'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 32px rgba(211,47,47,0.5)'" onmouseout="this.style.background='linear-gradient(135deg, #ffb300, #ff8f00)'; this.style.borderColor='#ffb300'; this.style.color='#0d1b0f'; this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 24px rgba(255,179,0,0.4)'"
-                        <span id="open-cart-text">Aggiungi al Carrello</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          `;
-          
-          // Smooth transition to new content
-          openTicketBox.style.opacity = '0';
-          setTimeout(() => {
-            openTicketBox.outerHTML = formHTML;
-            const newForm = document.getElementById('open-ticket-form');
-            if (newForm) {
-              newForm.style.opacity = '0';
-              newForm.style.transition = 'opacity 0.3s ease';
-              setTimeout(() => {
-                newForm.style.opacity = '1';
-              }, 50);
-            }
-            // Initialize form functionality after insertion
-            setTimeout(initializeOpenTicketForm, 150);
-          }, 150);
-        })
-        .catch(error => {
-          console.error('Open ticket product not available:', error);
-          // Show error message instead of fake pricing
-          const errorHTML = `
-            <div class="open-ticket-error" style="background: rgba(211,47,47,0.1); border: 2px solid #d32f2f; border-radius: 16px; padding: 2rem; margin: 2rem 0; text-align: center;">
-              <div style="color: #d32f2f; font-size: 1.5rem; margin-bottom: 1rem;">⚠️</div>
-              <h3 style="color: #d32f2f; margin: 0 0 1rem 0;">Biglietto Open temporaneamente non disponibile</h3>
-              <p style="color: rgba(255,255,255,0.8); margin: 0 0 1.5rem 0;">Il prodotto non è attualmente disponibile per l'acquisto online.</p>
-              <a href="https://lucinedinatale.it/products/biglietto-open-2024-2025" style="background: #d32f2f; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600;">
-                Visita la pagina prodotto
-              </a>
-            </div>
-          `;
-          
-          // Smooth transition to error state
-          openTicketBox.style.opacity = '0';
-          setTimeout(() => {
-            openTicketBox.outerHTML = errorHTML;
-            const errorDiv = document.querySelector('.open-ticket-error');
-            if (errorDiv) {
-              errorDiv.style.opacity = '0';
-              errorDiv.style.transition = 'opacity 0.3s ease';
-              setTimeout(() => {
-                errorDiv.style.opacity = '1';
-              }, 50);
-            }
-          }, 150);
-        });
+      // Direct replacement - no transitions or delays
+      openTicketBox.outerHTML = formHTML;
+      // Initialize form functionality immediately
+      setTimeout(initializeOpenTicketForm, 100);
     }
   }
 
@@ -520,30 +425,7 @@
   position: relative;
 }
 
-/* Fix quantity button icons visibility */
-.evey__variant-container .quantity__button svg,
-.evey__variant-container .quantity__button .icon {
-  width: 16px !important;
-  height: 16px !important;
-  stroke: currentColor !important;
-  fill: currentColor !important;
-  stroke-width: 2 !important;
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.evey__variant-container .quantity__button {
-  background: #2e7d32 !important;
-  border: 1px solid #2e7d32 !important;
-  color: white !important;
-  border-radius: 4px !important;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* Quantity buttons - let Shopify handle them naturally */
 
 /* Remove hint box - layout is now clear enough */
 
