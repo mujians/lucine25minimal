@@ -19,8 +19,19 @@
    
    console.log("Start evey-confirm-load script...")
    let counter = 1;
-   const atcBtn = document.querySelector('.product-form__submit, button[name="add"], button[type="submit"][name="add"]')
+   // Try multiple selectors to find the add to cart button
+   const atcBtn = document.querySelector('[id^="ProductSubmitButton-"]') || 
+                  document.querySelector('.product-form__submit') || 
+                  document.querySelector('button[name="add"]') || 
+                  document.querySelector('button[type="submit"][name="add"]')
    const dynamicBtn = document.querySelector('.shopify-payment-button')
+   
+   if (atcBtn) {
+     console.log("Found add to cart button:", atcBtn)
+   } else {
+     console.log("Could not find add to cart button")
+   }
+   
    if (dynamicBtn) dynamicBtn.disabled = true;
    
     let checkEveyScheduler = setInterval(function(){
