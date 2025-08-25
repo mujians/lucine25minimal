@@ -1,4 +1,94 @@
 <script>
+  // Preloading system - hide Evey content until fully loaded
+  function initializePreloader() {
+    // Add loading overlay to Evey container
+    const style = document.createElement('style');
+    style.textContent = `
+      .evey-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        color: #ffb300;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .evey__multi-variant-selector {
+        position: relative;
+      }
+      .evey-content-hidden {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .evey-content-ready {
+        opacity: 1;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Initialize preloader immediately
+  initializePreloader();
+
+  // Function to show loading and hide content until ready
+  function showEveyLoader() {
+    const eveyContainer = document.querySelector('.evey__multi-variant-selector');
+    if (eveyContainer && !eveyContainer.querySelector('.evey-loading-overlay')) {
+      eveyContainer.classList.add('evey-content-hidden');
+      
+      const loader = document.createElement('div');
+      loader.className = 'evey-loading-overlay';
+      loader.innerHTML = '⏳ Caricamento biglietti...';
+      
+      eveyContainer.appendChild(loader);
+    }
+  }
+
+  // Function to hide loader and show content when ready
+  function hideEveyLoader() {
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    function checkReady() {
+      attempts++;
+      const eveyContainer = document.querySelector('.evey__multi-variant-selector');
+      const loader = document.querySelector('.evey-loading-overlay');
+      
+      if (eveyContainer && loader) {
+        // Check if content is actually ready
+        const hasVariants = document.querySelectorAll('.evey__variant-container').length > 0;
+        const hasDateButton = document.querySelector('.evey__schedule-selector-button, [class*="schedule"], [class*="seleziona"]');
+        const hasTitle = document.querySelector('.biglietti-parco-title');
+        const hasTooltips = document.querySelectorAll('.ticket-tooltip').length > 0;
+        
+        // Also check if date button has Italian text (not English)
+        const dateButtonText = hasDateButton ? hasDateButton.textContent.trim() : '';
+        const hasItalianText = dateButtonText.includes('Seleziona') || dateButtonText.includes('data') || dateButtonText.length === 0;
+        
+        if (hasVariants && hasDateButton && hasTitle && hasTooltips && (hasItalianText || attempts >= maxAttempts)) {
+          loader.remove();
+          eveyContainer.classList.remove('evey-content-hidden');
+          eveyContainer.classList.add('evey-content-ready');
+        } else if (attempts < maxAttempts) {
+          // Not ready yet, try again
+          setTimeout(checkReady, 500);
+        } else {
+          // Force show after max attempts
+          loader.remove();
+          eveyContainer.classList.remove('evey-content-hidden');
+          eveyContainer.classList.add('evey-content-ready');
+        }
+      }
+    }
+    
+    setTimeout(checkReady, 300);
+  }
 
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
@@ -47,6 +137,10 @@
         const eveyVariants = document.querySelector('.evey__variants');
         if (eveyVariantContainers && eveyVariants && fetchEventId) {
             pbObserver.disconnect();
+            
+            // Show loading overlay first
+            showEveyLoader();
+            
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
               container.style.opacity = '0.6';
@@ -54,6 +148,13 @@
             });
             eveyVariants.style.cursor = 'not-allowed';
             blockMultiTicket();
+            
+            // Wait for everything to load, then show content
+            setTimeout(() => {
+              addBigliettParcoTitle();
+              addTicketTooltips();
+              hideEveyLoader();
+            }, 2000);
         }
     });
 
@@ -89,26 +190,12 @@
     }
   }
   
-  // Add title with multiple attempts
-  setTimeout(addBigliettParcoTitle, 1000);
-  setTimeout(addBigliettParcoTitle, 2000);
-  setTimeout(addBigliettParcoTitle, 3000);
-  
-  // Monitor for Evey loading and add title
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.addedNodes.length > 0) {
-        addBigliettParcoTitle();
-      }
-    });
-  });
-  
-  if (document.querySelector('#MainContent')) {
-    observer.observe(document.querySelector('#MainContent'), {
-      childList: true,
-      subtree: true
-    });
-  }
+  // Backup title addition (in case main system doesn't work)
+  setTimeout(() => {
+    if (!document.querySelector('.biglietti-parco-title')) {
+      addBigliettParcoTitle();
+    }
+  }, 4000);
 
   // Add smart tooltips - hover on desktop, click on mobile
   function addTicketTooltips() {
@@ -153,15 +240,12 @@
     }, 1000);
   }
 
-  // Initialize tooltips when page loads and when Evey loads
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', addTicketTooltips);
-  } else {
-    addTicketTooltips();
-  }
-
-  // Re-add tooltips when Evey content changes
-  setTimeout(addTicketTooltips, 2000);
+  // Backup tooltip addition (in case main system doesn't work)
+  setTimeout(() => {
+    if (document.querySelectorAll('.ticket-tooltip').length === 0) {
+      addTicketTooltips();
+    }
+  }, 4500);
 
   // Simple open ticket box - no loading states or complex logic
   function addOpenTicketForm() {
