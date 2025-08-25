@@ -1,44 +1,50 @@
 <script>
-  // SIMPLE: just show loading for 3 seconds, then show everything
-  const style = document.createElement('style');
-  style.textContent = `
-    .evey-loading-simple {
-      background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
-      border: 2px solid rgba(255,179,0,0.3);
-      border-radius: 12px;
-      padding: 40px 20px;
-      text-align: center;
-      color: #ffb300;
-      font-size: 18px;
-      font-weight: 700;
-      min-height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 20px 0;
-    }
-  `;
-  document.head.appendChild(style);
-
-  function showSimpleLoader() {
-    const eveyContainer = document.querySelector('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]');
-    if (eveyContainer && !document.querySelector('.evey-loading-simple')) {
-      eveyContainer.style.display = 'none';
-      
+  // IMMEDIATELY show loading and hide any Evey content that loads
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create loading placeholder immediately  
+    const targetArea = document.querySelector('.product-form, #MainContent');
+    if (targetArea) {
       const loader = document.createElement('div');
       loader.className = 'evey-loading-simple';
       loader.innerHTML = '⏳ Caricamento biglietti...';
+      loader.style.cssText = `
+        background: linear-gradient(135deg, rgba(255,179,0,0.1) 0%, rgba(211,47,47,0.05) 100%);
+        border: 2px solid rgba(255,179,0,0.3);
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        color: #ffb300;
+        font-size: 18px;
+        font-weight: 700;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+      `;
+      targetArea.appendChild(loader);
       
-      eveyContainer.parentNode.insertBefore(loader, eveyContainer);
+      // Hide any Evey content that appears
+      const hideEveyContent = () => {
+        document.querySelectorAll('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]').forEach(el => {
+          el.style.display = 'none';
+        });
+      };
       
-      // Show content after 3 seconds, period
+      // Hide immediately and keep hiding
+      hideEveyContent();
+      setInterval(hideEveyContent, 100);
+      
+      // After 3 seconds: remove loader, show Evey, stop hiding
       setTimeout(() => {
         loader.remove();
-        eveyContainer.style.display = 'block';
-        console.log('Content shown after 3 seconds');
+        document.querySelectorAll('.evey__multi-variant-selector, .evey__variants, [class*="evey__"]').forEach(el => {
+          el.style.display = 'block';
+        });
+        console.log('Evey content shown after 3 seconds');
       }, 3000);
     }
-  }
+  });
 
    function blockMultiTicket(){
     const fetchEventId = document.querySelector('input[name="properties[_event_id]"]');
@@ -88,14 +94,11 @@
         if (eveyVariantContainers && eveyVariants && fetchEventId) {
             pbObserver.disconnect();
             
-            // Simple loader that shows for 3 seconds
-            showSimpleLoader();
-            
-            // Add our stuff while loading
+            // Add our custom elements after 4 seconds (after content is shown)
             setTimeout(() => {
               addBigliettParcoTitle();
               addTicketTooltips();
-            }, 1000);
+            }, 4000);
             
             eveyVariantContainers.forEach(container => {
               container.style.pointerEvents = 'none';
