@@ -24,12 +24,6 @@
             "custom_liquid": "<div class=\"sketch-card sketch seed-1\" style=\"margin: 1.5rem 0;\">\n  <svg class=\"sketch-border\" viewBox=\"0 0 100 100\" aria-hidden=\"true\" preserveAspectRatio=\"none\">\n    <rect x=\"4\" y=\"4\" width=\"92\" height=\"92\" rx=\"12\" fill=\"none\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-dasharray=\"14 8 6 12 10 9\"/>\n  </svg>\n  <div style=\"color: #ffb300; font-weight: 600; line-height: 1.4;\">\n    💰 Acquista online e approfitta di un prezzo scontato rispetto all'acquisto in loco!\n  </div>\n</div>"
           }
         },
-        "instructions_info": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "<div class=\"sketch-card sketch seed-2\" style=\"margin: 1.5rem 0;\">\n  <svg class=\"sketch-border\" viewBox=\"0 0 100 100\" aria-hidden=\"true\" preserveAspectRatio=\"none\">\n    <rect x=\"4\" y=\"4\" width=\"92\" height=\"92\" rx=\"12\" fill=\"none\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-dasharray=\"12 7 5 11 9 8\"/>\n  </svg>\n  <div style=\"color: #2e7d32; font-weight: 600; line-height: 1.4;\">\n    🎫 Scegli la data e l'orario che preferisci <strong>cliccando sul pulsante qui sotto</strong> \"seleziona data e ora d'ingresso\" e aggiungi al carrello i tuoi biglietti.\n  </div>\n</div>"
-          }
-        },
         "price": {
           "type": "price",
           "settings": {}
@@ -71,7 +65,6 @@
       "block_order": [
         "discount_info",
         "custom_liquid_NkmUjk",
-        "instructions_info",
         "price",
         "variant_picker",
         "quantity_selector",
