@@ -4,12 +4,16 @@
     // Add CSS to completely hide Evey content while loading
     const style = document.createElement('style');
     style.textContent = `
-      .evey-content-hidden {
-        opacity: 0;
+      /* Hide ALL Evey content immediately */
+      .evey__multi-variant-selector,
+      .evey__variants,
+      [class*="evey__"] {
+        opacity: 0 !important;
         transition: opacity 0.3s ease;
       }
+      
       .evey-content-ready {
-        opacity: 1;
+        opacity: 1 !important;
         transition: opacity 0.5s ease;
       }
       @keyframes fadeIn {
@@ -40,7 +44,7 @@
   
   // Remove the temporary loader system - using only the placeholder now
 
-  // Function to show loading placeholder and hide content until ready
+  // Function to show loading placeholder - content already hidden by CSS
   function showEveyLoader() {
     const eveySelectors = [
       '.evey__multi-variant-selector',
@@ -52,15 +56,12 @@
     for (let selector of eveySelectors) {
       const eveyContainer = document.querySelector(selector);
       if (eveyContainer && !document.querySelector('.evey-loading-placeholder')) {
-        // Hide the actual Evey content
-        eveyContainer.classList.add('evey-content-hidden');
-        
-        // Create loading placeholder
+        // Create loading placeholder (content already hidden by CSS)
         const placeholder = document.createElement('div');
         placeholder.className = 'evey-loading-placeholder';
         placeholder.innerHTML = '⏳ Caricamento biglietti...';
         
-        // Insert placeholder before the hidden Evey container
+        // Insert placeholder before the Evey container
         eveyContainer.parentNode.insertBefore(placeholder, eveyContainer);
         console.log('Evey placeholder added before:', selector);
         break;
@@ -105,8 +106,7 @@
           // Remove placeholder
           placeholder.remove();
           
-          // Show Evey content with simple opacity change
-          eveyContainer.classList.remove('evey-content-hidden');
+          // Show Evey content by adding ready class (overrides CSS opacity: 0)
           eveyContainer.classList.add('evey-content-ready');
         } else if (attempts < maxAttempts) {
           // Not ready yet, try again
@@ -117,8 +117,7 @@
           // Force show after max attempts
           placeholder.remove();
           
-          // Show Evey content with simple opacity change
-          eveyContainer.classList.remove('evey-content-hidden');
+          // Show Evey content by adding ready class
           eveyContainer.classList.add('evey-content-ready');
         }
       }
@@ -195,11 +194,10 @@
             
             // Emergency fallback - force show content after 8 seconds
             setTimeout(() => {
-              const hiddenContent = document.querySelector('.evey-content-hidden');
-              if (hiddenContent) {
+              const eveyContent = document.querySelector('.evey__multi-variant-selector');
+              if (eveyContent && !eveyContent.classList.contains('evey-content-ready')) {
                 console.log('Emergency fallback - force showing content');
-                hiddenContent.classList.remove('evey-content-hidden');
-                hiddenContent.classList.add('evey-content-ready');
+                eveyContent.classList.add('evey-content-ready');
                 const placeholder = document.querySelector('.evey-loading-placeholder');
                 if (placeholder) placeholder.remove();
               }
