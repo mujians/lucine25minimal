@@ -158,32 +158,52 @@
 <style>
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .cart-item {
-    flex-direction: column;
-    text-align: center;
+  /* Cart Items Mobile Layout */
+  div[style*="display: flex"][style*="gap: 1.5rem"][style*="align-items: center"] {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
   }
   
-  .item-image img {
-    width: 150px !important;
-    height: 150px !important;
-  }
-  
-  .item-quantity {
-    justify-content: center;
-    margin: 1rem 0;
-  }
-  
-  .item-price {
+  /* Item Info Full Width */
+  div[style*="flex: 1"] {
+    flex: none !important;
+    width: 100% !important;
     text-align: center !important;
   }
   
-  .cart-summary {
-    position: sticky;
-    bottom: 1rem;
-    background: rgba(15, 47, 31, 0.95);
-    padding: 1rem;
-    border-radius: 12px;
-    margin-top: 2rem;
+  /* Quantity Controls Center */
+  div[style*="display: flex"][style*="align-items: center"][style*="gap: 0.5rem"] {
+    justify-content: center !important;
+    margin: 1rem 0 !important;
+  }
+  
+  /* Price and Remove Button */
+  div[style*="text-align: right"] {
+    text-align: center !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  /* Sketch Card Mobile */
+  .sketch-card {
+    margin: 1rem 0 !important;
+  }
+  
+  /* Input and Button Sizing */
+  input[type="text"], input[type="number"] {
+    font-size: 16px !important;
+  }
+  
+  /* Prevent Horizontal Scroll */
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Container Width Fix */
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 </style>
