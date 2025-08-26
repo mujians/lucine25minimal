@@ -387,15 +387,24 @@ button[name="add"][type="submit"]::after {
 
 /* Product media padding removed - not needed as media is hidden */
 
+/* ULTRA-AGGRESSIVE EVEY OVERRIDE - Force Providence Sans font */
+.evey__multi-variant-selector *,
+.evey__multi-variant-selector button,
+.evey__multi-variant-selector input,
+.evey__multi-variant-selector span,
+.evey__multi-variant-selector div {
+  font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+}
+
 /* Card style ONLY for Evey block */
 .evey__multi-variant-selector {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-radius: 20px !important;
-  padding: 2rem !important;
-  backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-  margin: 2rem 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
   position: relative;
   overflow: visible;
 }
