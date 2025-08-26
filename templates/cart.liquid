@@ -36,7 +36,7 @@
         
         <!-- Item Price -->
         <div style="text-align: right; min-width: 100px;">
-          <p style="margin: 0; color: var(--christmas-red); font-size: 1.2rem; font-weight: 700;">
+          <p style="margin: 0; color: var(--christmas-green); font-size: 1.2rem; font-weight: 700;">
             {{ item.final_line_price | money }}
           </p>
         </div>
@@ -73,7 +73,7 @@
         <!-- Subtotal -->
         <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
           <span style="color: rgba(255,255,255,0.9); font-size: 1.125rem;">Subtotale</span>
-          <span style="color: white; font-size: 1.125rem; font-weight: 600;">{{ cart.total_price | money }}</span>
+          <span style="color: var(--christmas-green); font-size: 1.125rem; font-weight: 600;">{{ cart.total_price | money }}</span>
         </div>
         
         <!-- Discount Code -->
@@ -110,7 +110,7 @@
         <!-- Total -->
         <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--christmas-gold);">
           <span style="color: var(--christmas-gold); font-size: 1.3rem; font-weight: 700;">TOTALE</span>
-          <span style="color: var(--christmas-red); font-size: 1.5rem; font-weight: 700;">{{ cart.total_price | money }}</span>
+          <span style="color: var(--christmas-green); font-size: 1.5rem; font-weight: 700;">{{ cart.total_price | money }}</span>
         </div>
         
         <!-- Checkout Button -->
