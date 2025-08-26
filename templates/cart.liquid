@@ -15,19 +15,10 @@
       <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;">
         <!-- Item Info -->
         <div style="flex: 1;">
-          <h4 style="color: white; margin: 0 0 0.5rem 0;">{{ item.product.title }}</h4>
-          {% if item.variant.title != 'Default Title' %}
-            <p style="margin: 0 0 0.5rem 0; color: rgba(255,255,255,0.8); font-size: 1.125rem;">
-              <strong>Tipo:</strong> {{ item.variant.title }}
-            </p>
-          {% endif %}
-          {% for property in item.properties %}
-            {% unless property.first contains '_' %}
-              <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 1.125rem;">
-                <strong>{{ property.first }}:</strong> {{ property.last }}
-              </p>
-            {% endunless %}
-          {% endfor %}
+          <h4 style="color: white; margin: 0 0 0.25rem 0;">{{ item.product.title }}</h4>
+          <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 1rem;">
+            {% if item.variant.title != 'Default Title' %}{{ item.variant.title }}{% endif %}{% for property in item.properties %}{% unless property.first contains '_' %}{% if item.variant.title != 'Default Title' %} • {% endif %}{{ property.last }}{% endunless %}{% endfor %}
+          </p>
         </div>
         
         <!-- Quantity Controls -->
@@ -67,7 +58,7 @@
 
   <!-- CART SUMMARY -->
   <section>
-    <div class="sketch-card sketch seed-1" style="padding: 2rem; position: relative;">
+    <div class="sketch-card sketch seed-1" style="padding: 2.5rem; position: relative;">
       <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
         <defs>
           <filter id="wobble-summary">
@@ -78,7 +69,7 @@
         <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-summary)"/>
       </svg>
       
-      <div style="display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 1;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 1; margin: 0.5rem;">
         <!-- Subtotal -->
         <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
           <span style="color: rgba(255,255,255,0.9); font-size: 1.125rem;">Subtotale</span>
@@ -194,7 +185,11 @@
   /* Sketch Card Mobile */
   .sketch-card {
     margin: 1rem 0 !important;
-    padding: 1.5rem !important;
+    padding: 2rem !important;
+  }
+  
+  .sketch-card > div {
+    margin: 0.75rem !important;
   }
   
   .sketch-card .sketch-border {
