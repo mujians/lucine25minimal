@@ -48,7 +48,7 @@
         "open_ticket": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "{% render 'open-ticket-form' %}"
+            "custom_liquid": "<!-- DEBUG: Open Ticket Block -->\n{% render 'open-ticket-form' %}\n<!-- END DEBUG -->"
           }
         }
       },
