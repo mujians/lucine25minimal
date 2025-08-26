@@ -1,5 +1,5 @@
 <!-- CART TEMPLATE - Carrello Lucine di Natale -->
-<div style="padding: 2rem; max-width: none; margin: 0 auto;">
+<div class="cart-mobile-compact" style="padding: 2rem; max-width: none; margin: 0 auto;">
 
 <h3 style="color: var(--christmas-red); text-align: center; margin-bottom: 1.5rem;">Il Tuo Carrello</h3>
 {% if cart.item_count > 0 %}
@@ -148,37 +148,40 @@
 <style>
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  /* Cart Items Mobile Layout */
-  div[style*="display: flex"][style*="gap: 1.5rem"][style*="align-items: center"] {
+  /* Cart Items Mobile Compact Layout */
+  .cart-mobile-compact div[style*="display: flex"][style*="gap: 1.5rem"][style*="align-items: center"] {
     flex-wrap: wrap !important;
-    gap: 0.5rem !important;
-    padding: 1rem !important;
+    gap: 0.25rem !important;
+    padding: 0.75rem !important;
   }
   
-  /* Item Info Full Width */
-  div[style*="flex: 1"] {
+  /* Compact Item Info */
+  .cart-mobile-compact div[style*="flex: 1"] {
     flex: 1 1 100% !important;
     text-align: center !important;
     order: 1 !important;
-    margin-bottom: 1rem !important;
+    margin-bottom: 0.5rem !important;
   }
   
-  /* Quantity Controls */
-  div[style*="display: flex"][style*="align-items: center"][style*="gap: 0.5rem"] {
+  /* Compact Title Spacing */
+  .cart-mobile-compact h5 {
+    margin-bottom: 0.1rem !important;
+  }
+  
+  /* Compact Controls Layout */
+  .cart-mobile-compact div[style*="display: flex"][style*="align-items: center"][style*="gap: 0.5rem"] {
     flex: 1 1 auto !important;
     order: 2 !important;
     justify-content: center !important;
   }
   
-  /* Price */
-  div[style*="text-align: right"] {
+  .cart-mobile-compact div[style*="text-align: right"] {
     flex: 1 1 auto !important;
     order: 3 !important;
     text-align: center !important;
   }
   
-  /* Remove Button */
-  div[style*="display: flex"][style*="gap: 1.5rem"][style*="align-items: center"] > div:last-child {
+  .cart-mobile-compact div[style*="display: flex"][style*="gap: 1.5rem"][style*="align-items: center"] > div:last-child {
     flex: 0 0 auto !important;
     order: 4 !important;
   }
