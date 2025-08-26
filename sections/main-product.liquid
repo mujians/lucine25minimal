@@ -139,8 +139,9 @@
       margin-bottom: 0 !important;
     }
     
-    /* Evey app integration with sketch-card */
-    .sketch-card .evey__multi-variant-selector {
+    /* AGGRESSIVE EVEY APP OVERRIDE - Remove all app styling */
+    .evey-override .evey__multi-variant-selector,
+    .evey-override form.evey__multi-variant-selector {
       background: transparent !important;
       border: none !important;
       border-radius: 0 !important;
@@ -148,30 +149,50 @@
       backdrop-filter: none !important;
       padding: 0 !important;
       margin: 0 !important;
+      width: 100% !important;
     }
     
-    /* Evey variant styling within sketch-card */
-    .sketch-card .evey__variant-container {
+    /* Remove all Evey backgrounds and glass effects */
+    .evey-override * {
+      background-image: none !important;
+      background-color: transparent !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    
+    /* Evey variant containers - clean styling */
+    .evey-override .evey__variant-container {
       background: rgba(255,255,255,0.05) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
       border-radius: 8px !important;
       margin-bottom: 1rem !important;
       padding: 1rem !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 1.5rem !important;
     }
     
-    .sketch-card .evey__variant-name {
+    /* Evey text styling */
+    .evey-override .evey__variant-name,
+    .evey-override h3 {
       color: var(--christmas-green) !important;
       font-weight: 600 !important;
       text-transform: uppercase !important;
+      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
     }
     
-    .sketch-card .evey__variant-price {
+    .evey-override .evey__variant-price,
+    .evey-override .money {
       color: var(--christmas-green) !important;
       font-weight: 700 !important;
+      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
     }
     
-    /* Evey buttons styling consistency */
-    .evey-card .btn,
-    .evey-card button {
+    /* ALL BUTTONS - Force our styling */
+    .evey-override button,
+    .evey-override .btn,
+    .evey-override input[type="submit"] {
       background: var(--christmas-green) !important;
       color: white !important;
       border: none !important;
@@ -183,10 +204,11 @@
       min-height: 48px !important;
       letter-spacing: 0.5px !important;
       font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+      width: 100% !important;
     }
     
-    /* Evey quantity buttons */
-    .evey-card .quantity__button {
+    /* Quantity controls */
+    .evey-override .quantity__button {
       background: none !important;
       border: 1px solid rgba(255,255,255,0.3) !important;
       color: var(--christmas-green) !important;
@@ -194,7 +216,15 @@
       font-weight: bold !important;
       padding: 8px 12px !important;
       min-height: 36px !important;
-      font-family: inherit !important;
+      width: auto !important;
+    }
+    
+    .evey-override .quantity__input {
+      background: none !important;
+      border: none !important;
+      color: white !important;
+      text-align: center !important;
+      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
     }
       line-height: 1.6 !important;
     }
@@ -705,7 +735,7 @@
                 {% render block %}
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
-              <div class="sketch-card evey-card" style="padding: 1.5rem; margin: 1.5rem 0; background: linear-gradient(135deg, rgba(46,125,50,0.1) 0%, rgba(211,47,47,0.05) 50%, rgba(255,179,0,0.05) 100%);">
+              <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <defs>
                     <filter id="wobble-evey">
