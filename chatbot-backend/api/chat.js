@@ -222,6 +222,10 @@ function generateSessionId() {
 
 async function tryCreateTicket(message, sessionId, req) {
   try {
+    // Timeout dopo 5 secondi per evitare timeout Vercel
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
     const ticketResponse = await fetch('https://ticket-system-chat.onrender.com/api/chat/request-operator', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -232,8 +236,11 @@ async function tryCreateTicket(message, sessionId, req) {
         question: message,
         priority: 'medium',
         source: 'chatbot_escalation'
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!ticketResponse.ok) {
       return { success: false };

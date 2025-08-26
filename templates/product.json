@@ -48,7 +48,7 @@
         "open_ticket": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<div class=\"sketch-card sketch seed-9\"></div>"
+            "custom_liquid": "{% render 'open-ticket-form' %}"
           }
         }
       },
