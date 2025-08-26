@@ -168,6 +168,34 @@
       color: var(--christmas-green) !important;
       font-weight: 700 !important;
     }
+    
+    /* Evey buttons styling consistency */
+    .evey-card .btn,
+    .evey-card button {
+      background: var(--christmas-green) !important;
+      color: white !important;
+      border: none !important;
+      padding: 1rem 2rem !important;
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      border-radius: 0 !important;
+      min-height: 48px !important;
+      letter-spacing: 0.5px !important;
+      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+    }
+    
+    /* Evey quantity buttons */
+    .evey-card .quantity__button {
+      background: none !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+      color: var(--christmas-green) !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      padding: 8px 12px !important;
+      min-height: 36px !important;
+      font-family: inherit !important;
+    }
       line-height: 1.6 !important;
     }
     
@@ -677,7 +705,7 @@
                 {% render block %}
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
-              <div class="sketch-card" style="padding: 1.5rem; margin: 1.5rem 0;">
+              <div class="sketch-card evey-card" style="padding: 1.5rem; margin: 1.5rem 0; background: linear-gradient(135deg, rgba(46,125,50,0.1) 0%, rgba(211,47,47,0.05) 50%, rgba(255,179,0,0.05) 100%);">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <defs>
                     <filter id="wobble-evey">
@@ -685,7 +713,7 @@
                       <feDisplacementMap in="SourceGraphic" scale="1"/>
                     </filter>
                   </defs>
-                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-evey)"/>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="#2e7d32" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-evey)"/>
                 </svg>
                 <script>console.log("Rendering Evey block directly");</script>
                 {% render block %}
