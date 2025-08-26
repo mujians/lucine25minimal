@@ -1167,10 +1167,7 @@ body.footer-expanded {
   margin: 2rem 0;
 }
 
-.faq-item {
-  border-bottom: 1px solid #333;
-  margin-bottom: 0.5rem;
-}
+/* Removed duplicate - correct style is below */
 
 .faq-question {
   font-family: 'Providence Sans', -apple-system, sans-serif !important;
@@ -1678,10 +1675,9 @@ h6 {
 
 .faq-item {
   margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(15, 47, 31, 0.3);
-  transition: all 0.3s ease;
 }
 
 .faq-item:hover {
@@ -1691,7 +1687,7 @@ h6 {
 /* FAQ Question Button */
 .faq-question {
   width: 100%;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
   border: none;
   color: var(--text-white) !important;
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
