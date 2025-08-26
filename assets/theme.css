@@ -1853,6 +1853,14 @@ h6 {
   text-align: right;
 }
 
+.menu-price--special {
+  color: var(--christmas-gold);
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--christmas-gold);
+}
+
 /* Special item styles */
 .menu-item-row.featured .menu-item-info h4 {
   color: var(--christmas-green) !important;
