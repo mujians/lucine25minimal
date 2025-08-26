@@ -1,0 +1,9 @@
+Elemento,Conflitto,File A,File B,Vincitore,Problema
+Font Evey,font-family,App Evey (inline),/snippets/evey-custom-code.liquid,CSS Override,Font sbagliati visibili
+Background Form,backdrop-filter,App Evey,/snippets/evey-custom-code.liquid,CSS Override,Sfondo sfocato
+Card Styling,Border style,App Evey (glass),/sections/main-product.liquid (sketch),CSS Override,Inconsistenza visiva
+Button Colors,background-color,App Evey,/sections/main-product.liquid,CSS Override,Colori non uniformi
+Quantity Controls,Button styling,/assets/component-quantity.css,/sections/main-product.liquid,CSS Override,Controlli duplicati
+Open Ticket,Implementation,/snippets/open-ticket-form.liquid,/snippets/evey-custom-code.liquid,evey-custom-code,Due form diverse
+Title Display,Visibility,/sections/main-product.liquid (hidden),/templates/product.json,CSS Override,Titolo nascosto
+Price Display,Color scheme,/assets/component-price.css,/sections/main-product.liquid,CSS Override,Colori price custom

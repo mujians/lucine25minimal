@@ -1,0 +1,16 @@
+Elemento,Classe CSS,Stile Principale,File Sorgente CSS,Note
+Container Pagina,.page-width.section-{id}-padding,"max-width: 1200px; padding: 2rem;",/assets/theme.css,Container globale
+Form Evey,.evey__multi-variant-selector,"background: transparent; backdrop-filter: none;",/snippets/evey-custom-code.liquid (riga 400+),Era blurred prima
+Titolo Evey,.biglietti-parco-title,"color: var(--christmas-gold); font-size: 1.5rem;",/snippets/evey-custom-code.liquid (riga 83),Iniettato via JS
+Card Evey,.evey-override,"background: linear-gradient(...); border: sketch;",/sections/main-product.liquid (riga 708+),Wrapper nostro
+Varianti Biglietti,.evey__variant-container,"background: rgba(255,255,255,0.05); padding: 1rem;",/sections/main-product.liquid (riga 165+),Override aggressivo
+Nomi Biglietti,.evey__variant-name,"color: var(--christmas-green); text-transform: uppercase;",/sections/main-product.liquid (riga 177+),Intero/Ridotto/Saltafila
+Prezzi Biglietti,.evey__variant-price .money,"color: var(--christmas-green); font-weight: 700;",/sections/main-product.liquid (riga 185+),"€9,00 €7,00 €13,00"
+Pulsanti Quantità,.quantity__button,"background: none; color: var(--christmas-green);",/sections/main-product.liquid (riga 211+),+ e -
+Input Quantità,.quantity__input,"color: white; text-align: center;",/sections/main-product.liquid (riga 222+),Numero centrale
+Pulsante Add Cart,.btn.product-form__cart-submit,"background: var(--christmas-green); text-transform: uppercase;",/sections/main-product.liquid (riga 192+),Pulsante principale
+Card Prezzi,.sketch-card (prezzo),"padding: 1.5rem; border: SVG sketch;",/sections/main-product.liquid (riga 628+),Card prezzo prodotto
+Open Ticket,.sketch-card.seed-9,"border: #ffb300; padding: 1.5rem;",/snippets/open-ticket-form.liquid (riga 1+),Card dorata
+Open Ticket Titolo,h5 (Open Ticket),"color: var(--christmas-gold); text-transform: uppercase;",/snippets/open-ticket-form.liquid (riga 16),BIGLIETTO OPEN
+Font Globale,"body, *","font-family: ""Providence Sans"", -apple-system, ...;",/assets/theme.css (riga 27),Font base tema
+Background Pagina,body,"background: #0f2f1f url(grain-texture);",/assets/theme.css,Sfondo verde scuro
