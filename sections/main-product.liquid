@@ -80,10 +80,9 @@
       box-shadow: none !important;
     }
     
-    /* Product info wrapper - clean, no card */
+    /* Product info wrapper - unified card system */
     .product__info-wrapper {
-      background: transparent !important;
-      padding: 2rem 0 !important;
+      padding: 0 !important;
       max-width: 100% !important;
       border: none !important;
       box-shadow: none !important;
@@ -95,17 +94,50 @@
       display: none !important;
     }
     
-    /* Price styling - more prominent */
+    /* Price styling - integrated with cards */
     .price {
-      text-align: center !important;
+      color: var(--christmas-green) !important;
       font-size: 2.2rem !important;
       margin-bottom: 2rem !important;
       font-weight: 700 !important;
     }
     
-    /* General body text sizing - larger for better readability */
-    p, .product-description {
-      font-size: 18px !important;
+    /* Buy buttons - unified styling */
+    .product-form__buttons {
+      margin: 1.5rem 0 !important;
+    }
+    
+    .btn.product-form__cart-submit {
+      background: var(--christmas-green) !important;
+      color: white !important;
+      border: none !important;
+      padding: 1rem 2rem !important;
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      border-radius: 0 !important;
+      width: 100% !important;
+      min-height: 48px !important;
+      letter-spacing: 0.5px !important;
+    }
+    
+    /* Typography standardization */
+    p, .product-description, .product__text {
+      font-size: 1.1rem !important;
+      line-height: 1.6 !important;
+      color: rgba(255,255,255,0.9) !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Consistent spacing for all blocks */
+    .product__info-container > * {
+      margin-bottom: 1.5rem !important;
+    }
+    
+    /* Last element no margin */
+    .product__info-container > *:last-child {
+      margin-bottom: 0 !important;
+    }
       line-height: 1.6 !important;
     }
     
@@ -445,6 +477,27 @@
       stroke: #d32f2f !important;
     }
     
+    /* Mobile responsiveness for product cards */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem !important;
+      }
+      
+      .sketch-card {
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+      }
+      
+      .price {
+        font-size: 1.8rem !important;
+      }
+      
+      .btn.product-form__cart-submit {
+        font-size: 1rem !important;
+        padding: 0.8rem 1.5rem !important;
+      }
+    }
+
     /* Hide skip to product info and problematic elements */
     .skip-to-content-link {
       display: none !important;
@@ -607,13 +660,24 @@
 <!-- MultiVariants App code end --> 
             
             {%- when 'price' -%}
-              <div class="no-js-hidden" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
-                {%- render 'price',
-                  product: product,
-                  use_variant: true,
-                  show_badges: true,
-                  price_class: 'price--large'
-                -%}
+              <div class="sketch-card" style="padding: 1.5rem; margin: 1.5rem 0;">
+                <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                  <defs>
+                    <filter id="wobble-price">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="2"/>
+                      <feDisplacementMap in="SourceGraphic" scale="1"/>
+                    </filter>
+                  </defs>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-price)"/>
+                </svg>
+                <div class="no-js-hidden" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                  {%- render 'price',
+                    product: product,
+                    use_variant: true,
+                    show_badges: true,
+                    price_class: 'price--large'
+                  -%}
+                </div>
               </div>
               {%- if product.quantity_price_breaks_configured? -%}
                 <div class="volume-pricing-note">
@@ -936,7 +1000,18 @@
             {%- when 'variant_picker' -%}
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
             {%- when 'buy_buttons' -%}
-              {%- render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true -%}
+              <div class="sketch-card" style="padding: 1.5rem; margin: 1.5rem 0;">
+                <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+                  <defs>
+                    <filter id="wobble-buttons">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="4"/>
+                      <feDisplacementMap in="SourceGraphic" scale="1"/>
+                    </filter>
+                  </defs>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-buttons)"/>
+                </svg>
+                {%- render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true -%}
+              </div>
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 {% liquid
