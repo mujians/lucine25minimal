@@ -48,9 +48,10 @@
 
 <script>
 // Load Open ticket product data and update price
-fetch('/products/biglietto-open-2024-2025.js')
+fetch('/products/biglietto-open-2025.js')
   .then(response => response.json())
   .then(product => {
+    console.log('Open ticket product loaded:', product);
     if (product && product.price) {
       const priceElement = document.getElementById('open-ticket-price');
       if (priceElement) {
@@ -60,6 +61,7 @@ fetch('/products/biglietto-open-2024-2025.js')
       
       // Update variant ID if different
       const variantId = product.variants && product.variants[0] ? product.variants[0].id : '10082871050579';
+      console.log('Using variant ID:', variantId);
       const hiddenInput = document.querySelector('#open-ticket-product-form input[name="id"]');
       if (hiddenInput) {
         hiddenInput.value = variantId;
@@ -67,7 +69,7 @@ fetch('/products/biglietto-open-2024-2025.js')
     }
   })
   .catch(error => {
-    console.log('Could not fetch Open ticket price, using default');
+    console.error('Error loading Open ticket product:', error);
   });
 
 // Open ticket quantity controls
