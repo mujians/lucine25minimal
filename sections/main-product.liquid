@@ -252,11 +252,12 @@
       /* Esatto come .menu-price */
     }
     
-    /* ALL BUTTONS - Force our styling */
-    .evey-override button,
-    .evey-override .btn,
-    .evey-override input[type="submit"] {
-      background: var(--christmas-red) !important;
+    /* ALL BUTTONS - IDENTICI allo stile .cta */
+    .evey-override button:not(.quantity__button),
+    .evey-override .btn:not(.quantity__button),
+    .evey-override input[type="submit"],
+    .evey-override button[type="submit"] {
+      background: #dc2626 !important;
       color: white !important;
       padding: 1rem 2rem !important;
       border-radius: 8px !important;
@@ -265,32 +266,45 @@
       font-weight: 600 !important;
       font-size: 1.1rem !important;
       border: none !important;
-      text-transform: uppercase !important;
-      min-height: 48px !important;
-      letter-spacing: 0.5px !important;
-      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+      cursor: pointer !important;
+      font-family: 'Providence Sans', -apple-system, sans-serif !important;
       width: 100% !important;
     }
     
-    /* Quantity controls */
+    /* Quantity controls - IDENTICI a Open Ticket */
+    .evey-override .quantity,
+    .evey-override .quantity__button,
+    .evey-override .evey__variant_quantity > div {
+      border: 1px solid rgba(255,255,255,0.2) !important;
+      border-radius: 8px !important;
+      background: rgba(255,255,255,0.05) !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+    
     .evey-override .quantity__button {
-      background: none !important;
-      border: 1px solid rgba(255,255,255,0.3) !important;
-      color: var(--christmas-green) !important;
-      font-size: 18px !important;
-      font-weight: bold !important;
-      padding: 8px 12px !important;
-      min-height: 36px !important;
-      width: auto !important;
+      background: rgba(255,255,255,0.1) !important;
+      border: none !important;
+      color: white !important;
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 6px !important;
+      cursor: pointer !important;
+      font-size: 1.2rem !important;
+      font-family: inherit !important;
+      margin: 4px !important;
     }
     
     .evey-override .quantity__input {
-      background: none !important;
+      width: 50px !important;
+      text-align: center !important;
+      background: transparent !important;
       border: none !important;
       color: white !important;
-      text-align: center !important;
-      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
-      line-height: 1.6 !important;
+      padding: 0.5rem !important;
+      font-size: 1.125rem !important;
+      font-weight: 600 !important;
+      font-family: inherit !important;
     }
     
     /* Card content text - increased size */
@@ -813,16 +827,12 @@
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when '@app' -%}
-              <div class="sketch-card" style="padding: 1.5rem; margin: 1.5rem 0;">
+              <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
-                
-                <!-- App content wrapped in menu-section-card pattern -->
-                <div class="menu-section-card" style="margin-top: 0;">
-                  <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
-                  {% render block %}
-                </div>
+                <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
+                {% render block %}
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
               <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
