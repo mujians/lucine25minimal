@@ -12,11 +12,9 @@
 {% if cart.item_count > 0 %}
   <!-- CART ITEMS -->
   <section style="margin: 2rem 0;">
-    <form action="/cart" method="post" id="cart-form">
-      
-    {% for item in cart.items %}
-    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;">
-        
+    <form action="/cart" method="post" id="cart-form" style="display: contents;">
+      {% for item in cart.items %}
+      <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;">
         <!-- Item Info -->
         <div style="flex: 1;">
           <h4 style="color: white; margin: 0 0 0.5rem 0;">{{ item.product.title }}</h4>
@@ -33,7 +31,6 @@
             {% endunless %}
           {% endfor %}
         </div>
-            
         
         <!-- Quantity Controls -->
         <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -63,12 +60,12 @@
           </button>
         </div>
       </div>
-    {% endfor %}
-        
-        <!-- Update Cart Button (hidden, triggered by JS) -->
-        <button type="submit" name="update" id="update-cart-btn" style="display: none;">Aggiorna</button>
-      </form>
-    </section>
+      {% endfor %}
+      
+      <!-- Update Cart Button (hidden, triggered by JS) -->
+      <button type="submit" name="update" id="update-cart-btn" style="display: none;">Aggiorna</button>
+    </form>
+  </section>
 
   <!-- CART SUMMARY -->
   <section>
@@ -89,44 +86,44 @@
           <span style="color: rgba(255,255,255,0.9); font-size: 1.125rem;">Subtotale</span>
           <span style="color: white; font-size: 1.125rem; font-weight: 600;">{{ cart.total_price | money }}</span>
         </div>
-      
-      <!-- Discount Code -->
-      <div style="padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <label style="color: var(--christmas-green); font-weight: 600; display: block; margin-bottom: 0.5rem;">🎁 Codice Sconto</label>
-        <div style="display: flex; gap: 0.5rem;">
-          <input type="text" 
-                 id="discount-code" 
-                 name="discount" 
-                 placeholder="Inserisci codice..."
-                 style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; font-size: 1.125rem;">
-          <button type="button" 
-                  onclick="applyDiscount()"
-                  style="background: var(--christmas-green); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.125rem; font-family: 'Providence Sans', sans-serif !important;">
-            APPLICA
-          </button>
+        
+        <!-- Discount Code -->
+        <div style="padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <label style="color: var(--christmas-green); font-weight: 600; display: block; margin-bottom: 0.5rem;">🎁 Codice Sconto</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" 
+                   id="discount-code" 
+                   name="discount" 
+                   placeholder="Inserisci codice..."
+                   style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem; border-radius: 8px; font-size: 1.125rem;">
+            <button type="button" 
+                    onclick="applyDiscount()"
+                    style="background: var(--christmas-green); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.125rem; font-family: 'Providence Sans', sans-serif !important;">
+              APPLICA
+            </button>
+          </div>
+          {% if cart.cart_level_discount_applications.size > 0 %}
+          <div style="margin-top: 0.5rem;">
+            {% for discount in cart.cart_level_discount_applications %}
+              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(139, 195, 74, 0.1); padding: 0.5rem; border-radius: 6px; margin-top: 0.5rem;">
+                <span style="color: var(--christmas-green); font-size: 0.9rem;">
+                  {{ discount.title }}
+                </span>
+                <span style="color: var(--christmas-green); font-weight: 600;">
+                  -{{ discount.total_allocated_amount | money }}
+                </span>
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
-        {% if cart.cart_level_discount_applications.size > 0 %}
-        <div style="margin-top: 0.5rem;">
-          {% for discount in cart.cart_level_discount_applications %}
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(139, 195, 74, 0.1); padding: 0.5rem; border-radius: 6px; margin-top: 0.5rem;">
-              <span style="color: var(--christmas-green); font-size: 0.9rem;">
-                {{ discount.title }}
-              </span>
-              <span style="color: var(--christmas-green); font-weight: 600;">
-                -{{ discount.total_allocated_amount | money }}
-              </span>
-            </div>
-          {% endfor %}
+        
+        <!-- Total -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--christmas-gold);">
+          <span style="color: var(--christmas-gold); font-size: 1.3rem; font-weight: 700;">TOTALE</span>
+          <span style="color: var(--christmas-red); font-size: 1.5rem; font-weight: 700;">{{ cart.total_price | money }}</span>
         </div>
-        {% endif %}
-      </div>
-      
-      <!-- Total -->
-      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--christmas-gold);">
-        <span style="color: var(--christmas-gold); font-size: 1.3rem; font-weight: 700;">TOTALE</span>
-        <span style="color: var(--christmas-red); font-size: 1.5rem; font-weight: 700;">{{ cart.total_price | money }}</span>
-      </div>
-      
+        
         <!-- Checkout Button -->
         <button type="submit" 
                 name="checkout" 
@@ -134,7 +131,7 @@
                 style="background: var(--christmas-red); color: white; border: none; padding: 1.2rem 2rem; border-radius: 12px; font-size: 1.125rem; font-weight: 600; cursor: pointer; margin-top: 1rem; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); font-family: 'Providence Sans', sans-serif !important;">
           PROCEDI AL CHECKOUT
         </button>
-      
+        
         <!-- Continue Shopping -->
         <a href="/collections/all" 
            style="text-align: center; color: var(--christmas-green); text-decoration: underline; display: block; margin-top: 0.5rem; font-size: 1.125rem;">
