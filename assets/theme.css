@@ -527,8 +527,8 @@ p {
   --text-white: #ffffff;       /* bianco puro */
   --text-gray: #e5e7eb;        /* grigio chiaro */
   
-  /* Backward compatibility */
-  --christmas-gold: var(--christmas-red);
+  /* Christmas gold - matching pagina-base-funzionante design */
+  --christmas-gold: #f59e0b;
 }
 
 /* CONTENT COMPONENTS */
