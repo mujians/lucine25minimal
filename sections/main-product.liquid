@@ -208,37 +208,48 @@
       border-radius: 0 !important;
     }
     
-    /* Evey variant containers - following pagina-base-funzionante event-minor-item pattern */
+    /* Evey variant containers - EXACT menu-item-row pattern da pagina-base-funzionante */
     .evey-override .evey__variant-container {
-      background: rgba(255,255,255,0.05) !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      border-radius: 12px !important;
-      margin-bottom: 0.75rem !important;
-      padding: 1.5rem !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      margin-bottom: 0 !important;
+      padding: 0.75rem 0 !important;
       display: flex !important;
-      gap: 1.5rem !important;
-      align-items: center !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+      /* Esatto come .menu-item-row in pagina-base-funzionante */
     }
     
-    /* Evey text styling - following pagina-base-funzionante pattern */
-    .evey-override .evey__variant-name,
-    .evey-override h3 {
-      color: var(--christmas-green) !important;
-      font-weight: 600 !important;
+    /* Evey variant names - EXACT h4 pattern da pagina-base-funzionante */
+    .evey-override .evey__variant-name {
       font-size: 1.125rem !important;
-      text-transform: uppercase !important;
       margin: 0 !important;
       line-height: 1.2 !important;
-      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+      color: white !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      /* Esatto come .menu-item-row h4 */
     }
     
+    /* Evey tooltips come descrizioni - pattern p da pagina-base-funzionante */
+    .evey-override .ticket-tooltip {
+      font-size: 1.125rem !important;
+      margin: 0 !important;
+      color: rgba(255,255,255,0.7) !important;
+      line-height: 1.2 !important;
+      display: block !important;
+      position: static !important;
+      /* Esatto come .menu-item-row p */
+    }
+    
+    /* Evey prices - EXACT menu-price pattern da pagina-base-funzionante */
     .evey-override .evey__variant-price,
     .evey-override .money {
-      color: var(--christmas-green) !important;
       font-weight: 700 !important;
       font-size: 1.125rem !important;
-      /* Following menu-price pattern from pagina-base-funzionante */
-      font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
+      color: #f59e0b !important;
+      /* Esatto come .menu-price */
     }
     
     /* ALL BUTTONS - Force our styling */
@@ -279,7 +290,6 @@
       color: white !important;
       text-align: center !important;
       font-family: "Providence Sans", -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", sans-serif !important;
-    }
       line-height: 1.6 !important;
     }
     
@@ -805,27 +815,19 @@
             {%- when '@app' -%}
               <div class="sketch-card" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="wobble-app">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5"/>
-                      <feDisplacementMap in="SourceGraphic" scale="1"/>
-                    </filter>
-                  </defs>
-                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-app)"/>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
-                <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
-                {% render block %}
+                
+                <!-- App content wrapped in menu-section-card pattern -->
+                <div class="menu-section-card" style="margin-top: 0;">
+                  <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
+                  {% render block %}
+                </div>
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
               <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="wobble-evey">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="6"/>
-                      <feDisplacementMap in="SourceGraphic" scale="1"/>
-                    </filter>
-                  </defs>
-                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="#2e7d32" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-evey)"/>
+                  <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="#2e7d32" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
                 <h3 style="color: var(--christmas-gold); font-size: 1.5rem; font-weight: 700; margin: 0 0 1.5rem 0; text-align: center;">Biglietti Parco</h3>
                 <script>console.log("Rendering Evey block directly");</script>
