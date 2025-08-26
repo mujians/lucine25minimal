@@ -349,11 +349,7 @@ main, #MainContent {
   transition: all 0.3s ease;
 }
 
-.event-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--christmas-red);
-  transform: translateY(-2px);
-}
+/* Removed hover - events are not clickable */
 
 .event-card img {
   width: 100%;
@@ -1903,47 +1899,7 @@ h6 {
   transform: translateY(-2px);
 }
 
-/* EVENT MINOR ITEM - Horizontal layout with 64px images */
-.event-minor-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  margin-bottom: 0.5rem;
-}
-
-/* Removed hover - events are not clickable */
-
-.event-minor-item img {
-  width: 64px !important;
-  height: 64px !important;
-  object-fit: cover;
-  border-radius: 6px;
-  flex-shrink: 0;
-  margin: 0 !important;
-}
-
-.event-minor-item .event-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.event-minor-item .event-content h4 {
-  margin: 0 0 0.25rem 0 !important;
-  font-size: 1.125rem !important;
-  color: var(--text-white) !important;
-}
-
-.event-minor-item .event-content p {
-  margin: 0 !important;
-  font-size: 0.95rem !important;
-  opacity: 0.8;
-  color: var(--text-white) !important;
-}
+/* Removed obsolete .event-minor-item styles - now using .event-item */
 
 /* EVENTS LAYOUT SYSTEM */
 .events-featured-grid {
@@ -2000,7 +1956,7 @@ h6 {
   line-height: 1.6;
 }
 
-.events-list-standard {
+.events-minor {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
