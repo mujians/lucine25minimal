@@ -1819,12 +1819,7 @@ h6 {
   border-bottom: none;
 }
 
-.menu-item-row:hover {
-  background: rgba(255,255,255,0.05);
-  margin: 0 -1rem;
-  padding: 1.25rem 1rem;
-  border-radius: 8px;
-}
+/* Removed hover - menu items are not clickable */
 
 .menu-item-info {
   flex: 1;
@@ -1901,11 +1896,7 @@ h6 {
   transition: all 0.3s ease;
 }
 
-.menu-section-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--christmas-red);
-  transform: translateY(-2px);
-}
+/* Removed hover - menu sections are not clickable */
 
 /* Removed obsolete .event-minor-item styles - now using .event-item */
 
