@@ -273,6 +273,25 @@
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
+      min-height: 52px !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Prevent layout shift when scheduler text changes */
+    .evey-override [data-evey-scheduler],
+    .evey-override [data-evey-scheduler] * {
+      min-height: 52px !important;
+      contain: layout !important;
+    }
+    
+    /* Stabilize form height during dynamic updates */
+    .evey-override .evey__multi-variant-selector {
+      contain: layout style !important;
+    }
+    
+    /* Prevent variant containers from shifting */
+    .evey-override .evey__variant-container {
+      min-height: 60px !important;
     }
     
     /* Quantity controls - IDENTICI a Open Ticket */
