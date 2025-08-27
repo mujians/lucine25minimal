@@ -217,7 +217,9 @@
       padding: 0.75rem 0 !important;
       display: flex !important;
       justify-content: space-between !important;
-      align-items: flex-start !important;
+      align-items: center !important;  /* Changed to center to match Evey's default */
+      min-height: 60px !important;
+      cursor: auto !important;
       /* Esatto come .menu-item-row in pagina-base-funzionante */
     }
     
@@ -281,15 +283,17 @@
     .sketch-card.evey-override {
       position: relative !important;
       isolation: isolate !important;
-      contain: layout !important;
       overflow: visible !important;
+      min-height: 350px !important;
     }
     
-    /* Prevent form collapse */
+    /* Prevent form collapse and maintain structure */
     .evey-override form,
     .evey-override .evey__multi-variant-selector {
-      min-height: 250px !important;
-      display: block !important;
+      min-height: 300px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.5rem !important;
       position: relative !important;
     }
     
@@ -314,26 +318,22 @@
       display: block !important;
     }
     
-    /* Each variant row stable */
-    .evey-override .evey__variant-container {
-      min-height: 50px !important;
-      margin-bottom: 0.75rem !important;
-    }
-    
-    /* OVERRIDE Evey's disabled state inline styles */
-    .evey-override .evey__variant-container[style*="pointer-events"] {
-      pointer-events: auto !important;
-      opacity: 1 !important;
-      filter: none !important;
+    /* OVERRIDE any cursor not-allowed from parent */
+    .evey-override,
+    .evey-override *,
+    .evey-override .evey__variant-container,
+    .evey-override .evey__variant-container * {
       cursor: auto !important;
     }
     
-    /* Force enable all variant containers */
-    .evey-override .evey__variant-container {
+    /* Force enable interactions on all elements */
+    .evey-override .evey__variant-container,
+    .evey-override .evey__variant-container[style*="pointer-events"],
+    .evey-override [style*="cursor"] {
       pointer-events: auto !important;
       opacity: 1 !important;
       filter: none !important;
-      cursor: auto !important;
+      cursor: pointer !important;
     }
     
     /* Remove problematic animations */
