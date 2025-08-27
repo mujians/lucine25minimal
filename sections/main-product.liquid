@@ -186,197 +186,35 @@
       text-align: center;
     }
 
-    /* AGGRESSIVE EVEY APP OVERRIDE - Remove all app styling */
-    .evey-override .evey__multi-variant-selector,
-    .evey-override form.evey__multi-variant-selector {
-      background: transparent !important;
-      border: none !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      width: 100% !important;
+    /* MINIMAL EVEY STYLING - Keep original layout, just fix fonts and colors */
+    .evey-override button,
+    .evey-override input[type="submit"] {
+      font-family: 'Providence Sans', -apple-system, sans-serif !important;
     }
     
-    /* Remove all Evey backgrounds and glass effects */
-    .evey-override * {
-      background-image: none !important;
-      background-color: transparent !important;
-      backdrop-filter: none !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-    }
-    
-    /* Evey variant containers - EXACT menu-item-row pattern da pagina-base-funzionante */
-    .evey-override .evey__variant-container {
-      background: transparent !important;
-      border: none !important;
-      border-radius: 0 !important;
-      margin-bottom: 0 !important;
-      padding: 0.75rem 0 !important;
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: center !important;  /* Changed to center to match Evey's default */
-      min-height: 60px !important;
-      cursor: auto !important;
-      /* Esatto come .menu-item-row in pagina-base-funzionante */
-    }
-    
-    /* Evey variant names - EXACT h4 pattern da pagina-base-funzionante */
-    .evey-override .evey__variant-name {
-      font-size: 1.125rem !important;
-      margin: 0 !important;
-      line-height: 1.2 !important;
-      color: white !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      /* Esatto come .menu-item-row h4 */
-    }
-    
-    /* Evey tooltips come descrizioni - pattern p da pagina-base-funzionante */
-    .evey-override .ticket-tooltip {
-      font-size: 1.125rem !important;
-      margin: 0 !important;
-      color: rgba(255,255,255,0.7) !important;
-      line-height: 1.2 !important;
-      display: block !important;
-      position: static !important;
-      /* Esatto come .menu-item-row p */
-    }
-    
-    /* Evey prices - EXACT menu-price pattern da pagina-base-funzionante */
-    .evey-override .evey__variant-price,
-    .evey-override .money {
-      font-weight: 700 !important;
-      font-size: 1.125rem !important;
-      color: #f59e0b !important;
-      /* Esatto come .menu-price */
-    }
-    
-    /* ALL BUTTONS - IDENTICI allo stile .cta */
-    .evey-override button:not(.quantity__button),
-    .evey-override .btn:not(.quantity__button),
-    .evey-override input[type="submit"],
-    .evey-override button[type="submit"] {
+    /* Fix Evey button fonts without breaking layout */
+    .evey-override .evey-scheduler-button,
+    .evey-override [data-evey-scheduler] button {
+      font-family: 'Providence Sans', -apple-system, sans-serif !important;
       background: #dc2626 !important;
       color: white !important;
-      padding: 1rem 2rem !important;
-      border-radius: 8px !important;
-      text-decoration: none !important;
-      display: inline-block !important;
-      font-weight: 600 !important;
-      font-size: 1.1rem !important;
       border: none !important;
-      cursor: pointer !important;
-      font-family: 'Providence Sans', -apple-system, sans-serif !important;
-      width: 100% !important;
+      font-weight: 600 !important;
       text-transform: uppercase !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      min-height: 52px !important;
-      box-sizing: border-box !important;
     }
     
-    /* Fix Evey layout explosion - isolate the card completely */
-    .sketch-card.evey-override {
-      position: relative !important;
-      isolation: isolate !important;
-      overflow: visible !important;
-      min-height: 350px !important;
-    }
-    
-    /* Prevent form collapse and maintain structure */
-    .evey-override form,
-    .evey-override .evey__multi-variant-selector {
-      min-height: 300px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 0.5rem !important;
-      position: relative !important;
-    }
-    
-    /* Scheduler button stable sizing */
-    .evey-override [data-evey-scheduler] {
-      display: block !important;
-      min-height: 52px !important;
-      margin-bottom: 1rem !important;
-    }
-    
-    .evey-override [data-evey-scheduler] button {
-      height: 52px !important;
-      line-height: 1.2 !important;
-      padding: 0.75rem 1rem !important;
-      white-space: normal !important;
-      word-wrap: break-word !important;
-    }
-    
-    /* Variant list stable */
-    .evey-override .evey__variants {
-      min-height: 100px !important;
-      display: block !important;
-    }
-    
-    /* OVERRIDE any cursor not-allowed from parent */
-    .evey-override,
-    .evey-override *,
-    .evey-override .evey__variant-container,
-    .evey-override .evey__variant-container * {
-      cursor: auto !important;
-    }
-    
-    /* Force enable interactions on all elements */
-    .evey-override .evey__variant-container,
-    .evey-override .evey__variant-container[style*="pointer-events"],
-    .evey-override [style*="cursor"] {
-      pointer-events: auto !important;
-      opacity: 1 !important;
-      filter: none !important;
-      cursor: pointer !important;
-    }
-    
-    /* Remove problematic animations */
-    .evey-override * {
-      animation-duration: 0s !important;
-      transition-duration: 0s !important;
-    }
-    
-    /* Quantity controls - IDENTICI a Open Ticket */
-    .evey-override .quantity,
-    .evey-override .quantity__button,
-    .evey-override .evey__variant_quantity > div {
-      border: 1px solid rgba(255,255,255,0.2) !important;
-      border-radius: 8px !important;
-      background: rgba(255,255,255,0.05) !important;
-      display: flex !important;
-      align-items: center !important;
-    }
-    
-    .evey-override .quantity__button {
-      background: rgba(255,255,255,0.1) !important;
-      border: none !important;
+    /* Submit button styling */
+    .evey-override button[type="submit"],
+    .evey-override .button--secondary {
+      font-family: 'Providence Sans', -apple-system, sans-serif !important;
+      background: #dc2626 !important;
       color: white !important;
-      width: 32px !important;
-      height: 32px !important;
-      border-radius: 6px !important;
-      cursor: pointer !important;
-      font-size: 1.2rem !important;
-      font-family: inherit !important;
-      margin: 4px !important;
-    }
-    
-    .evey-override .quantity__input {
-      width: 50px !important;
-      text-align: center !important;
-      background: transparent !important;
       border: none !important;
-      color: white !important;
-      padding: 0.5rem !important;
-      font-size: 1.125rem !important;
       font-weight: 600 !important;
-      font-family: inherit !important;
+      text-transform: uppercase !important;
     }
+    
+    /* REMOVED - These aggressive overrides were breaking Evey */
     
     /* Card content text - increased size */
     .card-container .card p {
@@ -898,7 +736,7 @@
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when '@app' -%}
-              <div class="sketch-card evey-test-no-override" style="padding: 1.5rem; margin: 1.5rem 0;">
+              <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
@@ -982,7 +820,7 @@
                 {% render block %}
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
-              <div class="sketch-card evey-test-no-override" style="padding: 1.5rem; margin: 1.5rem 0;">
+              <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="#2e7d32" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>

@@ -3,34 +3,39 @@
     <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-gold)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
   </svg>
   
-  <form id="open-ticket-product-form" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
-    <!-- Titolo e descrizione - seguendo esattamente pagina-base-funzionante -->
-    <h4>🥇 Biglietto Open</h4>
-    <p class="lead">Pass premium per accedere senza prenotazione</p>
-    <p class="meta">Valido in qualsiasi giorno e orario disponibile • Accesso prioritario sempre</p>
-    
-    <!-- Menu-item-row pattern da pagina-base-funzionante -->
-    <div class="menu-item-row">
-      <div>
-        <h4 class="no-margin">Biglietto Open Premium</h4>
-        <p>Senza necessità di prenotare giorno e orario specifico</p>
+  <form id="open-ticket-product-form" class="evey__multi-variant-selector" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <!-- Match Evey structure: variant container like Evey -->
+    <div class="evey__variants">
+      <div class="evey__variant-container" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(18, 18, 18, 0.08);">
+        <input type="hidden" name="id" value="10082871050579">
+        
+        <div class="evey__variant-title">
+          <div class="evey__variant-name">Biglietto Open</div>
+          <div class="evey__variant-price"><span class="money" id="open-ticket-price">€25,00</span></div>
+        </div>
+        
+        <div class="evey__variant_quantity">
+          <div class="quantity" style="display: flex; align-items: center;">
+            <button type="button" class="quantity__button quantity__minus open-qty-btn" data-action="minus">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-minus" fill="none" viewBox="0 0 10 2" style="width: 10px; height: 10px;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor"></path>
+              </svg>
+            </button>
+            <input name="quantity" class="quantity__input" type="number" min="0" value="1" id="open-quantity" style="width: 2.4rem; text-align: center; background: transparent; border-left: 0.1rem solid rgba(18,18,18,0.08); border-right: 0.1rem solid rgba(18,18,18,0.08); font-size: 14px;">
+            <button type="button" class="quantity__button quantity__plus open-qty-btn" data-action="plus">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-plus" fill="none" viewBox="0 0 10 10" style="width: 10px; height: 10px;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="menu-price" id="open-ticket-price">€25,00</div>
     </div>
     
-    <!-- Controlli quantità e submit - layout semplificato -->
-    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
-      <div style="display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.05);">
-        <button type="button" class="open-qty-btn" data-action="minus" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem; font-family: inherit; margin: 4px;">−</button>
-        <input type="number" name="quantity" id="open-quantity" value="1" min="1" max="10" style="width: 50px; text-align: center; background: transparent; border: none; color: white; padding: 0.5rem; font-size: 1.125rem; font-weight: 600; font-family: inherit;">
-        <button type="button" class="open-qty-btn" data-action="plus" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem; font-family: inherit; margin: 4px;">+</button>
-      </div>
-      
-      <input type="hidden" name="id" value="10082871050579">
-      <button type="submit" id="open-add-to-cart" class="cta" style="background: #dc2626; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; font-size: 1.1rem; border: none; cursor: pointer; font-family: 'Providence Sans', -apple-system, sans-serif; text-transform: uppercase;">
-        <span id="open-cart-text">Aggiungi al Carrello</span>
-      </button>
-    </div>
+    <!-- Submit button matching Evey -->
+    <button type="submit" id="open-add-to-cart" class="button button--full-width button--secondary" style="margin-top: 1rem;">
+      <span id="open-cart-text">Aggiungi al Carrello</span>
+    </button>
   </form>
 </div>
 
@@ -112,27 +117,74 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Open Ticket - integrato nel design system globale */
-.sketch-card.seed-9 .open-qty-btn:hover {
-  background: rgba(255,255,255,0.2) !important;
-  transition: all 0.3s ease;
+/* Open Ticket - Match Evey styling */
+.sketch-card.seed-9 .quantity {
+  display: flex;
+  align-items: center;
+  border: 0.1rem solid rgba(18, 18, 18, 0.08);
+  border-radius: 4px;
+  width: fit-content;
 }
 
-.sketch-card.seed-9 #open-quantity:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--christmas-gold);
+.sketch-card.seed-9 .quantity__button {
+  width: 45px;
+  height: 45px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(18, 18, 18);
 }
 
-/* Mobile responsive per controlli */
+.sketch-card.seed-9 .quantity__button:hover {
+  background: rgba(18, 18, 18, 0.06);
+}
+
+.sketch-card.seed-9 .quantity__input {
+  width: 2.4rem;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-left: 0.1rem solid rgba(18, 18, 18, 0.08);
+  border-right: 0.1rem solid rgba(18, 18, 18, 0.08);
+  font-size: 14px;
+  padding: 0;
+  height: 45px;
+}
+
+.sketch-card.seed-9 .evey__variant-name {
+  font-weight: bold;
+}
+
+.sketch-card.seed-9 .money {
+  font-weight: normal;
+}
+
+.sketch-card.seed-9 .button--secondary {
+  background: #dc2626;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  font-family: 'Providence Sans', -apple-system, sans-serif;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.sketch-card.seed-9 .button--secondary:hover {
+  background: #b91c1c;
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .sketch-card.seed-9 form > div:last-child {
+  .sketch-card.seed-9 .evey__variant-container {
     flex-direction: column !important;
     gap: 1rem !important;
-  }
-  
-  .sketch-card.seed-9 .cta {
-    width: 100%;
-    text-align: center;
   }
 }
 </style>
