@@ -277,21 +277,52 @@
       box-sizing: border-box !important;
     }
     
-    /* Prevent layout shift when scheduler text changes */
+    /* Prevent ANY layout shift from Evey dynamic loading */
+    .evey-override,
+    .evey-override * {
+      transition: none !important;
+      animation: none !important;
+    }
+    
+    /* Lock scheduler button dimensions */
     .evey-override [data-evey-scheduler],
-    .evey-override [data-evey-scheduler] * {
+    .evey-override [data-evey-scheduler] button,
+    .evey-override .evey-scheduler-button,
+    .evey-override .evey__scheduler-button {
       min-height: 52px !important;
-      contain: layout !important;
+      max-height: 52px !important;
+      height: 52px !important;
+      display: block !important;
+      width: 100% !important;
+      contain: strict !important;
+      overflow: hidden !important;
     }
     
-    /* Stabilize form height during dynamic updates */
+    /* Force form to maintain structure */
+    .evey-override form,
     .evey-override .evey__multi-variant-selector {
+      min-height: 200px !important;
       contain: layout style !important;
+      display: block !important;
+      position: relative !important;
     }
     
-    /* Prevent variant containers from shifting */
-    .evey-override .evey__variant-container {
+    /* Lock variant containers height */
+    .evey-override .evey__variant-container,
+    .evey-override .evey__variants {
       min-height: 60px !important;
+      contain: layout !important;
+      position: relative !important;
+    }
+    
+    /* Prevent any Evey dynamic class changes from affecting layout */
+    .evey-override .evey--loading,
+    .evey-override .evey--loaded,
+    .evey-override .evey--no-events,
+    .evey-override .evey--has-events {
+      min-height: inherit !important;
+      height: auto !important;
+      display: block !important;
     }
     
     /* Quantity controls - IDENTICI a Open Ticket */
@@ -854,7 +885,46 @@
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
-                <script>console.log("Rendering app block type:", "{{ block.type }}");</script>
+                <script>
+                  console.log("Rendering app block type:", "{{ block.type }}");
+                  // Prevent Evey from breaking layout
+                  document.addEventListener('DOMContentLoaded', function() {
+                    const eveyContainer = document.querySelector('.evey-override');
+                    if (eveyContainer) {
+                      // Lock initial dimensions
+                      const initialHeight = eveyContainer.offsetHeight;
+                      eveyContainer.style.minHeight = initialHeight + 'px';
+                      
+                      // Monitor for Evey mutations
+                      const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                          // Force maintain structure
+                          const forms = eveyContainer.querySelectorAll('form');
+                          forms.forEach(form => {
+                            if (!form.style.minHeight) {
+                              form.style.minHeight = '200px';
+                            }
+                          });
+                          
+                          // Lock scheduler button height
+                          const schedulerBtns = eveyContainer.querySelectorAll('[data-evey-scheduler] button, .evey-scheduler-button');
+                          schedulerBtns.forEach(btn => {
+                            btn.style.height = '52px';
+                            btn.style.minHeight = '52px';
+                            btn.style.maxHeight = '52px';
+                          });
+                        });
+                      });
+                      
+                      observer.observe(eveyContainer, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true,
+                        attributeFilter: ['class', 'style']
+                      });
+                    }
+                  });
+                </script>
                 {% render block %}
               </div>
             {%- when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' -%}
