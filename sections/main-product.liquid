@@ -320,6 +320,22 @@
       margin-bottom: 0.75rem !important;
     }
     
+    /* OVERRIDE Evey's disabled state inline styles */
+    .evey-override .evey__variant-container[style*="pointer-events"] {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      filter: none !important;
+      cursor: auto !important;
+    }
+    
+    /* Force enable all variant containers */
+    .evey-override .evey__variant-container {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      filter: none !important;
+      cursor: auto !important;
+    }
+    
     /* Remove problematic animations */
     .evey-override * {
       animation-duration: 0s !important;
@@ -887,35 +903,81 @@
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
                 <script>
-                  console.log("Rendering app block type:", "{{ block.type }}");
+                  console.log("🎯 Rendering Evey app block");
                   
-                  // Fix Evey layout explosion issue
-                  window.addEventListener('load', function() {
-                    setTimeout(function() {
-                      // After Evey loads, force stable layout
-                      const eveyCard = document.querySelector('.sketch-card.evey-override');
-                      if (eveyCard) {
-                        // Set a fixed min-height based on content
-                        const currentHeight = eveyCard.offsetHeight;
-                        eveyCard.style.minHeight = Math.max(currentHeight, 300) + 'px';
-                        
-                        // Find and stabilize the form
-                        const eveyForm = eveyCard.querySelector('form, .evey__multi-variant-selector');
-                        if (eveyForm) {
-                          eveyForm.style.minHeight = '250px';
-                          eveyForm.style.display = 'block';
-                        }
-                        
-                        // Ensure scheduler doesn't collapse
-                        const scheduler = eveyCard.querySelector('[data-evey-scheduler]');
-                        if (scheduler) {
-                          scheduler.style.minHeight = '52px';
-                          scheduler.style.display = 'block';
-                          scheduler.style.marginBottom = '1rem';
-                        }
+                  // Fix Evey disabled state and layout issues
+                  function fixEveyLayout() {
+                    console.log("🔧 Running Evey layout fix");
+                    
+                    const eveyCard = document.querySelector('.sketch-card.evey-override');
+                    if (!eveyCard) {
+                      console.log("❌ Evey card not found");
+                      return;
+                    }
+                    
+                    // Remove ALL inline styles that disable elements
+                    const variantContainers = eveyCard.querySelectorAll('.evey__variant-container');
+                    variantContainers.forEach((container, index) => {
+                      console.log(`📦 Variant ${index} inline style:`, container.getAttribute('style'));
+                      
+                      // Remove problematic inline styles
+                      if (container.style.pointerEvents) {
+                        console.log(`🚫 Removing disabled state from variant ${index}`);
+                        container.style.pointerEvents = '';
+                        container.style.opacity = '';
+                        container.style.filter = '';
+                        container.style.cursor = '';
                       }
-                    }, 1000); // Wait for Evey to initialize
-                  });
+                    });
+                    
+                    // Stabilize layout
+                    const currentHeight = eveyCard.offsetHeight;
+                    eveyCard.style.minHeight = Math.max(currentHeight, 300) + 'px';
+                    console.log(`📏 Set card min-height: ${eveyCard.style.minHeight}`);
+                    
+                    // Fix form
+                    const eveyForm = eveyCard.querySelector('form, .evey__multi-variant-selector');
+                    if (eveyForm) {
+                      eveyForm.style.minHeight = '250px';
+                      eveyForm.style.display = 'block';
+                      console.log("✅ Form stabilized");
+                    }
+                    
+                    // Monitor for Evey changes
+                    const observer = new MutationObserver(function(mutations) {
+                      mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                          const target = mutation.target;
+                          if (target.classList.contains('evey__variant-container')) {
+                            if (target.style.pointerEvents === 'none') {
+                              console.log("🔄 Evey tried to disable variant, fixing...");
+                              target.style.pointerEvents = '';
+                              target.style.opacity = '';
+                              target.style.filter = '';
+                              target.style.cursor = '';
+                            }
+                          }
+                        }
+                      });
+                    });
+                    
+                    // Observe all variant containers
+                    variantContainers.forEach(container => {
+                      observer.observe(container, {
+                        attributes: true,
+                        attributeFilter: ['style']
+                      });
+                    });
+                    
+                    console.log("👁️ Mutation observer active");
+                  }
+                  
+                  // Run immediately and after delays
+                  document.addEventListener('DOMContentLoaded', fixEveyLayout);
+                  window.addEventListener('load', fixEveyLayout);
+                  setTimeout(fixEveyLayout, 1000);
+                  setTimeout(fixEveyLayout, 2000);
+                  setTimeout(fixEveyLayout, 3000);
                 </script>
                 {% render block %}
               </div>
