@@ -1,5 +1,5 @@
 <div class="open-ticket-container" style="max-width: 800px; margin: 0 auto;">
-  <div class="sketch-card sketch seed-9" style="padding: 1.5rem; margin: 1.5rem 0; position: relative; background: rgba(255, 255, 255, 0.02); border-radius: 12px;">
+  <div class="sketch-card seed-9" style="padding: 1.5rem; margin: 1.5rem 0; position: relative; background: rgba(255, 255, 255, 0.02); border-radius: 12px;">
   <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
     <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-gold)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
   </svg>
@@ -131,21 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
   position: relative;
 }
 
-/* Force sketch border to work */
-.sketch-card.seed-9 .sketch-border {
-  position: absolute !important;
-  inset: -10px !important;
-  width: calc(100% + 20px) !important;
-  height: calc(100% + 20px) !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-.sketch-card.seed-9 .sketch-border rect {
-  stroke: var(--christmas-gold) !important;
-  stroke-width: 3.2 !important;
-  fill: none !important;
-}
+/* Now product page CSS is fixed, this should work automatically */
 
 /* Match Evey button styling exactly */
 .sketch-card.seed-9 .button--secondary {
