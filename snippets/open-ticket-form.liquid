@@ -1,9 +1,9 @@
 <div class="sketch-card seed-9" style="padding: 1.5rem; margin: 1.5rem 0; position: relative; background: rgba(255, 255, 255, 0.02); border-radius: 12px;">
   <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
-      <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-gold)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
-    </svg>
-    
-    <form id="open-ticket-product-form" class="evey__multi-variant-selector" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-gold)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
+  </svg>
+  
+  <form id="open-ticket-product-form" class="evey__multi-variant-selector" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
       <!-- Match Evey structure exactly: single variant like Evey -->
       <div class="evey__variants">
         <div class="evey__variant-container" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(18, 18, 18, 0.08);">
@@ -119,8 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Override formatted-content padding for Open Ticket only */
-.open-ticket-container.formatted-content {
+/* Override parent formatted-content padding when Open Ticket is present */
+.formatted-content:has(.sketch-card.seed-9),
+.product__info-container:has(.sketch-card.seed-9) {
   padding: 0 !important;
 }
 
