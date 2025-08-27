@@ -277,52 +277,53 @@
       box-sizing: border-box !important;
     }
     
-    /* Prevent ANY layout shift from Evey dynamic loading */
-    .evey-override,
-    .evey-override * {
-      transition: none !important;
-      animation: none !important;
+    /* Fix Evey layout explosion - isolate the card completely */
+    .sketch-card.evey-override {
+      position: relative !important;
+      isolation: isolate !important;
+      contain: layout !important;
+      overflow: visible !important;
     }
     
-    /* Lock scheduler button dimensions */
-    .evey-override [data-evey-scheduler],
-    .evey-override [data-evey-scheduler] button,
-    .evey-override .evey-scheduler-button,
-    .evey-override .evey__scheduler-button {
-      min-height: 52px !important;
-      max-height: 52px !important;
-      height: 52px !important;
-      display: block !important;
-      width: 100% !important;
-      contain: strict !important;
-      overflow: hidden !important;
-    }
-    
-    /* Force form to maintain structure */
+    /* Prevent form collapse */
     .evey-override form,
     .evey-override .evey__multi-variant-selector {
-      min-height: 200px !important;
-      contain: layout style !important;
+      min-height: 250px !important;
       display: block !important;
       position: relative !important;
     }
     
-    /* Lock variant containers height */
-    .evey-override .evey__variant-container,
+    /* Scheduler button stable sizing */
+    .evey-override [data-evey-scheduler] {
+      display: block !important;
+      min-height: 52px !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    .evey-override [data-evey-scheduler] button {
+      height: 52px !important;
+      line-height: 1.2 !important;
+      padding: 0.75rem 1rem !important;
+      white-space: normal !important;
+      word-wrap: break-word !important;
+    }
+    
+    /* Variant list stable */
     .evey-override .evey__variants {
-      min-height: 60px !important;
-      contain: layout !important;
-      position: relative !important;
+      min-height: 100px !important;
+      display: block !important;
     }
     
-    /* Prevent any Evey dynamic class changes from affecting layout */
-    .evey-override .evey--loading,
-    .evey-override .evey--loaded,
-    .evey-override .evey--no-events,
-    .evey-override .evey--has-events {
-      min-height: inherit !important;
-      height: auto !important;
-      display: block !important;
+    /* Each variant row stable */
+    .evey-override .evey__variant-container {
+      min-height: 50px !important;
+      margin-bottom: 0.75rem !important;
+    }
+    
+    /* Remove problematic animations */
+    .evey-override * {
+      animation-duration: 0s !important;
+      transition-duration: 0s !important;
     }
     
     /* Quantity controls - IDENTICI a Open Ticket */
@@ -887,42 +888,33 @@
                 </svg>
                 <script>
                   console.log("Rendering app block type:", "{{ block.type }}");
-                  // Prevent Evey from breaking layout
-                  document.addEventListener('DOMContentLoaded', function() {
-                    const eveyContainer = document.querySelector('.evey-override');
-                    if (eveyContainer) {
-                      // Lock initial dimensions
-                      const initialHeight = eveyContainer.offsetHeight;
-                      eveyContainer.style.minHeight = initialHeight + 'px';
-                      
-                      // Monitor for Evey mutations
-                      const observer = new MutationObserver(function(mutations) {
-                        mutations.forEach(function(mutation) {
-                          // Force maintain structure
-                          const forms = eveyContainer.querySelectorAll('form');
-                          forms.forEach(form => {
-                            if (!form.style.minHeight) {
-                              form.style.minHeight = '200px';
-                            }
-                          });
-                          
-                          // Lock scheduler button height
-                          const schedulerBtns = eveyContainer.querySelectorAll('[data-evey-scheduler] button, .evey-scheduler-button');
-                          schedulerBtns.forEach(btn => {
-                            btn.style.height = '52px';
-                            btn.style.minHeight = '52px';
-                            btn.style.maxHeight = '52px';
-                          });
-                        });
-                      });
-                      
-                      observer.observe(eveyContainer, {
-                        childList: true,
-                        subtree: true,
-                        attributes: true,
-                        attributeFilter: ['class', 'style']
-                      });
-                    }
+                  
+                  // Fix Evey layout explosion issue
+                  window.addEventListener('load', function() {
+                    setTimeout(function() {
+                      // After Evey loads, force stable layout
+                      const eveyCard = document.querySelector('.sketch-card.evey-override');
+                      if (eveyCard) {
+                        // Set a fixed min-height based on content
+                        const currentHeight = eveyCard.offsetHeight;
+                        eveyCard.style.minHeight = Math.max(currentHeight, 300) + 'px';
+                        
+                        // Find and stabilize the form
+                        const eveyForm = eveyCard.querySelector('form, .evey__multi-variant-selector');
+                        if (eveyForm) {
+                          eveyForm.style.minHeight = '250px';
+                          eveyForm.style.display = 'block';
+                        }
+                        
+                        // Ensure scheduler doesn't collapse
+                        const scheduler = eveyCard.querySelector('[data-evey-scheduler]');
+                        if (scheduler) {
+                          scheduler.style.minHeight = '52px';
+                          scheduler.style.display = 'block';
+                          scheduler.style.marginBottom = '1rem';
+                        }
+                      }
+                    }, 1000); // Wait for Evey to initialize
                   });
                 </script>
                 {% render block %}
