@@ -194,7 +194,10 @@
     
     /* Fix Evey button fonts without breaking layout */
     .evey-override .evey-scheduler-button,
-    .evey-override [data-evey-scheduler] button {
+    .evey-override [data-evey-scheduler] button,
+    .evey-override button:contains("Seleziona"),
+    .evey-override button[data-evey-trigger],
+    .evey-override [data-evey-string] {
       font-family: 'Providence Sans', -apple-system, sans-serif !important;
       background: #dc2626 !important;
       color: white !important;
@@ -773,6 +776,76 @@
                     
                     console.log("👁️ Mutation observer active");
                   }
+
+                  // Block Evey interactions when no date selected
+                  function checkEveyDateSelection() {
+                    // Find all Evey cards but exclude Open Ticket
+                    const eveyCards = document.querySelectorAll('.sketch-card.evey-override');
+                    
+                    eveyCards.forEach(eveyCard => {
+                      // Skip if this is the Open Ticket block
+                      if (eveyCard.querySelector('#open-ticket-product-form')) {
+                        return; // Don't block Open Ticket interactions
+                      }
+
+                      // Skip if this card doesn't contain Evey app content
+                      if (!eveyCard.querySelector('[class*="evey"]')) {
+                        return;
+                      }
+
+                    // Check if date is selected by looking for active/selected elements
+                    const hasDateSelected = eveyCard.querySelector('.evey-scheduler-selected') || 
+                                          eveyCard.querySelector('[data-evey-selected="true"]') ||
+                                          eveyCard.querySelector('.evey-date-selected') ||
+                                          eveyCard.querySelector('.selected');
+
+                    // Only target Evey elements, not Open Ticket
+                    const quantityButtons = eveyCard.querySelectorAll('.quantity__button:not(.open-qty-btn)');
+                    const quantityInputs = eveyCard.querySelectorAll('.quantity__input:not(#open-quantity)');
+                    const submitButtons = eveyCard.querySelectorAll('button[type="submit"]:not(#open-add-to-cart)');
+
+                    if (!hasDateSelected) {
+                      console.log("🚫 No date selected - blocking Evey interactions");
+                      // Disable quantity controls
+                      quantityButtons.forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
+                      });
+                      quantityInputs.forEach(input => {
+                        input.disabled = true;
+                        input.style.opacity = '0.5';
+                      });
+                      // Disable submit buttons
+                      submitButtons.forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
+                      });
+                    } else {
+                      console.log("✅ Date selected - enabling Evey interactions");
+                      // Enable quantity controls
+                      quantityButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                      });
+                      quantityInputs.forEach(input => {
+                        input.disabled = false;
+                        input.style.opacity = '1';
+                      });
+                      // Enable submit buttons
+                      submitButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                      });
+                    }
+                    }); // Close forEach
+                  }
+
+                  // Monitor for date selection changes
+                  setInterval(checkEveyDateSelection, 500);
                   
                   // Run immediately and after delays
                   document.addEventListener('DOMContentLoaded', fixEveyLayout);
