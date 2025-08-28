@@ -54,7 +54,7 @@
         "open_ticket": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<div class=\"formatted-content\">\n  {% render 'open-ticket-form' %}\n</div>"
+            "custom_liquid": "{% render 'open-ticket-form' %}"
           }
         }
       },
