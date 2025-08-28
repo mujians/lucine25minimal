@@ -75,11 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
       const input = document.getElementById('open-quantity');
       const action = this.getAttribute('data-action');
       let value = parseInt(input.value) || 1;
+      console.log('📊 Current value:', value, 'Input element:', input);
       
       if (action === 'plus' && value < 10) {
         input.value = value + 1;
+        console.log('➕ Incremented to:', input.value);
       } else if (action === 'minus' && value > 1) {
         input.value = value - 1;
+        console.log('➖ Decremented to:', input.value);
+      } else {
+        console.log('❌ No change - limits reached or invalid action');
       }
     });
   });

@@ -203,7 +203,7 @@ main, #MainContent {
 
 /* TOP POSITION - Content flows naturally */
 .navigation-container.top .content.show {
-  background: #0f2f1f;
+  background: rgba(15, 47, 31, 0.9);
   padding: 10px 20px 20px 20px;
   box-sizing: border-box;
   min-height: 70vh;
