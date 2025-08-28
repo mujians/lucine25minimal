@@ -1,8 +1,5 @@
-<div class="open-ticket-container" style="max-width: 800px; margin: 0 auto;">
-  <div class="open-ticket-card" style="position: relative; padding: 1.5rem; margin: 1.5rem 0; background: rgba(255, 255, 255, 0.02); border-radius: 12px;">
-  <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
-    <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-gold)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
-  </svg>
+<div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
+  <!-- Removed sketch-border SVG to match Evey exactly -->
   
   <form id="open-ticket-product-form" class="evey__multi-variant-selector" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
       <!-- Match Evey structure exactly: single variant like Evey -->
@@ -40,7 +37,6 @@
         <span id="open-cart-text">Aggiungi al Carrello</span>
       </button>
     </form>
-  </div>
 </div>
 
 <script>
@@ -121,27 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Open Ticket styling */
-.open-ticket-card {
-  position: relative;
-}
-
-.open-ticket-card .sketch-border {
-  position: absolute;
-  inset: -10px;
-  width: calc(100% + 20px);
-  height: calc(100% + 20px);
-  pointer-events: none;
-}
-
-.open-ticket-card .sketch-border rect {
-  stroke: var(--christmas-gold);
-  stroke-width: 3.2;
-  fill: none;
-}
+/* Open Ticket uses same evey-override class as Evey for consistency */
 
 /* Match Evey button styling exactly */
-.open-ticket-card .button--secondary {
+.sketch-card.evey-override .button--secondary {
   background: #dc2626;
   color: white;
   padding: 1rem 2rem;
@@ -155,21 +134,5 @@ document.addEventListener('DOMContentLoaded', function() {
   width: 100%;
 }
 
-.sketch-card.seed-9 .button--secondary:hover {
-  background: #b91c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-}
-
-.sketch-card.seed-9 .quantity__button:hover {
-  background: rgba(18, 18, 18, 0.06);
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .sketch-card.seed-9 .evey__variant-container {
-    flex-direction: column !important;
-    gap: 1rem !important;
-  }
-}
+/* Removed seed-9 specific CSS - using evey-override like Evey */
 </style>
