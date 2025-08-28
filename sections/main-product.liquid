@@ -624,6 +624,45 @@
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
       transition: all 0.3s ease !important;
     }
+
+    /* Open Ticket quantity button styles - copied from component-quantity.css */
+    .open-qty-btn {
+      width: calc(4.5rem / var(--font-body-scale));
+      flex-shrink: 0;
+      font-size: 1.8rem;
+      border: 0;
+      background-color: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgb(var(--color-foreground));
+      padding: 0;
+    }
+
+    .open-qty-btn svg,
+    .open-qty-btn .icon {
+      width: 1rem !important;
+      height: 1rem !important;
+      pointer-events: none;
+      fill: currentColor !important;
+      stroke: currentColor !important;
+    }
+
+    .open-quantity-input {
+      color: currentColor;
+      font-size: 1.6rem;
+      font-weight: 500;
+      opacity: 0.85;
+      text-align: center;
+      background-color: transparent;
+      border: 0;
+      padding: 0 0.5rem;
+      width: 100%;
+      flex-grow: 1;
+      -webkit-appearance: none;
+      appearance: none;
+    }
   </style>
 
   {%- style -%}
