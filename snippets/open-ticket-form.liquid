@@ -1,29 +1,29 @@
-<div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
-  <!-- Removed sketch-border SVG to match Evey exactly -->
+<div class="sketch-card open-ticket-container" style="padding: 1.5rem; margin: 1.5rem 0;">
+  <!-- Completely isolated Open Ticket without Evey classes -->
   
-  <form id="open-ticket-product-form" class="evey__multi-variant-selector" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
-      <!-- Match Evey structure exactly: single variant like Evey -->
-      <div class="evey__variants">
-        <div class="evey__variant-container" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(18, 18, 18, 0.08);">
+  <form id="open-ticket-product-form" class="open-ticket-form" action="/cart/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
+      <!-- Open ticket structure without Evey classes -->
+      <div class="open-variants">
+        <div class="open-variant-container" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(18, 18, 18, 0.08);">
           <input type="hidden" name="id" value="10082871050579">
           
-          <div class="evey__variant-title">
-            <div class="evey__variant-name" style="position: relative; font-weight: bold;">Biglietto Open
+          <div class="open-variant-title">
+            <div class="open-variant-name" style="position: relative; font-weight: bold;">Biglietto Open
               <div class="ticket-tooltip" style="display: none;">Pass premium per accedere senza prenotazione. Valido in qualsiasi giorno e orario disponibile.</div>
             </div>
-            <div class="evey__variant-price"><span class="money" id="open-ticket-price">€25,00</span></div>
+            <div class="open-variant-price"><span class="money" id="open-ticket-price">€25,00</span></div>
           </div>
           
-          <div class="evey__variant_quantity">
-            <div class="quantity" style="display: flex; align-items: center; border: 0.1rem solid rgba(18, 18, 18, 0.08); border-radius: 4px;">
-              <button type="button" class="open-qty-btn open-qty-minus" data-action="minus" style="width: 45px; height: 45px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-minus" fill="none" viewBox="0 0 10 2" style="width: 10px; height: 10px;">
+          <div class="open-variant-quantity">
+            <div class="open-quantity" style="display: flex; align-items: center; border: 0.1rem solid rgba(18, 18, 18, 0.08); border-radius: 4px;">
+              <button type="button" class="open-qty-btn open-qty-minus" data-action="minus" style="width: 45px !important; height: 45px !important; background: transparent !important; border: none !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="open-icon open-icon-minus" fill="none" viewBox="0 0 10 2" style="width: 10px !important; height: 10px !important;">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor"></path>
                 </svg>
               </button>
-              <input name="quantity" class="open-quantity-input" type="number" min="0" value="1" id="open-quantity" style="width: 2.4rem; text-align: center; background: transparent; border: none; border-left: 0.1rem solid rgba(18, 18, 18, 0.08); border-right: 0.1rem solid rgba(18, 18, 18, 0.08); font-size: 14px;">
-              <button type="button" class="open-qty-btn open-qty-plus" data-action="plus" style="width: 45px; height: 45px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-plus" fill="none" viewBox="0 0 10 10" style="width: 10px; height: 10px;">
+              <input name="quantity" class="open-quantity-input" type="number" min="0" value="1" id="open-quantity" style="width: 2.4rem !important; text-align: center !important; background: transparent !important; border: none !important; border-left: 0.1rem solid rgba(18, 18, 18, 0.08) !important; border-right: 0.1rem solid rgba(18, 18, 18, 0.08) !important; font-size: 14px !important;">
+              <button type="button" class="open-qty-btn open-qty-plus" data-action="plus" style="width: 45px !important; height: 45px !important; background: transparent !important; border: none !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="open-icon open-icon-plus" fill="none" viewBox="0 0 10 10" style="width: 10px !important; height: 10px !important;">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z" fill="currentColor"></path>
                 </svg>
               </button>
@@ -127,22 +127,31 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Open Ticket uses same evey-override class as Evey for consistency */
+/* Open Ticket completely isolated from Evey classes */
 
-/* Match Evey button styling exactly */
-.sketch-card.evey-override .button--secondary {
-  background: #dc2626;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  border: none;
-  cursor: pointer;
-  font-family: 'Providence Sans', -apple-system, sans-serif;
-  text-transform: uppercase;
-  width: 100%;
+/* Match Evey button styling exactly but isolated */
+.sketch-card.open-ticket-container .button--secondary {
+  background: #dc2626 !important;
+  color: white !important;
+  padding: 1rem 2rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-family: 'Providence Sans', -apple-system, sans-serif !important;
+  text-transform: uppercase !important;
+  width: 100% !important;
 }
 
-/* Removed seed-9 specific CSS - using evey-override like Evey */
+/* Isolate Open Ticket from all Evey CSS interference */
+.open-ticket-container * {
+  box-sizing: border-box;
+}
+
+.open-icon {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  pointer-events: none !important;
+}
 </style>
