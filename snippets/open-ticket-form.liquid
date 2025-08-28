@@ -65,8 +65,13 @@ fetch('/products/biglietto-open-2025.js')
 
 // Open ticket quantity controls
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.open-qty-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+  console.log('🎟️ Open Ticket JS loaded');
+  const buttons = document.querySelectorAll('.open-qty-btn');
+  console.log('📦 Found quantity buttons:', buttons.length);
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      console.log('🔢 Quantity button clicked:', this.getAttribute('data-action'));
       const input = document.getElementById('open-quantity');
       const action = this.getAttribute('data-action');
       let value = parseInt(input.value) || 1;
