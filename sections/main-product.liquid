@@ -891,18 +891,21 @@
                         btn.style.textTransform = 'uppercase';
                       });
 
-                      // Remove ALL existing tooltips first
-                      const existingTooltips = eveyCard.querySelectorAll('.evey-ticket-tooltip, .ticket-tooltip');
-                      existingTooltips.forEach(tooltip => tooltip.remove());
-                      
                       // Add tooltips ONLY to specific variants that need them
                       const variantNames = eveyCard.querySelectorAll('.evey__variant-name, [class*="variant"] [class*="name"]');
                       variantNames.forEach(nameEl => {
                         const text = nameEl.textContent.toLowerCase();
                         
-                        // Remove any existing tooltips and icons in this element
-                        const existingTooltipsInElement = nameEl.querySelectorAll('.evey-ticket-tooltip, .ticket-tooltip, .evey-info-icon');
-                        existingTooltipsInElement.forEach(el => el.remove());
+                        // Remove ALL existing info icons and tooltips first to prevent duplicates
+                        const allIconsAndTooltips = nameEl.querySelectorAll('span, .evey-ticket-tooltip, .ticket-tooltip');
+                        allIconsAndTooltips.forEach(el => {
+                          if (el.innerHTML && el.innerHTML.includes('ⓘ')) {
+                            el.remove();
+                          }
+                          if (el.classList && (el.classList.contains('evey-ticket-tooltip') || el.classList.contains('ticket-tooltip'))) {
+                            el.remove();
+                          }
+                        });
                         
                         let tooltipContent = '';
                         // ONLY add tooltips for ridotti and saltafila
@@ -1019,8 +1022,8 @@
                   setTimeout(() => { fixEveyLayout(); translateEveyButtons(); }, 2000);
                   setTimeout(() => { fixEveyLayout(); translateEveyButtons(); }, 3000);
                   
-                  // Monitor for dynamic content changes
-                  setInterval(translateEveyButtons, 2000);
+                  // Monitor for dynamic content changes - but run less frequently to avoid duplicates
+                  setInterval(translateEveyButtons, 5000);
                 </script>
                 {% render block %}
               </div>
