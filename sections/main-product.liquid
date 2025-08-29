@@ -197,7 +197,11 @@
     .evey-override [data-evey-scheduler] button,
     .evey-override button:contains("Seleziona"),
     .evey-override button[data-evey-trigger],
-    .evey-override [data-evey-string] {
+    .evey-override [data-evey-string],
+    .evey-override button,
+    .evey-override input[type="submit"],
+    [class*="evey"] button,
+    [id*="evey"] button {
       font-family: 'Providence Sans', -apple-system, sans-serif !important;
       background: #dc2626 !important;
       color: white !important;
@@ -566,6 +570,52 @@
       .evey-override .evey__variant-name {
         font-size: 1rem !important;
       }
+
+      /* Mobile improvements for Open Ticket */
+      .sketch-card {
+        margin: 1rem 0 !important;
+        padding: 1rem !important;
+      }
+
+      .open-ticket-container button {
+        padding: 0.8rem 1.5rem !important;
+        font-size: 1rem !important;
+        min-height: 48px !important;
+        border-radius: 6px !important;
+      }
+
+      /* Mobile quantity controls */
+      .open-qty-btn {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+      }
+
+      .open-quantity-input {
+        width: 3rem !important;
+        font-size: 16px !important; /* Prevent zoom on iOS */
+      }
+
+      /* Better mobile variant layout for Open Ticket */
+      .open-variant-container {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 0.8rem !important;
+        padding: 1rem 0 !important;
+      }
+
+      .open-variant-price {
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        color: var(--christmas-gold) !important;
+      }
+
+      /* Improve mobile touch targets */
+      .open-quantity {
+        min-height: 44px !important;
+        border-width: 1px !important;
+        justify-content: center !important;
+      }
     }
 
     /* Hide skip to product info and problematic elements */
@@ -817,12 +867,44 @@
                   }
 
                   
+                  // Translate Evey buttons to Italian
+                  function translateEveyButtons() {
+                    const eveyCard = document.querySelector('.sketch-card.evey-override');
+                    if (eveyCard) {
+                      // Translate "Add to Cart" to Italian
+                      const addToCartButtons = eveyCard.querySelectorAll('button, input[type="submit"]');
+                      addToCartButtons.forEach(btn => {
+                        if (btn.textContent && btn.textContent.toLowerCase().includes('add to cart')) {
+                          btn.textContent = 'AGGIUNGI AL CARRELLO';
+                        }
+                        if (btn.value && btn.value.toLowerCase().includes('add to cart')) {
+                          btn.value = 'AGGIUNGI AL CARRELLO';
+                        }
+                      });
+                      
+                      // Force uppercase on all Evey buttons
+                      const allButtons = eveyCard.querySelectorAll('button, input[type="submit"]');
+                      allButtons.forEach(btn => {
+                        btn.style.textTransform = 'uppercase';
+                      });
+                    }
+                  }
+
                   // Run immediately and after delays
-                  document.addEventListener('DOMContentLoaded', fixEveyLayout);
-                  window.addEventListener('load', fixEveyLayout);
-                  setTimeout(fixEveyLayout, 1000);
-                  setTimeout(fixEveyLayout, 2000);
-                  setTimeout(fixEveyLayout, 3000);
+                  document.addEventListener('DOMContentLoaded', function() {
+                    fixEveyLayout();
+                    translateEveyButtons();
+                  });
+                  window.addEventListener('load', function() {
+                    fixEveyLayout();
+                    translateEveyButtons();
+                  });
+                  setTimeout(() => { fixEveyLayout(); translateEveyButtons(); }, 1000);
+                  setTimeout(() => { fixEveyLayout(); translateEveyButtons(); }, 2000);
+                  setTimeout(() => { fixEveyLayout(); translateEveyButtons(); }, 3000);
+                  
+                  // Monitor for dynamic content changes
+                  setInterval(translateEveyButtons, 2000);
                 </script>
                 {% render block %}
               </div>
