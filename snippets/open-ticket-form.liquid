@@ -22,19 +22,17 @@
           </div>
           
           <div class="open-variant-quantity">
-            <div class="open-quantity" style="display: flex; align-items: center; border: 0.1rem solid rgba(18, 18, 18, 0.08); border-radius: var(--inputs-radius); position: relative; width: calc(14rem / var(--font-body-scale) + var(--inputs-border-width) * 2); min-height: calc((var(--inputs-border-width) * 2) + 4.5rem);">
-              <button type="button" class="open-qty-btn" data-action="minus" style="width: calc(4.5rem / var(--font-body-scale)); flex-shrink: 0; font-size: 1.8rem; border: 0; background-color: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgb(var(--color-foreground)); padding: 0; margin-left: calc(var(--inputs-border-width));">
-                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="open-icon open-icon-minus" fill="none" viewBox="0 0 10 2" style="width: 1rem !important; height: 1rem !important; fill: currentColor !important; stroke: currentColor !important; pointer-events: none !important;">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor"></path>
-                </svg>
+            <quantity-input class="quantity open-quantity">
+              <button class="quantity__button no-js-hidden" name="minus" type="button">
+                <span class="visually-hidden">Diminuisci quantità biglietto open</span>
+                {% render 'icon-minus' %}
               </button>
-              <input name="quantity" class="open-quantity-input" type="number" min="0" value="1" id="open-quantity" style="color: currentColor; font-size: 1.6rem; font-weight: 500; opacity: 0.85; text-align: center; background-color: transparent; border: 0; padding: 0 0.5rem; width: 100%; flex-grow: 1; -webkit-appearance: none; appearance: none;">
-              <button type="button" class="open-qty-btn" data-action="plus" style="width: calc(4.5rem / var(--font-body-scale)); flex-shrink: 0; font-size: 1.8rem; border: 0; background-color: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgb(var(--color-foreground)); padding: 0; margin-right: calc(var(--inputs-border-width));">
-                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="open-icon open-icon-plus" fill="none" viewBox="0 0 10 10" style="width: 1rem !important; height: 1rem !important; fill: currentColor !important; stroke: currentColor !important; pointer-events: none !important;">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z" fill="currentColor"></path>
-                </svg>
+              <input name="quantity" class="quantity__input" type="number" min="1" value="1" id="open-quantity" step="1" max="10">
+              <button class="quantity__button no-js-hidden" name="plus" type="button">
+                <span class="visually-hidden">Aumenta quantità biglietto open</span>
+                {% render 'icon-plus' %}
               </button>
-            </div>
+            </quantity-input>
           </div>
         </div>
       </div>
@@ -70,32 +68,9 @@ fetch('/products/biglietto-open-2025.js')
     // Silently fail if product cannot be loaded
   });
 
-// Open ticket quantity controls and tooltip
+// Open ticket now uses native Shopify quantity-input element
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🎟️ Open Ticket JS loaded');
-  const buttons = document.querySelectorAll('.open-qty-btn');
-  console.log('📦 Found quantity buttons:', buttons.length);
-
-  
-  buttons.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      console.log('🔢 Quantity button clicked:', this.getAttribute('data-action'));
-      const input = document.getElementById('open-quantity');
-      const action = this.getAttribute('data-action');
-      let value = parseInt(input.value) || 1;
-      console.log('📊 Current value:', value, 'Input element:', input);
-      
-      if (action === 'plus' && value < 10) {
-        input.value = value + 1;
-        console.log('➕ Incremented to:', input.value);
-      } else if (action === 'minus' && value > 1) {
-        input.value = value - 1;
-        console.log('➖ Decremented to:', input.value);
-      } else {
-        console.log('❌ No change - limits reached or invalid action');
-      }
-    });
-  });
+  console.log('🎟️ Open Ticket JS loaded - using native quantity-input');
 
   // Open ticket form submission
   const form = document.getElementById('open-ticket-product-form');
@@ -135,38 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Open Ticket quantity styling to match Evey exactly */
-
-/* Add pseudo-elements for thickness like Evey */
-.open-ticket-container .open-quantity:after {
-  pointer-events: none;
-  content: '';
-  position: absolute;
-  top: var(--inputs-border-width);
-  right: var(--inputs-border-width);
-  bottom: var(--inputs-border-width);
-  left: var(--inputs-border-width);
-  border: 0.1rem solid transparent;
-  border-radius: var(--inputs-radius);
-  box-shadow: 0 0 0 var(--inputs-border-width) rgba(var(--color-foreground), var(--inputs-border-opacity));
-  transition: box-shadow var(--duration-short) ease;
-  z-index: 1;
-}
-
-.open-ticket-container .open-quantity:before {
-  background: rgb(var(--color-background));
-  pointer-events: none;
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: var(--inputs-radius-outset);
-  box-shadow: var(--inputs-shadow-horizontal-offset) var(--inputs-shadow-vertical-offset)
-    var(--inputs-shadow-blur-radius) rgba(var(--color-shadow), var(--inputs-shadow-opacity));
-  z-index: -1;
-}
+/* Open Ticket now uses native Shopify quantity-input - no custom CSS needed */
 
 /* Match Evey button styling EXACTLY */
 .sketch-card.open-ticket-container .button--secondary {
