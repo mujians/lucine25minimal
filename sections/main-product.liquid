@@ -713,6 +713,12 @@
       -webkit-appearance: none;
       appearance: none;
     }
+
+    /* Remove automatic info icon from ALL evey variant names */
+    .evey__variant-name::after {
+      display: none !important;
+      content: none !important;
+    }
   </style>
 
   {%- style -%}
