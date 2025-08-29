@@ -867,7 +867,7 @@
                   }
 
                   
-                  // Translate Evey buttons to Italian
+                  // Translate Evey buttons and add tooltips
                   function translateEveyButtons() {
                     const eveyCard = document.querySelector('.sketch-card.evey-override');
                     if (eveyCard) {
@@ -886,6 +886,72 @@
                       const allButtons = eveyCard.querySelectorAll('button, input[type="submit"]');
                       allButtons.forEach(btn => {
                         btn.style.textTransform = 'uppercase';
+                      });
+
+                      // Add tooltips to Evey variants
+                      const variantNames = eveyCard.querySelectorAll('.evey__variant-name, [class*="variant"] [class*="name"]');
+                      variantNames.forEach(nameEl => {
+                        const text = nameEl.textContent.toLowerCase();
+                        
+                        // Skip if tooltip already added
+                        if (nameEl.querySelector('.evey-info-icon')) return;
+                        
+                        let tooltipContent = '';
+                        if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
+                          tooltipContent = `<strong style="color: var(--christmas-gold);">Biglietti Ridotti</strong><br>
+                            • Per bambini dai 3 ai 12 anni e disabili<br>
+                            • Documentazione richiesta all'ingresso<br><br>
+                            <strong style="color: var(--christmas-gold);">Disabili:</strong><br>
+                            • Diritto al biglietto ridotto + n° 1 accompagnatore<br>
+                            • Accesso prioritario tramite ingresso separato`;
+                        } else if (text.includes('saltafila') || text.includes('salt')) {
+                          tooltipContent = `<strong style="color: var(--christmas-gold);">Biglietto Saltafila</strong><br>
+                            • Salta-fila all'ingresso del parco<br>
+                            • Nel giorno e nella fascia oraria selezionata<br>
+                            • Ideale nei weekend`;
+                        }
+
+                        if (tooltipContent) {
+                          // Add info icon and tooltip
+                          const infoIcon = document.createElement('span');
+                          infoIcon.className = 'evey-info-icon';
+                          infoIcon.innerHTML = 'ⓘ';
+                          infoIcon.style.cssText = 'display: inline-block; margin-left: 8px; cursor: help; color: var(--christmas-gold); font-size: 14px; opacity: 0.8;';
+                          
+                          const tooltip = document.createElement('div');
+                          tooltip.className = 'evey-ticket-tooltip';
+                          tooltip.innerHTML = tooltipContent;
+                          tooltip.style.cssText = `position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 13px; line-height: 1.4; width: 280px; z-index: 999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
+                          
+                          // Make parent relative if not already
+                          if (nameEl.style.position !== 'relative') {
+                            nameEl.style.position = 'relative';
+                          }
+                          
+                          nameEl.appendChild(infoIcon);
+                          nameEl.appendChild(tooltip);
+                          
+                          // Add event listeners
+                          infoIcon.addEventListener('mouseenter', () => {
+                            tooltip.style.opacity = '1';
+                            tooltip.style.transform = 'translateY(0)';
+                            tooltip.style.pointerEvents = 'auto';
+                          });
+                          
+                          infoIcon.addEventListener('mouseleave', () => {
+                            tooltip.style.opacity = '0';
+                            tooltip.style.transform = 'translateY(-10px)';
+                            tooltip.style.pointerEvents = 'none';
+                          });
+                          
+                          infoIcon.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const isVisible = tooltip.style.opacity === '1';
+                            tooltip.style.opacity = isVisible ? '0' : '1';
+                            tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
+                            tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
+                          });
+                        }
                       });
                     }
                   }
