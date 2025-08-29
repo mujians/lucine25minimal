@@ -795,6 +795,9 @@
           {%- case block.type -%}
             {%- when '@app' -%}
               <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
+                <!-- Title and description inside Evey card for coherence -->
+                <h3 style="color: var(--christmas-red); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Biglietti Parco</h3>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 0.95rem;">Scegli data e orario specifici • Prenotazione obbligatoria</p>
                 <!-- REMOVED sketch-border SVG -->
                 <script>
                   console.log("🎯 Rendering Evey app block");
@@ -888,23 +891,21 @@
                         btn.style.textTransform = 'uppercase';
                       });
 
-                      // Add tooltips to Evey variants
+                      // Remove ALL existing tooltips first
+                      const existingTooltips = eveyCard.querySelectorAll('.evey-ticket-tooltip, .ticket-tooltip');
+                      existingTooltips.forEach(tooltip => tooltip.remove());
+                      
+                      // Add tooltips ONLY to specific variants that need them
                       const variantNames = eveyCard.querySelectorAll('.evey__variant-name, [class*="variant"] [class*="name"]');
                       variantNames.forEach(nameEl => {
                         const text = nameEl.textContent.toLowerCase();
                         
-                        // Skip if tooltip already added or if it's a standard variant name without special info
-                        if (nameEl.querySelector('.evey-info-icon')) return;
-                        
-                        // Remove any existing non-gold info icons
-                        const existingIcons = nameEl.querySelectorAll('span:not(.evey-info-icon)');
-                        existingIcons.forEach(icon => {
-                          if (icon.innerHTML === 'ⓘ' && !icon.classList.contains('evey-info-icon')) {
-                            icon.remove();
-                          }
-                        });
+                        // Remove any existing tooltips and icons in this element
+                        const existingTooltipsInElement = nameEl.querySelectorAll('.evey-ticket-tooltip, .ticket-tooltip, .evey-info-icon');
+                        existingTooltipsInElement.forEach(el => el.remove());
                         
                         let tooltipContent = '';
+                        // ONLY add tooltips for ridotti and saltafila
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
                           tooltipContent = `<strong style="color: var(--christmas-gold);">Biglietti Ridotti</strong><br>
                             • Per bambini dai 3 ai 12 anni e disabili<br>
@@ -920,7 +921,7 @@
                         }
 
                         if (tooltipContent) {
-                          // Add info icon and tooltip
+                          // Add info icon and tooltip ONLY if there's content
                           const infoIcon = document.createElement('span');
                           infoIcon.className = 'evey-info-icon';
                           infoIcon.innerHTML = 'ⓘ';
