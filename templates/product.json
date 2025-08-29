@@ -38,7 +38,7 @@
         "evey_title": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<div class=\"formatted-content\">\n  <h2 style=\"color: var(--christmas-red); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;\">🎟️ Biglietti Parco</h2>\n  <p style=\"color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 0.95rem;\">Scegli data e orario specifici • Prenotazione obbligatoria</p>\n</div>"
+            "custom_liquid": "<div class=\"formatted-content\" style=\"padding-top: 0 !important; padding-bottom: 0 !important; margin-bottom: 0 !important;\">\n  <h3 style=\"color: var(--christmas-red); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;\">Biglietti Parco</h3>\n  <p style=\"color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 0.95rem;\">Scegli data e orario specifici • Prenotazione obbligatoria</p>\n</div>"
           }
         },
         "evey_events_tickets_multi_variant_selector_9ixpHJ": {

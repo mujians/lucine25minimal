@@ -893,8 +893,16 @@
                       variantNames.forEach(nameEl => {
                         const text = nameEl.textContent.toLowerCase();
                         
-                        // Skip if tooltip already added
+                        // Skip if tooltip already added or if it's a standard variant name without special info
                         if (nameEl.querySelector('.evey-info-icon')) return;
+                        
+                        // Remove any existing non-gold info icons
+                        const existingIcons = nameEl.querySelectorAll('span:not(.evey-info-icon)');
+                        existingIcons.forEach(icon => {
+                          if (icon.innerHTML === 'ⓘ' && !icon.classList.contains('evey-info-icon')) {
+                            icon.remove();
+                          }
+                        });
                         
                         let tooltipContent = '';
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
@@ -950,6 +958,47 @@
                             tooltip.style.opacity = isVisible ? '0' : '1';
                             tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
                             tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
+                          });
+                        }
+                      });
+
+                      // Add warning for cart button when no date selected
+                      const cartButtons = eveyCard.querySelectorAll('button[type="submit"], input[type="submit"], .button--secondary');
+                      cartButtons.forEach(btn => {
+                        if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
+                          btn.addEventListener('mouseenter', function() {
+                            // Check if date is selected
+                            const hasDateSelected = eveyCard.querySelector('.evey-scheduler-selected') || 
+                                                  eveyCard.querySelector('[data-evey-selected="true"]') ||
+                                                  eveyCard.querySelector('.evey-date-selected') ||
+                                                  eveyCard.querySelector('.selected');
+                            
+                            if (!hasDateSelected) {
+                              // Show warning tooltip
+                              let warningTooltip = btn.querySelector('.date-warning-tooltip');
+                              if (!warningTooltip) {
+                                warningTooltip = document.createElement('div');
+                                warningTooltip.className = 'date-warning-tooltip';
+                                warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
+                                warningTooltip.style.cssText = `position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(220, 38, 38, 0.95); color: white; padding: 0.6rem 1rem; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 999; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);`;
+                                
+                                if (btn.style.position !== 'relative') {
+                                  btn.style.position = 'relative';
+                                }
+                                btn.appendChild(warningTooltip);
+                              }
+                              
+                              setTimeout(() => {
+                                warningTooltip.style.opacity = '1';
+                              }, 50);
+                            }
+                          });
+                          
+                          btn.addEventListener('mouseleave', function() {
+                            const warningTooltip = btn.querySelector('.date-warning-tooltip');
+                            if (warningTooltip) {
+                              warningTooltip.style.opacity = '0';
+                            }
                           });
                         }
                       });
