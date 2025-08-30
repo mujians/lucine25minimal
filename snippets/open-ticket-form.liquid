@@ -136,23 +136,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Force Open Ticket to use exact same styles as Evey */
+/* Clean CSS - Only essential styles for Open Ticket to match Evey exactly */
 .open-variant-quantity .quantity {
   width: 140px !important;
   height: 45px !important;
   border: 1.5px solid rgba(18, 18, 18, 0.08) !important;
   border-radius: 0px !important;
-  font-size: 18px !important;
   min-height: 0px !important;
   position: relative !important;
   display: flex !important;
   box-sizing: border-box !important;
-}
-
-/* Nuclear option - highest specificity possible */
-.open-ticket-container .open-variant-quantity .quantity .quantity__input.quantity__input.quantity__input {
-  font-size: 14pt !important;
-  padding: 0 0.5rem !important;
 }
 
 .open-variant-quantity .quantity__button {
@@ -160,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
   height: 42px !important;
   font-size: 28.8px !important;
   padding: 0px !important;
-  background-color: rgba(0, 0, 0, 0) !important;
+  background-color: transparent !important;
   border: none !important;
   display: flex !important;
   align-items: center !important;
@@ -168,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
   flex-shrink: 0 !important;
   cursor: pointer !important;
   color: rgb(255, 255, 255) !important;
-  box-sizing: border-box !important;
 }
 
 /* Match Evey button styling EXACTLY */

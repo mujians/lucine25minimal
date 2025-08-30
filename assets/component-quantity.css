@@ -53,10 +53,7 @@
   appearance: none;
 }
 
-/* Force Open Ticket input to use 14pt font */
-.open-variant-quantity .quantity__input {
-  font-size: 14pt !important;
-}
+/* Removed - now using inline style font-size: 14px !important */
 
 .quantity__button {
   width: calc(4.5rem / var(--font-body-scale));
