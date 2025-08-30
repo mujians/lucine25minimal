@@ -136,7 +136,14 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Open Ticket now uses native Shopify quantity-input - no custom CSS needed */
+/* Force Open Ticket to use exact same dimensions as Evey */
+.open-variant-quantity .quantity {
+  width: 140px !important; /* Force same width as Evey */
+}
+
+.open-variant-quantity .quantity__input {
+  font-size: 14pt !important; /* Force same font as Evey */
+}
 
 /* Match Evey button styling EXACTLY */
 .sketch-card.open-ticket-container .button--secondary {
