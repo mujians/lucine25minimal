@@ -136,13 +136,21 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Force Open Ticket to use exact same dimensions as Evey */
+/* Force Open Ticket to use exact same styles as Evey */
 .open-variant-quantity .quantity {
-  width: 140px !important; /* Force same width as Evey */
+  width: 140px !important;
+  height: 45px !important;
+  border: 1.5px solid rgba(18, 18, 18, 0.08) !important;
+  border-radius: 0px !important;
+  font-size: 18px !important;
+  min-height: 0px !important;
+  position: relative !important;
+  display: flex !important;
+  box-sizing: border-box !important;
 }
 
 .open-variant-quantity .quantity__input {
-  font-size: 14pt !important; /* Force same font as Evey */
+  font-size: 18px !important;
 }
 
 /* Match Evey button styling EXACTLY */
