@@ -1715,6 +1715,9 @@
     // Mobile-friendly tooltip enhancement - AFTER all tooltips are created
     document.addEventListener('DOMContentLoaded', function() {
       console.log('📱 Mobile Tooltip Enhancement Loading...');
+      console.log('🔧 User Agent:', navigator.userAgent);
+      console.log('📏 Window size:', window.innerWidth + 'x' + window.innerHeight);
+      console.log('📱 Is Mobile:', window.innerWidth <= 768);
       
       // Wait a bit for Evey tooltips to be fully created
       setTimeout(() => {
@@ -1725,8 +1728,32 @@
           console.log(`📋 Processing tooltip ${index + 1}:`, {
             hasContent: tooltip.innerHTML.length > 0,
             parentElement: tooltip.parentElement?.className,
-            currentOpacity: tooltip.style.opacity
+            currentOpacity: tooltip.style.opacity,
+            currentVisibility: tooltip.style.visibility,
+            currentDisplay: tooltip.style.display,
+            computedOpacity: window.getComputedStyle(tooltip).opacity,
+            computedVisibility: window.getComputedStyle(tooltip).visibility,
+            boundingRect: tooltip.getBoundingClientRect()
           });
+          
+          // Track tooltip state changes
+          const observeTooltipState = () => {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                  console.log(`🔄 Tooltip ${index + 1} state changed:`, {
+                    opacity: tooltip.style.opacity,
+                    visibility: tooltip.style.visibility,
+                    transform: tooltip.style.transform,
+                    pointerEvents: tooltip.style.pointerEvents,
+                    reason: 'style_attribute_changed'
+                  });
+                }
+              });
+            });
+            observer.observe(tooltip, { attributes: true, attributeFilter: ['style', 'class'] });
+          };
+          observeTooltipState();
           
           // Add close button if not already present
           if (!tooltip.querySelector('.mobile-close-btn')) {
@@ -1740,10 +1767,12 @@
             closeBtn.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('❌ Mobile close button clicked');
+              console.log(`❌ Mobile close button clicked for tooltip ${index + 1}`);
+              console.log(`📉 HIDING tooltip ${index + 1} via close button`);
               tooltip.style.opacity = '0';
               tooltip.style.transform = 'translateY(-10px)';
               tooltip.style.pointerEvents = 'none';
+              console.log(`✅ Tooltip ${index + 1} hidden successfully`);
             });
             
             console.log('✅ Added close button to tooltip', index + 1);
@@ -1752,23 +1781,47 @@
           // Find the corresponding info icon
           const infoIcon = tooltip.parentElement?.querySelector('.evey-info-icon');
           if (infoIcon) {
+            console.log(`🎯 Found info icon for tooltip ${index + 1}:`, {
+              className: infoIcon.className,
+              innerHTML: infoIcon.innerHTML.substring(0, 50) + '...',
+              boundingRect: infoIcon.getBoundingClientRect()
+            });
+            
+            // Track ALL events on info icon
+            ['click', 'touchstart', 'touchend', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout'].forEach(eventType => {
+              infoIcon.addEventListener(eventType, (e) => {
+                console.log(`👆 Event '${eventType}' on info icon ${index + 1}:`, {
+                  eventType,
+                  target: e.target.className,
+                  currentTarget: e.currentTarget.className,
+                  tooltipOpacity: tooltip.style.opacity,
+                  isMobile: window.innerWidth <= 768,
+                  timeStamp: e.timeStamp
+                });
+              });
+            });
+            
             // Add mobile click handler (in addition to existing hover)
             infoIcon.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
               
               const isVisible = tooltip.style.opacity === '1';
-              console.log('📱 Mobile click on info icon:', {
+              console.log(`📱 Mobile click on info icon ${index + 1}:`, {
                 tooltipIndex: index + 1,
                 currentlyVisible: isVisible,
-                action: isVisible ? 'closing' : 'opening'
+                action: isVisible ? 'closing' : 'opening',
+                currentOpacity: tooltip.style.opacity,
+                computedOpacity: window.getComputedStyle(tooltip).opacity
               });
               
               if (isVisible) {
                 // Close this tooltip
+                console.log(`📉 HIDING tooltip ${index + 1} via click`);
                 tooltip.style.opacity = '0';
                 tooltip.style.transform = 'translateY(-10px)';
                 tooltip.style.pointerEvents = 'none';
+                console.log(`✅ Tooltip ${index + 1} hidden`);
               } else {
                 // Close all other tooltips first
                 existingTooltips.forEach((otherTooltip, otherIndex) => {
@@ -1781,9 +1834,16 @@
                 });
                 
                 // Open this tooltip
+                console.log(`📈 SHOWING tooltip ${index + 1} via click`);
                 tooltip.style.opacity = '1';
                 tooltip.style.transform = 'translateY(0)';
                 tooltip.style.pointerEvents = 'auto';
+                console.log(`✅ Tooltip ${index + 1} shown:`, {
+                  finalOpacity: tooltip.style.opacity,
+                  finalTransform: tooltip.style.transform,
+                  finalPointerEvents: tooltip.style.pointerEvents,
+                  boundingRect: tooltip.getBoundingClientRect()
+                });
               }
             });
             
@@ -1795,11 +1855,20 @@
         
         // Click outside to close all tooltips
         document.addEventListener('click', (e) => {
+          const clickTarget = e.target.closest('.evey-info-icon') ? 'info-icon' : 
+                             e.target.closest('.evey-ticket-tooltip') ? 'tooltip' : 'outside';
+          console.log('👆 Document click:', {
+            target: clickTarget,
+            elementClass: e.target.className,
+            coordinates: { x: e.clientX, y: e.clientY }
+          });
+          
           if (!e.target.closest('.evey-info-icon') && !e.target.closest('.evey-ticket-tooltip')) {
             const openTooltips = Array.from(existingTooltips).filter(t => t.style.opacity === '1');
             if (openTooltips.length > 0) {
-              console.log('🔄 Closing all tooltips (clicked outside)');
-              openTooltips.forEach(tooltip => {
+              console.log('🔄 Closing all tooltips (clicked outside)', openTooltips.length, 'open tooltips');
+              openTooltips.forEach((tooltip, i) => {
+                console.log(`📉 HIDING tooltip via outside click: ${i + 1}`);
                 tooltip.style.opacity = '0';
                 tooltip.style.transform = 'translateY(-10px)';
                 tooltip.style.pointerEvents = 'none';

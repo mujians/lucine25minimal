@@ -98,32 +98,102 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Open ticket form submission
+  // Open ticket form submission with detailed logging
   const form = document.getElementById('open-ticket-product-form');
+  console.log('🎟️ Open ticket form found:', form ? 'YES' : 'NO');
+  
   if (form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+      console.log('🚀 Open ticket form submitted');
       
       const formData = new FormData(this);
       const addBtn = document.getElementById('open-add-to-cart');
       const btnText = document.getElementById('open-cart-text');
+      const quantityInput = form.querySelector('.quantity__input');
+      const variantIdInput = form.querySelector('input[name="id"]');
+      
+      // Log form data details
+      console.log('📋 Form data before submission:', {
+        variantId: variantIdInput ? variantIdInput.value : 'NOT_FOUND',
+        quantity: quantityInput ? quantityInput.value : 'NOT_FOUND',
+        formElements: Array.from(form.elements).map(el => ({
+          name: el.name,
+          value: el.value,
+          type: el.type
+        }))
+      });
+      
+      // Check if quantity is greater than 0
+      const qty = parseInt(quantityInput?.value || '0');
+      if (qty === 0) {
+        console.error('❌ Quantity is 0, cannot add to cart');
+        if (btnText) btnText.textContent = 'Seleziona quantità!';
+        setTimeout(() => {
+          if (btnText) btnText.textContent = 'Aggiungi al Carrello';
+        }, 2000);
+        return;
+      }
+      
+      // Log all form data entries
+      console.log('📦 FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        console.log(`  ${key}: ${value}`);
+      }
       
       if (addBtn) addBtn.disabled = true;
       if (btnText) btnText.textContent = 'Aggiungendo...';
       
+      console.log('🌐 Sending request to /cart/add.js...');
       fetch('/cart/add.js', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
       })
-      .then(response => response.json())
+      .then(response => {
+        console.log('📡 Response received:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return response.json();
+      })
       .then(data => {
+        console.log('✅ Success response:', data);
         if (btnText) btnText.textContent = 'Aggiunto! ✓';
+        
+        // Also log cart state
+        fetch('/cart.js')
+          .then(r => r.json())
+          .then(cartData => {
+            console.log('🛒 Cart after addition:', {
+              itemCount: cartData.item_count,
+              totalPrice: cartData.total_price,
+              items: cartData.items.map(item => ({
+                title: item.title,
+                quantity: item.quantity,
+                variant_id: item.variant_id
+              }))
+            });
+          });
+        
         setTimeout(() => {
           window.location.href = '/cart';
         }, 800);
       })
       .catch(error => {
-        console.error('Error:', error);
+        console.error('❌ Open ticket cart error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack
+        });
         if (btnText) btnText.textContent = 'Errore - Riprova';
         if (addBtn) addBtn.disabled = false;
         setTimeout(() => {
@@ -131,6 +201,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2000);
       });
     });
+    
+    console.log('✅ Open ticket form event listener attached');
+  } else {
+    console.error('❌ Open ticket form NOT found in DOM');
   }
 });
 </script>
