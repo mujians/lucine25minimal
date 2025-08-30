@@ -1713,14 +1713,19 @@
   
   <script>
     // Mobile-friendly tooltip enhancement - AFTER all tooltips are created
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('📱 Mobile Tooltip Enhancement Loading...');
-      console.log('🔧 User Agent:', navigator.userAgent);
-      console.log('📏 Window size:', window.innerWidth + 'x' + window.innerHeight);
-      console.log('📱 Is Mobile:', window.innerWidth <= 768);
+    (function initMobileTooltips() {
+      console.log('🚀 Mobile Tooltip Script STARTED');
       
-      // Wait a bit for Evey tooltips to be fully created
-      setTimeout(() => {
+      function setupTooltips() {
+        try {
+          console.log('📱 Mobile Tooltip Enhancement Loading...');
+          console.log('🔧 User Agent:', navigator.userAgent);
+          console.log('📏 Window size:', window.innerWidth + 'x' + window.innerHeight);
+          console.log('📱 Is Mobile:', window.innerWidth <= 768);
+          
+          // Wait a bit for Evey tooltips to be fully created
+          setTimeout(() => {
+            try {
         const existingTooltips = document.querySelectorAll('.evey-ticket-tooltip');
         console.log('🔍 Found existing tooltips:', existingTooltips.length);
         
@@ -1877,9 +1882,25 @@
           }
         });
         
-        console.log('✅ Mobile tooltip enhancement completed');
-      }, 1000); // Wait 1 second for everything to load
-    });
+              console.log('✅ Mobile tooltip enhancement completed');
+            } catch (error) {
+              console.error('❌ Error in tooltip setup:', error);
+            }
+          }, 1000); // Wait 1 second for everything to load
+        } catch (error) {
+          console.error('❌ Error in setupTooltips:', error);
+        }
+      }
+      
+      // Try both immediate and DOMContentLoaded
+      if (document.readyState === 'loading') {
+        console.log('📄 Document still loading, waiting for DOMContentLoaded');
+        document.addEventListener('DOMContentLoaded', setupTooltips);
+      } else {
+        console.log('📄 Document already loaded, running immediately');
+        setupTooltips();
+      }
+    })();
   </script>
 </section>
 {% render 'evey-custom-code' %}
