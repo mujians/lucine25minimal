@@ -1006,92 +1006,25 @@
                           nameEl.appendChild(infoIcon);
                           nameEl.appendChild(tooltip);
                           
-                          // Add close button to tooltip
-                          const closeBtn = document.createElement('span');
-                          closeBtn.innerHTML = '×';
-                          closeBtn.style.cssText = 'position: absolute; top: 5px; right: 8px; cursor: pointer; font-size: 16px; color: var(--christmas-gold); font-weight: bold;';
-                          closeBtn.className = 'tooltip-close-btn';
-                          tooltip.appendChild(closeBtn);
-                          
-                          console.log('📱 Mobile Tooltip Setup:', {
-                            variant: variant,
-                            hasCloseBtn: !!closeBtn,
-                            tooltipContent: tooltip.innerHTML.substring(0, 50) + '...'
-                          });
-                          
-                          // Mobile-first: Click to open/close
-                          infoIcon.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            const isVisible = tooltip.style.opacity === '1';
-                            
-                            console.log('📱 Tooltip clicked:', {
-                              variant: variant,
-                              currentlyVisible: isVisible,
-                              action: isVisible ? 'closing' : 'opening'
-                            });
-                            
-                            if (isVisible) {
-                              // Close tooltip
-                              tooltip.style.opacity = '0';
-                              tooltip.style.transform = 'translateY(-10px)';
-                              tooltip.style.pointerEvents = 'none';
-                            } else {
-                              // Close all other tooltips first
-                              document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
-                                if (t !== tooltip) {
-                                  t.style.opacity = '0';
-                                  t.style.transform = 'translateY(-10px)';
-                                  t.style.pointerEvents = 'none';
-                                }
-                              });
-                              
-                              // Open this tooltip
-                              tooltip.style.opacity = '1';
-                              tooltip.style.transform = 'translateY(0)';
-                              tooltip.style.pointerEvents = 'auto';
-                            }
-                          });
-                          
-                          // Close button click
-                          closeBtn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log('❌ Close button clicked for:', variant);
-                            tooltip.style.opacity = '0';
-                            tooltip.style.transform = 'translateY(-10px)';
-                            tooltip.style.pointerEvents = 'none';
-                          });
-                          
-                          // Desktop hover (still works)
+                          // Add event listeners
                           infoIcon.addEventListener('mouseenter', () => {
-                            if (window.innerWidth > 768) { // Only on desktop
-                              console.log('🖱️ Desktop hover open:', variant);
-                              tooltip.style.opacity = '1';
-                              tooltip.style.transform = 'translateY(0)';
-                              tooltip.style.pointerEvents = 'auto';
-                            }
+                            tooltip.style.opacity = '1';
+                            tooltip.style.transform = 'translateY(0)';
+                            tooltip.style.pointerEvents = 'auto';
                           });
                           
                           infoIcon.addEventListener('mouseleave', () => {
-                            if (window.innerWidth > 768) { // Only on desktop
-                              console.log('🖱️ Desktop hover close:', variant);
-                              tooltip.style.opacity = '0';
-                              tooltip.style.transform = 'translateY(-10px)';
-                              tooltip.style.pointerEvents = 'none';
-                            }
-                          });
-                        }
-                      });
-                      
-                      // Close tooltips when clicking outside
-                      document.addEventListener('click', (e) => {
-                        if (!e.target.closest('.evey-info-icon') && !e.target.closest('.evey-ticket-tooltip')) {
-                          console.log('🔄 Closing all tooltips (clicked outside)');
-                          document.querySelectorAll('.evey-ticket-tooltip').forEach(tooltip => {
                             tooltip.style.opacity = '0';
                             tooltip.style.transform = 'translateY(-10px)';
                             tooltip.style.pointerEvents = 'none';
+                          });
+                          
+                          infoIcon.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const isVisible = tooltip.style.opacity === '1';
+                            tooltip.style.opacity = isVisible ? '0' : '1';
+                            tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
+                            tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
                           });
                         }
                       });
