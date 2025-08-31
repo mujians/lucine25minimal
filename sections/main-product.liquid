@@ -45,11 +45,12 @@
         if (icon) {
           console.log(`🎯 Adding handler to icon ${i+1}`);
           
-          // Remove any existing onclick to avoid duplicates
-          icon.onclick = null;
+          // Remove ALL existing event listeners by cloning the element
+          const newIcon = icon.cloneNode(true);
+          icon.parentNode.replaceChild(newIcon, icon);
           
-          // Add new handler
-          icon.addEventListener('click', function(e) {
+          // Add new handler to the cloned element
+          newIcon.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
@@ -101,6 +102,22 @@
     setupMobileTooltips();
     setTimeout(setupMobileTooltips, 1000);
     setTimeout(setupMobileTooltips, 3000);
+    
+    // Monitor for Evey interference
+    setTimeout(() => {
+      console.log('🔍 Checking for Evey interference...');
+      document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
+        // Check what listeners are attached
+        const listeners = getEventListeners ? getEventListeners(icon) : null;
+        console.log(`Icon ${i+1} listeners:`, listeners);
+        
+        // Force our handler to be the only one
+        icon.addEventListener('mouseenter', (e) => {
+          console.log(`🐭 Hover on icon ${i+1} - preventing default hover`);
+          e.stopPropagation();
+        }, true);
+      });
+    }, 4000);
   </script>
 
   <style>
