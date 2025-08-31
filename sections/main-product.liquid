@@ -7,119 +7,21 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // Mobile tooltip fix - Overlay approach
+    // Mobile tooltip fix - Direct event interception
     console.log('🚀 TOOLTIP SCRIPT STARTING!');
     
-    // Create invisible click overlays on top of icons
-    function createClickOverlays() {
-      console.log('🎯 Creating click overlays...');
+    // Setup tooltips without overlays
+    function setupTooltipHandlers() {
+      console.log('🎯 Setting up tooltip handlers...');
       
-      document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
-        // Skip if overlay already exists  
-        if (icon.querySelector('.mobile-click-overlay')) {
-          console.log(`⚠️ Overlay already exists for icon ${i+1}`);
-          return;
-        }
-        
-        const tooltip = icon.parentElement?.querySelector('.evey-ticket-tooltip');
-        if (!tooltip) {
-          console.log(`❌ No tooltip found for icon ${i+1}`);
-          return;
-        }
-        
-        // Create invisible overlay ONLY on the info icon itself
-        const overlay = document.createElement('div');
-        overlay.className = 'mobile-click-overlay';
-        overlay.style.cssText = `
-          position: absolute;
-          top: -5px;
-          left: -5px;
-          width: 30px;
-          height: 30px;
-          z-index: 9999;
-          cursor: pointer;
-          background: transparent;
-        `;
-        
-        // Add click handler to overlay
-        overlay.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const currentOpacity = window.getComputedStyle(tooltip).opacity;
-          const currentVisibility = window.getComputedStyle(tooltip).visibility;
-          const isVisible = currentOpacity === '1' && currentVisibility === 'visible';
-          
-          console.log(`👆 Overlay ${i+1} clicked:`, {
-            currentOpacity,
-            currentVisibility,
-            isVisible,
-            tooltipBounds: tooltip.getBoundingClientRect()
-          });
-          
-          if (isVisible) {
-            console.log(`📉 Hiding tooltip ${i+1}`);
-            tooltip.style.opacity = '0';
-            tooltip.style.pointerEvents = 'none';
-            tooltip.style.visibility = 'hidden';
-            tooltip.dataset.keepOpen = 'false';
-            
-            // Clear interval if exists
-            if (tooltip.dataset.intervalId) {
-              clearInterval(parseInt(tooltip.dataset.intervalId));
-            }
-            
-            console.log(`✅ Tooltip ${i+1} hidden`);
-          } else {
-            console.log(`🔄 Hiding all other tooltips...`);
-            // Hide all tooltips
-            document.querySelectorAll('.evey-ticket-tooltip').forEach((t, idx) => {
-              if (t.style.opacity === '1' || t.style.visibility === 'visible') {
-                t.style.opacity = '0';
-                t.style.pointerEvents = 'none';
-                t.style.visibility = 'hidden';
-                console.log(`  - Hidden tooltip ${idx+1}`);
-              }
-            });
-            
-            console.log(`📈 Showing tooltip ${i+1}`);
-            tooltip.style.opacity = '1';
-            tooltip.style.pointerEvents = 'auto';
-            tooltip.style.visibility = 'visible';
-            tooltip.style.display = 'block';
-            
-            // Keep tooltip open - prevent auto-close
-            tooltip.dataset.keepOpen = 'true';
-            
-            // Force tooltip to stay open every 500ms
-            const keepOpenInterval = setInterval(() => {
-              if (tooltip.dataset.keepOpen === 'true') {
-                if (tooltip.style.opacity !== '1') {
-                  console.log(`⚠️ Tooltip ${i+1} was hidden by timer, reopening...`);
-                  tooltip.style.opacity = '1';
-                  tooltip.style.pointerEvents = 'auto';
-                  tooltip.style.visibility = 'visible';
-                }
-              } else {
-                clearInterval(keepOpenInterval);
-              }
-            }, 500);
-            
-            // Store interval ID for cleanup
-            tooltip.dataset.intervalId = keepOpenInterval;
-            
-            console.log(`✅ Tooltip ${i+1} shown and will stay open`);
-          }
-        });
-        
-        // Make icon container relative for overlay positioning
-        icon.style.position = 'relative';
-        
-        // Add overlay as child of icon
-        icon.appendChild(overlay);
-        console.log(`✅ Overlay added to icon ${i+1}`);
-        
-        // Add close button to tooltip with proper styling
+      const tooltips = document.querySelectorAll('.evey-ticket-tooltip');
+      const icons = document.querySelectorAll('.evey-info-icon');
+      
+      // Store tooltip references
+      window.tooltipRefs = [];
+      
+      tooltips.forEach((tooltip, i) => {
+        // Add close button
         if (!tooltip.querySelector('.mobile-close-btn')) {
           const btn = document.createElement('span');
           btn.className = 'mobile-close-btn';
@@ -149,41 +51,88 @@
             tooltip.style.opacity = '0';
             tooltip.style.pointerEvents = 'none';
             tooltip.style.visibility = 'hidden';
-            tooltip.dataset.keepOpen = 'false';
-            
-            // Clear interval if exists
-            if (tooltip.dataset.intervalId) {
-              clearInterval(parseInt(tooltip.dataset.intervalId));
-            }
+            tooltip.dataset.forceOpen = 'false';
           };
           tooltip.appendChild(btn);
         }
+        
+        // Store reference for later
+        window.tooltipRefs.push({
+          tooltip: tooltip,
+          icon: icons[i],
+          index: i
+        });
       });
       
-      console.log('🎉 Overlays created!');
+      console.log(`✅ Setup ${window.tooltipRefs.length} tooltips`);
     }
     
-    // Try multiple times to catch dynamically added icons
-    setTimeout(createClickOverlays, 1000);
-    setTimeout(createClickOverlays, 2000);
-    setTimeout(createClickOverlays, 3000);
-    setTimeout(createClickOverlays, 4000);
-    setTimeout(createClickOverlays, 5000);
+    // Intercept clicks at document level
+    document.addEventListener('click', function(e) {
+      // Check if click is on info icon
+      const clickedIcon = e.target.closest('.evey-info-icon');
+      if (!clickedIcon) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Find which tooltip this icon belongs to
+      const ref = window.tooltipRefs?.find(r => r.icon === clickedIcon);
+      if (!ref) {
+        console.log('⚠️ No tooltip found for clicked icon');
+        return;
+      }
+      
+      const tooltip = ref.tooltip;
+      const index = ref.index;
+      
+      const isVisible = window.getComputedStyle(tooltip).opacity === '1';
+      console.log(`👆 Icon ${index+1} clicked, tooltip visible: ${isVisible}`);
+      
+      if (isVisible) {
+        console.log(`📉 Hiding tooltip ${index+1}`);
+        tooltip.style.opacity = '0';
+        tooltip.style.pointerEvents = 'none';
+        tooltip.style.visibility = 'hidden';
+        tooltip.dataset.forceOpen = 'false';
+      } else {
+        // Hide all other tooltips first
+        window.tooltipRefs?.forEach(otherRef => {
+          if (otherRef.tooltip !== tooltip) {
+            otherRef.tooltip.style.opacity = '0';
+            otherRef.tooltip.style.pointerEvents = 'none';
+            otherRef.tooltip.style.visibility = 'hidden';
+            otherRef.tooltip.dataset.forceOpen = 'false';
+          }
+        });
+        
+        console.log(`📈 Showing tooltip ${index+1}`);
+        tooltip.style.opacity = '1';
+        tooltip.style.pointerEvents = 'auto';
+        tooltip.style.visibility = 'visible';
+        tooltip.dataset.forceOpen = 'true';
+        
+        // Keep it open
+        const keepOpen = setInterval(() => {
+          if (tooltip.dataset.forceOpen === 'true') {
+            if (tooltip.style.opacity !== '1') {
+              console.log(`⚠️ Re-opening tooltip ${index+1}`);
+              tooltip.style.opacity = '1';
+              tooltip.style.pointerEvents = 'auto';
+              tooltip.style.visibility = 'visible';
+            }
+          } else {
+            clearInterval(keepOpen);
+          }
+        }, 300);
+      }
+    }, true); // Capture phase
     
-    // Also monitor for new icons being added
-    const observer = new MutationObserver(() => {
-      console.log('🔄 DOM changed, checking for new icons...');
-      createClickOverlays();
-    });
-    
-    // Start observing after a delay
-    setTimeout(() => {
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-      console.log('👁️ Monitoring for DOM changes...');
-    }, 2000);
+    // Setup everything multiple times to catch late-loading elements
+    setTimeout(setupTooltipHandlers, 1000);
+    setTimeout(setupTooltipHandlers, 2000);
+    setTimeout(setupTooltipHandlers, 3000);
+    setTimeout(setupTooltipHandlers, 4000);
     
   </script>
 
