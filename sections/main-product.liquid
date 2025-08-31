@@ -15,8 +15,8 @@
       console.log('🎯 Creating click overlays...');
       
       document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
-        // Skip if overlay already exists
-        if (icon.parentElement.querySelector('.mobile-click-overlay')) {
+        // Skip if overlay already exists  
+        if (icon.querySelector('.mobile-click-overlay')) {
           console.log(`⚠️ Overlay already exists for icon ${i+1}`);
           return;
         }
@@ -46,24 +46,41 @@
           e.preventDefault();
           e.stopPropagation();
           
-          const isVisible = window.getComputedStyle(tooltip).opacity === '1';
-          console.log(`👆 Overlay ${i+1} clicked, tooltip visible: ${isVisible}`);
+          const currentOpacity = window.getComputedStyle(tooltip).opacity;
+          const currentVisibility = window.getComputedStyle(tooltip).visibility;
+          const isVisible = currentOpacity === '1' && currentVisibility === 'visible';
+          
+          console.log(`👆 Overlay ${i+1} clicked:`, {
+            currentOpacity,
+            currentVisibility,
+            isVisible,
+            tooltipBounds: tooltip.getBoundingClientRect()
+          });
           
           if (isVisible) {
+            console.log(`📉 Hiding tooltip ${i+1}`);
             tooltip.style.opacity = '0';
             tooltip.style.pointerEvents = 'none';
             tooltip.style.visibility = 'hidden';
+            console.log(`✅ Tooltip ${i+1} hidden`);
           } else {
+            console.log(`🔄 Hiding all other tooltips...`);
             // Hide all tooltips
-            document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
-              t.style.opacity = '0';
-              t.style.pointerEvents = 'none';
-              t.style.visibility = 'hidden';
+            document.querySelectorAll('.evey-ticket-tooltip').forEach((t, idx) => {
+              if (t.style.opacity === '1' || t.style.visibility === 'visible') {
+                t.style.opacity = '0';
+                t.style.pointerEvents = 'none';
+                t.style.visibility = 'hidden';
+                console.log(`  - Hidden tooltip ${idx+1}`);
+              }
             });
-            // Show this one
+            
+            console.log(`📈 Showing tooltip ${i+1}`);
             tooltip.style.opacity = '1';
             tooltip.style.pointerEvents = 'auto';
             tooltip.style.visibility = 'visible';
+            tooltip.style.display = 'block';
+            console.log(`✅ Tooltip ${i+1} shown`);
           }
         });
         
@@ -74,11 +91,29 @@
         icon.appendChild(overlay);
         console.log(`✅ Overlay added to icon ${i+1}`);
         
-        // Add close button to tooltip
+        // Add close button to tooltip with proper styling
         if (!tooltip.querySelector('.mobile-close-btn')) {
           const btn = document.createElement('span');
+          btn.className = 'mobile-close-btn';
           btn.innerHTML = '×';
-          btn.style.cssText = 'position:absolute;top:5px;right:8px;cursor:pointer;font-size:20px;color:#ffb300;font-weight:bold;z-index:10000;';
+          btn.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 32px;
+            color: #dc2626;
+            font-weight: 400;
+            z-index: 10000;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Homemade Apple', cursive;
+            text-transform: uppercase;
+            line-height: 1;
+          `;
           btn.onclick = (e) => {
             e.stopPropagation();
             console.log(`❌ Close button clicked for tooltip ${i+1}`);
@@ -121,6 +156,25 @@
     /* Our design system colors/fonts */
     #MainProduct-{{ section.id }} {
       background: transparent;
+    }
+    
+    /* Hide duplicate price and buy button boxes that shouldn't be there */
+    #price-template--26159267414355__main,
+    .product-form__buttons .shopify-payment-button,
+    .product__pickup-availabilities {
+      display: none !important;
+    }
+    
+    /* Ensure mobile close button is visible */
+    .mobile-close-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Ensure tooltips are on top */
+    .evey-ticket-tooltip {
+      z-index: 9998 !important;
     }
     
     .product__title {
