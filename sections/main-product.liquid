@@ -6,6 +6,64 @@
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+  <script>
+    // Mobile tooltip fix - Execute immediately
+    console.log('🚀 TOOLTIP SCRIPT STARTING!');
+    
+    function setupMobileTooltips() {
+      const tooltips = document.querySelectorAll('.evey-ticket-tooltip');
+      console.log('🔍 Found tooltips:', tooltips.length);
+      
+      if (tooltips.length === 0) {
+        console.log('⏰ Waiting for tooltips...');
+        setTimeout(setupMobileTooltips, 2000);
+        return;
+      }
+      
+      tooltips.forEach((tooltip, i) => {
+        // Add close button
+        if (!tooltip.querySelector('.mobile-close-btn')) {
+          const btn = document.createElement('span');
+          btn.innerHTML = '×';
+          btn.style.cssText = 'position:absolute;top:5px;right:8px;cursor:pointer;font-size:20px;color:#ffb300;font-weight:bold;z-index:1000;';
+          btn.onclick = () => {
+            tooltip.style.opacity = '0';
+            tooltip.style.pointerEvents = 'none';
+          };
+          tooltip.appendChild(btn);
+        }
+        
+        // Add click handler to info icon
+        const icon = tooltip.parentElement?.querySelector('.evey-info-icon');
+        if (icon) {
+          icon.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close all others
+            tooltips.forEach(t => {
+              t.style.opacity = '0';
+              t.style.pointerEvents = 'none';
+            });
+            
+            // Toggle this one
+            if (tooltip.style.opacity !== '1') {
+              tooltip.style.opacity = '1';
+              tooltip.style.pointerEvents = 'auto';
+            }
+          };
+        }
+      });
+      
+      console.log('✅ Tooltips ready!');
+    }
+    
+    // Try multiple times
+    setupMobileTooltips();
+    setTimeout(setupMobileTooltips, 1000);
+    setTimeout(setupMobileTooltips, 3000);
+  </script>
+
   <style>
     /* Our design system colors/fonts */
     #MainProduct-{{ section.id }} {
