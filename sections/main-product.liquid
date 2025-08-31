@@ -103,19 +103,59 @@
     setTimeout(setupMobileTooltips, 1000);
     setTimeout(setupMobileTooltips, 3000);
     
-    // Monitor for Evey interference
+    // Debug: Intercept ALL clicks globally
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.evey-info-icon')) {
+        console.log('🎯 GLOBAL: Click detected on info icon!', {
+          target: e.target,
+          currentTarget: e.currentTarget,
+          className: e.target.className,
+          parentClassName: e.target.parentElement?.className
+        });
+      }
+    }, true); // Capture phase - catches it first
+    
+    // After 4 seconds, try a different approach
     setTimeout(() => {
-      console.log('🔍 Checking for Evey interference...');
+      console.log('🔧 Trying alternative approach...');
+      
+      // Find all info icons and their tooltips
       document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
-        // Check what listeners are attached
-        const listeners = getEventListeners ? getEventListeners(icon) : null;
-        console.log(`Icon ${i+1} listeners:`, listeners);
+        const tooltip = icon.parentElement?.querySelector('.evey-ticket-tooltip');
+        if (!tooltip) return;
         
-        // Force our handler to be the only one
-        icon.addEventListener('mouseenter', (e) => {
-          console.log(`🐭 Hover on icon ${i+1} - preventing default hover`);
+        // Remove the icon and recreate it completely
+        const newIcon = document.createElement('span');
+        newIcon.className = 'evey-info-icon';
+        newIcon.innerHTML = icon.innerHTML;
+        newIcon.style.cssText = icon.style.cssText;
+        
+        // Add OUR click handler
+        newIcon.onclick = function(e) {
+          e.preventDefault();
           e.stopPropagation();
-        }, true);
+          console.log(`✨ NEW ICON CLICKED ${i+1}`);
+          
+          const isVisible = tooltip.style.opacity === '1';
+          if (isVisible) {
+            tooltip.style.opacity = '0';
+            tooltip.style.pointerEvents = 'none';
+          } else {
+            // Hide all tooltips
+            document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
+              t.style.opacity = '0';
+              t.style.pointerEvents = 'none';
+            });
+            // Show this one
+            tooltip.style.opacity = '1';
+            tooltip.style.pointerEvents = 'auto';
+          }
+          return false;
+        };
+        
+        // Replace old icon with new one
+        icon.parentNode.replaceChild(newIcon, icon);
+        console.log(`♻️ Replaced icon ${i+1} with fresh one`);
       });
     }, 4000);
   </script>
