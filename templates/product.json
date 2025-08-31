@@ -20,16 +20,19 @@
         },
         "custom_liquid_NkmUjk": {
           "type": "custom_liquid",
+          "disabled": true,
           "settings": {
             "custom_liquid": "<div class=\"formatted-content\">\n  <div class=\"sketch-card sketch seed-1\" style=\"margin: 2rem 0;\">\n    <svg class=\"sketch-border\" viewBox=\"0 0 100 100\" aria-hidden=\"true\" preserveAspectRatio=\"none\">\n      <defs>\n        <filter id=\"wobble-discount-info\">\n          <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"1\" seed=\"3\"/>\n          <feDisplacementMap in=\"SourceGraphic\" scale=\"1\"/>\n        </filter>\n      </defs>\n      <rect x=\"4\" y=\"4\" width=\"92\" height=\"92\" rx=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-dasharray=\"14 8 6 12 10 9\" vector-effect=\"non-scaling-stroke\" filter=\"url(#wobble-discount-info)\"/>\n    </svg>\n    <div style=\"color: var(--christmas-gold); font-weight: 600; line-height: 1.4;\">\n      💰 Acquista online e approfitta di un prezzo scontato rispetto all'acquisto in loco!\n    </div>\n  </div>\n</div>"
           }
         },
         "price": {
           "type": "price",
+          "disabled": true,
           "settings": {}
         },
         "buy_buttons": {
           "type": "buy_buttons",
+          "disabled": true,
           "settings": {
             "show_dynamic_checkout": true,
             "show_gift_card_recipient": true
