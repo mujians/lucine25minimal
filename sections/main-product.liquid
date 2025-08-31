@@ -47,11 +47,11 @@
           `;
           btn.onclick = (e) => {
             e.stopPropagation();
-            console.log(`❌ Close button clicked for tooltip ${i+1}`);
+            console.log(`❌ MANUALLY CLOSING TOOLTIP (close button ${i+1})`);
+            tooltip.dataset.forceOpen = 'false'; // Set this FIRST
             tooltip.style.opacity = '0';
             tooltip.style.pointerEvents = 'none';
             tooltip.style.visibility = 'hidden';
-            tooltip.dataset.forceOpen = 'false';
             
             // Disconnect observer
             if (tooltip.styleObserver) {
@@ -98,11 +98,11 @@
       console.log(`📋 Tooltip state: opacity=${tooltip.style.opacity}, computed=${window.getComputedStyle(tooltip).opacity}, visible=${isVisible}`);
       
       if (isVisible) {
-        console.log(`📉 Hiding tooltip`);
+        console.log(`📉 MANUALLY HIDING TOOLTIP (user click)`);
+        tooltip.dataset.forceOpen = 'false'; // Set this FIRST to prevent observer override
         tooltip.style.opacity = '0';
         tooltip.style.pointerEvents = 'none';
         tooltip.style.visibility = 'hidden';
-        tooltip.dataset.forceOpen = 'false';
         
         // Disconnect observer
         if (tooltip.styleObserver) {
@@ -150,18 +150,36 @@
           tooltip.styleObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
               if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                const oldValue = mutation.oldValue;
+                const newValue = tooltip.style.cssText;
+                
+                console.log(`🔍 Tooltip style changed:`, {
+                  forceOpen: tooltip.dataset.forceOpen,
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  oldOpacity: oldValue?.match(/opacity:\s*([^;]+)/)?.[1] || 'none',
+                  newOpacity: tooltip.style.opacity,
+                  oldVisibility: oldValue?.match(/visibility:\s*([^;]+)/)?.[1] || 'none', 
+                  newVisibility: tooltip.style.visibility
+                });
+                
                 if (tooltip.dataset.forceOpen === 'true') {
                   // Check if Evey tried to hide it
                   const currentOpacity = tooltip.style.opacity;
                   const currentVisibility = tooltip.style.visibility;
                   
                   if (currentOpacity !== '1' || currentVisibility === 'hidden') {
-                    console.log(`🔄 Evey tried to modify tooltip, overriding...`);
+                    console.log(`⚡ EVEY INTERFERENCE DETECTED! Overriding:`, {
+                      opacity: currentOpacity + ' → 1',
+                      visibility: currentVisibility + ' → visible'
+                    });
                     tooltip.style.opacity = '1';
                     tooltip.style.pointerEvents = 'auto';
                     tooltip.style.visibility = 'visible';
                     tooltip.style.display = 'block';
                   }
+                } else {
+                  console.log(`📋 Tooltip not force-open, allowing change`);
                 }
               }
             });
@@ -169,7 +187,8 @@
           
           tooltip.styleObserver.observe(tooltip, {
             attributes: true,
-            attributeFilter: ['style']
+            attributeFilter: ['style'],
+            attributeOldValue: true
           });
         }
         
