@@ -133,11 +133,18 @@
         });
         
         console.log(`📈 Showing tooltip`);
-        tooltip.style.opacity = '1';
-        tooltip.style.pointerEvents = 'auto';
-        tooltip.style.visibility = 'visible';
-        tooltip.style.display = 'block';
+        tooltip.style.setProperty('opacity', '1', 'important');
+        tooltip.style.setProperty('pointer-events', 'auto', 'important');
+        tooltip.style.setProperty('visibility', 'visible', 'important');
+        tooltip.style.setProperty('display', 'block', 'important');
         tooltip.dataset.forceOpen = 'true';
+        
+        console.log(`✅ After setting important styles:`, {
+          inlineOpacity: tooltip.style.opacity,
+          computedOpacity: window.getComputedStyle(tooltip).opacity,
+          inlineVisibility: tooltip.style.visibility,
+          computedVisibility: window.getComputedStyle(tooltip).visibility
+        });
         
         // Override Evey's functions to prevent interference
         tooltip.dataset.eveyOverridden = 'true';
@@ -169,14 +176,14 @@
                   const currentVisibility = tooltip.style.visibility;
                   
                   if (currentOpacity !== '1' || currentVisibility === 'hidden') {
-                    console.log(`⚡ EVEY INTERFERENCE DETECTED! Overriding:`, {
+                    console.log(`⚡ EVEY INTERFERENCE DETECTED! Overriding with !important:`, {
                       opacity: currentOpacity + ' → 1',
                       visibility: currentVisibility + ' → visible'
                     });
-                    tooltip.style.opacity = '1';
-                    tooltip.style.pointerEvents = 'auto';
-                    tooltip.style.visibility = 'visible';
-                    tooltip.style.display = 'block';
+                    tooltip.style.setProperty('opacity', '1', 'important');
+                    tooltip.style.setProperty('pointer-events', 'auto', 'important');
+                    tooltip.style.setProperty('visibility', 'visible', 'important');
+                    tooltip.style.setProperty('display', 'block', 'important');
                   }
                 } else {
                   console.log(`📋 Tooltip not force-open, allowing change`);
