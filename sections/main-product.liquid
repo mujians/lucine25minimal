@@ -7,10 +7,10 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // Mobile tooltip fix - Execute immediately
+    // Mobile tooltip fix - Wait for Evey to finish
     console.log('🚀 TOOLTIP SCRIPT STARTING!');
     
-    function setupMobileTooltips() {
+    function setupMobileTooltips(isRetry = false) {
       const tooltips = document.querySelectorAll('.evey-ticket-tooltip');
       console.log('🔍 Found tooltips:', tooltips.length);
       
@@ -98,66 +98,85 @@
       console.log('✅ Tooltips ready!');
     }
     
-    // Try multiple times but avoid duplicates
-    setupMobileTooltips();
-    setTimeout(setupMobileTooltips, 1000);
-    setTimeout(setupMobileTooltips, 3000);
-    
-    // Debug: Intercept ALL clicks globally
-    document.addEventListener('click', function(e) {
-      if (e.target.closest('.evey-info-icon')) {
-        console.log('🎯 GLOBAL: Click detected on info icon!', {
-          target: e.target,
-          currentTarget: e.currentTarget,
-          className: e.target.className,
-          parentClassName: e.target.parentElement?.className
-        });
-      }
-    }, true); // Capture phase - catches it first
-    
-    // After 4 seconds, try a different approach
-    setTimeout(() => {
-      console.log('🔧 Trying alternative approach...');
-      
-      // Find all info icons and their tooltips
-      document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
-        const tooltip = icon.parentElement?.querySelector('.evey-ticket-tooltip');
-        if (!tooltip) return;
+    // Wait for Evey to finish all its modifications
+    function waitForEveyAndSetup() {
+      // Check if Evey is still working
+      const checkEvey = setInterval(() => {
+        const eveyStatus = document.querySelector('.evey__form');
+        const formStabilized = document.body.textContent.includes('Form stabilized');
         
-        // Remove the icon and recreate it completely
-        const newIcon = document.createElement('span');
-        newIcon.className = 'evey-info-icon';
-        newIcon.innerHTML = icon.innerHTML;
-        newIcon.style.cssText = icon.style.cssText;
-        
-        // Add OUR click handler
-        newIcon.onclick = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log(`✨ NEW ICON CLICKED ${i+1}`);
+        // If we see "Form stabilized" in recent logs, Evey is done
+        if (eveyStatus) {
+          clearInterval(checkEvey);
+          console.log('⏰ Evey detected, waiting 2 seconds for it to finish...');
           
-          const isVisible = tooltip.style.opacity === '1';
-          if (isVisible) {
-            tooltip.style.opacity = '0';
-            tooltip.style.pointerEvents = 'none';
-          } else {
-            // Hide all tooltips
-            document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
-              t.style.opacity = '0';
-              t.style.pointerEvents = 'none';
+          // Wait a bit more then set up our handlers
+          setTimeout(() => {
+            console.log('🎯 Setting up mobile tooltips AFTER Evey...');
+            
+            // Find all icons and setup click handlers
+            document.querySelectorAll('.evey-info-icon').forEach((icon, i) => {
+              const tooltip = icon.parentElement?.querySelector('.evey-ticket-tooltip');
+              if (!tooltip) return;
+              
+              // Clone to remove ALL handlers
+              const newIcon = icon.cloneNode(true);
+              
+              // Add ONLY our handler
+              newIcon.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isVisible = tooltip.style.opacity === '1';
+                console.log(`👆 Icon ${i+1} clicked, visible: ${isVisible}`);
+                
+                if (isVisible) {
+                  tooltip.style.opacity = '0';
+                  tooltip.style.pointerEvents = 'none';
+                } else {
+                  // Hide all tooltips first
+                  document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
+                    t.style.opacity = '0';
+                    t.style.pointerEvents = 'none';
+                  });
+                  // Show this one
+                  tooltip.style.opacity = '1';
+                  tooltip.style.pointerEvents = 'auto';
+                }
+                return false;
+              };
+              
+              // Add close button
+              if (!tooltip.querySelector('.mobile-close-btn')) {
+                const btn = document.createElement('span');
+                btn.innerHTML = '×';
+                btn.style.cssText = 'position:absolute;top:5px;right:8px;cursor:pointer;font-size:20px;color:#ffb300;font-weight:bold;z-index:1000;';
+                btn.onclick = () => {
+                  tooltip.style.opacity = '0';
+                  tooltip.style.pointerEvents = 'none';
+                };
+                tooltip.appendChild(btn);
+              }
+              
+              // Replace icon
+              icon.parentNode.replaceChild(newIcon, icon);
+              console.log(`✅ Setup icon ${i+1}`);
             });
-            // Show this one
-            tooltip.style.opacity = '1';
-            tooltip.style.pointerEvents = 'auto';
-          }
-          return false;
-        };
-        
-        // Replace old icon with new one
-        icon.parentNode.replaceChild(newIcon, icon);
-        console.log(`♻️ Replaced icon ${i+1} with fresh one`);
-      });
-    }, 4000);
+            
+            console.log('🎉 Mobile tooltips ready and working!');
+          }, 2000);
+        }
+      }, 500);
+      
+      // Fallback after 5 seconds
+      setTimeout(() => {
+        clearInterval(checkEvey);
+        setupMobileTooltips(true);
+      }, 5000);
+    }
+    
+    // Start the process
+    waitForEveyAndSetup();
   </script>
 
   <style>
