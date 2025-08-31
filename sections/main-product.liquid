@@ -53,11 +53,14 @@
             tooltip.style.visibility = 'hidden';
             tooltip.dataset.forceOpen = 'false';
             
-            // Clear interval
-            if (tooltip.keepOpenInterval) {
-              clearInterval(tooltip.keepOpenInterval);
-              tooltip.keepOpenInterval = null;
+            // Disconnect observer
+            if (tooltip.styleObserver) {
+              tooltip.styleObserver.disconnect();
+              tooltip.styleObserver = null;
             }
+            
+            // Remove protection
+            tooltip.classList.remove('mobile-tooltip-protected');
           };
           tooltip.appendChild(btn);
         }
@@ -101,11 +104,14 @@
         tooltip.style.visibility = 'hidden';
         tooltip.dataset.forceOpen = 'false';
         
-        // Clear any existing intervals
-        if (tooltip.keepOpenInterval) {
-          clearInterval(tooltip.keepOpenInterval);
-          tooltip.keepOpenInterval = null;
+        // Disconnect observer
+        if (tooltip.styleObserver) {
+          tooltip.styleObserver.disconnect();
+          tooltip.styleObserver = null;
         }
+        
+        // Remove protection
+        tooltip.classList.remove('mobile-tooltip-protected');
       } else {
         // Hide all other tooltips first
         document.querySelectorAll('.evey-ticket-tooltip').forEach(otherTooltip => {
@@ -114,10 +120,15 @@
             otherTooltip.style.pointerEvents = 'none';
             otherTooltip.style.visibility = 'hidden';
             otherTooltip.dataset.forceOpen = 'false';
-            if (otherTooltip.keepOpenInterval) {
-              clearInterval(otherTooltip.keepOpenInterval);
-              otherTooltip.keepOpenInterval = null;
+            
+            // Disconnect observer
+            if (otherTooltip.styleObserver) {
+              otherTooltip.styleObserver.disconnect();
+              otherTooltip.styleObserver = null;
             }
+            
+            // Remove protection
+            otherTooltip.classList.remove('mobile-tooltip-protected');
           }
         });
         
@@ -128,22 +139,46 @@
         tooltip.style.display = 'block';
         tooltip.dataset.forceOpen = 'true';
         
-        // Keep it open aggressively
-        tooltip.keepOpenInterval = setInterval(() => {
-          if (tooltip.dataset.forceOpen === 'true') {
-            const currentOpacity = window.getComputedStyle(tooltip).opacity;
-            if (currentOpacity !== '1' || tooltip.style.opacity !== '1') {
-              console.log(`⚠️ Tooltip was hidden (opacity: ${currentOpacity}/${tooltip.style.opacity}), reopening...`);
-              tooltip.style.opacity = '1';
-              tooltip.style.pointerEvents = 'auto';
-              tooltip.style.visibility = 'visible';
-              tooltip.style.display = 'block';
-            }
-          } else {
-            clearInterval(tooltip.keepOpenInterval);
-            tooltip.keepOpenInterval = null;
-          }
-        }, 200); // Check every 200ms
+        // Override Evey's functions to prevent interference
+        tooltip.dataset.eveyOverridden = 'true';
+        
+        // Store original style values
+        const originalStyle = tooltip.style.cssText;
+        
+        // Create a MutationObserver to watch for Evey changes
+        if (!tooltip.styleObserver) {
+          tooltip.styleObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                if (tooltip.dataset.forceOpen === 'true') {
+                  // Check if Evey tried to hide it
+                  const currentOpacity = tooltip.style.opacity;
+                  const currentVisibility = tooltip.style.visibility;
+                  
+                  if (currentOpacity !== '1' || currentVisibility === 'hidden') {
+                    console.log(`🔄 Evey tried to modify tooltip, overriding...`);
+                    tooltip.style.opacity = '1';
+                    tooltip.style.pointerEvents = 'auto';
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.display = 'block';
+                  }
+                }
+              }
+            });
+          });
+          
+          tooltip.styleObserver.observe(tooltip, {
+            attributes: true,
+            attributeFilter: ['style']
+          });
+        }
+        
+        // Also block Evey's setTimeout/setInterval on this tooltip
+        const originalSetTimeout = window.setTimeout;
+        const originalSetInterval = window.setInterval;
+        
+        // Mark tooltip as protected
+        tooltip.classList.add('mobile-tooltip-protected');
       }
     }, true); // Capture phase
     
