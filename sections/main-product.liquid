@@ -27,38 +27,77 @@
           btn.innerHTML = '×';
           btn.style.cssText = 'position:absolute;top:5px;right:8px;cursor:pointer;font-size:20px;color:#ffb300;font-weight:bold;z-index:1000;';
           btn.onclick = () => {
+            console.log(`❌ Close button clicked for tooltip ${i+1}`);
             tooltip.style.opacity = '0';
             tooltip.style.pointerEvents = 'none';
           };
           tooltip.appendChild(btn);
         }
         
+        // Check if handler already exists
+        if (tooltip.dataset.clickHandlerAdded === 'true') {
+          console.log(`⚠️ Handler already exists for tooltip ${i+1}, skipping`);
+          return;
+        }
+        
         // Add click handler to info icon
         const icon = tooltip.parentElement?.querySelector('.evey-info-icon');
         if (icon) {
-          icon.onclick = (e) => {
+          console.log(`🎯 Adding handler to icon ${i+1}`);
+          
+          // Remove any existing onclick to avoid duplicates
+          icon.onclick = null;
+          
+          // Add new handler
+          icon.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Close all others
-            tooltips.forEach(t => {
-              t.style.opacity = '0';
-              t.style.pointerEvents = 'none';
+            const currentOpacity = window.getComputedStyle(tooltip).opacity;
+            const isVisible = currentOpacity === '1';
+            
+            console.log(`👆 Click on icon ${i+1}:`, {
+              currentOpacity,
+              isVisible,
+              tooltipDisplay: window.getComputedStyle(tooltip).display,
+              tooltipVisibility: window.getComputedStyle(tooltip).visibility
             });
             
-            // Toggle this one
-            if (tooltip.style.opacity !== '1') {
+            if (isVisible) {
+              console.log(`📉 Closing tooltip ${i+1}`);
+              tooltip.style.opacity = '0';
+              tooltip.style.pointerEvents = 'none';
+              tooltip.style.visibility = 'hidden';
+            } else {
+              // Close all others first
+              console.log(`🔄 Closing other tooltips...`);
+              tooltips.forEach((t, idx) => {
+                if (t !== tooltip) {
+                  t.style.opacity = '0';
+                  t.style.pointerEvents = 'none';
+                  t.style.visibility = 'hidden';
+                }
+              });
+              
+              console.log(`📈 Opening tooltip ${i+1}`);
               tooltip.style.opacity = '1';
               tooltip.style.pointerEvents = 'auto';
+              tooltip.style.visibility = 'visible';
+              tooltip.style.display = 'block';
             }
-          };
+            
+            console.log(`✅ After click - tooltip ${i+1} opacity:`, tooltip.style.opacity);
+          }, true); // Use capture phase
+          
+          // Mark as handled
+          tooltip.dataset.clickHandlerAdded = 'true';
         }
       });
       
       console.log('✅ Tooltips ready!');
     }
     
-    // Try multiple times
+    // Try multiple times but avoid duplicates
     setupMobileTooltips();
     setTimeout(setupMobileTooltips, 1000);
     setTimeout(setupMobileTooltips, 3000);
