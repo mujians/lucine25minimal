@@ -6,6 +6,85 @@
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+  <script>
+    // FINAL mobile tooltip fix
+    console.log('🚀 FINAL TOOLTIP SCRIPT STARTING!');
+    
+    function setupFinalTooltips() {
+      console.log('🎯 Setting up FINAL tooltip handlers...');
+      
+      const tooltips = document.querySelectorAll('.evey-ticket-tooltip');
+      const icons = document.querySelectorAll('.evey-info-icon');
+      
+      console.log(`📊 Found ${tooltips.length} tooltips and ${icons.length} icons`);
+      
+      tooltips.forEach((tooltip, i) => {
+        // Add close button
+        if (!tooltip.querySelector('.mobile-close-btn')) {
+          const btn = document.createElement('span');
+          btn.innerHTML = '×';
+          btn.style.cssText = 'position:absolute;top:10px;right:10px;cursor:pointer;font-size:32px;color:#ffffff;font-weight:400;z-index:10000;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:"Homemade Apple",cursive;text-shadow:0 1px 3px rgba(0,0,0,0.3);';
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            console.log(`❌ Closing tooltip ${i+1}`);
+            tooltip.style.setProperty('opacity', '0', 'important');
+            tooltip.style.setProperty('visibility', 'hidden', 'important');
+          };
+          tooltip.appendChild(btn);
+        }
+      });
+    }
+    
+    // Global click handler - capture phase
+    document.addEventListener('click', function(e) {
+      const clickedIcon = e.target.closest('.evey-info-icon');
+      if (!clickedIcon) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      console.log('👆 FINAL: Info icon clicked!');
+      
+      const tooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
+      if (!tooltip) {
+        console.log('❌ No tooltip found');
+        return;
+      }
+      
+      const computedOpacity = window.getComputedStyle(tooltip).opacity;
+      const isVisible = parseFloat(computedOpacity) > 0.5;
+      
+      console.log(`📋 Tooltip check: computed=${computedOpacity}, visible=${isVisible}`);
+      
+      if (isVisible) {
+        console.log('📉 HIDING tooltip');
+        tooltip.style.setProperty('opacity', '0', 'important');
+        tooltip.style.setProperty('visibility', 'hidden', 'important');
+      } else {
+        // Hide all others
+        document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
+          if (t !== tooltip) {
+            t.style.setProperty('opacity', '0', 'important');
+            t.style.setProperty('visibility', 'hidden', 'important');
+          }
+        });
+        
+        console.log('📈 SHOWING tooltip with !important');
+        tooltip.style.setProperty('opacity', '1', 'important');
+        tooltip.style.setProperty('visibility', 'visible', 'important');
+        tooltip.style.setProperty('display', 'block', 'important');
+        tooltip.style.setProperty('pointer-events', 'auto', 'important');
+        
+        console.log(`✅ Applied styles, computed opacity: ${window.getComputedStyle(tooltip).opacity}`);
+      }
+    }, true);
+    
+    // Setup multiple times
+    setTimeout(setupFinalTooltips, 1000);
+    setTimeout(setupFinalTooltips, 2000);
+    setTimeout(setupFinalTooltips, 3000);
+  </script>
+
   <style>
     /* Our design system colors/fonts */
     #MainProduct-{{ section.id }} {
