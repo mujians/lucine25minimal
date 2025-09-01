@@ -137,7 +137,12 @@
           const opacity = window.getComputedStyle(tooltip).opacity;
           if (parseFloat(opacity) < 0.9) {
             console.log(`⚡ Re-forcing tooltip ${tooltipId} (was ${opacity})`);
-            tooltip.style.cssText += 'opacity: 1 !important; visibility: visible !important; display: block !important;';
+            // Re-inject the style tag if needed
+            if (!document.getElementById(`style-${tooltipId}`)) {
+              document.head.appendChild(styleTag);
+              console.log(`💉 Re-injected style for ${tooltipId}`);
+            }
+            tooltip.style.cssText = 'opacity: 1 !important; visibility: visible !important; display: block !important; pointer-events: auto !important; z-index: 99999 !important;';
           }
         }
       });
