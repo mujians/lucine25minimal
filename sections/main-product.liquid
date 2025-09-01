@@ -46,12 +46,12 @@
         console.log('Grandparent:', iconElement.parentElement?.parentElement);
         console.log('Grandparent classes:', iconElement.parentElement?.parentElement?.className);
         
-        // Fallback to icon position
-        const iconRect = iconElement.getBoundingClientRect();
+        // Just center it on screen
         customTooltip.style.cssText = `
           position: fixed;
-          top: ${iconRect.bottom + 10}px;
-          left: ${Math.max(20, iconRect.left - 150)}px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           width: 400px;
           max-width: calc(100vw - 40px);
           background: rgba(26, 26, 26, 0.98);
@@ -67,14 +67,12 @@
           line-height: 1.6;
         `;
       } else {
-        const variantRect = variantContainer.getBoundingClientRect();
-        const top = variantRect.bottom + 10;
-        const left = variantRect.left;
-        
+        // Also center if we have variant container
         customTooltip.style.cssText = `
           position: fixed;
-          top: ${top}px;
-          left: ${left}px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           width: 400px;
           max-width: calc(100vw - 40px);
           background: rgba(26, 26, 26, 0.98);
@@ -91,26 +89,27 @@
         `;
       }
       
-      // Add close button - SIMPLE WHITE X
+      // Add close button - PROPER X
       const closeBtn = document.createElement('span');
       closeBtn.className = 'custom-tooltip-close';
-      closeBtn.innerHTML = '×';
+      closeBtn.innerHTML = '✕';  // Using proper multiplication sign
       closeBtn.style.cssText = `
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 15px;
+        right: 15px;
         color: white;
-        font-size: 28px;
-        font-weight: normal;
+        font-size: 24px;
+        font-weight: 300;
         cursor: pointer;
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         line-height: 1;
-        opacity: 0.9;
+        opacity: 0.8;
         transition: opacity 0.2s;
+        font-family: system-ui, -apple-system, sans-serif;
       `;
       
       closeBtn.onmouseover = () => {
