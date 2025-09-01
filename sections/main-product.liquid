@@ -7,12 +7,53 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // ULTIMATE tooltip fix - inject style tags dynamically
-    console.log('💥 ULTIMATE TOOLTIP FIX STARTING!');
+    // DETECTIVE MODE - understand Evey's behavior
+    console.log('🕵️ DETECTIVE MODE - Tracking Evey behavior');
     
     // Track open tooltips with unique IDs
     const openTooltips = new Map();
     let tooltipIdCounter = 0;
+    
+    // Watch for DOM changes
+    const eveyObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        // Check for removed tooltips
+        mutation.removedNodes.forEach(node => {
+          if (node.classList && node.classList.contains('evey-ticket-tooltip')) {
+            console.log('🗑️ EVEY REMOVED a tooltip!', node.id || 'no-id');
+          }
+        });
+        
+        // Check for added tooltips
+        mutation.addedNodes.forEach(node => {
+          if (node.classList && node.classList.contains('evey-ticket-tooltip')) {
+            console.log('➕ EVEY ADDED a new tooltip!');
+          }
+        });
+        
+        // Check for attribute changes on evey containers
+        if (mutation.type === 'attributes' && mutation.target.classList) {
+          if (mutation.target.classList.contains('evey__variants') || 
+              mutation.target.classList.contains('evey__variant')) {
+            console.log(`🔄 EVEY changed ${mutation.attributeName} on`, mutation.target.className);
+          }
+        }
+      });
+    });
+    
+    // Start observing after Evey loads
+    setTimeout(() => {
+      const eveyContainer = document.querySelector('.evey__variants');
+      if (eveyContainer) {
+        eveyObserver.observe(eveyContainer, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['style', 'class']
+        });
+        console.log('👁️ Now watching Evey container for changes');
+      }
+    }, 2000);
     
     function setupFinalTooltips() {
       console.log('🎯 Setting up tooltip handlers...');
