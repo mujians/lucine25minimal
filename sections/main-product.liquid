@@ -29,37 +29,67 @@
       customTooltip.setAttribute('data-variant', variantName);
       
       // Position it properly relative to the variant container
-      const variantContainer = iconElement.closest('.evey__variant');
+      let variantContainer = iconElement.closest('.evey__variant');
+      
+      // Try different selectors if the first one doesn't work
       if (!variantContainer) {
-        console.error('No variant container found!');
-        return null;
+        variantContainer = iconElement.closest('[class*="evey__variant"]');
       }
-      
-      const variantRect = variantContainer.getBoundingClientRect();
-      const iconRect = iconElement.getBoundingClientRect();
-      
-      // Calculate position similar to Evey (below the variant, aligned left)
-      const top = variantRect.bottom + 10;
-      const left = variantRect.left;
-      
-      customTooltip.style.cssText = `
-        position: fixed;
-        top: ${top}px;
-        left: ${left}px;
-        width: ${Math.min(variantRect.width, 400)}px;
-        max-width: 400px;
-        background: rgba(26, 26, 26, 0.98);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        z-index: 999999;
-        display: block;
-        opacity: 1;
-        visibility: visible;
-        font-size: 14px;
-        line-height: 1.5;
-      `;
+      if (!variantContainer) {
+        variantContainer = iconElement.closest('.evey__variants')?.querySelector('.evey__variant');
+      }
+      if (!variantContainer) {
+        // Log what we're working with
+        console.log('Icon element:', iconElement);
+        console.log('Parent:', iconElement.parentElement);
+        console.log('Parent classes:', iconElement.parentElement?.className);
+        console.log('Grandparent:', iconElement.parentElement?.parentElement);
+        console.log('Grandparent classes:', iconElement.parentElement?.parentElement?.className);
+        
+        // Fallback to icon position
+        const iconRect = iconElement.getBoundingClientRect();
+        customTooltip.style.cssText = `
+          position: fixed;
+          top: ${iconRect.bottom + 10}px;
+          left: ${iconRect.left}px;
+          width: 300px;
+          max-width: 400px;
+          background: rgba(26, 26, 26, 0.98);
+          color: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          z-index: 999999;
+          display: block;
+          opacity: 1;
+          visibility: visible;
+          font-size: 14px;
+          line-height: 1.5;
+        `;
+      } else {
+        const variantRect = variantContainer.getBoundingClientRect();
+        const top = variantRect.bottom + 10;
+        const left = variantRect.left;
+        
+        customTooltip.style.cssText = `
+          position: fixed;
+          top: ${top}px;
+          left: ${left}px;
+          width: ${Math.min(variantRect.width, 400)}px;
+          max-width: 400px;
+          background: rgba(26, 26, 26, 0.98);
+          color: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          z-index: 999999;
+          display: block;
+          opacity: 1;
+          visibility: visible;
+          font-size: 14px;
+          line-height: 1.5;
+        `;
+      }
       
       // Add close button AFTER setting main styles
       const closeBtn = document.createElement('button');
