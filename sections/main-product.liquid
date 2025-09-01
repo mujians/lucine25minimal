@@ -15,44 +15,87 @@
     
     // Create a custom tooltip that Evey can't destroy
     function createCustomTooltip(eveyTooltip, iconElement) {
-      // Get the content from Evey's tooltip
-      const content = eveyTooltip.innerHTML;
+      // Get the content from Evey's tooltip (but not the close button if it exists)
+      const eveyContent = eveyTooltip.cloneNode(true);
+      const existingClose = eveyContent.querySelector('.evey-tooltip-close, .mobile-close-btn');
+      if (existingClose) existingClose.remove();
+      
       const variantName = iconElement.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
       
       // Create our own tooltip container outside Evey
       const customTooltip = document.createElement('div');
       customTooltip.className = 'custom-tooltip-replacement';
-      customTooltip.innerHTML = content;
+      customTooltip.innerHTML = eveyContent.innerHTML;
       customTooltip.setAttribute('data-variant', variantName);
       
-      // Add close button
-      const closeBtn = document.createElement('span');
-      closeBtn.className = 'custom-close-btn';
-      closeBtn.innerHTML = '×';
-      closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;cursor:pointer;font-size:32px;color:#ffffff;font-weight:400;z-index:10000;width:32px;height:32px;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 3px rgba(0,0,0,0.3);';
-      closeBtn.onclick = () => {
-        customTooltip.style.display = 'none';
-        customTooltips.delete(variantName);
-      };
-      customTooltip.appendChild(closeBtn);
-      
-      // Position it near the icon
+      // Position it properly relative to the variant container
+      const variantContainer = iconElement.closest('.evey__variant');
+      const variantRect = variantContainer.getBoundingClientRect();
       const iconRect = iconElement.getBoundingClientRect();
+      
+      // Calculate position similar to Evey (below the variant, aligned left)
+      const top = variantRect.bottom + 10;
+      const left = variantRect.left;
+      
       customTooltip.style.cssText = `
         position: fixed;
-        top: ${iconRect.top + 30}px;
-        left: ${Math.min(iconRect.left, window.innerWidth - 320)}px;
-        width: 300px;
-        background: #1a1a1a;
+        top: ${top}px;
+        left: ${left}px;
+        width: ${Math.min(variantRect.width, 400)}px;
+        max-width: 400px;
+        background: rgba(26, 26, 26, 0.98);
         color: white;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         z-index: 999999;
         display: block;
         opacity: 1;
         visibility: visible;
+        font-size: 14px;
+        line-height: 1.5;
       `;
+      
+      // Add close button AFTER setting main styles
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'custom-tooltip-close';
+      closeBtn.innerHTML = `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      `;
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition: all 0.2s;
+        padding: 0;
+      `;
+      
+      closeBtn.onmouseover = () => {
+        closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+      };
+      closeBtn.onmouseout = () => {
+        closeBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+      };
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        customTooltip.remove();
+        customTooltips.delete(variantName);
+      };
+      
+      customTooltip.appendChild(closeBtn);
       
       // Add to body (outside Evey's control)
       document.body.appendChild(customTooltip);
@@ -123,6 +166,28 @@
   </script>
   
   <style>
+    /* HIDE ALL EVEY TOOLTIPS PERMANENTLY */
+    .evey-ticket-tooltip,
+    .evey__ticket-tooltip,
+    .evey-tooltip,
+    [class*="evey"][class*="tooltip"] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    
+    /* Ensure our custom tooltips stay visible */
+    .custom-tooltip-replacement {
+      position: fixed !important;
+      z-index: 999999 !important;
+    }
+    
+    /* Style the close button properly */
+    .custom-tooltip-close:hover {
+      transform: scale(1.1);
+    }
+    
     /* NUCLEAR CSS - Override everything with max specificity */
     .evey-ticket-tooltip.force-visible {
       opacity: 1 !important;
