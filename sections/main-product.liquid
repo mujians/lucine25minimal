@@ -1272,19 +1272,8 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // DEBUG: Log what we find
-                            console.log('🔍 Checking for selected date...');
-                            console.log('Button disabled?', btn.disabled);
-                            console.log('Button className:', btn.className);
-                            console.log('.evey-scheduler-selected:', eveyCard.querySelector('.evey-scheduler-selected'));
-                            console.log('[data-evey-selected="true"]:', eveyCard.querySelector('[data-evey-selected="true"]'));
-                            console.log('.evey-date-selected:', eveyCard.querySelector('.evey-date-selected'));
-                            console.log('.selected:', eveyCard.querySelector('.selected'));
-                            console.log('[class*="selected"]:', eveyCard.querySelector('[class*="selected"]'));
-                            
-                            // Only check if button is disabled - that's the real indicator
+                            // Check if button is disabled (means no date selected)
                             const hasDateSelected = !btn.disabled;
-                            console.log('📅 Date selected?', hasDateSelected);
                             
                             if (!hasDateSelected) {
                               // Show warning tooltip
@@ -1293,17 +1282,37 @@
                                 warningTooltip = document.createElement('div');
                                 warningTooltip.className = 'date-warning-tooltip';
                                 warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
-                                warningTooltip.style.cssText = `position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(220, 38, 38, 0.95); color: white; padding: 0.6rem 1rem; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 999; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);`;
+                                warningTooltip.style.cssText = `
+                                  position: absolute; 
+                                  bottom: calc(100% + 10px); 
+                                  left: 50%; 
+                                  transform: translateX(-50%); 
+                                  background: rgba(220, 38, 38, 0.95); 
+                                  color: white; 
+                                  padding: 0.8rem 1.2rem; 
+                                  border-radius: 8px; 
+                                  font-size: 14px; 
+                                  white-space: nowrap; 
+                                  z-index: 99999; 
+                                  opacity: 0; 
+                                  transition: opacity 0.3s ease; 
+                                  pointer-events: none; 
+                                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                                  margin-bottom: 5px;
+                                `;
                                 
-                                if (btn.style.position !== 'relative') {
+                                if (btn.style.position !== 'relative' && btn.style.position !== 'absolute') {
                                   btn.style.position = 'relative';
                                 }
                                 btn.appendChild(warningTooltip);
                               }
                               
+                              // Force show it
                               setTimeout(() => {
-                                warningTooltip.style.opacity = '1';
-                              }, 50);
+                                if (warningTooltip) {
+                                  warningTooltip.style.opacity = '1';
+                                }
+                              }, 10);
                             }
                           });
                           
