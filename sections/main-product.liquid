@@ -102,9 +102,15 @@
         return;
       }
       
+      // Ensure tooltip has an ID
+      if (!tooltip.id) {
+        tooltip.id = `tooltip-${tooltipIdCounter++}`;
+        console.log(`🆔 Assigned ID: ${tooltip.id}`);
+      }
+      
       const isVisible = openTooltips.has(tooltip.id);
       
-      console.log(`📋 Tooltip state: visible=${isVisible}, id=${tooltip.id}`);
+      console.log(`📋 Tooltip state: visible=${isVisible}, id='${tooltip.id}'`);
       
       if (isVisible) {
         console.log('📉 HIDING tooltip');
