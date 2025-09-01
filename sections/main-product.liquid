@@ -1272,16 +1272,19 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // Check if date is selected - look for ANY selected date/time elements
-                            const hasDateSelected = eveyCard.querySelector('.evey-scheduler-selected') || 
-                                                  eveyCard.querySelector('[data-evey-selected="true"]') ||
-                                                  eveyCard.querySelector('.evey-date-selected') ||
-                                                  eveyCard.querySelector('.selected') ||
-                                                  eveyCard.querySelector('.evey__selected') ||
-                                                  eveyCard.querySelector('[class*="selected"]') ||
-                                                  eveyCard.querySelector('.evey__variant-container:not([style*="pointer-events: none"])') ||
-                                                  // Check if button is actually enabled (not disabled)
-                                                  !btn.disabled;
+                            // DEBUG: Log what we find
+                            console.log('🔍 Checking for selected date...');
+                            console.log('Button disabled?', btn.disabled);
+                            console.log('Button className:', btn.className);
+                            console.log('.evey-scheduler-selected:', eveyCard.querySelector('.evey-scheduler-selected'));
+                            console.log('[data-evey-selected="true"]:', eveyCard.querySelector('[data-evey-selected="true"]'));
+                            console.log('.evey-date-selected:', eveyCard.querySelector('.evey-date-selected'));
+                            console.log('.selected:', eveyCard.querySelector('.selected'));
+                            console.log('[class*="selected"]:', eveyCard.querySelector('[class*="selected"]'));
+                            
+                            // Only check if button is disabled - that's the real indicator
+                            const hasDateSelected = !btn.disabled;
+                            console.log('📅 Date selected?', hasDateSelected);
                             
                             if (!hasDateSelected) {
                               // Show warning tooltip
