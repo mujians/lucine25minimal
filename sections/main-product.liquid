@@ -7,8 +7,8 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // AGGRESSIVE tooltip fix - blocks Evey interference
-    console.log('🚀 AGGRESSIVE TOOLTIP FIX STARTING!');
+    // NUCLEAR tooltip fix - completely override Evey
+    console.log('☢️ NUCLEAR TOOLTIP FIX STARTING!');
     
     // Track open tooltips
     const openTooltips = new Set();
@@ -22,6 +22,9 @@
       console.log(`📊 Found ${tooltips.length} tooltips and ${icons.length} icons`);
       
       tooltips.forEach((tooltip, i) => {
+        // Add data attribute to track
+        tooltip.setAttribute('data-tooltip-index', i);
+        
         // Add close button
         if (!tooltip.querySelector('.mobile-close-btn')) {
           const btn = document.createElement('span');
@@ -31,37 +34,13 @@
           btn.onclick = (e) => {
             e.stopPropagation();
             console.log(`❌ Closing tooltip ${i+1}`);
+            tooltip.classList.remove('force-visible');
             openTooltips.delete(tooltip);
-            tooltip.style.setProperty('opacity', '0', 'important');
-            tooltip.style.setProperty('visibility', 'hidden', 'important');
           };
           tooltip.appendChild(btn);
         }
       });
     }
-    
-    // Force tooltips to stay open - check every 100ms
-    setInterval(() => {
-      openTooltips.forEach(tooltip => {
-        const currentOpacity = window.getComputedStyle(tooltip).opacity;
-        if (parseFloat(currentOpacity) < 0.9) {
-          console.log(`⚡ Forcing tooltip visible (was ${currentOpacity})`);
-          tooltip.style.setProperty('opacity', '1', 'important');
-          tooltip.style.setProperty('visibility', 'visible', 'important');
-          tooltip.style.setProperty('display', 'block', 'important');
-          tooltip.style.setProperty('pointer-events', 'auto', 'important');
-          tooltip.style.setProperty('z-index', '99999', 'important');
-          
-          // Also force parent container
-          const parent = tooltip.parentElement;
-          if (parent) {
-            parent.style.setProperty('z-index', '99998', 'important');
-          }
-        }
-      });
-    }, 100);
-    
-    // Remove old observer code since we're using interval instead
     
     // Global click handler - capture phase
     document.addEventListener('click', function(e) {
@@ -79,34 +58,25 @@
         return;
       }
       
-      const computedOpacity = window.getComputedStyle(tooltip).opacity;
-      const isVisible = parseFloat(computedOpacity) > 0.5 || openTooltips.has(tooltip);
+      const isVisible = tooltip.classList.contains('force-visible');
       
-      console.log(`📋 Tooltip state: opacity=${computedOpacity}, tracked=${openTooltips.has(tooltip)}`);
+      console.log(`📋 Tooltip state: force-visible=${isVisible}`);
       
       if (isVisible) {
         console.log('📉 HIDING tooltip');
+        tooltip.classList.remove('force-visible');
         openTooltips.delete(tooltip);
-        tooltip.style.setProperty('opacity', '0', 'important');
-        tooltip.style.setProperty('visibility', 'hidden', 'important');
       } else {
         // Hide all others
         document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
-          if (t !== tooltip) {
-            openTooltips.delete(t);
-            t.style.setProperty('opacity', '0', 'important');
-            t.style.setProperty('visibility', 'hidden', 'important');
-          }
+          t.classList.remove('force-visible');
+          openTooltips.delete(t);
         });
         
-        console.log('📈 SHOWING tooltip and tracking it');
+        console.log('📈 SHOWING tooltip with force-visible class');
+        tooltip.classList.add('force-visible');
         openTooltips.add(tooltip);
-        tooltip.style.setProperty('opacity', '1', 'important');
-        tooltip.style.setProperty('visibility', 'visible', 'important');
-        tooltip.style.setProperty('display', 'block', 'important');
-        tooltip.style.setProperty('pointer-events', 'auto', 'important');
-        
-        console.log(`✅ Tooltip opened and tracked`);
+        console.log(`✅ Tooltip opened with nuclear override`);
       }
     }, true);
     
@@ -115,6 +85,32 @@
     setTimeout(setupFinalTooltips, 2000);
     setTimeout(setupFinalTooltips, 3000);
   </script>
+  
+  <style>
+    /* NUCLEAR CSS - Override everything with max specificity */
+    .evey-ticket-tooltip.force-visible {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+      pointer-events: auto !important;
+      z-index: 99999 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+    
+    /* Disable all Evey animations/transitions for forced tooltips */
+    .evey-ticket-tooltip.force-visible * {
+      animation: none !important;
+      transition: none !important;
+    }
+    
+    /* Ensure parent doesn't hide it */
+    .evey__variant:has(.evey-ticket-tooltip.force-visible) {
+      z-index: 99998 !important;
+      overflow: visible !important;
+    }
+  </style>
 
   <style>
     /* Our design system colors/fonts */
