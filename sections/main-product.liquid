@@ -30,6 +30,11 @@
       
       // Position it properly relative to the variant container
       const variantContainer = iconElement.closest('.evey__variant');
+      if (!variantContainer) {
+        console.error('No variant container found!');
+        return null;
+      }
+      
       const variantRect = variantContainer.getBoundingClientRect();
       const iconRect = iconElement.getBoundingClientRect();
       
@@ -151,7 +156,10 @@
       });
       
       // Create our custom tooltip
-      createCustomTooltip(eveyTooltip, clickedIcon);
+      const created = createCustomTooltip(eveyTooltip, clickedIcon);
+      if (!created) {
+        console.error('Failed to create custom tooltip');
+      }
     }, true);
     
     // Clean up when clicking outside
