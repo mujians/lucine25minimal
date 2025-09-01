@@ -96,21 +96,44 @@
       
       console.log('👆 Info icon clicked!');
       
-      const tooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
+      // Find tooltip - check multiple possible locations
+      let tooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
       if (!tooltip) {
-        console.log('❌ No tooltip found');
+        tooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
+      }
+      if (!tooltip) {
+        // Search all tooltips and find the one closest to this icon
+        const allTooltips = document.querySelectorAll('.evey-ticket-tooltip');
+        console.log(`🔍 Searching ${allTooltips.length} tooltips...`);
+        for (let t of allTooltips) {
+          if (clickedIcon.closest('.evey__variant')?.contains(t)) {
+            tooltip = t;
+            console.log('✅ Found tooltip via variant container');
+            break;
+          }
+        }
+      }
+      
+      if (!tooltip) {
+        console.log('❌ No tooltip found after exhaustive search');
         return;
       }
+      
+      // Log current state
+      const computedStyles = window.getComputedStyle(tooltip);
+      console.log(`🔬 Tooltip found: opacity=${computedStyles.opacity}, visibility=${computedStyles.visibility}, display=${computedStyles.display}`);
       
       // Ensure tooltip has an ID
       if (!tooltip.id) {
         tooltip.id = `tooltip-${tooltipIdCounter++}`;
         console.log(`🆔 Assigned ID: ${tooltip.id}`);
+      } else {
+        console.log(`♻️ Reusing existing ID: ${tooltip.id}`);
       }
       
       const isVisible = openTooltips.has(tooltip.id);
       
-      console.log(`📋 Tooltip state: visible=${isVisible}, id='${tooltip.id}'`);
+      console.log(`📋 Tooltip state: tracked=${isVisible}, id='${tooltip.id}'`);
       
       if (isVisible) {
         console.log('📉 HIDING tooltip');
@@ -125,7 +148,17 @@
         
         console.log('📈 SHOWING tooltip with injected styles');
         showTooltip(tooltip);
-        console.log(`✅ Tooltip opened with ultimate override`);
+        
+        // Check if it actually worked
+        setTimeout(() => {
+          const afterStyles = window.getComputedStyle(tooltip);
+          console.log(`🔬 After show: opacity=${afterStyles.opacity}, visibility=${afterStyles.visibility}, display=${afterStyles.display}`);
+          if (parseFloat(afterStyles.opacity) < 0.5) {
+            console.log('⚠️ TOOLTIP NOT VISIBLE - Style injection may have failed!');
+          } else {
+            console.log('✅ Tooltip successfully shown');
+          }
+        }, 100);
       }
     }, true);
     
