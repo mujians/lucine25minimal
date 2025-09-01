@@ -7,127 +7,62 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // DETECTIVE MODE - understand Evey's behavior
-    console.log('🕵️ DETECTIVE MODE - Tracking Evey behavior');
+    // REPLACEMENT STRATEGY - Create our own tooltips outside Evey's control
+    console.log('🚀 CUSTOM TOOLTIP SYSTEM STARTING');
     
-    // Track open tooltips with unique IDs
-    const openTooltips = new Map();
-    let tooltipIdCounter = 0;
+    // Store our custom tooltips
+    const customTooltips = new Map();
     
-    // Watch for DOM changes
-    const eveyObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        // Check for removed tooltips
-        mutation.removedNodes.forEach(node => {
-          if (node.classList && node.classList.contains('evey-ticket-tooltip')) {
-            console.log('🗑️ EVEY REMOVED a tooltip!', node.id || 'no-id');
-          }
-        });
-        
-        // Check for added tooltips
-        mutation.addedNodes.forEach(node => {
-          if (node.classList && node.classList.contains('evey-ticket-tooltip')) {
-            console.log('➕ EVEY ADDED a new tooltip!');
-          }
-        });
-        
-        // Check for attribute changes on evey containers
-        if (mutation.type === 'attributes' && mutation.target.classList) {
-          if (mutation.target.classList.contains('evey__variants') || 
-              mutation.target.classList.contains('evey__variant')) {
-            console.log(`🔄 EVEY changed ${mutation.attributeName} on`, mutation.target.className);
-          }
-        }
-      });
-    });
-    
-    // Start observing after Evey loads
-    setTimeout(() => {
-      const eveyContainer = document.querySelector('.evey__variants');
-      if (eveyContainer) {
-        eveyObserver.observe(eveyContainer, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['style', 'class']
-        });
-        console.log('👁️ Now watching Evey container for changes');
-      }
-    }, 2000);
-    
-    function setupFinalTooltips() {
-      console.log('🎯 Setting up tooltip handlers...');
+    // Create a custom tooltip that Evey can't destroy
+    function createCustomTooltip(eveyTooltip, iconElement) {
+      // Get the content from Evey's tooltip
+      const content = eveyTooltip.innerHTML;
+      const variantName = iconElement.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
       
-      const tooltips = document.querySelectorAll('.evey-ticket-tooltip');
-      const icons = document.querySelectorAll('.evey-info-icon');
+      // Create our own tooltip container outside Evey
+      const customTooltip = document.createElement('div');
+      customTooltip.className = 'custom-tooltip-replacement';
+      customTooltip.innerHTML = content;
+      customTooltip.setAttribute('data-variant', variantName);
       
-      console.log(`📊 Found ${tooltips.length} tooltips and ${icons.length} icons`);
+      // Add close button
+      const closeBtn = document.createElement('span');
+      closeBtn.className = 'custom-close-btn';
+      closeBtn.innerHTML = '×';
+      closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;cursor:pointer;font-size:32px;color:#ffffff;font-weight:400;z-index:10000;width:32px;height:32px;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 3px rgba(0,0,0,0.3);';
+      closeBtn.onclick = () => {
+        customTooltip.style.display = 'none';
+        customTooltips.delete(variantName);
+      };
+      customTooltip.appendChild(closeBtn);
       
-      tooltips.forEach((tooltip, i) => {
-        // Give each tooltip a unique ID
-        if (!tooltip.id) {
-          tooltip.id = `tooltip-${tooltipIdCounter++}`;
-        }
-        
-        // Add close button
-        if (!tooltip.querySelector('.mobile-close-btn')) {
-          const btn = document.createElement('span');
-          btn.className = 'mobile-close-btn';
-          btn.innerHTML = '×';
-          btn.style.cssText = 'position:absolute;top:10px;right:10px;cursor:pointer;font-size:32px;color:#ffffff;font-weight:400;z-index:10000;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:"Homemade Apple",cursive;text-shadow:0 1px 3px rgba(0,0,0,0.3);';
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            console.log(`❌ Closing tooltip ${tooltip.id}`);
-            hideTooltip(tooltip);
-          };
-          tooltip.appendChild(btn);
-        }
-      });
-    }
-    
-    function showTooltip(tooltip) {
-      // Remove any existing style tag for this tooltip
-      const existingStyle = document.getElementById(`style-${tooltip.id}`);
-      if (existingStyle) existingStyle.remove();
-      
-      // Create a new style tag with max specificity
-      const styleTag = document.createElement('style');
-      styleTag.id = `style-${tooltip.id}`;
-      styleTag.innerHTML = `
-        #${tooltip.id} {
-          opacity: 1 !important;
-          visibility: visible !important;
-          display: block !important;
-          pointer-events: auto !important;
-          z-index: 99999 !important;
-          transform: none !important;
-          transition: none !important;
-          animation: none !important;
-        }
+      // Position it near the icon
+      const iconRect = iconElement.getBoundingClientRect();
+      customTooltip.style.cssText = `
+        position: fixed;
+        top: ${iconRect.top + 30}px;
+        left: ${Math.min(iconRect.left, window.innerWidth - 320)}px;
+        width: 300px;
+        background: #1a1a1a;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        z-index: 999999;
+        display: block;
+        opacity: 1;
+        visibility: visible;
       `;
-      document.head.appendChild(styleTag);
-      openTooltips.set(tooltip.id, styleTag);
       
-      console.log(`💉 Injected style for ${tooltip.id}`);
+      // Add to body (outside Evey's control)
+      document.body.appendChild(customTooltip);
+      customTooltips.set(variantName, customTooltip);
       
-      // Also force with inline styles
-      tooltip.style.cssText += 'opacity: 1 !important; visibility: visible !important; display: block !important;';
+      console.log(`✨ Created custom tooltip for ${variantName}`);
+      return customTooltip;
     }
     
-    function hideTooltip(tooltip) {
-      // Remove the style tag
-      const styleTag = openTooltips.get(tooltip.id);
-      if (styleTag) {
-        styleTag.remove();
-        openTooltips.delete(tooltip.id);
-        console.log(`🗑️ Removed style for ${tooltip.id}`);
-      }
-      
-      // Force hide
-      tooltip.style.cssText += 'opacity: 0 !important; visibility: hidden !important;';
-    }
-    
-    // Global click handler - capture phase
+    // NEW APPROACH - Create custom tooltips on click
     document.addEventListener('click', function(e) {
       const clickedIcon = e.target.closest('.evey-info-icon');
       if (!clickedIcon) return;
@@ -137,95 +72,54 @@
       
       console.log('👆 Info icon clicked!');
       
-      // Find tooltip - check multiple possible locations
-      let tooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
-      if (!tooltip) {
-        tooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
-      }
-      if (!tooltip) {
-        // Search all tooltips and find the one closest to this icon
-        const allTooltips = document.querySelectorAll('.evey-ticket-tooltip');
-        console.log(`🔍 Searching ${allTooltips.length} tooltips...`);
-        for (let t of allTooltips) {
-          if (clickedIcon.closest('.evey__variant')?.contains(t)) {
-            tooltip = t;
-            console.log('✅ Found tooltip via variant container');
-            break;
-          }
-        }
-      }
+      const variantName = clickedIcon.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
       
-      if (!tooltip) {
-        console.log('❌ No tooltip found after exhaustive search');
+      // Check if we already have a custom tooltip for this variant
+      if (customTooltips.has(variantName)) {
+        const existing = customTooltips.get(variantName);
+        if (existing.style.display === 'none') {
+          // Re-show it
+          existing.style.display = 'block';
+          console.log(`👁️ Re-showing custom tooltip for ${variantName}`);
+        } else {
+          // Hide it
+          existing.style.display = 'none';
+          console.log(`🙈 Hiding custom tooltip for ${variantName}`);
+        }
         return;
       }
       
-      // Log current state
-      const computedStyles = window.getComputedStyle(tooltip);
-      console.log(`🔬 Tooltip found: opacity=${computedStyles.opacity}, visibility=${computedStyles.visibility}, display=${computedStyles.display}`);
-      
-      // Ensure tooltip has an ID
-      if (!tooltip.id) {
-        tooltip.id = `tooltip-${tooltipIdCounter++}`;
-        console.log(`🆔 Assigned ID: ${tooltip.id}`);
-      } else {
-        console.log(`♻️ Reusing existing ID: ${tooltip.id}`);
+      // Find Evey's tooltip to copy content
+      let eveyTooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
+      if (!eveyTooltip) {
+        eveyTooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
       }
       
-      const isVisible = openTooltips.has(tooltip.id);
-      
-      console.log(`📋 Tooltip state: tracked=${isVisible}, id='${tooltip.id}'`);
-      
-      if (isVisible) {
-        console.log('📉 HIDING tooltip');
-        hideTooltip(tooltip);
-      } else {
-        // Hide all others
-        document.querySelectorAll('.evey-ticket-tooltip').forEach(t => {
-          if (t.id && openTooltips.has(t.id)) {
-            hideTooltip(t);
-          }
-        });
-        
-        console.log('📈 SHOWING tooltip with injected styles');
-        showTooltip(tooltip);
-        
-        // Check if it actually worked
-        setTimeout(() => {
-          const afterStyles = window.getComputedStyle(tooltip);
-          console.log(`🔬 After show: opacity=${afterStyles.opacity}, visibility=${afterStyles.visibility}, display=${afterStyles.display}`);
-          if (parseFloat(afterStyles.opacity) < 0.5) {
-            console.log('⚠️ TOOLTIP NOT VISIBLE - Style injection may have failed!');
-          } else {
-            console.log('✅ Tooltip successfully shown');
-          }
-        }, 100);
+      if (!eveyTooltip) {
+        console.log('❌ No Evey tooltip found to copy');
+        return;
       }
-    }, true);
-    
-    // Keep tooltips visible - check every 50ms
-    setInterval(() => {
-      openTooltips.forEach((styleTag, tooltipId) => {
-        const tooltip = document.getElementById(tooltipId);
-        if (tooltip) {
-          const opacity = window.getComputedStyle(tooltip).opacity;
-          if (parseFloat(opacity) < 0.9) {
-            console.log(`⚡ Re-forcing tooltip ${tooltipId} (was ${opacity})`);
-            // Re-inject the style tag if needed
-            if (!document.getElementById(`style-${tooltipId}`)) {
-              document.head.appendChild(styleTag);
-              console.log(`💉 Re-injected style for ${tooltipId}`);
-            }
-            tooltip.style.cssText = 'opacity: 1 !important; visibility: visible !important; display: block !important; pointer-events: auto !important; z-index: 99999 !important;';
-          }
+      
+      // Hide all other custom tooltips
+      customTooltips.forEach((tooltip, name) => {
+        if (name !== variantName) {
+          tooltip.style.display = 'none';
         }
       });
-    }, 50);
+      
+      // Create our custom tooltip
+      createCustomTooltip(eveyTooltip, clickedIcon);
+    }, true);
     
-    // Setup multiple times
-    setTimeout(setupFinalTooltips, 1000);
-    setTimeout(setupFinalTooltips, 2000);
-    setTimeout(setupFinalTooltips, 3000);
+    // Clean up when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.evey-info-icon') && !e.target.closest('.custom-tooltip-replacement')) {
+        // Hide all custom tooltips when clicking outside
+        customTooltips.forEach(tooltip => {
+          tooltip.style.display = 'none';
+        });
+      }
+    });
   </script>
   
   <style>
