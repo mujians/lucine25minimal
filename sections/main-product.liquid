@@ -40,35 +40,28 @@
       });
     }
     
-    // MutationObserver to fight Evey's changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          const tooltip = mutation.target;
-          if (tooltip.classList && tooltip.classList.contains('evey-ticket-tooltip') && openTooltips.has(tooltip)) {
-            const currentOpacity = window.getComputedStyle(tooltip).opacity;
-            if (parseFloat(currentOpacity) < 0.9) {
-              console.log('⚡ Evey tried to hide tooltip, blocking!');
-              tooltip.style.setProperty('opacity', '1', 'important');
-              tooltip.style.setProperty('visibility', 'visible', 'important');
-              tooltip.style.setProperty('display', 'block', 'important');
-              tooltip.style.setProperty('pointer-events', 'auto', 'important');
-            }
+    // Force tooltips to stay open - check every 100ms
+    setInterval(() => {
+      openTooltips.forEach(tooltip => {
+        const currentOpacity = window.getComputedStyle(tooltip).opacity;
+        if (parseFloat(currentOpacity) < 0.9) {
+          console.log(`⚡ Forcing tooltip visible (was ${currentOpacity})`);
+          tooltip.style.setProperty('opacity', '1', 'important');
+          tooltip.style.setProperty('visibility', 'visible', 'important');
+          tooltip.style.setProperty('display', 'block', 'important');
+          tooltip.style.setProperty('pointer-events', 'auto', 'important');
+          tooltip.style.setProperty('z-index', '99999', 'important');
+          
+          // Also force parent container
+          const parent = tooltip.parentElement;
+          if (parent) {
+            parent.style.setProperty('z-index', '99998', 'important');
           }
         }
       });
-    });
+    }, 100);
     
-    // Start observing after page loads
-    setTimeout(() => {
-      document.querySelectorAll('.evey-ticket-tooltip').forEach(tooltip => {
-        observer.observe(tooltip, { 
-          attributes: true, 
-          attributeFilter: ['style']
-        });
-      });
-      console.log('👁️ MutationObserver watching tooltips');
-    }, 2000);
+    // Remove old observer code since we're using interval instead
     
     // Global click handler - capture phase
     document.addEventListener('click', function(e) {
