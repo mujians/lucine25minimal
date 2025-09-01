@@ -1272,11 +1272,16 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // Check if date is selected
+                            // Check if date is selected - look for ANY selected date/time elements
                             const hasDateSelected = eveyCard.querySelector('.evey-scheduler-selected') || 
                                                   eveyCard.querySelector('[data-evey-selected="true"]') ||
                                                   eveyCard.querySelector('.evey-date-selected') ||
-                                                  eveyCard.querySelector('.selected');
+                                                  eveyCard.querySelector('.selected') ||
+                                                  eveyCard.querySelector('.evey__selected') ||
+                                                  eveyCard.querySelector('[class*="selected"]') ||
+                                                  eveyCard.querySelector('.evey__variant-container:not([style*="pointer-events: none"])') ||
+                                                  // Check if button is actually enabled (not disabled)
+                                                  !btn.disabled;
                             
                             if (!hasDateSelected) {
                               // Show warning tooltip
