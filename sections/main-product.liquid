@@ -1276,11 +1276,19 @@
                             // Evey disables the button when no date is selected, regardless of ticket quantity
                             const noDateSelected = btn.disabled || btn.classList.contains('disabled');
                             
+                            console.log('⚠️ WARNING CHECK:');
+                            console.log('  - Button disabled:', btn.disabled);
+                            console.log('  - Has disabled class:', btn.classList.contains('disabled'));
+                            console.log('  - Should show warning:', noDateSelected);
+                            
                             // Show warning when NO DATE is selected
                             if (noDateSelected) {
+                              console.log('📢 SHOWING WARNING TOOLTIP');
+                              
                               // Show warning tooltip
                               let warningTooltip = btn.querySelector('.date-warning-tooltip');
                               if (!warningTooltip) {
+                                console.log('  - Creating new tooltip');
                                 warningTooltip = document.createElement('div');
                                 warningTooltip.className = 'date-warning-tooltip';
                                 warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
@@ -1310,12 +1318,25 @@
                                   btn.style.position = 'relative';
                                 }
                                 btn.appendChild(warningTooltip);
+                              } else {
+                                console.log('  - Tooltip already exists');
                               }
                               
                               // Make sure it's visible
                               if (warningTooltip) {
                                 warningTooltip.style.display = 'block';
+                                
+                                // Log actual computed styles
+                                const computed = window.getComputedStyle(warningTooltip);
+                                console.log('📊 TOOLTIP ACTUAL STATE:');
+                                console.log('  - Computed opacity:', computed.opacity);
+                                console.log('  - Computed display:', computed.display);
+                                console.log('  - Computed visibility:', computed.visibility);
+                                console.log('  - Computed z-index:', computed.zIndex);
+                                console.log('  - Computed background:', computed.backgroundColor);
                               }
+                            } else {
+                              console.log('✅ Date selected, no warning needed');
                             }
                           });
                           
