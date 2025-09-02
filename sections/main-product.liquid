@@ -1272,20 +1272,11 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // Check specifically for date selection in Evey calendar
-                            // Look for any active/selected date element
-                            const hasDateSelected = document.querySelector('.evey-calendar .selected') ||
-                                                  document.querySelector('.evey-calendar .active') ||
-                                                  document.querySelector('[data-date-selected="true"]') ||
-                                                  document.querySelector('.date-selected') ||
-                                                  document.querySelector('.time-selected') ||
-                                                  document.querySelector('.evey__date--selected') ||
-                                                  document.querySelector('.evey__time--selected') ||
-                                                  // Check if there's selected text showing date/time
-                                                  Array.from(document.querySelectorAll('.evey__selected-info, .evey-selected-text, [class*="selected"]'))
-                                                    .some(el => el.textContent && (el.textContent.includes('2025') || el.textContent.includes(':00')));
+                            // Simple check: if button is disabled, no date is selected
+                            // If button is enabled but has "disabled" class, also no date
+                            const buttonIsDisabled = btn.disabled || btn.classList.contains('disabled');
                             
-                            if (!hasDateSelected) {
+                            if (buttonIsDisabled) {
                               // Show warning tooltip
                               let warningTooltip = btn.querySelector('.date-warning-tooltip');
                               if (!warningTooltip) {
@@ -1293,26 +1284,26 @@
                                 warningTooltip.className = 'date-warning-tooltip';
                                 warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
                                 warningTooltip.style.cssText = `
-                                  position: absolute; 
-                                  bottom: calc(100% + 10px); 
-                                  left: 50%; 
-                                  transform: translateX(-50%); 
-                                  background: rgb(220, 38, 38); 
-                                  color: white; 
-                                  padding: 0.8rem 1.2rem; 
-                                  border-radius: 8px; 
-                                  font-size: 14px; 
-                                  white-space: normal; 
-                                  max-width: 280px;
-                                  width: max-content;
-                                  text-align: center;
-                                  line-height: 1.4;
-                                  z-index: 99999; 
+                                  position: absolute !important; 
+                                  bottom: calc(100% + 10px) !important; 
+                                  left: 50% !important; 
+                                  transform: translateX(-50%) !important; 
+                                  background: rgb(220, 38, 38) !important; 
+                                  color: white !important; 
+                                  padding: 0.8rem 1.2rem !important; 
+                                  border-radius: 8px !important; 
+                                  font-size: 14px !important; 
+                                  white-space: normal !important; 
+                                  max-width: 280px !important;
+                                  width: max-content !important;
+                                  text-align: center !important;
+                                  line-height: 1.4 !important;
+                                  z-index: 999999 !important; 
                                   opacity: 0; 
-                                  transition: opacity 0.3s ease; 
-                                  pointer-events: none; 
-                                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-                                  margin-bottom: 5px;
+                                  transition: opacity 0.3s ease !important; 
+                                  pointer-events: none !important; 
+                                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+                                  margin-bottom: 5px !important;
                                 `;
                                 
                                 if (btn.style.position !== 'relative' && btn.style.position !== 'absolute') {
@@ -1321,10 +1312,10 @@
                                 btn.appendChild(warningTooltip);
                               }
                               
-                              // Force show it
+                              // Force show it with !important
                               setTimeout(() => {
                                 if (warningTooltip) {
-                                  warningTooltip.style.opacity = '1';
+                                  warningTooltip.style.setProperty('opacity', '1', 'important');
                                 }
                               }, 10);
                             }
