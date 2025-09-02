@@ -2278,7 +2278,7 @@
       
       <!-- Payment Security & Methods Row -->
       {% if shop.enabled_payment_types.size > 0 %}
-      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); gap: 2rem;">
+      <div class="payment-row" style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); gap: 2rem;">
         
         <!-- Left: Secure Payments Badge -->
         <div style="flex-shrink: 0;">
@@ -2342,6 +2342,13 @@
       
       .mobile-break {
         display: inline;
+      }
+      
+      /* Stack payment section vertically on mobile */
+      .payment-row {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
       }
     }
   </style>
