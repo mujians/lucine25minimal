@@ -15,7 +15,7 @@
         "discount_info": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<div class=\"formatted-content\">\n  <h1>🎄 Biglietti Lucine di Natale 2025</h1>\n</div>"
+            "custom_liquid": "<div class=\"formatted-content\">\n  <h1>Lucine di Natale 2025</h1>\n</div>"
           }
         },
         "custom_liquid_NkmUjk": {
