@@ -1272,9 +1272,16 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
+                            // DEBUG: Log button state
+                            console.log('🔍 Button state check:');
+                            console.log('  - btn.disabled:', btn.disabled);
+                            console.log('  - btn.className:', btn.className);
+                            console.log('  - Has disabled class:', btn.classList.contains('disabled'));
+                            
                             // Simple check: if button is disabled, no date is selected
                             // If button is enabled but has "disabled" class, also no date
                             const buttonIsDisabled = btn.disabled || btn.classList.contains('disabled');
+                            console.log('  - Final decision (show warning):', buttonIsDisabled);
                             
                             if (buttonIsDisabled) {
                               // Show warning tooltip
