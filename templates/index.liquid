@@ -98,21 +98,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
               </div>
             {% endif %}
             
-          {% elsif link.url contains '/products/' %}
-            <!-- Product tab content - will be loaded via AJAX -->
-            <div class="product-tab-placeholder formatted-content">
-              <div class="loading" style="text-align: center; padding: 3rem; color: var(--christmas-green);">
-                🎄 Caricamento prodotto...
-              </div>
-            </div>
-            
-          {% else %}
-            <!-- Other link types -->
-            <div class="formatted-content">
-              <h2>{{ link.title }}</h2>
-              <p>Contenuto in caricamento...</p>
-              <a href="{{ link.url }}" class="cta">Visualizza pagina completa →</a>
-            </div>
           {% endif %}
         </div>
       </div>
