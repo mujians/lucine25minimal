@@ -2276,9 +2276,21 @@
         
       </div>
       
+      <!-- Secure Payments Badge -->
+      <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(46, 125, 50, 0.15); border: 1px solid rgba(46, 125, 50, 0.3); padding: 0.5rem 1rem; border-radius: 20px; margin-bottom: 1rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(46, 125, 50, 0.9)" stroke-width="2">
+            <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
+            <circle cx="12" cy="16" r="1" fill="rgba(46, 125, 50, 0.9)"></circle>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round"></path>
+          </svg>
+          <span style="color: rgba(46, 125, 50, 0.9); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pagamenti Sicuri SSL</span>
+        </div>
+      </div>
+      
       <!-- Payment Methods - Dynamic from Shopify -->
       {% if shop.enabled_payment_types.size > 0 %}
-      <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div style="text-align: center; padding-top: 1rem;">
         <div style="color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">Metodi di pagamento accettati</div>
         <div class="payment-icons" style="display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;">
           {% for type in shop.enabled_payment_types %}
