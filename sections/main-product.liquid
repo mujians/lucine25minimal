@@ -2329,7 +2329,10 @@
       max-width: none !important;
     }
     
-    .trust-section .payment-logo-large svg {
+    /* Nuclear option: override Shopify's global 16px icon rule */
+    .trust-section .payment-logo-large svg,
+    .payment-logo-large svg,
+    [class*="payment"] svg {
       height: 96px !important;
       width: auto !important;
       max-width: none !important;
