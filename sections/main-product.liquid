@@ -1272,18 +1272,12 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // Check if ANY ticket quantity is selected
-                            const quantities = eveyCard.querySelectorAll('.quantity__input, input[type="number"], [name*="quantity"]');
-                            let hasTicketsSelected = false;
+                            // Check if button is disabled - that means NO DATE is selected
+                            // Evey disables the button when no date is selected, regardless of ticket quantity
+                            const noDateSelected = btn.disabled || btn.classList.contains('disabled');
                             
-                            quantities.forEach(input => {
-                              if (input.value && parseInt(input.value) > 0) {
-                                hasTicketsSelected = true;
-                              }
-                            });
-                            
-                            // Show warning ONLY if NO tickets are selected at all
-                            if (!hasTicketsSelected) {
+                            // Show warning when NO DATE is selected
+                            if (noDateSelected) {
                               // Show warning tooltip
                               let warningTooltip = btn.querySelector('.date-warning-tooltip');
                               if (!warningTooltip) {
