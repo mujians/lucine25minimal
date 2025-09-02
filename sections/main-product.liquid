@@ -1272,18 +1272,18 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // DEBUG: Log button state
-                            console.log('🔍 Button state check:');
-                            console.log('  - btn.disabled:', btn.disabled);
-                            console.log('  - btn.className:', btn.className);
-                            console.log('  - Has disabled class:', btn.classList.contains('disabled'));
+                            // Check if ANY ticket quantity is selected
+                            const quantities = eveyCard.querySelectorAll('.quantity__input, input[type="number"], [name*="quantity"]');
+                            let hasTicketsSelected = false;
                             
-                            // Simple check: if button is disabled, no date is selected
-                            // If button is enabled but has "disabled" class, also no date
-                            const buttonIsDisabled = btn.disabled || btn.classList.contains('disabled');
-                            console.log('  - Final decision (show warning):', buttonIsDisabled);
+                            quantities.forEach(input => {
+                              if (input.value && parseInt(input.value) > 0) {
+                                hasTicketsSelected = true;
+                              }
+                            });
                             
-                            if (buttonIsDisabled) {
+                            // Show warning ONLY if NO tickets are selected at all
+                            if (!hasTicketsSelected) {
                               // Show warning tooltip
                               let warningTooltip = btn.querySelector('.date-warning-tooltip');
                               if (!warningTooltip) {
@@ -1306,8 +1306,7 @@
                                   text-align: center !important;
                                   line-height: 1.4 !important;
                                   z-index: 999999 !important; 
-                                  opacity: 0; 
-                                  transition: opacity 0.3s ease !important; 
+                                  opacity: 1 !important; 
                                   pointer-events: none !important; 
                                   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
                                   margin-bottom: 5px !important;
@@ -1319,12 +1318,10 @@
                                 btn.appendChild(warningTooltip);
                               }
                               
-                              // Force show it with !important
-                              setTimeout(() => {
-                                if (warningTooltip) {
-                                  warningTooltip.style.setProperty('opacity', '1', 'important');
-                                }
-                              }, 10);
+                              // Make sure it's visible
+                              if (warningTooltip) {
+                                warningTooltip.style.display = 'block';
+                              }
                             }
                           });
                           
