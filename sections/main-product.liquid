@@ -2295,7 +2295,7 @@
         <!-- Right: Payment Icons -->
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           {% for type in shop.enabled_payment_types %}
-            <span class="payment-icon" style="background: white; padding: 6px; border-radius: 4px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;">
+            <span class="payment-icon" style="display: flex; align-items: center; justify-content: center;">
               {{ type | payment_type_svg_tag }}
             </span>
           {% endfor %}
@@ -2321,9 +2321,9 @@
     }
     
     .payment-icon svg {
-      height: 44px;
+      height: 40px;
       width: auto;
-      max-width: 52px;
+      max-width: none;
     }
     
     .mobile-break {
