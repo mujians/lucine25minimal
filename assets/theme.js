@@ -48,6 +48,29 @@
     });
   }
 
+  // Function to load product content via AJAX
+  function loadProductContent(url, targetContent) {
+    // Show loading state
+    targetContent.innerHTML = '<div class="loading" style="text-align: center; padding: 3rem; color: var(--christmas-green);">🎄 Caricamento...</div>';
+    
+    // Fetch product content
+    fetch(url + '?view=ajax')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(html => {
+        targetContent.innerHTML = html;
+        console.log('Product content loaded via AJAX');
+      })
+      .catch(error => {
+        console.error('Error loading product:', error);
+        targetContent.innerHTML = '<div class="error" style="text-align: center; padding: 3rem; color: var(--christmas-red);">❌ Errore nel caricamento. <a href="' + url + '" style="color: var(--christmas-green);">Clicca qui per visualizzare la pagina</a></div>';
+      });
+  }
+
   // Function to activate a tab and update URL
   function activateTab(index) {
     console.log('🔄 TAB ACTIVATION:', {
@@ -84,6 +107,23 @@
     if (targetContent) {
       targetContent.classList.add('active');
       console.log('Activated content for index:', index);
+      
+      // Check if this tab links to a product page and needs AJAX loading
+      const tab = tabs[index];
+      if (tab && tab.dataset.url && tab.dataset.url.includes('/products/')) {
+        console.log('🛒 Product tab detected, URL:', tab.dataset.url);
+        // Check if content needs to be loaded (has loading placeholder or is empty)
+        const hasLoadingPlaceholder = targetContent.querySelector('.loading');
+        const isContentEmpty = targetContent.innerHTML.trim() === '';
+        const hasProductContent = targetContent.querySelector('.product-ajax-content');
+        
+        if (hasLoadingPlaceholder || isContentEmpty || !hasProductContent) {
+          console.log('📦 Loading product content via AJAX...');
+          loadProductContent(tab.dataset.url, targetContent);
+        } else {
+          console.log('✅ Product content already loaded');
+        }
+      }
     } else {
       console.log('No content found for index:', index);
     }
