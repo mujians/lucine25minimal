@@ -1322,9 +1322,12 @@
                                 console.log('  - Tooltip already exists');
                               }
                               
-                              // Make sure it's visible
+                              // Make sure it's visible - FORCE OPACITY EVERY TIME
                               if (warningTooltip) {
                                 warningTooltip.style.display = 'block';
+                                // FORCE opacity 1 with setProperty to override any previous state
+                                warningTooltip.style.setProperty('opacity', '1', 'important');
+                                warningTooltip.style.setProperty('visibility', 'visible', 'important');
                                 
                                 // Log actual computed styles
                                 const computed = window.getComputedStyle(warningTooltip);
