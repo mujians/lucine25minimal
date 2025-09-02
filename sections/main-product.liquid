@@ -1285,17 +1285,28 @@
                             if (noDateSelected) {
                               console.log('📢 SHOWING WARNING TOOLTIP');
                               
-                              // Show warning tooltip
-                              let warningTooltip = btn.querySelector('.date-warning-tooltip');
+                              // Show warning tooltip - OUTSIDE THE BUTTON
+                              let warningTooltip = document.getElementById('date-warning-tooltip-global');
                               if (!warningTooltip) {
                                 console.log('  - Creating new tooltip');
                                 warningTooltip = document.createElement('div');
+                                warningTooltip.id = 'date-warning-tooltip-global';
                                 warningTooltip.className = 'date-warning-tooltip';
                                 warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
+                                
+                                // Add to body, not to button
+                                document.body.appendChild(warningTooltip);
+                              } else {
+                                console.log('  - Tooltip already exists');
+                              }
+                              
+                              // Position tooltip relative to button
+                              if (warningTooltip) {
+                                const btnRect = btn.getBoundingClientRect();
                                 warningTooltip.style.cssText = `
-                                  position: absolute !important; 
-                                  bottom: calc(100% + 10px) !important; 
-                                  left: 50% !important; 
+                                  position: fixed !important; 
+                                  top: ${btnRect.top - 60}px !important; 
+                                  left: ${btnRect.left + (btnRect.width / 2)}px !important; 
                                   transform: translateX(-50%) !important; 
                                   background: rgb(220, 38, 38) !important; 
                                   color: white !important; 
@@ -1309,25 +1320,11 @@
                                   line-height: 1.4 !important;
                                   z-index: 999999 !important; 
                                   opacity: 1 !important; 
+                                  visibility: visible !important;
+                                  display: block !important;
                                   pointer-events: none !important; 
                                   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-                                  margin-bottom: 5px !important;
                                 `;
-                                
-                                if (btn.style.position !== 'relative' && btn.style.position !== 'absolute') {
-                                  btn.style.position = 'relative';
-                                }
-                                btn.appendChild(warningTooltip);
-                              } else {
-                                console.log('  - Tooltip already exists');
-                              }
-                              
-                              // Make sure it's visible - FORCE OPACITY EVERY TIME
-                              if (warningTooltip) {
-                                warningTooltip.style.display = 'block';
-                                // FORCE opacity 1 with setProperty to override any previous state
-                                warningTooltip.style.setProperty('opacity', '1', 'important');
-                                warningTooltip.style.setProperty('visibility', 'visible', 'important');
                                 
                                 // Log actual computed styles
                                 const computed = window.getComputedStyle(warningTooltip);
@@ -1344,9 +1341,9 @@
                           });
                           
                           btn.addEventListener('mouseleave', function() {
-                            const warningTooltip = btn.querySelector('.date-warning-tooltip');
+                            const warningTooltip = document.getElementById('date-warning-tooltip-global');
                             if (warningTooltip) {
-                              warningTooltip.style.opacity = '0';
+                              warningTooltip.style.display = 'none';
                             }
                           });
                         }
