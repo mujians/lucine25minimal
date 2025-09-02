@@ -1233,14 +1233,15 @@
                         let tooltipContent = '';
                         // ONLY add tooltips for ridotti and saltafila
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
-                          tooltipContent = `<strong style="color: var(--christmas-gold);">Biglietti Ridotti</strong><br>
+                          tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTI RIDOTTI</strong><br>
+                            • Ingresso Gratuito per bambini fino ai 2 anni<br>
                             • Per bambini dai 3 ai 12 anni e disabili<br>
                             • Documentazione richiesta all'ingresso<br><br>
-                            <strong style="color: var(--christmas-gold);">Disabili:</strong><br>
-                            • Diritto al biglietto ridotto + n° 1 accompagnatore<br>
+                            <strong style="color: var(--christmas-gold);">DISABILI:</strong><br>
+                            • Ha diritto al biglietto ridotto anche 1 accompagnatore per disabile<br>
                             • Accesso prioritario tramite ingresso separato`;
                         } else if (text.includes('saltafila') || text.includes('salt')) {
-                          tooltipContent = `<strong style="color: var(--christmas-gold);">Biglietto Saltafila</strong><br>
+                          tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTO SALTAFILA</strong><br>
                             • Salta-fila all'ingresso del parco<br>
                             • Nel giorno e nella fascia oraria selezionata<br>
                             • Ideale nei weekend`;
