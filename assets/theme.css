@@ -569,7 +569,7 @@ ul li::before {
   background: transparent;
   color: var(--card-text);
   border-radius: 16px;
-  padding: 32px 24px 28px; /* Increased top padding and overall padding */
+  padding: 2.5rem 2rem; /* More consistent padding all around */
   margin: 2.5rem 0; /* Increased spacing between cards */
 }
 
@@ -951,9 +951,15 @@ body.footer-expanded {
   margin-bottom: 1rem;
 }
 
+/* General rule for all images in sketch cards */
+.sketch-card img {
+  max-width: 80px !important;
+  height: auto !important;
+}
+
 .sketch-card .navetta-icon {
-  width: 120px;
-  height: 120px;
+  width: 60px !important;  /* Reduced from 120px */
+  height: 60px !important;
   margin: 0 auto;
   align-self: center;
 }
@@ -2294,6 +2300,14 @@ a.cta[href*="maps"]:after {
   
   .event-card, .sketch-card {
     margin: 2rem 0;
+    padding: 2.5rem !important; /* Ensure good padding on desktop */
+  }
+  
+  /* Desktop: Ensure images in sketch-cards stay reasonable */
+  .sketch-card img,
+  .sketch-card .navetta-icon {
+    max-width: 70px !important;
+    height: auto !important;
   }
   
   /* Two-column layouts for longer content */
