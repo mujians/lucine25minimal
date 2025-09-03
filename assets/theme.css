@@ -2138,21 +2138,46 @@ a.cta[href*="maps"]:after {
     display: none !important;
   }
   
-  /* Desktop Footer at bottom of content */
+  /* Desktop Footer at bottom of content - White background */
   .desktop-footer {
     display: block !important;
     margin-top: 4rem;
-    padding: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: -3rem; /* Extend to full width */
+    margin-right: -3rem;
+    margin-bottom: -2rem;
+    padding: 2rem 3rem;
+    background: white;
     text-align: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: #333;
     font-size: 0.9rem;
+    position: relative;
+    width: calc(100% + 6rem);
+  }
+  
+  .desktop-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ddd, transparent);
+  }
+  
+  .desktop-footer p {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .desktop-footer strong {
+    color: #333;
   }
   
   .desktop-footer img {
-    max-width: 200px;
+    max-width: 250px;
     margin: 1rem auto;
-    opacity: 0.8;
+    display: block;
+    opacity: 1;
   }
   
   /* Main Content Area - Adjusted for sidebar */
@@ -2164,12 +2189,14 @@ a.cta[href*="maps"]:after {
     min-height: 100vh;
     display: flex;
     align-items: stretch;
+    overflow: visible; /* Allow footer to extend */
   }
   
   .content {
     flex: 1;
     max-width: none;
     padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll from footer */
   }
   
   /* Desktop Content Layout */
@@ -2177,6 +2204,17 @@ a.cta[href*="maps"]:after {
     padding: 2rem 3rem;
     max-width: 800px; /* Reduced from 1200px for better readability */
     margin: 0 auto;
+  }
+  
+  /* Limit ALL content widths including sections */
+  .content.show .formatted-content,
+  .content.show .content-section,
+  .content.show .location-section,
+  .content.show section {
+    max-width: 800px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   
   /* Limit image sizes on desktop */
