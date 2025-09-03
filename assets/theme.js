@@ -1,24 +1,30 @@
-// Navigation controller: menu ha solo 2 posizioni - bottom (homepage) e top (aperto)
+// Navigation controller: supports both mobile tabs and desktop sidebar
 (() => {
   const container = document.querySelector('.navigation-container');
-  const tabs = document.querySelectorAll('.tab');
+  const mobileTabs = document.querySelectorAll('.tab');
+  const desktopNavItems = document.querySelectorAll('.nav-item');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
 
-  if (!container || !tabs.length || !contents.length || !contentArea) {
+  // Combine mobile and desktop navigation elements
+  const allNavElements = [...mobileTabs, ...desktopNavItems];
+
+  if (!container || !allNavElements.length || !contents.length || !contentArea) {
     console.log('Navigation elements not found');
     return;
   }
 
   console.log('Navigation initialized - Elements found:', {
     container: !!container,
-    tabs: tabs.length,
+    mobileTabs: mobileTabs.length,
+    desktopNavItems: desktopNavItems.length,
     contents: contents.length,
     contentArea: !!contentArea
   });
   
   // Debug: stampa tutti i data-index disponibili
-  console.log('Available tabs:', Array.from(tabs).map(t => t.dataset.index));
+  console.log('Available mobile tabs:', Array.from(mobileTabs).map(t => t.dataset.index));
+  console.log('Available desktop nav:', Array.from(desktopNavItems).map(t => t.dataset.index));
   console.log('Available contents:', Array.from(contents).map(c => c.dataset.index));
 
   let scrollHandlerEnabled = true;
@@ -50,9 +56,14 @@
 
   // Function to activate a tab and update URL
   function activateTab(index) {
+    // Find the element name for this index (could be mobile or desktop)
+    const activeElement = [...mobileTabs, ...desktopNavItems].find(el => 
+      parseInt(el.dataset.index) === index
+    );
+    
     console.log('🔄 TAB ACTIVATION:', {
       newIndex: index,
-      tabName: tabs[index] ? tabs[index].textContent : 'UNKNOWN',
+      elementName: activeElement ? activeElement.textContent.trim() : 'UNKNOWN',
       windowScroll: window.pageYOffset,
       bodyHeight: document.body.scrollHeight,
       viewportHeight: window.innerHeight
@@ -61,14 +72,18 @@
     // Disable scroll handling during tab changes
     scrollHandlerEnabled = false;
     
-    // Update active tab
-    tabs.forEach((t, i) => {
-      t.classList.toggle('active', i === index);
+    // Update active state for both mobile and desktop navigation
+    mobileTabs.forEach((t, i) => {
+      t.classList.toggle('active', parseInt(t.dataset.index) === index);
+    });
+    
+    desktopNavItems.forEach((t, i) => {
+      t.classList.toggle('active', parseInt(t.dataset.index) === index);
     });
 
     // Update URL hash
-    if (index > 0 && tabs[index]) {
-      const tabName = tabs[index].textContent.toLowerCase().replace(/\s+/g, '-');
+    if (index > 0 && activeElement) {
+      const tabName = activeElement.textContent.trim().toLowerCase().replace(/\s+/g, '-');
       window.history.pushState(null, null, '#' + tabName);
     } else {
       window.history.pushState(null, null, window.location.pathname);
@@ -118,11 +133,11 @@
     }, 500);
   }
 
-  // Add click handlers
-  tabs.forEach((tab) => {
-    tab.onclick = (e) => {
+  // Add click handlers for both mobile and desktop navigation
+  allNavElements.forEach((navElement) => {
+    navElement.onclick = (e) => {
       e.preventDefault();
-      const index = parseInt(tab.dataset.index);
+      const index = parseInt(navElement.dataset.index);
       activateTab(index);
     };
   });
@@ -132,22 +147,21 @@
     const hash = window.location.hash.substring(1);
     if (!hash) return 0;
     
-    // Find tab by matching text content
-    for (let i = 0; i < tabs.length; i++) {
-      const tab = tabs[i];
-      const tabName = tab.textContent.toLowerCase().replace(/\s+/g, '-');
-      if (tabName === hash) {
-        return parseInt(tab.dataset.index);
+    // Find element by matching text content (check both mobile and desktop)
+    for (const navElement of allNavElements) {
+      const elementName = navElement.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+      if (elementName === hash) {
+        return parseInt(navElement.dataset.index);
       }
     }
     return 0; // Default to home if no match
   }
 
   // Initialize with correct tab from URL
-  console.log('Initializing - Found tabs:', tabs.length);
+  console.log('Initializing - Found navigation elements:', allNavElements.length);
   console.log('Found contents:', contents.length);
   
-  if (tabs.length > 0) {
+  if (allNavElements.length > 0) {
     // Check URL hash to determine initial tab
     const initialTabIndex = getTabFromHash();
     console.log('Initial tab index from URL:', initialTabIndex);

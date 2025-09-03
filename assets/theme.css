@@ -1976,3 +1976,287 @@ h6 {
 a.cta[href*="maps"]:after {
   content: " →";
 }
+
+/* ============================================
+   DESKTOP RESPONSIVE LAYOUT
+   ============================================ */
+
+/* Desktop Sidebar Navigation - Hidden on mobile */
+.desktop-sidebar {
+  display: none;
+}
+
+/* Desktop Layout for screens > 1024px */
+@media (min-width: 1024px) {
+  /* Hide mobile navigation on desktop */
+  .mobile-menu {
+    display: none;
+  }
+  
+  /* Show desktop sidebar */
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(15, 47, 31, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    padding: 2rem 1.5rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+  }
+  
+  /* Sidebar Header */
+  .sidebar-header {
+    margin-bottom: 3rem;
+    text-align: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .site-title {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 1.8rem;
+    color: var(--christmas-red);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+  
+  .site-tagline {
+    color: var(--christmas-gold);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  /* Sidebar Menu Items */
+  .sidebar-menu {
+    flex: 1;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.5rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(4px);
+  }
+  
+  .nav-item.active {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--christmas-gold);
+    color: var(--christmas-gold);
+  }
+  
+  .nav-icon {
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    width: 24px;
+    text-align: center;
+  }
+  
+  .nav-text {
+    font-weight: 500;
+  }
+  
+  /* Sidebar Footer */
+  .sidebar-footer {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .contact-info p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Main Content Area - Adjusted for sidebar */
+  .navigation-container {
+    padding-left: 280px;
+  }
+  
+  .content-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+  }
+  
+  .content {
+    flex: 1;
+    max-width: none;
+    padding: 0;
+  }
+  
+  /* Desktop Content Layout */
+  .content.show {
+    padding: 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Desktop Homepage Layout */
+  .navigation-container.bottom {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 280px;
+  }
+  
+  .navigation-container.bottom .content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  .navigation-container.bottom .tab-content {
+    background: rgba(15, 47, 31, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Desktop Typography */
+  body {
+    font-size: 18px;
+  }
+  
+  .formatted-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .formatted-content h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .formatted-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Desktop Card Layouts */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .event-card, .sketch-card {
+    margin: 2rem 0;
+  }
+  
+  /* Two-column layouts for longer content */
+  .two-column-desktop {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin: 2rem 0;
+  }
+  
+  /* CTA buttons - larger on desktop */
+  .cta, .family-cta {
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    display: inline-block;
+  }
+  
+  .cta:hover, .family-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+  }
+}
+
+/* Tablet Layout (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Mobile navigation but with better spacing */
+  .mobile-menu {
+    padding: 1rem 0;
+  }
+  
+  .menu-tabs {
+    gap: 1rem;
+    padding: 0 2rem;
+  }
+  
+  .tab {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    min-width: 120px;
+  }
+  
+  /* Content area improvements for tablet */
+  .content.show {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .formatted-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .formatted-content h2 {
+    font-size: 2rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .desktop-sidebar {
+    width: 320px;
+  }
+  
+  .navigation-container {
+    padding-left: 320px;
+  }
+  
+  .navigation-container.bottom {
+    padding-left: 320px;
+  }
+  
+  .content.show {
+    padding: 3rem 4rem;
+    max-width: 1400px;
+  }
+  
+  .formatted-content h1 {
+    font-size: 3.5rem;
+  }
+  
+  /* Three column grid for larger screens */
+  .info-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
