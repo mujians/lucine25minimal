@@ -498,8 +498,8 @@ p {
 }
 
 .family-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  color: var(--christmas-gold);
+  transition: color 0.3s ease;
 }
 
 /* CLEAN, MINIMAL DECORATIONS */
@@ -613,6 +613,12 @@ ul li::before {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
+  transition: color 0.3s ease;
+}
+
+.sketch-card .cta:hover {
+  color: var(--christmas-gold);
+  text-decoration-color: var(--christmas-gold);
 }
 
 /* Variazioni seed per bordi diversi */
@@ -2326,8 +2332,8 @@ a.cta[href*="maps"]:after {
   }
   
   .cta:hover, .family-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    color: var(--christmas-gold) !important;
+    transition: color 0.3s ease;
   }
 }
 
