@@ -1981,8 +1981,9 @@ a.cta[href*="maps"]:after {
    DESKTOP RESPONSIVE LAYOUT
    ============================================ */
 
-/* Desktop Sidebar Navigation - Hidden on mobile */
-.desktop-sidebar {
+/* Desktop elements - Hidden on mobile */
+.desktop-sidebar,
+.desktop-footer {
   display: none;
 }
 
@@ -2089,6 +2090,71 @@ a.cta[href*="maps"]:after {
     margin-bottom: 0.5rem;
   }
   
+  /* Social Icons in Sidebar */
+  .sidebar-social {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1rem 0;
+    justify-content: center;
+  }
+  
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    background: var(--christmas-gold);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  /* Legal Links in Sidebar */
+  .sidebar-legal {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  
+  .sidebar-legal a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .sidebar-legal a:hover {
+    color: var(--christmas-gold);
+  }
+  
+  /* Hide mobile footer trigger on desktop */
+  #footer-trigger {
+    display: none !important;
+  }
+  
+  /* Desktop Footer at bottom of content */
+  .desktop-footer {
+    display: block !important;
+    margin-top: 4rem;
+    padding: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .desktop-footer img {
+    max-width: 200px;
+    margin: 1rem auto;
+    opacity: 0.8;
+  }
+  
   /* Main Content Area - Adjusted for sidebar */
   .navigation-container {
     padding-left: 280px;
@@ -2109,8 +2175,25 @@ a.cta[href*="maps"]:after {
   /* Desktop Content Layout */
   .content.show {
     padding: 2rem 3rem;
-    max-width: 1200px;
+    max-width: 800px; /* Reduced from 1200px for better readability */
     margin: 0 auto;
+  }
+  
+  /* Limit image sizes on desktop */
+  .formatted-content img {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    margin: 1.5rem auto;
+    display: block;
+    border-radius: 12px;
+  }
+  
+  /* Better paragraph width for readability */
+  .formatted-content p {
+    max-width: 65ch; /* Optimal line length for reading */
+    margin-left: auto;
+    margin-right: auto;
   }
   
   /* Desktop Homepage Layout */
