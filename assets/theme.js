@@ -69,6 +69,12 @@
       viewportHeight: window.innerHeight
     });
     
+    // Reset scroll position BEFORE changing tabs
+    if (contentArea) {
+      contentArea.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+    
     // Disable scroll handling during tab changes
     scrollHandlerEnabled = false;
     
@@ -116,8 +122,22 @@
       // Tab aperta: menu in top, contenuto visibile
       container.classList.remove('bottom');
       container.classList.add('top');
-      contentArea.scrollTop = 0;
       contentArea.classList.add('show');
+      
+      // Force scroll reset with a small delay to ensure DOM is ready
+      contentArea.scrollTop = 0;
+      window.scrollTo(0, 0);
+      
+      // Double-check scroll reset after animation
+      setTimeout(() => {
+        contentArea.scrollTop = 0;
+        window.scrollTo(0, 0);
+        // Also reset the specific tab content scroll if it has its own scroll
+        if (targetContent) {
+          targetContent.scrollTop = 0;
+        }
+      }, 50);
+      
       // Il contenuto specifico è già attivato sopra
     }
     
