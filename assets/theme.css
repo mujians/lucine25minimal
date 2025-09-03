@@ -2141,15 +2141,15 @@ a.cta[href*="maps"]:after {
   /* Desktop Footer at bottom of content - White background */
   .desktop-footer {
     display: block !important;
-    margin-top: 4rem;
+    margin-top: 3rem;
     margin-left: -3rem; /* Extend to full width */
     margin-right: -3rem;
     margin-bottom: -2rem;
-    padding: 2rem 3rem;
+    padding: 1rem 2rem; /* Reduced padding */
     background: white;
     text-align: center;
     color: #333;
-    font-size: 0.9rem;
+    font-size: 0.75rem; /* Smaller text */
     position: relative;
     width: calc(100% + 6rem);
   }
@@ -2166,16 +2166,19 @@ a.cta[href*="maps"]:after {
   
   .desktop-footer p {
     color: #666;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Reduced margin */
+    font-size: 0.75rem; /* Smaller text */
   }
   
   .desktop-footer strong {
     color: #333;
+    font-size: 0.8rem; /* Slightly bigger for company name */
   }
   
   .desktop-footer img {
-    max-width: 250px;
-    margin: 1rem auto;
+    max-width: 150px; /* Much smaller image */
+    height: auto;
+    margin: 0.5rem auto;
     display: block;
     opacity: 1;
   }
