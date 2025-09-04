@@ -2351,10 +2351,10 @@ a.cta[href*="maps"]:after {
   .formatted-content .event-item .event-thumb,
   .formatted-content .events-list-standard .event-item .event-thumb,
   .formatted-content .event-item img.event-thumb {
-    width: 64px !important;
-    height: 64px !important;
-    max-width: 64px !important;
-    max-height: 64px !important;
+    width: 80px !important;
+    height: 80px !important;
+    max-width: 80px !important;
+    max-height: 80px !important;
     margin: 0 !important;
     border-radius: 8px !important;
     object-fit: cover !important;
