@@ -1952,13 +1952,18 @@ h6 {
   margin-bottom: 0.75rem;
 }
 
-.event-thumb {
+.event-item .event-thumb,
+.event-item img.event-thumb,
+.events-list-standard .event-item .event-thumb,
+.events-list-standard .event-item img.event-thumb {
   width: 64px !important;
   height: 64px !important;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-  margin: 0;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
 }
 
 .event-item .event-info {
@@ -1982,9 +1987,14 @@ h6 {
     text-align: left !important;
   }
   
-  .event-thumb {
+  .event-item .event-thumb,
+  .event-item img.event-thumb,
+  .events-list-standard .event-item .event-thumb,
+  .events-list-standard .event-item img.event-thumb {
     width: 64px !important;
     height: 64px !important;
+    max-width: 64px !important;
+    max-height: 64px !important;
     align-self: center;
   }
   
