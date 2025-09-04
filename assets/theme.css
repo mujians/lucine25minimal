@@ -296,7 +296,7 @@ main, #MainContent {
 
 .event-name {
   color: white;
-  font-size: 0.9em;
+  font-size: 1.125rem; /* 18px minimum */
 }
 
 .image-container {
@@ -428,7 +428,7 @@ main, #MainContent {
   background: linear-gradient(90deg, transparent, var(--christmas-gold), transparent);
 }
 
-.sketch-card .cta-primary {
+.formatted-content .sketch-card .cta-primary {
   font-size: 1.125rem; /* 18px minimum */
   padding: 1rem 2rem;
   background: var(--christmas-red);
@@ -448,6 +448,14 @@ main, #MainContent {
 }
 
 .link-red {
+  color: var(--christmas-red);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.sketch-border-red {
   color: var(--christmas-red);
 }
 
@@ -824,12 +832,22 @@ ul li::before {
   text-decoration-color: var(--christmas-gold);
 }
 
-/* Variazioni seed per bordi diversi */
+/* Variazioni seed per bordi diversi - RESPONSIVE PATTERNS */
 .seed-1 .sketch-border rect { stroke-dashoffset: 2; }
 .seed-2 .sketch-border rect { stroke-dashoffset: 6; }
 .seed-3 .sketch-border rect { stroke-dasharray: 12 7 5 11 9 8; }
 .seed-4 .sketch-border rect { stroke-dashoffset: 4; stroke-dasharray: 15 9 7 13; }
 .seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
+
+/* DESKTOP: Larger dash patterns for bigger containers */
+@media (min-width: 1024px) {
+  .seed-1 .sketch-border rect { stroke-dasharray: 20 12 10 16; }
+  .seed-2 .sketch-border rect { stroke-dasharray: 18 10 8 14; }
+  .seed-3 .sketch-border rect { stroke-dasharray: 24 14 10 22 18 16; }
+  .seed-4 .sketch-border rect { stroke-dasharray: 30 18 14 26; }
+  .seed-5 .sketch-border rect { stroke-dasharray: 26 12 16 20 22 14; }
+  .seed-6 .sketch-border rect { stroke-dasharray: 32 20 16 28 !important; }
+}
 
 /* Animated border for navetta card (seed-6) */
 .sketch-card.seed-6 .sketch-border rect[stroke-dasharray="16 10 8 14"] {
@@ -1527,6 +1545,18 @@ body.footer-expanded {
   z-index: -1;
 }
 
+/* RESPONSIVE QUOTE PATTERN */
+.quote-sketch-background path {
+  stroke-dasharray: 2 1; /* Mobile default */
+}
+
+@media (min-width: 1024px) {
+  .quote-sketch-background path {
+    stroke-dasharray: 4 2; /* Desktop: larger pattern */
+    stroke-width: 1.5;
+  }
+}
+
 .quote-content {
   position: relative;
   z-index: 1;
@@ -1940,7 +1970,7 @@ h6 {
   }
   
   .faq-nav-link {
-    font-size: 0.9rem;
+    font-size: 1.125rem; /* 18px minimum */
   }
 }
 
@@ -1980,7 +2010,7 @@ h6 {
 
 .menu-item-info .meta {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1.125rem; /* 18px minimum */
   color: rgba(255,255,255,0.7);
   line-height: 1.4;
 }
@@ -2086,7 +2116,7 @@ h6 {
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 1.125rem; /* 18px minimum instead of 13.6px */
   font-weight: 600;
   display: inline-block;
   margin-bottom: 0.75rem;
@@ -2349,14 +2379,14 @@ a.cta[href*="maps"]:after {
   
   .site-dates {
     color: var(--christmas-gold);
-    font-size: 1.1rem; /* Increased from 0.9rem */
+    font-size: 1.125rem; /* 18px minimum */
     font-weight: 600;
     margin: 0.5rem 0 0.2rem 0;
   }
   
   .site-closed {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1rem; /* Increased from 0.8rem */
+    font-size: 1.125rem; /* 18px minimum */
     margin: 0;
     font-style: italic;
   }
@@ -2488,7 +2518,7 @@ a.cta[href*="maps"]:after {
   
   .company-info p {
     color: rgba(255, 255, 255, 0.4); /* Less prominent */
-    font-size: 0.65rem; /* Smaller text */
+    font-size: 0.875rem; /* 14px - interface exception for legal info */
     margin: 0.2rem 0;
     line-height: 1.3;
   }
