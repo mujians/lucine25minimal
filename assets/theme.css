@@ -1976,6 +1976,12 @@ h6 {
   margin-bottom: 0.5rem !important;
 }
 
+/* Control image sizes in menu cards (excluding specific icons) */
+.menu-section-card img:not(.parking-icon):not(.navetta-icon) {
+  max-width: 80px;
+  height: auto;
+}
+
 /* Removed hover - menu sections are not clickable */
 
 /* Removed obsolete .event-minor-item styles - now using .event-item */
