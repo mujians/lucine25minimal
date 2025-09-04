@@ -2026,8 +2026,17 @@ a.cta[href*="maps"]:after {
   .sidebar-header {
     margin-bottom: 3rem;
     text-align: center;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+  }
+  
+  .logo-link {
+    display: block;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .logo-link:hover {
+    opacity: 0.8;
   }
   
   .sidebar-logo {

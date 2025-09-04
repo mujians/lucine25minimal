@@ -36,17 +36,14 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   <!-- Desktop Sidebar Navigation -->
   <nav class="desktop-sidebar">
     <div class="sidebar-header">
-      <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-logo-white-2025.png?v=1757004485" alt="Lucine di Natale" class="sidebar-logo" />
+      <a href="/" class="logo-link" data-index="0">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-logo-white-2025.png?v=1757004485" alt="Lucine di Natale" class="sidebar-logo" />
+      </a>
       <p class="site-dates">Dal 6 dicembre al 6 gennaio</p>
       <p class="site-closed">chiuso il 24 e il 31 dicembre</p>
     </div>
     
     <div class="sidebar-menu">
-      <button class="nav-item active" data-index="0">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-text">Home</span>
-      </button>
-      
       {% for link in main_menu.links %}
         <button class="nav-item" data-index="{{ forloop.index }}" data-url="{{ link.url }}">
           <span class="nav-icon">

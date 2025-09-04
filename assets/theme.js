@@ -3,11 +3,13 @@
   const container = document.querySelector('.navigation-container');
   const mobileTabs = document.querySelectorAll('.tab');
   const desktopNavItems = document.querySelectorAll('.nav-item');
+  const logoLink = document.querySelector('.logo-link');
   const contents = document.querySelectorAll('.tab-content');
   const contentArea = document.querySelector('.content');
 
-  // Combine mobile and desktop navigation elements
+  // Combine mobile and desktop navigation elements, including logo
   const allNavElements = [...mobileTabs, ...desktopNavItems];
+  if (logoLink) allNavElements.push(logoLink);
 
   if (!container || !allNavElements.length || !contents.length || !contentArea) {
     console.log('Navigation elements not found');
@@ -86,6 +88,11 @@
     desktopNavItems.forEach((t, i) => {
       t.classList.toggle('active', parseInt(t.dataset.index) === index);
     });
+    
+    // Update logo link active state (when homepage is active)
+    if (logoLink) {
+      logoLink.classList.toggle('active', index === 0);
+    }
 
     // Update URL hash
     if (index > 0 && activeElement) {
