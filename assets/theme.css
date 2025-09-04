@@ -1811,11 +1811,11 @@ h6 {
 
 /* FAQ Active State - question button when answer is open */
 .faq-question.active:after {
-  content: '\00D7';
+  content: '×';
   transform: translateY(-50%) rotate(0deg);
   font-size: 2.2em;
   font-weight: 400;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   letter-spacing: 0;
 }
 
