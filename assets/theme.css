@@ -2572,11 +2572,14 @@ a.cta[href*="maps"]:after {
   }
   
   .menu-title {
-    color: var(--christmas-gold);
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    color: white !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    margin-bottom: 1.5rem !important;
+    margin-top: 0 !important;
+    text-align: center !important;
+    display: block !important;
+    opacity: 1 !important;
   }
   
   .footer-link-main {
