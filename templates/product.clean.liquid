@@ -43,12 +43,42 @@
     <div class="evey-container">
       <h3>Evey Scheduler Test</h3>
       <div id="evey-selector">
-        <!-- Evey app block -->
-        {% render 'evey-events-tickets-multi-variant-selector', 
-           product: product,
-           show_service_fees: true %}
+        <!-- Evey app block - using the exact same block as main template -->
+        {% liquid
+          assign evey_block_settings = shop.metafields.app.evey_settings | default: blank
+          echo '<div class="evey-multi-variant-selector">'
+          echo '<!-- Evey will inject content here -->'
+          echo '</div>'
+        %}
       </div>
     </div>
+    
+    <!-- Load Evey scripts manually -->
+    <script>
+      // Load Evey if it hasn't loaded
+      if (!window.EveyApp) {
+        console.log('🔄 Loading Evey scripts manually...');
+        
+        // Create the same environment Evey expects
+        window.Shopify = window.Shopify || {};
+        window.Shopify.shop = '{{ shop.permanent_domain }}';
+        window.Shopify.theme = {
+          id: {{ theme.id }},
+          name: '{{ theme.name }}'
+        };
+        
+        // Try to trigger Evey initialization
+        const eveyScript = document.createElement('script');
+        eveyScript.src = 'https://cdn.evey.events/storefront/{{ shop.permanent_domain }}.js';
+        eveyScript.onload = () => {
+          console.log('✅ Evey script loaded');
+        };
+        eveyScript.onerror = () => {
+          console.log('❌ Evey script failed to load');
+        };
+        document.head.appendChild(eveyScript);
+      }
+    </script>
     
     <script>
       console.log('🧪 CLEAN PRODUCT TEMPLATE LOADED');
