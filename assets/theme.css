@@ -1963,11 +1963,7 @@ h6 {
   margin-bottom: 0;
 }
 
-/* Fix dimensioni standard per eventi */
-.event-item .event-thumb {
-  width: 80px !important;
-  height: 80px !important;
-}
+/* Eventi standard ora usano event-minor-item - regole rimosse */
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
@@ -1976,17 +1972,7 @@ h6 {
     gap: 1.5rem;
   }
   
-  .event-item {
-    flex-direction: row !important;
-    gap: 1rem !important;
-    text-align: left !important;
-  }
-  
-  .event-item .event-thumb {
-    width: 80px !important;
-    height: 80px !important;
-    align-self: center;
-  }
+  /* event-item mobile rules removed - now using event-minor-item */
   
   .event-minor-item {
     flex-direction: row !important;
