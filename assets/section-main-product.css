@@ -20,10 +20,17 @@
 }
 
 /* Fix Evey buttons visibility in product page */
-.section-main-product button[data-evey-trigger],
-.section-main-product [data-evey-string],
-.section-main-product .evey-scheduler-button {
+#MainProduct button[data-evey-trigger],
+#MainProduct [data-evey-string],
+#MainProduct .evey-scheduler-button,
+section[id*="MainProduct"] button[data-evey-trigger],
+section[id*="MainProduct"] [data-evey-string],
+section[id*="MainProduct"] .evey-scheduler-button,
+button[data-evey-trigger],
+[data-evey-string],
+.evey-scheduler-button {
   visibility: visible !important;
+  display: block !important;
 }
 
 .product.grid {

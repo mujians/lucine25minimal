@@ -2902,3 +2902,13 @@ a.cta[href*="maps"]:after {
     padding-top: 60px !important;
   }
 }
+
+/* EVEY EVENTS VISIBILITY FIX - Global override */
+button[data-evey-trigger],
+[data-evey-string],
+.evey-scheduler-button,
+.evey-btn {
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+}
