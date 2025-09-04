@@ -19,6 +19,13 @@
   padding-bottom: 0 !important;
 }
 
+/* Fix Evey buttons visibility in product page */
+.section-main-product button[data-evey-trigger],
+.section-main-product [data-evey-string],
+.section-main-product .evey-scheduler-button {
+  visibility: visible !important;
+}
+
 .product.grid {
   gap: 0;
 }
