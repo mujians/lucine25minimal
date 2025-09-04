@@ -1206,6 +1206,25 @@ body.footer-expanded {
   margin: 1.5rem 0;
 }
 
+/* Esclusioni specifiche per immagini eventi */
+.formatted-content .event-thumb,
+.formatted-content .featured-image {
+  margin: 0 !important;
+  border-radius: 8px !important;
+}
+
+.formatted-content .event-thumb {
+  max-width: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.formatted-content .featured-image {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 200px !important;
+}
+
 .formatted-content a {
   color: var(--christmas-red);
   text-decoration: underline;
@@ -2316,6 +2335,23 @@ a.cta[href*="maps"]:after {
     margin: 1.5rem auto;
     display: block;
     border-radius: 12px;
+  }
+  
+  /* Esclusioni specifiche per immagini eventi su desktop */
+  .formatted-content .event-thumb {
+    max-width: 64px !important;
+    width: 64px !important;
+    height: 64px !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+  
+  .formatted-content .featured-image {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 200px !important;
+    margin: 0 !important;
+    display: block !important;
   }
   
   /* Better paragraph width for readability */
