@@ -1938,6 +1938,37 @@ h6 {
   line-height: 1.5;
 }
 
+/* EVENTI MINORI - Classe per eventi con immagini più piccole */
+.event-minor-item {
+  display: flex !important;
+  gap: 1rem !important;
+  align-items: center !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 0.75rem;
+}
+
+.event-minor-item img {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.event-minor-item p {
+  margin-bottom: 0;
+}
+
+/* Fix dimensioni standard per eventi */
+.event-item .event-thumb {
+  width: 80px !important;
+  height: 80px !important;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .events-featured-grid {
@@ -1946,15 +1977,25 @@ h6 {
   }
   
   .event-item {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    flex-direction: row !important;
+    gap: 1rem !important;
+    text-align: left !important;
   }
   
   .event-item .event-thumb {
-    width: 120px;
-    height: 120px;
+    width: 80px !important;
+    height: 80px !important;
     align-self: center;
+  }
+  
+  .event-minor-item {
+    flex-direction: row !important;
+    text-align: left !important;
+  }
+  
+  .event-minor-item img {
+    width: 64px !important;
+    height: 64px !important;
   }
 }
 
