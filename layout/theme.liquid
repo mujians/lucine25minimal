@@ -32,11 +32,20 @@
 </head>
 <body class="template-{{ request.page_type | handle }}">
   <main id="MainContent" role="main">
+    
     {% if request.page_type == 'product' %}
-      <!-- Product pages with desktop sidebar wrapper -->
-      <div class="product-page-wrapper">
-        <!-- Desktop sidebar (only >1024px) -->
-        <div class="desktop-product-sidebar">
+      <!-- Desktop Product Wrapper with Sidebar (only >1024px) -->
+      <div class="desktop-product-wrapper">
+        <div class="navigation-container top" data-tabs-section>
+          <!-- Mobile Menu (hidden on desktop) -->
+          <div class="mobile-menu" style="display: none;">
+            <div class="menu-tabs">
+              <button class="tab" onclick="window.location.href='/'">Home</button>
+              <button class="tab active">Biglietti</button>
+            </div>
+          </div>
+
+          <!-- Desktop Sidebar Navigation -->
           <nav class="desktop-sidebar">
             <div class="sidebar-header">
               <a href="/" class="logo-link">
@@ -110,47 +119,45 @@
               </div>
             </div>
           </nav>
-        </div>
 
-        <!-- Product content -->
-        <div class="product-content-wrapper">
-          {{ content_for_layout }}
+          <!-- Content Area -->
+          <div class="content-wrapper">
+            <div class="content show">
+              <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+                {{ content_for_layout }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- Mobile Original Product (only <1024px) -->
+      <div class="mobile-product-original">
+        {{ content_for_layout }}
+      </div>
+
       <style>
-      /* Desktop product layout with sidebar */
+      /* Desktop: mostra wrapper con sidebar, nascondi mobile */
       @media (min-width: 1024px) {
-        .product-page-wrapper {
-          display: flex;
+        .desktop-product-wrapper {
+          display: block;
         }
-        .desktop-product-sidebar {
-          width: 280px;
-          position: fixed;
-          left: 0;
-          top: 0;
-          height: 100vh;
-          z-index: 1000;
-        }
-        .product-content-wrapper {
-          margin-left: 320px;
-          max-width: 800px;
-          margin-right: auto;
-          padding: 2rem;
+        .mobile-product-original {
+          display: none;
         }
       }
 
-      /* Mobile: normal product layout */
+      /* Mobile: nascondi wrapper, mostra versione mobile originale */
       @media (max-width: 1023px) {
-        .desktop-product-sidebar {
+        .desktop-product-wrapper {
           display: none;
         }
-        .product-content-wrapper {
-          margin: 0;
-          padding: 0;
+        .mobile-product-original {
+          display: block;
         }
       }
       </style>
+    
     {% else %}
       <!-- All other pages: normal layout -->
       {{ content_for_layout }}
