@@ -2683,9 +2683,13 @@ a.cta[href*="maps"]:after {
   }
 }
 
-/* Desktop - Hide mobile elements */
+/* Desktop - Hide mobile elements and add content padding */
 @media (min-width: 1024px) {
   .mobile-header {
     display: none;
+  }
+  
+  .content-wrapper {
+    padding-top: 60px !important;
   }
 }
