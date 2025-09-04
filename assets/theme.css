@@ -1938,8 +1938,10 @@ h6 {
   line-height: 1.5;
 }
 
-/* EVENTI MINORI - Classe per eventi con immagini più piccole */
-.event-minor-item {
+/* Regole event-minor-item rimosse - non usate nel contenuto Shopify */
+
+/* Fix per eventi standard con event-item e event-thumb (contenuto Shopify) */
+.event-item {
   display: flex !important;
   gap: 1rem !important;
   align-items: center !important;
@@ -1950,7 +1952,7 @@ h6 {
   margin-bottom: 0.75rem;
 }
 
-.event-minor-item img {
+.event-thumb {
   width: 64px !important;
   height: 64px !important;
   object-fit: cover;
@@ -1959,11 +1961,13 @@ h6 {
   margin: 0;
 }
 
-.event-minor-item p {
-  margin-bottom: 0;
+.event-item .event-info {
+  flex: 1;
 }
 
-/* Eventi standard ora usano event-minor-item - regole rimosse */
+.event-item p {
+  margin-bottom: 0;
+}
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
@@ -1972,17 +1976,19 @@ h6 {
     gap: 1.5rem;
   }
   
-  /* event-item mobile rules removed - now using event-minor-item */
-  
-  .event-minor-item {
+  .event-item {
     flex-direction: row !important;
+    gap: 1rem !important;
     text-align: left !important;
   }
   
-  .event-minor-item img {
+  .event-thumb {
     width: 64px !important;
     height: 64px !important;
+    align-self: center;
   }
+  
+  /* Regole event-minor-item mobile rimosse - non usate */
 }
 
 /* Maintain compatibility with existing event styles */
