@@ -266,9 +266,204 @@
           </div>
         </section>
 
+        <!-- Interface Typography Analysis -->
+        <section class="location-section">
+          <h2>🔧 Interface Typography Analysis</h2>
+          
+          <div class="sketch-card sketch seed-11">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-interface">
+                  <feturbulence type="fractalNoise" basefrequency="0.9" numoctaves="1" seed="11"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-interface)"></rect>
+            </svg>
+            <h4>Navigation & Interface Elements</h4>
+            <div class="typography-examples">
+              <h5>Desktop Sidebar:</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Nav items: Standard size, Providence Sans</li>
+                <li>Logo text: Variable sizes</li>
+                <li>Date info: Small text (site-dates, site-closed)</li>
+              </ul>
+              
+              <h5>Mobile Header:</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Burger menu: No text</li>
+                <li>Tab buttons (removed): Were variable sizes</li>
+              </ul>
+              
+              <h5>Mobile Footer Menu:</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Menu items: 1.25rem (20px), bold, uppercase</li>
+                <li>Legal text: 0.875rem (14px)</li>
+                <li>Company info: 0.875rem (14px)</li>
+              </ul>
+              
+              <h5>Buttons & CTAs:</h5>
+              <ul style="margin-left: 1rem;">
+                <li>.cta buttons: 1.1rem desktop</li>
+                <li>Vedi mappa links: Standard + arrow →</li>
+                <li>Close buttons: Icon only</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Page-by-Page Typography Inventory -->
+        <section class="location-section">
+          <h2>📄 Per-Page Typography Inventory</h2>
+          
+          <div class="sketch-card sketch seed-12">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-pages">
+                  <feturbulence type="fractalNoise" basefrequency="0.7" numoctaves="1" seed="12"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-pages)"></rect>
+            </svg>
+            <h4>Typography Usage by Page</h4>
+            <div class="typography-examples">
+              
+              <h5>🏠 Homepage (index.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Main title: H1 (3.5rem desktop, 2.5rem mobile)</li>
+                <li>Subtitle: Standard paragraph</li>
+                <li>Event card titles: H3</li>
+                <li>Info boxes: H4 + paragraph</li>
+                <li>CTA buttons: 1.1rem</li>
+              </ul>
+              
+              <h5>🎫 Biglietti (page.biglietti.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Section titles: H3</li>
+                <li>Card titles: H4</li>
+                <li>Lead text: 1.2rem, green, bold</li>
+                <li>Meta text: Standard, opacity 0.85</li>
+                <li>CTA buttons: Multiple sizes found</li>
+              </ul>
+              
+              <h5>📖 Storia (page.storia.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Main title: H1</li>
+                <li>Section title: H2</li>
+                <li>Quote text: Custom styling</li>
+                <li>Gallery titles: H4</li>
+                <li>Gallery descriptions: Standard paragraph</li>
+              </ul>
+              
+              <h5>🎄 Eventi (page.eventi.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Event dates: 1.1rem (desktop), variable mobile</li>
+                <li>Event titles: H4 (1.125rem)</li>
+                <li>Event descriptions: 0.95rem</li>
+                <li>Event thumbnails: 80px desktop, 64px mobile</li>
+              </ul>
+              
+              <h5>❓ FAQ (page.faq.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Section title: H2</li>
+                <li>FAQ questions: H4</li>
+                <li>FAQ answers: Standard paragraph</li>
+                <li>Navigation items: Various sizes</li>
+              </ul>
+              
+              <h5>🚗 Info & Parcheggi (page.info-parcheggi.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Location title: H3</li>
+                <li>Parking titles: H4</li>
+                <li>Parking meta: .meta class</li>
+                <li>Vedi mappa: .cta + arrow</li>
+              </ul>
+              
+              <h5>🍽️ Menu Ristoro (page.menu-ristoro.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Menu section: H2</li>
+                <li>Menu items: H4</li>
+                <li>Prices: Various formatting</li>
+                <li>Descriptions: .meta class</li>
+              </ul>
+              
+              <h5>👀 Visitare (page.visitare.liquid):</h5>
+              <ul style="margin-left: 1rem;">
+                <li>Page title: H1</li>
+                <li>Location titles: H3</li>
+                <li>Location descriptions: Standard paragraphs</li>
+                <li>Special info cards: Various sizes</li>
+              </ul>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- Typography Standardization Plan -->
+        <section class="location-section">
+          <h2>🎯 Typography Standardization Plan</h2>
+          
+          <div class="sketch-card sketch seed-13">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-plan">
+                  <feturbulence type="fractalNoise" basefrequency="0.5" numoctaves="1" seed="13"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-plan)"></rect>
+            </svg>
+            <h4 style="color: var(--christmas-gold);">Proposed Utility Classes (REM only)</h4>
+            <div class="typography-examples">
+              
+              <h5>Base Scale System:</h5>
+              <div style="margin-left: 1rem;">
+                <p style="font-size: 0.75rem;"><strong>.text-xs:</strong> 0.75rem (12px) - Fine print, captions</p>
+                <p style="font-size: 0.875rem;"><strong>.text-sm:</strong> 0.875rem (14px) - Meta info, legal text</p>
+                <p style="font-size: 1rem;"><strong>.text-base:</strong> 1rem (16px) - Body text default</p>
+                <p style="font-size: 1.125rem;"><strong>.text-lg:</strong> 1.125rem (18px) - Emphasized text</p>
+                <p style="font-size: 1.25rem;"><strong>.text-xl:</strong> 1.25rem (20px) - Subheadings</p>
+                <p style="font-size: 1.5rem;"><strong>.text-2xl:</strong> 1.5rem (24px) - H4 headings</p>
+                <p style="font-size: 1.875rem;"><strong>.text-3xl:</strong> 1.875rem (30px) - H3 headings</p>
+                <p style="font-size: 2.25rem;"><strong>.text-4xl:</strong> 2.25rem (36px) - H2 headings</p>
+                <p style="font-size: 3rem;"><strong>.text-5xl:</strong> 3rem (48px) - H1 headings</p>
+              </div>
+
+              <h5>Component-Specific Classes:</h5>
+              <ul style="margin-left: 1rem;">
+                <li><strong>.event-date:</strong> .text-lg, weight-600, green background</li>
+                <li><strong>.event-title:</strong> .text-xl, weight-600, white color</li>
+                <li><strong>.event-meta:</strong> .text-sm, opacity-85</li>
+                <li><strong>.card-lead:</strong> .text-xl, weight-600, green color</li>
+                <li><strong>.card-meta:</strong> .text-sm, opacity-85</li>
+                <li><strong>.footer-title:</strong> .text-base, weight-600, red color</li>
+                <li><strong>.footer-link:</strong> .text-base, underline</li>
+                <li><strong>.footer-legal:</strong> .text-sm</li>
+                <li><strong>.mobile-menu-item:</strong> .text-xl, weight-bold, uppercase</li>
+              </ul>
+
+              <h5>Mobile Responsive Rules:</h5>
+              <ul style="margin-left: 1rem;">
+                <li>H1: 3rem desktop → 2.25rem mobile</li>
+                <li>H2: 2.25rem desktop → 1.875rem mobile</li>
+                <li>H3: 1.875rem desktop → 1.5rem mobile</li>
+                <li>Event thumbnails: 5rem desktop → 4rem mobile</li>
+                <li>All other text: Same size across devices</li>
+              </ul>
+
+            </div>
+          </div>
+        </section>
+
         <!-- Recommendations -->
         <section class="location-section">
-          <h2>📋 Recommended Solutions</h2>
+          <h2>📋 Implementation Recommendations</h2>
           
           <div class="sketch-card sketch seed-10" style="border-color: var(--christmas-green);">
             <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">

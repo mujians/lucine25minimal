@@ -5,13 +5,7 @@
 }
 
 /* CUSTOM FONTS */
-@font-face {
-  font-family: 'Homemade Apple';
-  src: url('HomemadeApple.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Using only Providence Sans - Homemade Apple removed */
 
 @font-face {
   font-family: 'Providence Sans';
@@ -266,7 +260,7 @@ main, #MainContent {
 .special-event-info h3 {
   color: var(--christmas-red);
   margin-bottom: 0.5rem;
-  font-family: 'Homemade Apple', cursive;
+  font-family: 'Providence Sans', sans-serif;
 }
 
 .card-container {
@@ -392,7 +386,7 @@ main, #MainContent {
 
 /* TYPOGRAPHY SYSTEM - MIXED FONTS */
 h1, h2 {
-  font-family: 'Homemade Apple', cursive !important;
+  font-family: 'Providence Sans', sans-serif !important;
   font-weight: normal !important;
   margin: 0 0 1.5rem 0 !important;
   line-height: 1.4 !important;
@@ -1333,7 +1327,7 @@ body.footer-expanded {
 /* Typography quotes with Homemade Apple font */
 .quote-content::before,
 .quote-content::after {
-  font-family: 'Homemade Apple', cursive;
+  font-family: 'Providence Sans', sans-serif;
   font-size: 3rem;
   color: var(--christmas-gold);
   opacity: 0.7;
@@ -1653,7 +1647,7 @@ h6 {
   line-height: 1;
   width: 2rem;
   text-align: center;
-  font-family: 'Homemade Apple', cursive !important; /* Sketch effect font */
+  font-family: 'Providence Sans', sans-serif !important; /* Sketch effect font */
   letter-spacing: 0.1em;
 }
 
@@ -1686,7 +1680,7 @@ h6 {
   transform: translateY(-50%) rotate(0deg);
   font-size: 2.2em;
   font-weight: 400;
-  font-family: 'Homemade Apple', cursive !important; /* Sketch effect font */
+  font-family: 'Providence Sans', sans-serif !important; /* Sketch effect font */
   letter-spacing: 0;
 }
 
