@@ -2803,11 +2803,7 @@ a.cta[href*="maps"]:after {
   }
   
   .mobile-header {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
-    display: block;
+    display: none !important;
   }
 
   /* Mobile Cart Icon */
