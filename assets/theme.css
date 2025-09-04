@@ -818,7 +818,7 @@ ul li::before {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.95);
+  background: #0f2f1f;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -829,6 +829,18 @@ ul li::before {
   display: none;
   visibility: hidden;
   opacity: 0;
+}
+
+.snap-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='mobileGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23mobileGrain)'/%3E%3C/svg%3E");
 }
 
 /* Footer visible state - slides up from bottom */
@@ -2788,6 +2800,52 @@ a.cta[href*="maps"]:after {
     z-index: 1000;
     display: block;
   }
+
+  /* Mobile Cart Icon */
+  .mobile-cart-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: block;
+  }
+
+  .mobile-cart-icon a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-cart-icon a:hover {
+    background: white;
+    transform: scale(1.05);
+  }
+
+  .cart-icon {
+    font-size: 24px;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--christmas-red);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1.2;
+  }
   
   .burger-menu {
     width: 50px;
@@ -2828,6 +2886,10 @@ a.cta[href*="maps"]:after {
 /* Desktop - Hide mobile elements and add content padding */
 @media (min-width: 1024px) {
   .mobile-header {
+    display: none;
+  }
+
+  .mobile-cart-icon {
     display: none;
   }
   

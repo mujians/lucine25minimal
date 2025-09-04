@@ -26,6 +26,16 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
     </button>
   </div>
 
+  <!-- Mobile Cart Icon -->
+  <div class="mobile-cart-icon">
+    <a href="{% if cart.item_count > 0 %}/cart{% else %}/products/biglietto-parco-lucine-di-natale-2025{% endif %}" aria-label="Carrello">
+      <span class="cart-icon">🛒</span>
+      {% if cart.item_count > 0 %}
+        <span class="cart-count">{{ cart.item_count }}</span>
+      {% endif %}
+    </a>
+  </div>
+
   <!-- Include sidebar navigation -->
   {% assign current_page_title = 'Home' %}
   {% render 'sidebar-navigation' %}
