@@ -1206,23 +1206,28 @@ body.footer-expanded {
   margin: 1.5rem 0;
 }
 
-/* Esclusioni specifiche per immagini eventi */
-.formatted-content .event-thumb,
-.formatted-content .featured-image {
-  margin: 0 !important;
-  border-radius: 8px !important;
-}
-
-.formatted-content .event-thumb {
-  max-width: 64px !important;
+/* Esclusioni specifiche per immagini eventi - ALTA SPECIFICITÀ */
+.formatted-content .event-item .event-thumb,
+.formatted-content .events-list-standard .event-item .event-thumb,
+.formatted-content .event-item img.event-thumb {
   width: 64px !important;
   height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  display: block !important;
 }
 
-.formatted-content .featured-image {
+.formatted-content .events-featured-grid .featured-image,
+.formatted-content .featured-event-card .featured-image {
   max-width: 100% !important;
   width: 100% !important;
   height: 200px !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
 }
 
 .formatted-content a {
@@ -1960,8 +1965,10 @@ h6 {
 /* Regole event-minor-item rimosse - non usate nel contenuto Shopify */
 
 /* Fix per eventi standard con event-item e event-thumb (contenuto Shopify) */
-.event-item {
+.formatted-content .event-item,
+.formatted-content .events-list-standard .event-item {
   display: flex !important;
+  flex-direction: row !important;
   gap: 1rem !important;
   align-items: center !important;
   background: rgba(255, 255, 255, 0.05) !important;
@@ -2000,10 +2007,13 @@ h6 {
     gap: 1.5rem;
   }
   
-  .event-item {
+  .formatted-content .event-item,
+  .formatted-content .events-list-standard .event-item {
     flex-direction: row !important;
     gap: 1rem !important;
     text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
   }
   
   .event-item .event-thumb,
@@ -2337,16 +2347,23 @@ a.cta[href*="maps"]:after {
     border-radius: 12px;
   }
   
-  /* Esclusioni specifiche per immagini eventi su desktop */
-  .formatted-content .event-thumb {
-    max-width: 64px !important;
+  /* Esclusioni specifiche per immagini eventi su desktop - ALTA SPECIFICITÀ */
+  .formatted-content .event-item .event-thumb,
+  .formatted-content .events-list-standard .event-item .event-thumb,
+  .formatted-content .event-item img.event-thumb {
     width: 64px !important;
     height: 64px !important;
+    max-width: 64px !important;
+    max-height: 64px !important;
     margin: 0 !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
     display: block !important;
   }
   
-  .formatted-content .featured-image {
+  .formatted-content .events-featured-grid .featured-image,
+  .formatted-content .featured-event-card .featured-image {
     max-width: 100% !important;
     width: 100% !important;
     height: 200px !important;
