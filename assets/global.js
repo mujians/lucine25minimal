@@ -1260,19 +1260,24 @@ customElements.define('product-recommendations', ProductRecommendations);
 
 // Mobile Footer Toggle Functionality
 function toggleMobileFooter() {
-  console.log('🔍 toggleMobileFooter called');
+  console.log('🔍 toggleMobileFooter called from burger menu');
   const footer = document.getElementById('snap-footer');
-  const trigger = document.getElementById('footer-trigger');
   
-  console.log('Footer element:', footer);
-  console.log('Trigger element:', trigger);
-  
-  if (footer && trigger) {
-    footer.classList.toggle('footer-open');
-    trigger.style.display = footer.classList.contains('footer-open') ? 'none' : 'flex';
-    console.log('✅ Footer toggled, classes:', footer.classList.toString());
+  if (footer) {
+    // Use the same classes as the existing footer system
+    if (footer.classList.contains('expanded')) {
+      // Footer is open, close it
+      footer.classList.remove('show', 'expanded');
+      document.body.classList.remove('footer-expanded');
+      console.log('🔴 Footer closed by burger menu');
+    } else {
+      // Footer is closed, open it  
+      footer.classList.add('show', 'expanded');
+      document.body.classList.add('footer-expanded');
+      console.log('🟢 Footer opened by burger menu');
+    }
   } else {
-    console.log('❌ Footer or trigger not found');
+    console.log('❌ Footer not found');
   }
 }
 

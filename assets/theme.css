@@ -2536,9 +2536,9 @@ a.cta[href*="maps"]:after {
 
 /* Mobile Footer Enhanced Styles */
 @media (max-width: 1023px) {
-  /* Keep footer trigger visible on mobile as backup */
+  /* Footer trigger completely removed - using burger menu only */
   .footer-trigger {
-    display: flex !important;
+    display: none !important;
   }
   
   /* Footer event info column */
