@@ -20,7 +20,7 @@ body {
   color: white;
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
-  font-size: 18px; /* Increased from 17px */
+  font-size: 1.125rem; /* 18px minimum - base body size */
   /* Allow natural scrolling - no height restrictions */
   
   /* Grain texture overlay */
@@ -141,7 +141,7 @@ main, #MainContent {
   padding: 15px 20px;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem; /* 16px equivalent in REM */
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: normal;
   text-transform: uppercase;
@@ -212,7 +212,7 @@ main, #MainContent {
 
 .tab-content {
   display: none;
-  font-size: 18px;
+  font-size: 1.125rem; /* 18px minimum */
   line-height: 1.5;
 }
 
@@ -384,6 +384,214 @@ main, #MainContent {
    Minimale | Natalizio | Famiglie
    ============================================= */
 
+/* NEW UTILITY CLASSES - REM ONLY */
+.map-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.map-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.625rem;
+  border: 2px solid var(--christmas-gold);
+}
+
+.interface-caption {
+  color: rgba(255,255,255,0.8);
+  margin-top: 0.5rem;
+  font-size: 0.875rem; /* 14px - interface exception */
+}
+
+.ticket-title {
+  color: var(--christmas-red);
+  margin-bottom: 1rem;
+}
+
+.ticket-subtitle {
+  color: var(--christmas-green);
+  font-weight: 600;
+  font-size: 1.125rem; /* 18px minimum */
+  margin-bottom: 1.5rem;
+}
+
+.ticket-meta {
+  color: rgba(255,255,255,0.8);
+  margin-top: 1rem;
+  font-size: 1.125rem; /* 18px minimum instead of 14px */
+}
+
+.ticket-divider {
+  margin: 1rem 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--christmas-gold), transparent);
+}
+
+.cta-primary {
+  font-size: 1.125rem; /* 18px minimum */
+  padding: 1rem 2rem;
+  background: var(--christmas-red);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.christmas-red {
+  color: var(--christmas-red);
+}
+
+.faq-intro {
+  font-size: 1.125rem; /* 18px minimum instead of 19px */
+}
+
+.link-red {
+  color: var(--christmas-red);
+}
+
+/* GALLERY SYSTEM - FIXED */
+.gallery-container {
+  margin: 2rem 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--christmas-red);
+  border: none;
+  width: 3.125rem; /* 50px */
+  height: 3.125rem; /* 50px */
+  border-radius: 50%;
+  font-size: 1.5rem; /* 24px */
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.gallery-nav:hover {
+  background: var(--christmas-red);
+  color: white;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav-left {
+  left: -1.563rem; /* -25px */
+}
+
+.gallery-nav-right {
+  right: -1.563rem; /* -25px */
+}
+
+.gallery-scroll {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  margin: 0 1.875rem; /* 30px */
+}
+
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-card {
+  flex: 0 0 18.75rem; /* 300px */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem; /* 12px */
+  overflow: hidden;
+}
+
+.gallery-card .gallery-image {
+  width: 100% !important;
+  height: 12.5rem !important; /* 200px */
+  object-fit: cover !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+.gallery-content {
+  padding: 1rem;
+}
+
+.gallery-content h4 {
+  color: var(--christmas-red);
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem; /* 18px minimum */
+}
+
+.gallery-content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.125rem; /* 18px minimum instead of 14px */
+  line-height: 1.4;
+  margin: 0;
+}
+
+.gallery-content strong {
+  color: var(--christmas-gold);
+  font-weight: 600;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .gallery-card {
+    flex: 0 0 15.625rem; /* 250px */
+  }
+  
+  .gallery-image {
+    height: 9.375rem; /* 150px */
+  }
+  
+  .gallery-content {
+    padding: 0.8rem;
+  }
+  
+  .gallery-content h4 {
+    font-size: 1.125rem; /* Keep 18px minimum */
+  }
+  
+  .gallery-content p {
+    font-size: 1.125rem; /* Keep 18px minimum - NO MORE 14px */
+  }
+}
+
+@media (max-width: 1023px) {
+  .gallery-nav {
+    width: 2.5rem; /* 40px */
+    height: 2.5rem; /* 40px */
+    font-size: 1.25rem; /* 20px */
+  }
+  
+  .gallery-nav-left {
+    left: -1.25rem; /* -20px */
+  }
+  
+  .gallery-nav-right {
+    right: -1.25rem; /* -20px */
+  }
+  
+  .gallery-scroll {
+    margin: 0 1.563rem; /* 25px */
+  }
+}
+
 /* TYPOGRAPHY SYSTEM - MIXED FONTS */
 h1, h2 {
   font-family: 'Providence Sans', sans-serif !important;
@@ -396,6 +604,7 @@ h1, h2 {
   border-bottom: none !important;
   padding: 0 !important;
   padding-bottom: 0 !important;
+  text-transform: uppercase !important;
 }
 
 h3, h4, h5, h6 {
@@ -1036,7 +1245,7 @@ body.footer-expanded {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 18px;
+  font-size: 1.125rem; /* 18px minimum */
   font-family: 'Providence Sans', sans-serif;
   display: flex;
   align-items: center;
@@ -1369,7 +1578,7 @@ body.footer-expanded {
 
 /* FONT SIZE IMPROVEMENTS - Ensure minimums */
 body {
-  font-size: 18px; /* Increased from 17px */
+  font-size: 1.125rem; /* 18px minimum - base body size */
 }
 
 p {
@@ -1432,11 +1641,11 @@ h6 {
 
 /* Tab button font size */
 .tab {
-  font-size: 17px; /* Increased from 16px */
+  font-size: 1.125rem; /* 18px minimum - increased from 17px */
 }
 
 .tab-content {
-  font-size: 19px; /* Increased from 18px */
+  font-size: 1.1875rem; /* 19px equivalent in REM */
 }
 
 /* FAQ IMPROVEMENTS */
@@ -2401,7 +2610,7 @@ a.cta[href*="maps"]:after {
   
   /* Desktop Typography */
   body {
-    font-size: 18px;
+    font-size: 1.125rem; /* 18px minimum */
   }
   
   .formatted-content h1 {
@@ -2583,7 +2792,7 @@ a.cta[href*="maps"]:after {
     display: block;
     text-align: center;
     padding: 0.5rem 0;
-    font-size: 20px;
+    font-size: 1.25rem; /* 20px equivalent */
     font-weight: bold;
     text-decoration: none !important;
     color: white;
@@ -2610,7 +2819,7 @@ a.cta[href*="maps"]:after {
   
   .legal-line {
     color: rgba(255, 255, 255, 0.9);
-    font-size: 14px;
+    font-size: 1.125rem; /* 18px minimum - NO 14px ALLOWED */
     line-height: 1.6;
     margin: 0.25rem 0;
   }

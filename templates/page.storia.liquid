@@ -104,11 +104,11 @@
           <p>Scopri il percorso e le installazioni illuminate del Parco delle Lucine!</p>
           
           <!-- Mappa -->
-          <div style="text-align: center; margin: 2rem 0;">
+          <div class="map-container">
             <a href="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/Lucine-di-Natale-2024-mappa-sito.jpg?v=1731075987" target="_blank">
-              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/Lucine-di-Natale-2024-mappa-sito.jpg?v=1731075987" alt="Mappa Lucine di Natale 2024" style="max-width: 100%; height: auto; border-radius: 10px; border: 2px solid var(--christmas-gold);">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/Lucine-di-Natale-2024-mappa-sito.jpg?v=1731075987" alt="Mappa Lucine di Natale 2024" class="map-image">
             </a>
-            <p style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 0.5rem;">Clicca per ingrandire la mappa</p>
+            <p class="interface-caption">Clicca per ingrandire la mappa</p>
           </div>
 
           <!-- Galleria scrollabile -->
@@ -327,150 +327,6 @@
             <button class="gallery-nav gallery-nav-right" onclick="scrollGallery(1)">›</button>
           </div>
 
-          <!-- CSS per la galleria -->
-          <style>
-          .gallery-container {
-            margin: 2rem 0;
-            position: relative;
-            display: flex;
-            align-items: center;
-          }
-          
-          .gallery-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--christmas-red);
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-          }
-          
-          .gallery-nav:hover {
-            background: var(--christmas-red);
-            color: white;
-            transform: translateY(-50%) scale(1.1);
-          }
-          
-          .gallery-nav-left {
-            left: -25px;
-          }
-          
-          .gallery-nav-right {
-            right: -25px;
-          }
-          
-          .gallery-scroll {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding: 0;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            flex: 1;
-            margin: 0 30px;
-          }
-          
-          .gallery-scroll::-webkit-scrollbar {
-            display: none;
-          }
-          
-          .gallery-card {
-            flex: 0 0 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-          }
-          
-          
-          .gallery-card .gallery-image {
-            width: 100% !important;
-            height: 200px !important;
-            object-fit: cover !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-            margin: 0 !important;
-            max-width: none !important;
-          }
-          
-          .gallery-content {
-            padding: 1rem;
-          }
-          
-          .gallery-content h4 {
-            color: var(--christmas-red);
-            font-weight: 700;
-            margin: 0 0 0.5rem 0;
-            font-size: 1.1rem;
-          }
-          
-          .gallery-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin: 0;
-          }
-          
-          .gallery-content strong {
-            color: var(--christmas-gold);
-            font-weight: 600;
-          }
-          
-          @media (max-width: 768px) {
-            .gallery-card {
-              flex: 0 0 250px;
-            }
-            
-            .gallery-image {
-              height: 150px;
-            }
-            
-            .gallery-content {
-              padding: 0.8rem;
-            }
-            
-            .gallery-content h4 {
-              font-size: 1rem;
-            }
-            
-            .gallery-content p {
-              font-size: 0.85rem;
-            }
-          
-          /* Mobile responsive adjustments for navigation buttons */
-          @media (max-width: 1023px) {
-            .gallery-nav {
-              width: 40px;
-              height: 40px;
-              font-size: 20px;
-            }
-            
-            .gallery-nav-left {
-              left: -20px;
-            }
-            
-            .gallery-nav-right {
-              right: -20px;
-            }
-            
-            .gallery-scroll {
-              margin: 0 25px;
-            }
-          }
-          
-          }
-          </style>
           
           <script>
           function scrollGallery(direction) {

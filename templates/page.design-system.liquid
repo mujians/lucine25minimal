@@ -422,31 +422,80 @@
             <h4 style="color: var(--christmas-gold);">Proposed Utility Classes (REM only)</h4>
             <div class="typography-examples">
               
-              <h5>Base Scale System:</h5>
+              <h5>Content Scale System (18px minimum):</h5>
               <div style="margin-left: 1rem;">
-                <p style="font-size: 0.75rem;"><strong>.text-xs:</strong> 0.75rem (12px) - Fine print, captions</p>
-                <p style="font-size: 0.875rem;"><strong>.text-sm:</strong> 0.875rem (14px) - Meta info, legal text</p>
-                <p style="font-size: 1rem;"><strong>.text-base:</strong> 1rem (16px) - Body text default</p>
-                <p style="font-size: 1.125rem;"><strong>.text-lg:</strong> 1.125rem (18px) - Emphasized text</p>
-                <p style="font-size: 1.25rem;"><strong>.text-xl:</strong> 1.25rem (20px) - Subheadings</p>
-                <p style="font-size: 1.5rem;"><strong>.text-2xl:</strong> 1.5rem (24px) - H4 headings</p>
-                <p style="font-size: 1.875rem;"><strong>.text-3xl:</strong> 1.875rem (30px) - H3 headings</p>
-                <p style="font-size: 2.25rem;"><strong>.text-4xl:</strong> 2.25rem (36px) - H2 headings</p>
-                <p style="font-size: 3rem;"><strong>.text-5xl:</strong> 3rem (48px) - H1 headings</p>
+                <p style="font-size: 1.125rem;"><strong>.text-base:</strong> 1.125rem (18px) - Body text default (MINIMUM)</p>
+                <p style="font-size: 1.25rem;"><strong>.text-lg:</strong> 1.25rem (20px) - Emphasized text</p>
+                <p style="font-size: 1.5rem;"><strong>.text-xl:</strong> 1.5rem (24px) - H4 headings</p>
+                <p style="font-size: 1.875rem;"><strong>.text-2xl:</strong> 1.875rem (30px) - H3 headings</p>
+                <p style="font-size: 2.25rem;"><strong>.text-3xl:</strong> 2.25rem (36px) - H2 headings</p>
+                <p style="font-size: 3rem;"><strong>.text-4xl:</strong> 3rem (48px) - H1 headings</p>
+              </div>
+
+              <h5>Interface Elements (exceptions to 18px rule):</h5>
+              <div style="margin-left: 1rem;">
+                <p style="font-size: 0.75rem;"><strong>.text-xs:</strong> 0.75rem (12px) - Footer legal, P.IVA</p>
+                <p style="font-size: 0.875rem;"><strong>.text-sm:</strong> 0.875rem (14px) - Social links, copyright</p>
               </div>
 
               <h5>Component-Specific Classes:</h5>
               <ul style="margin-left: 1rem;">
                 <li><strong>.event-date:</strong> .text-lg, weight-600, green background</li>
-                <li><strong>.event-title:</strong> .text-xl, weight-600, white color</li>
-                <li><strong>.event-meta:</strong> .text-sm, opacity-85</li>
+                <li><strong>.event-title:</strong> .text-lg, weight-600, white color</li>
+                <li><strong>.event-meta:</strong> .text-base (18px minimum)</li>
                 <li><strong>.card-lead:</strong> .text-xl, weight-600, green color</li>
-                <li><strong>.card-meta:</strong> .text-sm, opacity-85</li>
+                <li><strong>.card-meta:</strong> .text-base (18px minimum)</li>
                 <li><strong>.footer-title:</strong> .text-base, weight-600, red color</li>
                 <li><strong>.footer-link:</strong> .text-base, underline</li>
-                <li><strong>.footer-legal:</strong> .text-sm</li>
+                <li><strong>.footer-legal:</strong> .text-xs (interface exception)</li>
+                <li><strong>.footer-social:</strong> .text-sm (interface exception)</li>
                 <li><strong>.mobile-menu-item:</strong> .text-xl, weight-bold, uppercase</li>
               </ul>
+
+              <h5>FIXED TYPOGRAPHY RULES</h5>
+              <div style="background: #1a4a2a; padding: 1.5rem; border-left: 4px solid var(--christmas-gold); margin: 2rem 0;">
+                <h6 style="color: var(--christmas-gold); margin-bottom: 1rem;">REGOLE FISSE - NON NEGOZIABILI:</h6>
+                <ul style="margin-left: 1rem; line-height: 1.8;">
+                  <li><strong>Font minimo contenuto:</strong> 18px (1.125rem) - SEMPRE</li>
+                  <li><strong>Font family:</strong> Solo Providence Sans - SEMPRE</li>
+                  <li><strong>Unità di misura:</strong> Solo REM - MAI PX</li>
+                  <li><strong>H1, H2:</strong> Sempre UPPERCASE - text-transform</li>
+                  <li><strong>Eccezioni &lt;18px:</strong> Solo footer legale/aziendale</li>
+                  <li><strong>Line-height:</strong> 1.4-1.7 range - MAI sotto 1.4</li>
+                  <li><strong>Letter-spacing:</strong> 0.02em per headings</li>
+                </ul>
+              </div>
+
+              <h5>SISTEMA DI OTTIMIZZAZIONE</h5>
+              <div style="background: #0f1f0f; padding: 1.5rem; border-left: 4px solid #dc2626; margin: 2rem 0;">
+                <h6 style="color: #dc2626; margin-bottom: 1rem;">PRIORITÀ OTTIMIZZAZIONI:</h6>
+                <ol style="margin-left: 1rem; line-height: 1.8;">
+                  <li><strong>Eliminare !important:</strong> Riorganizzare CSS per specificità naturale</li>
+                  <li><strong>Standardizzare font-size:</strong> Convertire tutti i PX in REM</li>
+                  <li><strong>Pulire duplicati:</strong> Unificare regole CSS ridondanti</li>
+                  <li><strong>Creare utility classes:</strong> .text-base, .text-lg, .text-xl, ecc.</li>
+                  <li><strong>Responsive coherent:</strong> Scale mobili/desktop coerenti</li>
+                  <li><strong>Margin/padding system:</strong> Spacing uniforme in REM</li>
+                  <li><strong>Color system:</strong> CSS variables per tutti i colori</li>
+                  <li><strong>Component isolation:</strong> Ogni template con classi specifiche</li>
+                </ol>
+              </div>
+
+              <h5>PIANO TEMPLATE ANALYSIS</h5>
+              <div style="background: #1a2f1a; padding: 1.5rem; border-left: 4px solid var(--christmas-green); margin: 2rem 0;">
+                <h6 style="color: var(--christmas-green); margin-bottom: 1rem;">ORDINE DI ANALISI:</h6>
+                <ol style="margin-left: 1rem; line-height: 1.8;">
+                  <li><strong>Layout base:</strong> layout/theme.liquid</li>
+                  <li><strong>Homepage:</strong> templates/index.liquid</li>
+                  <li><strong>Pages generiche:</strong> templates/page.liquid</li>
+                  <li><strong>Biglietti:</strong> templates/page.biglietti.liquid</li>
+                  <li><strong>Eventi:</strong> templates/page.eventi.liquid</li>
+                  <li><strong>Storia:</strong> templates/page.storia.liquid</li>
+                  <li><strong>FAQ:</strong> templates/page.faq.liquid</li>
+                  <li><strong>Info Parcheggi:</strong> templates/page.info-parcheggi.liquid</li>
+                  <li><strong>Snippets:</strong> snippets/ (sidebar, footer, ecc.)</li>
+                </ol>
+              </div>
 
               <h5>Mobile Responsive Rules:</h5>
               <ul style="margin-left: 1rem;">
