@@ -1260,12 +1260,19 @@ customElements.define('product-recommendations', ProductRecommendations);
 
 // Mobile Footer Toggle Functionality
 function toggleMobileFooter() {
+  console.log('🔍 toggleMobileFooter called');
   const footer = document.getElementById('snap-footer');
   const trigger = document.getElementById('footer-trigger');
+  
+  console.log('Footer element:', footer);
+  console.log('Trigger element:', trigger);
   
   if (footer && trigger) {
     footer.classList.toggle('footer-open');
     trigger.style.display = footer.classList.contains('footer-open') ? 'none' : 'flex';
+    console.log('✅ Footer toggled, classes:', footer.classList.toString());
+  } else {
+    console.log('❌ Footer or trigger not found');
   }
 }
 
