@@ -2573,7 +2573,8 @@ a.cta[href*="maps"]:after {
   
   .footer-mobile-logo {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    margin-top: -1rem;
   }
   
   .footer-logo-small {
