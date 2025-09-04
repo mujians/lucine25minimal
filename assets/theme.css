@@ -1994,8 +1994,7 @@ a.cta[href*="maps"]:after {
    ============================================ */
 
 /* Desktop elements - Hidden on mobile */
-.desktop-sidebar,
-.desktop-footer {
+.desktop-sidebar {
   display: none;
 }
 
@@ -2096,17 +2095,11 @@ a.cta[href*="maps"]:after {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  .contact-info p {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-  
   /* Social Icons in Sidebar */
   .sidebar-social {
     display: flex;
     gap: 0.8rem;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
     justify-content: center;
   }
   
@@ -2128,15 +2121,43 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* Legal Links in Sidebar */
-  .sidebar-legal {
-    margin-top: 1rem;
+  /* Company Info in Sidebar */
+  .company-info {
     text-align: center;
+    margin: 2rem 0 1.5rem 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .company-info p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    margin: 0.3rem 0;
+    line-height: 1.3;
+  }
+  
+  .company-info strong {
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.8rem;
   }
   
+  .comune-logo {
+    max-width: 120px !important;
+    height: auto !important;
+    margin: 1rem auto 0.5rem auto;
+    display: block;
+    opacity: 0.8;
+  }
+  
+  /* Legal Links in Sidebar */
+  .sidebar-legal {
+    text-align: center;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
   .sidebar-legal a {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.4);
     text-decoration: none;
     transition: color 0.3s ease;
   }
@@ -2148,51 +2169,6 @@ a.cta[href*="maps"]:after {
   /* Hide mobile footer trigger on desktop */
   #footer-trigger {
     display: none !important;
-  }
-  
-  /* Desktop Footer at bottom of content - White background */
-  .desktop-footer {
-    display: block !important;
-    margin-top: 3rem;
-    margin-left: -3rem; /* Extend to full width */
-    margin-right: -3rem;
-    margin-bottom: -2rem;
-    padding: 1rem 2rem; /* Reduced padding */
-    background: white;
-    text-align: center;
-    color: #333;
-    font-size: 0.75rem; /* Smaller text */
-    position: relative;
-    width: calc(100% + 6rem);
-  }
-  
-  .desktop-footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #ddd, transparent);
-  }
-  
-  .desktop-footer p {
-    color: #666;
-    margin-bottom: 0.5rem; /* Reduced margin */
-    font-size: 0.75rem; /* Smaller text */
-  }
-  
-  .desktop-footer strong {
-    color: #333;
-    font-size: 0.8rem; /* Slightly bigger for company name */
-  }
-  
-  .desktop-footer img {
-    max-width: 150px; /* Much smaller image */
-    height: auto;
-    margin: 0.5rem auto;
-    display: block;
-    opacity: 1;
   }
   
   /* Main Content Area - Adjusted for sidebar */
