@@ -1,4 +1,4 @@
-/* PRODUCT PAGE PADDING ADJUSTMENTS */
+/* PRODUCT PAGE PADDING ADJUSTMENTS - Clean approach */
 .product {
   margin: 0;
 }
@@ -12,7 +12,7 @@
   }
 }
 
-/* Mobile: tighter padding */
+/* Mobile: tighter padding with header space */
 @media (max-width: 768px) {
   .page-width {
     padding: 1rem;
