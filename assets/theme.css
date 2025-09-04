@@ -1772,11 +1772,11 @@ h6 {
   font-size: 2em;
   font-weight: 300;
   color: var(--christmas-red);
-  transition: none !important;
+  transition: none;
   line-height: 1;
   width: 2rem;
   text-align: center;
-  font-family: 'Providence Sans', sans-serif !important; /* Sketch effect font */
+  font-family: 'Providence Sans', sans-serif;
   letter-spacing: 0.1em;
 }
 
@@ -1809,7 +1809,7 @@ h6 {
   transform: translateY(-50%) rotate(0deg);
   font-size: 2.2em;
   font-weight: 400;
-  font-family: 'Providence Sans', sans-serif !important; /* Sketch effect font */
+  font-family: 'Providence Sans', sans-serif;
   letter-spacing: 0;
 }
 
@@ -1845,8 +1845,8 @@ h6 {
 /* Mobile FAQ Optimizations */
 @media (max-width: 768px) {
   .faq-question {
-    font-size: 1.125rem !important; /* 18px for mobile */
-    padding: 1rem 5rem 1rem 1.25rem !important;
+    font-size: 1.125rem; /* 18px for mobile */
+    padding: 1rem 5rem 1rem 1.25rem;
     line-height: 1.3;
   }
   
