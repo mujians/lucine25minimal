@@ -1,5 +1,22 @@
+/* RESET EXCESSIVE PADDING FOR PRODUCT PAGE */
 .product {
   margin: 0;
+}
+
+/* Override global content-wrapper padding for product pages */
+.section-main-product .content-wrapper,
+.page-width {
+  padding-top: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Reset section padding system */
+.section-padding,
+[class*="section-"][class*="-padding"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .product.grid {
@@ -28,19 +45,19 @@
   }
 
   .product__info-wrapper {
-    padding: 0 0 0 2rem;
+    padding: 0;
   }
 
   .product__info-wrapper--extra-padding {
-    padding: 0 0 0 2rem;
+    padding: 0;
   }
 
   .product--right .product__info-wrapper {
-    padding: 0 2rem 0 0;
+    padding: 0;
   }
 
   .product--right .product__info-wrapper--extra-padding {
-    padding: 0 2rem 0 0;
+    padding: 0;
   }
 
   .product--right .product__media-list {
