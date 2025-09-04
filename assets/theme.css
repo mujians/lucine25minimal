@@ -2022,6 +2022,32 @@ a.cta[href*="maps"]:after {
     overflow-y: auto;
   }
   
+  /* Custom scrollbar for sidebar */
+  .desktop-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .desktop-sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  
+  .desktop-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.4);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+  
+  .desktop-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.6);
+  }
+  
+  /* Firefox scrollbar styling */
+  .desktop-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.4) rgba(255, 255, 255, 0.05);
+  }
+  
   /* Sidebar Header */
   .sidebar-header {
     margin-bottom: 1.5rem;
