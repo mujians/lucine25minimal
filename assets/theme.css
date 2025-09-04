@@ -2800,11 +2800,39 @@ a.cta[href*="maps"]:after {
     position: relative !important;
     width: 100% !important;
     height: auto !important;
+    background: #0f2f1f;
+    padding: 2rem;
   }
   
   .mobile-header {
     display: none !important;
   }
+
+  /* Load desktop sidebar styling on mobile */
+  .desktop-sidebar .sidebar-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .desktop-sidebar .sidebar-logo {
+    max-width: 200px;
+    height: auto;
+  }
+
+  .desktop-sidebar .sidebar-menu a {
+    display: block;
+    padding: 1rem 0;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .content-wrapper {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-top: 0 !important;
+  }
+}
 
   /* Mobile Cart Icon */
   .mobile-cart-icon {
