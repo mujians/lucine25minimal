@@ -2796,7 +2796,10 @@ a.cta[href*="maps"]:after {
 /* Mobile Burger Menu Styles */
 @media (max-width: 1023px) {
   .desktop-sidebar {
-    display: none !important;
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
   }
   
   .mobile-header {
