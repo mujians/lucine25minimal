@@ -20,47 +20,21 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   <!-- Mobile Menu -->
   <div class="mobile-menu">
     <div class="menu-tabs">
-      <!-- Home sempre primo -->
-      <button class="tab" data-index="0">Home</button>
+      <button class="tab active" onclick="window.location.href='/'">Home</button>
       
       <!-- Menu dinamico da Shopify -->
       {% assign main_menu = linklists['menu-principale'] %}
       {% for link in main_menu.links %}
-        <button class="tab" data-index="{{ forloop.index }}" data-url="{{ link.url }}">
+        <button class="tab" onclick="window.location.href='{{ link.url }}'">
           {{ link.title }}
         </button>
       {% endfor %}
     </div>
   </div>
 
-  <!-- Desktop Sidebar Navigation -->
-  <nav class="desktop-sidebar">
-    <div class="sidebar-header">
-      <a href="/" class="logo-link" data-index="0">
-        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-logo-white-2025.png?v=1757004485" alt="Lucine di Natale" class="sidebar-logo" />
-      </a>
-      <p class="site-dates">Dal 6 dicembre al 6 gennaio</p>
-      <p class="site-closed">chiuso il 24 e il 31 dicembre</p>
-    </div>
-    
-    <div class="sidebar-menu">
-      {% for link in main_menu.links %}
-        <button class="nav-item" data-index="{{ forloop.index }}" data-url="{{ link.url }}">
-          <span class="nav-icon">
-            {% if link.title contains 'Biglietti' %}🎫
-            {% elsif link.title contains 'FAQ' %}❓
-            {% elsif link.title contains 'Eventi' %}🎄
-            {% elsif link.title contains 'Menu' or link.title contains 'Ristoro' %}🍽️
-            {% elsif link.title contains 'Storia' %}📖
-            {% elsif link.title contains 'Visitare' %}👀
-            {% elsif link.title contains 'Parcheggi' %}🚗
-            {% else %}✨
-            {% endif %}
-          </span>
-          <span class="nav-text">{{ link.title }}</span>
-        </button>
-      {% endfor %}
-    </div>
+  <!-- Include sidebar navigation -->
+  {% assign current_page_title = 'Home' %}
+  {% render 'sidebar-navigation' %}
     
     <div class="sidebar-footer">
       <p class="social-title">Seguici sui social</p>
