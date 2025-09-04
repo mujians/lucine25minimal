@@ -316,63 +316,7 @@ main, #MainContent {
   margin: 2rem 0;
 }
 
-.concert-item {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.concert-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--christmas-red);
-}
-
-.concert-thumb {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.concert-info {
-  flex: 1;
-}
-
-.concert-dates {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.concert-date {
-  background: rgba(5, 150, 105, 0.2);
-  color: var(--christmas-green);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-family: 'Providence Sans', sans-serif;
-  border: 1px solid rgba(5, 150, 105, 0.3);
-}
-
-.concert-date-special {
-  background: rgba(220, 38, 38, 0.2);
-  color: var(--christmas-red);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-family: 'Providence Sans', sans-serif;
-  font-style: italic;
-  border: 1px solid rgba(220, 38, 38, 0.3);
-}
+/* REMOVED: Dead concert-* CSS classes - not used in any template */
 
 @keyframes subtlePulse {
   0%, 100% { opacity: 0.4; }
@@ -1156,14 +1100,7 @@ body.footer-expanded {
   margin-bottom: 1rem;
 }
 
-.navetta-icon {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  mix-blend-mode: screen; /* Screen blend mode for transparency effect */
-  flex-shrink: 0;
-  margin-right: 1rem;
-}
+/* REMOVED: Generic navetta-icon rule causing conflicts */
 
 .navetta-title h4 {
   margin: 0 !important;
@@ -1178,17 +1115,19 @@ body.footer-expanded {
   margin-bottom: 1rem;
 }
 
-/* General rule for all images in sketch cards */
-.sketch-card img {
-  max-width: 80px !important;
-  height: auto !important;
+/* General rule for images in sketch cards (excluding navetta) */
+.sketch-card img:not(.navetta-icon) {
+  max-width: 80px;
+  height: auto;
 }
 
 .sketch-card .navetta-icon {
-  width: 60px !important;  /* Reduced from 120px */
-  height: 60px !important;
+  width: 120px; /* INGRANDITO - era 60px */
+  height: 120px;
+  object-fit: contain;
+  mix-blend-mode: screen;
   margin: 0 auto;
-  align-self: center;
+  display: block;
 }
 
 .sketch-card .navetta-title h4 {
@@ -1633,13 +1572,7 @@ h6 {
   font-size: 1em; /* Increased from 0.9em */
 }
 
-.concert-date {
-  font-size: 1em; /* Increased from 0.85em */
-}
-
-.concert-date-special {
-  font-size: 1em; /* Increased from 0.85em */
-}
+/* REMOVED: Duplicate concert class overrides */
 
 .footer-column h4 {
   font-size: 1rem; /* Increased from 0.85em */
@@ -2671,11 +2604,10 @@ a.cta[href*="maps"]:after {
     padding: 2.5rem !important; /* Ensure good padding on desktop */
   }
   
-  /* Desktop: Ensure images in sketch-cards stay reasonable */
-  .sketch-card img,
-  .sketch-card .navetta-icon {
-    max-width: 70px !important;
-    height: auto !important;
+  /* Desktop: Ensure images in sketch-cards stay reasonable (excluding navetta) */
+  .sketch-card img:not(.navetta-icon) {
+    max-width: 70px;
+    height: auto;
   }
   
   /* Two-column layouts for longer content */

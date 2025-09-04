@@ -1,5 +1,4 @@
-<!-- LUCINE MINIMAL - 404 PAGE -->
-<script>console.log('🚫 404 PAGE LOADED');</script>
+<!-- LUCINE MINIMAL - 404 PAGE SIMPLIFIED -->
 
 <div class="video-bg">
   <video autoplay muted loop playsinline>
@@ -7,21 +6,10 @@
   </video>
 </div>
 
-<div class="mobile-menu">
-  <div class="menu-tabs">
-    <button class="tab active">Home</button>
-    <button class="tab">404</button>
-  </div>
-</div>
-
-<div class="content">
-  <div class="tab-content active">
+<div class="content show">
+  <div class="formatted-content" style="text-align: center; padding: 3rem;">
     <h1>{{ 'general.404.title' | t }}</h1>
     <p>{{ 'general.404.subtext_html' | t }}</p>
-    <p><a href="/">Torna alla homepage</a></p>
-  </div>
-  <div class="tab-content">
-    <h2>Pagina non trovata</h2>
-    <p>La pagina che cercavi non esiste.</p>
+    <p><a href="/" class="cta">Torna alla homepage</a></p>
   </div>
 </div>
