@@ -2554,6 +2554,16 @@ a.cta[href*="maps"]:after {
     border-radius: 50% !important;
     cursor: pointer !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .footer-close-btn:hover {
+    background: white !important;
+    transform: scale(1.05) !important;
+  }
+  
+  .footer-close-btn svg {
+    fill: var(--christmas-red) !important;
   }
   
   /* Main navigation styled */
