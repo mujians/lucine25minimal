@@ -2030,18 +2030,25 @@ a.cta[href*="maps"]:after {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  .site-title {
-    font-family: 'Homemade Apple', cursive;
-    font-size: 1.8rem;
-    color: var(--christmas-red);
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
+  .sidebar-logo {
+    max-width: 200px;
+    height: auto;
+    margin: 0 auto 1rem auto;
+    display: block;
   }
   
-  .site-tagline {
+  .site-dates {
     color: var(--christmas-gold);
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 600;
+    margin: 0.5rem 0 0.2rem 0;
+  }
+  
+  .site-closed {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    margin: 0;
+    font-style: italic;
   }
   
   /* Sidebar Menu Items */
@@ -2095,11 +2102,22 @@ a.cta[href*="maps"]:after {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
   
+  /* Social Title */
+  .social-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
   /* Social Icons in Sidebar */
   .sidebar-social {
     display: flex;
     gap: 0.8rem;
-    margin: 1.5rem 0;
+    margin: 0 0 1.5rem 0;
     justify-content: center;
   }
   
@@ -2146,7 +2164,7 @@ a.cta[href*="maps"]:after {
     height: auto !important;
     margin: 1rem auto 0.5rem auto;
     display: block;
-    opacity: 0.8;
+    opacity: 1; /* Full opacity as requested */
   }
   
   /* Legal Links in Sidebar */
