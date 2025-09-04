@@ -1,27 +1,22 @@
-/* PRODUCT PAGE PADDING ADJUSTMENTS - Clean approach */
+/* RESET EXCESSIVE PADDING FOR PRODUCT PAGE */
 .product {
   margin: 0;
 }
 
-/* Desktop: reasonable padding */
-@media (min-width: 1024px) {
-  .page-width {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+/* Override global content-wrapper padding for product pages */
+.section-main-product .content-wrapper,
+.page-width {
+  padding-top: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 1rem !important;
 }
 
-/* Mobile: tighter padding with header space */
-@media (max-width: 768px) {
-  .page-width {
-    padding: 1rem;
-  }
-  
-  /* Adjust for mobile header */
-  section[id*="MainProduct"] {
-    padding-top: 60px;
-  }
+/* Reset section padding system */
+.section-padding,
+[class*="section-"][class*="-padding"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .product.grid {
