@@ -19,7 +19,7 @@
   }
   
   /* Adjust for mobile header */
-  #MainProduct-template--16819739197629__main {
+  section[id*="MainProduct"] {
     padding-top: 60px;
   }
 }
