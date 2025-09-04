@@ -19,18 +19,40 @@
   
   <div class="footer-container">
     
-    <!-- COLONNA 1: Menu Navigazione -->
+    <!-- COLONNA 1: Logo e Info Evento -->
+    <div class="footer-column footer-event-info">
+      <div class="footer-logo">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-logo-white-2025.png?v=1757004485" alt="Lucine di Natale" class="footer-logo-img" />
+        <p class="footer-dates">Dal 6 dicembre al 6 gennaio</p>
+        <p class="footer-closed">chiuso il 24 e il 31 dicembre</p>
+      </div>
+    </div>
+    
+    <!-- COLONNA 2: Menu Navigazione -->
     <div class="footer-column footer-nav">
       <h4>MENU</h4>
       <nav class="footer-menu">
         {% assign main_menu = linklists['menu-principale'] %}
         {% for link in main_menu.links %}
-          <a href="{{ link.url }}" class="footer-link" target="_self">{{ link.title }}</a>
+          <a href="{{ link.url }}" class="footer-link" target="_self">
+            <span class="footer-nav-icon">
+              {% if link.title contains 'Biglietti' %}🎫
+              {% elsif link.title contains 'FAQ' %}❓
+              {% elsif link.title contains 'Eventi' %}🎄
+              {% elsif link.title contains 'Menu' or link.title contains 'Ristoro' %}🍽️
+              {% elsif link.title contains 'Storia' %}📖
+              {% elsif link.title contains 'Visitare' %}👀
+              {% elsif link.title contains 'Parcheggi' or link.title contains 'Info' %}🚗
+              {% else %}✨
+              {% endif %}
+            </span>
+            {{ link.title }}
+          </a>
         {% endfor %}
       </nav>
     </div>
     
-    <!-- COLONNA 2: Social -->
+    <!-- COLONNA 3: Social -->
     <div class="footer-column">
       <h4>SEGUICI</h4>
       <div class="footer-social">
