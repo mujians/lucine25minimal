@@ -469,61 +469,6 @@
             }
           }
           
-          /* Mobile responsive - Hide sidebar and show burger menu */
-          @media (max-width: 1023px) {
-            .desktop-sidebar {
-              display: none !important;
-            }
-            
-            .mobile-header {
-              position: fixed;
-              top: 20px;
-              left: 20px;
-              z-index: 1000;
-              display: block;
-            }
-            
-            .burger-menu {
-              width: 50px;
-              height: 50px;
-              background: rgba(255, 255, 255, 0.9);
-              border: none;
-              border-radius: 50%;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 4px;
-              cursor: pointer;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-              transition: all 0.3s ease;
-            }
-            
-            .burger-menu:hover {
-              background: white;
-              transform: scale(1.05);
-            }
-            
-            .burger-menu span {
-              width: 20px;
-              height: 2px;
-              background: var(--christmas-red);
-              border-radius: 1px;
-              transition: all 0.3s ease;
-            }
-            
-            .content-wrapper {
-              margin-left: 0 !important;
-              width: 100% !important;
-            }
-          }
-          
-          /* Desktop - Hide mobile elements */
-          @media (min-width: 1024px) {
-            .mobile-header {
-              display: none;
-            }
-          }
           }
           </style>
           
