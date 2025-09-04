@@ -1652,15 +1652,16 @@ h6 {
   align-items: center;
 }
 
-.parking-icon {
-  width: 48px; /* Increased from 32px */
-  height: 48px; /* Increased from 32px */
+.parking-icons .parking-icon {
+  width: 48px !important;
+  height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
   object-fit: contain;
   opacity: 0.9;
   transition: all 0.3s ease;
-  margin: 0 0 0.5rem 0 !important; /* Override formatted-content img margins */
+  margin: 0 0 0.5rem 0 !important;
   filter: brightness(1.1) contrast(1.1);
-  /* Remove any clipping issues */
   border-radius: 0;
   background: transparent;
 }
@@ -1678,9 +1679,11 @@ h6 {
     margin: 0;
   }
   
-  .parking-icon {
-    width: 40px; /* Increased from 28px */
-    height: 40px; /* Increased from 28px */
+  .parking-icons .parking-icon {
+    width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
   }
 }
 
