@@ -428,7 +428,7 @@ main, #MainContent {
   background: linear-gradient(90deg, transparent, var(--christmas-gold), transparent);
 }
 
-.cta-primary {
+.sketch-card .cta-primary {
   font-size: 1.125rem; /* 18px minimum */
   padding: 1rem 2rem;
   background: var(--christmas-red);
