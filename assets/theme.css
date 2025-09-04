@@ -783,14 +783,14 @@ ul li::before {
 .seed-4 .sketch-border rect { stroke-dashoffset: 4; stroke-dasharray: 15 9 7 13; }
 .seed-5 .sketch-border rect { stroke-dashoffset: 8; stroke-dasharray: 13 6 8 10 11 7; }
 
-/* DESKTOP: Larger dash patterns for bigger containers */
+/* DESKTOP: Optimized dash patterns - subtle and clean */
 @media (min-width: 1024px) {
-  .seed-1 .sketch-border rect { stroke-dasharray: 20 12 10 16; }
-  .seed-2 .sketch-border rect { stroke-dasharray: 18 10 8 14; }
-  .seed-3 .sketch-border rect { stroke-dasharray: 24 14 10 22 18 16; }
-  .seed-4 .sketch-border rect { stroke-dasharray: 30 18 14 26; }
-  .seed-5 .sketch-border rect { stroke-dasharray: 26 12 16 20 22 14; }
-  .seed-6 .sketch-border rect { stroke-dasharray: 32 20 16 28 !important; }
+  .seed-1 .sketch-border rect { stroke-dasharray: 14 8 6 10; }
+  .seed-2 .sketch-border rect { stroke-dasharray: 12 6 5 9; }
+  .seed-3 .sketch-border rect { stroke-dasharray: 16 9 7 13 12 8; }
+  .seed-4 .sketch-border rect { stroke-dasharray: 18 10 8 12; }
+  .seed-5 .sketch-border rect { stroke-dasharray: 15 8 10 12 14 9; }
+  .seed-6 .sketch-border rect { stroke-dasharray: 20 12 10 16 !important; }
 }
 
 /* Animated border for navetta card (seed-6) */
