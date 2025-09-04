@@ -1,0 +1,133 @@
+=== BACKUP MOBILE ELEMENTS ===
+Created: $(date)
+
+=== 1. BURGER MENU HTML (from templates) ===
+
+<!-- Mobile Burger Menu -->
+<div class="mobile-header">
+  <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</div>
+
+=== 2. MOBILE CART ICON (from index.liquid) ===
+
+<!-- Mobile Cart Icon -->
+<div class="mobile-cart-icon">
+  <a href="{% if cart.item_count > 0 %}/cart{% else %}/products/biglietto-parco-lucine-di-natale-2025{% endif %}" aria-label="Carrello">
+    <svg class="cart-icon" viewBox="0 0 24 24">
+      <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+    </svg>
+    {% if cart.item_count > 0 %}
+      <span class="cart-count">{{ cart.item_count }}</span>
+    {% endif %}
+  </a>
+</div>
+
+=== 3. FOOTER SNAP RENDER ===
+
+{% render 'footer-snap' %}
+
+=== 4. GLOBAL.JS FUNCTIONS ===
+
+function toggleMobileFooter() {
+  const footer = document.getElementById('snap-footer');
+  if (footer) {
+    footer.classList.toggle('active');
+    document.body.classList.toggle('footer-active');
+  }
+}
+
+function closeFooter() {
+  const footer = document.getElementById('snap-footer');
+  if (footer) {
+    footer.classList.remove('active');
+    document.body.classList.remove('footer-active');
+  }
+}
+
+=== 5. MOBILE CSS ===
+
+/* Mobile Cart Icon */
+.mobile-cart-icon {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: block;
+}
+
+.mobile-cart-icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.mobile-cart-icon a:hover {
+  transform: scale(1.1);
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--christmas-red);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.burger-menu {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.burger-menu:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+.burger-menu span {
+  width: 20px;
+  height: 2px;
+  background: var(--christmas-red);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .mobile-cart-icon {
+    display: none;
+  }
+}
+
+=== END BACKUP ===

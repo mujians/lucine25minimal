@@ -2803,79 +2803,6 @@ a.cta[href*="maps"]:after {
   }
 }
 
-  /* Mobile Cart Icon */
-  .mobile-cart-icon {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: block;
-  }
-
-  .mobile-cart-icon a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    text-decoration: none;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-
-  .mobile-cart-icon a:hover {
-    transform: scale(1.1);
-  }
-
-  .cart-icon {
-    width: 24px;
-    height: 24px;
-    fill: white;
-  }
-
-  .cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--christmas-red);
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 50%;
-    min-width: 20px;
-    text-align: center;
-    line-height: 1.2;
-  }
-  
-  .burger-menu {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-  }
-  
-  .burger-menu:hover {
-    background: white;
-    transform: scale(1.05);
-  }
-  
-  .burger-menu span {
-    width: 20px;
-    height: 2px;
-    background: var(--christmas-red);
-    border-radius: 1px;
-    transition: all 0.3s ease;
-  }
   
   .content-wrapper {
     margin-left: 0 !important;
@@ -2890,9 +2817,6 @@ a.cta[href*="maps"]:after {
     display: none;
   }
 
-  .mobile-cart-icon {
-    display: none;
-  }
   
   .content-wrapper {
     padding-top: 60px !important;
