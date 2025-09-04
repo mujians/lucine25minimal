@@ -32,76 +32,34 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
   <!-- Content Area -->
   <div class="content-wrapper">
-    <div class="content">
-    <!-- Home content -->
-    <div class="tab-content active" data-index="0">
-      <div class="content-section">
-        <div class="formatted-content">
-          <h1>Lucine di Natale</h1>
-          <p class="christmas-accent">Un viaggio magico nel cuore del Natale per <span class="highlight-text">tutta la famiglia</span></p>
-          
-          <div class="event-card">
-            <h3 class="christmas-accent">Benvenuti nel nostro mondo incantato</h3>
-            <p>Dal <span class="highlight-text">1 al 24 dicembre</span>, il centro storico si trasforma in un villaggio natalizio dove magia e tradizione si incontrano.</p>
-            <p>Spettacoli di luci, laboratori creativi, mercatini artigianali e tanto altro vi aspettano per creare insieme ricordi indimenticabili.</p>
-            <a href="#" class="family-cta" onclick="document.querySelector('.tab[data-index=\"2\"]').click(); return false;">Scopri il Programma</a>
+    <div class="content show">
+      <div class="formatted-content">
+        <h1>Lucine di Natale</h1>
+        <p class="christmas-accent">Un viaggio magico nel cuore del Natale per <span class="highlight-text">tutta la famiglia</span></p>
+        
+        <div class="event-card">
+          <h3 class="christmas-accent">Benvenuti nel nostro mondo incantato</h3>
+          <p>Dal <span class="highlight-text">5 dicembre al 6 gennaio</span>, Leggiuno si trasforma in un villaggio natalizio dove magia e tradizione si incontrano.</p>
+          <p>Spettacoli di luci, installazioni artistiche, e tanto altro vi aspettano per creare insieme ricordi indimenticabili.</p>
+          <a href="/pages/eventi" class="family-cta">Scopri il Programma</a>
+        </div>
+        
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>📅 Quando</h4>
+            <p>5 Dic - 6 Gen<br>17:30 - 23:00</p>
           </div>
-          
-          <div class="info-grid">
-            <div class="info-box">
-              <h4>📅 Quando</h4>
-              <p>1-24 Dicembre<br>15:00 - 21:00</p>
-            </div>
-            <div class="info-box">
-              <h4>📍 Dove</h4>
-              <p>Centro Storico<br>Piazza Principale</p>
-            </div>
-            <div class="info-box">
-              <h4>🎟️ Biglietti</h4>
-              <p>Da €10<br>Famiglia €40</p>
-            </div>
+          <div class="info-box">
+            <h4>📍 Dove</h4>
+            <p>Leggiuno<br>Lago Maggiore</p>
+          </div>
+          <div class="info-box">
+            <h4>🎟️ Biglietti</h4>
+            <p>Online<br>Prenotazione</p>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Homepage content -->
-    <div class="tab-content" data-index="0">
-      <div class="content-section">
-        <div class="formatted-content">
-          <h1>Lucine di Natale</h1>
-          <p>Benvenuti nel magico mondo delle <span class="christmas-red">Lucine di Natale</span>!</p>
-          <p>Un'esperienza incantevole per tutta la famiglia con installazioni luminose uniche e atmosfere natalizie indimenticabili.</p>
-        </div>
-      </div>
-      
-    </div>
-
-    <!-- Dynamic content con design system -->
-    {% for link in main_menu.links %}
-      <div class="tab-content" data-index="{{ forloop.index }}">
-        <div class="content-section">
-          {% comment %} Contenuto con styling natalizio {% endcomment %}
-          {% if link.url contains '/pages/' %}
-            {% assign page_handle = link.url | split: '/pages/' | last %}
-            {% assign page = pages[page_handle] %}
-            
-            <!-- DEBUG: Page handle: {{ page_handle }} -->
-            <!-- DEBUG: Page exists: {% if page %}YES{% else %}NO{% endif %} -->
-            <!-- DEBUG: Content blank: {% if page.content == blank %}YES{% else %}NO{% endif %} -->
-            
-            {% if page.content != blank %}
-              <div class="page-content formatted-content">
-                {{ page.content }}
-              </div>
-            {% endif %}
-            
-          {% endif %}
-        </div>
-      </div>
-    {% endfor %}
-    
-    </div> <!-- end content -->
   </div> <!-- end content-wrapper -->
 </div>
 
