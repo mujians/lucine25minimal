@@ -1,22 +1,27 @@
-/* RESET EXCESSIVE PADDING FOR PRODUCT PAGE */
+/* PRODUCT PAGE PADDING ADJUSTMENTS */
 .product {
   margin: 0;
 }
 
-/* Override global content-wrapper padding for product pages */
-.section-main-product .content-wrapper,
-.page-width {
-  padding-top: 1rem !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-  padding-bottom: 1rem !important;
+/* Desktop: reasonable padding */
+@media (min-width: 1024px) {
+  .page-width {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 }
 
-/* Reset section padding system */
-.section-padding,
-[class*="section-"][class*="-padding"] {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+/* Mobile: tighter padding */
+@media (max-width: 768px) {
+  .page-width {
+    padding: 1rem;
+  }
+  
+  /* Adjust for mobile header */
+  #MainProduct-template--16819739197629__main {
+    padding-top: 60px;
+  }
 }
 
 .product.grid {
