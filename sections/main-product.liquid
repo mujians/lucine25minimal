@@ -7,6 +7,24 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
+    // EVEY DEBUGGING - Track initialization  
+    console.log('🚀 PRODUCT PAGE SCRIPT STARTING');
+    console.log('📦 Available scripts:', Object.keys(window).filter(k => k.toLowerCase().includes('evey')));
+    console.log('📦 jQuery available:', typeof window.jQuery !== 'undefined');
+    
+    // Watch for Evey elements
+    const checkEveyButton = () => {
+      const eveyBtn = document.querySelector('[data-evey-trigger="scheduler"]');
+      console.log('🎯 Evey button found:', eveyBtn);
+      console.log('🎯 Evey button visible:', eveyBtn ? getComputedStyle(eveyBtn).visibility : 'not found');
+      console.log('🎯 Evey button display:', eveyBtn ? getComputedStyle(eveyBtn).display : 'not found');
+    };
+    
+    // Check immediately and after DOM load
+    checkEveyButton();
+    document.addEventListener('DOMContentLoaded', checkEveyButton);
+    setTimeout(checkEveyButton, 2000); // Also check after 2 seconds
+    
     // REPLACEMENT STRATEGY - Create our own tooltips outside Evey's control
     console.log('🚀 CUSTOM TOOLTIP SYSTEM STARTING');
     
