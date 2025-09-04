@@ -2209,7 +2209,6 @@ a.cta[href*="maps"]:after {
     text-align: center;
     margin: 1rem 0 0 0;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .company-info p {
