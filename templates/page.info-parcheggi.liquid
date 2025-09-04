@@ -1,0 +1,172 @@
+<!-- Desktop wrapper con sidebar -->
+<div class="navigation-container top" data-tabs-section>
+  <!-- Mobile Menu (hidden on desktop) -->
+  <div class="mobile-menu">
+    <div class="menu-tabs">
+      <button class="tab" onclick="window.location.href='/'">Home</button>
+      <button class="tab active">Info & Parcheggi</button>
+    </div>
+  </div>
+
+  <!-- Include sidebar navigation -->
+  {% assign current_page_title = 'Parcheggi' %}
+  {% render 'sidebar-navigation' %}
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="content show">
+      <div class="formatted-content">
+        <h1>Info &amp; Parcheggi</h1>
+        
+        <section class="location-section">
+          <h3>Apertura</h3>
+          <p>L'evento si terrà dal <strong>05/12/2024</strong> al <strong>06/01/2025</strong>, con chiusura il <strong>24/12</strong> e <strong>31/12</strong>.</p>
+          
+          <h3>Orari</h3>
+          <p>Aperto tutti i giorni dalle <strong>17:30 alle 23:00</strong>. Ultimo ingresso alle <strong>22:30</strong>.</p>
+          
+          <h3>Posizione</h3>
+          <p>Le Lucine di Natale si trovano a <a href="https://www.google.es/maps/place/Lucine+di+Natale/@45.8754965,8.616261,1591m/data=!3m2!1e3!5s0x478677d16897a89d:0xffc727058b2ff665!4m15!1m8!3m7!1s0x4786763337856641:0x4960edf4bd04b67c!2s21038+Leggiuno+VA,+Italia!3b1!8m2!3d45.874841!4d8.6207265!16zL20vMGYycmg2!3m5!1s0x478677d27d256b93:0x705477973c2d4edc!8m2!3d45.8776751!4d8.62088!16s%2Fg%2F11h2g2dbsk?entry=ttu&amp;g_ep=EgoyMDI0MTExNy4wIKXMDSoJLDEwMjExMjMzSAFQAw%3D%3D">Leggiuno</a>, sul Lago Maggiore, in provincia di Varese. <a class="cta" href="https://www.google.es/maps/place/Lucine+di+Natale/@45.8754965,8.616261,1648m/data=!3m2!1e3!5s0x478677d16897a89d:0xffc727058b2ff665!4m15!1m8!3m7!1s0x4786763337856641:0x4960edf4bd04b67c!2s21038+Leggiuno+VA!3b1!8m2!3d45.874841!4d8.6207265!16zL20vMGYycmg2!3m5!1s0x478677d27d256b93:0x705477973c2d4edc!8m2!3d45.8776751!4d8.62088!16s%2Fg%2F11h2g2dbsk?entry=ttu&amp;g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D">Vedi mappa</a></p>
+        </section>
+
+        <section class="location-section">
+          <div class="sketch-card sketch seed-6">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-6">
+                  <feturbulence type="fractalNoise" basefrequency="1.2" numoctaves="1" seed="13"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="16 10 8 14" vector-effect="non-scaling-stroke" filter="url(#wobble-6)"></rect>
+            </svg>
+            <div class="navetta-title">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/navetta-lucine-leggiuno-icon-1.gif?v=1755979632" alt="Navetta" class="navetta-icon">
+              <h4>Servizio Navetta Gratuito!</h4>
+            </div>
+            <p class="lead">Operativo tutti i giorni dalle <strong>16:30 alle 22:30</strong></p>
+            <p class="meta">Servendo i parcheggi P2, P4 e P5 · Ogni 15 minuti.</p>
+            <p><a class="cta" href="https://www.google.com/maps?q=45.8772,8.59997">Vedi mappa</a></p>
+          </div>
+        </section>
+
+        <section class="location-section">
+          <h2>Parcheggi Disponibili</h2>
+          
+          <!-- P1 - Campo Sportivo: Auto + Camper -->
+          <div class="sketch-card sketch seed-1">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-1">
+                  <feturbulence type="fractalNoise" basefrequency="0.9" numoctaves="1" seed="3"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-1)"></rect>
+            </svg>
+            <h4>P1 – Campo Sportivo Leggiuno</h4>
+            <p class="lead">Parcheggio auto gratuito</p>
+            <p class="meta">(camper ammessi - area non attrezzata) · 10 min a piedi</p>
+            <div class="parking-icons">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio.png?v=1755988564" alt="Parcheggio Auto" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-camper.png?v=1755988563" alt="Camper" class="parking-icon">
+            </div>
+            <a class="cta" href="https://www.google.com/maps?q=45.87312,8.615">Vedi mappa</a>
+          </div>
+
+          <!-- P2 - Manifattura: Auto + Navetta -->
+          <div class="sketch-card sketch seed-2">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-2">
+                  <feturbulence type="fractalNoise" basefrequency="0.8" numoctaves="1" seed="5"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-2)"></rect>
+            </svg>
+            <h4>P2 – Manifattura</h4>
+            <p class="lead">Parcheggio auto gratuito</p>
+            <p class="meta">Servizio navetta</p>
+            <div class="parking-icons">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio.png?v=1755988564" alt="Parcheggio Auto" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-navetta.png?v=1755988564" alt="Servizio Navetta" class="parking-icon">
+            </div>
+            <a class="cta" href="https://www.google.com/maps?q=45.86887,8.62794">Vedi mappa</a>
+          </div>
+
+          <!-- P3 - Chiesa S. Stefano: Auto + Disabili -->
+          <div class="sketch-card sketch seed-3">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-3">
+                  <feturbulence type="fractalNoise" basefrequency="1.1" numoctaves="1" seed="7"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="12 7 5 11 9 8" vector-effect="non-scaling-stroke" filter="url(#wobble-3)"></rect>
+            </svg>
+            <h4>P3 – Chiesa S. Stefano</h4>
+            <p class="lead">Parcheggio auto gratuito</p>
+            <p class="meta">Parcheggio disabili · Meno di 2 min a piedi</p>
+            <div class="parking-icons">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio.png?v=1755988564" alt="Parcheggio Auto" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio-disabili.png?v=1755988565" alt="Parcheggio Disabili" class="parking-icon">
+            </div>
+            <a class="cta" href="https://www.google.com/maps?q=45.87712,8.62236">Vedi mappa</a>
+          </div>
+
+          <!-- P4 - Scuole medie: Auto + Navetta + Camper -->
+          <div class="sketch-card sketch seed-4">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-4">
+                  <feturbulence type="fractalNoise" basefrequency="0.7" numoctaves="1" seed="9"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="15 9 7 13" vector-effect="non-scaling-stroke" filter="url(#wobble-4)"></rect>
+            </svg>
+            <h4>P4 – Scuole medie</h4>
+            <p class="lead">Parcheggio auto gratuito</p>
+            <p class="meta">Servizio navetta · Camper ammessi - area non attrezzata</p>
+            <div class="parking-icons">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio.png?v=1755988564" alt="Parcheggio Auto" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-navetta.png?v=1755988564" alt="Servizio Navetta" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-camper.png?v=1755988563" alt="Camper" class="parking-icon">
+            </div>
+            <a class="cta" href="https://www.google.com/maps?q=45.86816,8.62443">Vedi mappa</a>
+          </div>
+
+          <!-- P5 - S. Caterina: Auto + Navetta + Camper + Bus -->
+          <div class="sketch-card sketch seed-5">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-5">
+                  <feturbulence type="fractalNoise" basefrequency="1.0" numoctaves="1" seed="11"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="13 6 8 10 11 7" vector-effect="non-scaling-stroke" filter="url(#wobble-5)"></rect>
+            </svg>
+            <h4>P5 – S. Caterina</h4>
+            <p class="lead">Parcheggio auto gratuito</p>
+            <p class="meta">Servizio navetta · Camper ammessi - area non attrezzata · Area riservata alla sosta dei bus turistici</p>
+            <div class="parking-icons">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-parcheggio.png?v=1755988564" alt="Parcheggio Auto" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-navetta.png?v=1755988564" alt="Servizio Navetta" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-camper.png?v=1755988563" alt="Camper" class="parking-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-leggiuno-icona-bus.png?v=1755988564" alt="Bus Turistici" class="parking-icon">
+            </div>
+            <a class="cta" href="https://www.google.com/maps?q=45.8772,8.59997">Vedi mappa</a>
+          </div>
+        </section>
+
+        <section class="location-section">
+          <h2>Assistenza</h2>
+          <p>Per assistenza, contattare il servizio clienti via email a <a href="mailto:info@lucinedinatale.it">info@lucinedinatale.it</a>.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

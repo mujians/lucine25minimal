@@ -58,7 +58,7 @@
             <div class="sidebar-menu">
               {% assign main_menu = linklists['menu-principale'] %}
               {% for link in main_menu.links %}
-                <button class="nav-item" onclick="window.location.href='{{ link.url }}{% unless link.url contains '?' %}?{% else %}&{% endunless %}tab=active'">
+                <button class="nav-item" onclick="window.location.href='{{ link.url }}'">
                   <span class="nav-icon">
                     {% if link.title contains 'Biglietti' %}🎫
                     {% elsif link.title contains 'FAQ' %}❓
