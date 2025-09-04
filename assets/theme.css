@@ -2561,10 +2561,18 @@ a.cta[href*="maps"]:after {
     text-align: center;
   }
   
+  .menu-title {
+    color: var(--christmas-gold);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
   .footer-link-main {
     display: block;
     text-align: center;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     font-size: 20px;
     font-weight: bold;
     text-decoration: none !important;
