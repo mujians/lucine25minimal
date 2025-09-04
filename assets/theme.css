@@ -391,9 +391,11 @@ main, #MainContent {
   font-size: 1.125rem; /* 18px minimum instead of 19px */
 }
 
-.link-red {
-  color: var(--christmas-red);
-}
+/* SEMANTIC COLOR GUIDELINES:
+ * Red (var(--christmas-red)): Primary CTAs, urgent actions, important page titles
+ * Green (var(--christmas-green)): All financial info/prices, success states, positive benefits, secondary positive actions
+ * Gold (var(--christmas-gold)): Premium content, important highlights, decorative elements, special section labels
+ * Removed .link-red class - using direct var(--christmas-red) inline styles for better consistency */
 
 .text-center {
   text-align: center;
@@ -697,8 +699,8 @@ ul li::before {
 
 /* CLEAN SECTIONS */
 .location-section {
-  margin: 3rem 0;
-  padding-bottom: 2rem;
+  margin: 2rem 0;
+  padding-bottom: 1rem;
 }
 
 .location-section:last-child {
@@ -707,6 +709,7 @@ ul li::before {
 
 .location-image {
   width: 100%;
+  max-width: 600px;
   height: auto;
   border-radius: 8px;
   margin: 1.5rem 0;
@@ -1979,8 +1982,8 @@ h6 {
   margin-bottom: 0.5rem !important;
 }
 
-/* Control image sizes in menu cards (excluding specific icons) */
-.menu-section-card img:not(.parking-icon):not(.navetta-icon) {
+/* Control image sizes in menu cards (excluding specific icons and location images) */
+.menu-section-card img:not(.parking-icon):not(.navetta-icon):not(.location-image) {
   max-width: 80px;
   height: auto;
 }
