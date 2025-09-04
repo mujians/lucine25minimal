@@ -1,0 +1,307 @@
+<!-- Desktop wrapper con sidebar -->
+<div class="navigation-container top" data-tabs-section>
+  <!-- Mobile Burger Menu -->
+  <div class="mobile-header">
+    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Include sidebar navigation -->
+  {% assign current_page_title = 'Design System' %}
+  {% render 'sidebar-navigation' %}
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="content show">
+      <div class="formatted-content">
+        <h1>Design System</h1>
+        <p>Documentazione completa di tutti gli stili, classi e dimensioni di testo utilizzate nel sito.</p>
+
+        <!-- Typography Headings -->
+        <section class="location-section">
+          <h2>Typography - Headings</h2>
+          
+          <div class="sketch-card sketch seed-1">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-h1">
+                  <feturbulence type="fractalNoise" basefrequency="0.9" numoctaves="1" seed="1"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-h1)"></rect>
+            </svg>
+            <h4>Headings</h4>
+            <div class="typography-examples">
+              <h1 style="margin: 1rem 0;">H1 - Main Title (Desktop: 3.5rem / Mobile: 2.5rem)</h1>
+              <h2 style="margin: 1rem 0;">H2 - Section Title (Desktop: 2.2rem / Mobile: 2rem)</h2>
+              <h3 style="margin: 1rem 0;">H3 - Subsection (Desktop: 1.8rem / Mobile: 1.5rem)</h3>
+              <h4 style="margin: 1rem 0;">H4 - Card Title (1.5rem)</h4>
+            </div>
+            <p class="meta">
+              <strong>Desktop:</strong> H1: 3.5rem, H2: 2.2rem, H3: 1.8rem<br>
+              <strong>Mobile:</strong> H1: 2.5rem, H2: 2rem, H3: 1.5rem
+            </p>
+          </div>
+        </section>
+
+        <!-- Body Text -->
+        <section class="location-section">
+          <h2>Typography - Body Text</h2>
+          
+          <div class="sketch-card sketch seed-2">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-body">
+                  <feturbulence type="fractalNoise" basefrequency="0.8" numoctaves="1" seed="2"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-body)"></rect>
+            </svg>
+            <h4>Body Text Sizes</h4>
+            <div class="typography-examples">
+              <p style="font-size: 18px; margin: 0.5rem 0;"><strong>Base Text:</strong> 18px (Increased from 17px) - Main content</p>
+              <p style="font-size: 1.125rem; margin: 0.5rem 0;"><strong>Large Text:</strong> 1.125rem (18px) - Important content</p>
+              <p style="font-size: 1rem; margin: 0.5rem 0;"><strong>Regular Text:</strong> 1rem (16px) - Standard content</p>
+              <p style="font-size: 0.95rem; margin: 0.5rem 0;"><strong>Small Text:</strong> 0.95rem (15.2px) - Secondary info</p>
+              <p style="font-size: 0.9rem; margin: 0.5rem 0;"><strong>Meta Text:</strong> 0.9rem (14.4px) - Metadata</p>
+              <p style="font-size: 0.85rem; margin: 0.5rem 0;"><strong>Tiny Text:</strong> 0.85rem (13.6px) - Small details</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Event System -->
+        <section class="location-section">
+          <h2>Event System Classes</h2>
+          
+          <div class="sketch-card sketch seed-3">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-events">
+                  <feturbulence type="fractalNoise" basefrequency="0.7" numoctaves="1" seed="3"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-events)"></rect>
+            </svg>
+            <h4>Event Components</h4>
+            <div class="typography-examples">
+              <div class="event-item" style="margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-natale-eventi-thumb.jpg?v=1730903862" alt="Sample" class="event-thumb" style="width: 80px; height: 80px; margin-right: 1rem;">
+                <div class="event-info">
+                  <div class="event-date" style="font-size: 1.1rem;">15 DIC</div>
+                  <h4 style="margin: 0.5rem 0; font-size: 1.125rem;">Event Title</h4>
+                  <p style="margin: 0; font-size: 0.95rem;">Event description text</p>
+                </div>
+              </div>
+              <p class="meta">
+                <strong>Desktop:</strong> .event-thumb: 80px, .event-date: 1.1rem, h4: 1.125rem<br>
+                <strong>Mobile:</strong> .event-thumb: 64px, text sizes maintained
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card System -->
+        <section class="location-section">
+          <h2>Card System Classes</h2>
+          
+          <div class="sketch-card sketch seed-4">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-cards">
+                  <feturbulence type="fractalNoise" basefrequency="1.1" numoctaves="1" seed="4"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-cards)"></rect>
+            </svg>
+            <h4>Card Typography Classes</h4>
+            <div class="typography-examples">
+              <p class="lead" style="margin: 0.5rem 0;">Lead Text (1.2rem, Christmas Green)</p>
+              <p class="meta" style="margin: 0.5rem 0; opacity: 0.85;">Meta Text (standard size, opacity 0.85)</p>
+              <a href="#" class="cta">CTA Link (Christmas Red, underline)</a>
+            </div>
+            <p class="meta">
+              <strong>.lead:</strong> 1.2rem, var(--christmas-green), font-weight: 600<br>
+              <strong>.meta:</strong> Standard size, opacity: 0.85<br>
+              <strong>.cta:</strong> var(--christmas-red), text-decoration: underline
+            </p>
+          </div>
+        </section>
+
+        <!-- Footer System -->
+        <section class="location-section">
+          <h2>Footer System Classes</h2>
+          
+          <div class="sketch-card sketch seed-5">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-footer">
+                  <feturbulence type="fractalNoise" basefrequency="0.6" numoctaves="1" seed="5"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-footer)"></rect>
+            </svg>
+            <h4>Footer Typography</h4>
+            <div class="typography-examples">
+              <h4 style="color: var(--christmas-red); font-size: 1rem; margin: 0.5rem 0;">Footer Section Title (1rem, Christmas Red)</h4>
+              <a href="#" class="footer-link" style="color: rgba(255,255,255,0.8); font-size: 1rem; text-decoration: underline;">Footer Link (1rem, rgba(255,255,255,0.8))</a>
+              <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin: 0.5rem 0;">Footer Legal Text (0.95rem, rgba(255,255,255,0.7))</p>
+              <p style="color: white; font-size: 20px; font-weight: bold; margin: 0.5rem 0;">Mobile Menu Item (20px, white, bold)</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Button System -->
+        <section class="location-section">
+          <h2>Button & CTA System</h2>
+          
+          <div class="sketch-card sketch seed-6">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-buttons">
+                  <feturbulence type="fractalNoise" basefrequency="1.0" numoctaves="1" seed="6"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-buttons)"></rect>
+            </svg>
+            <h4>Button Styles</h4>
+            <div class="typography-examples">
+              <a href="#" class="cta" style="background: var(--christmas-red); color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 8px; display: inline-block; font-size: 1.1rem; margin: 0.5rem;">CTA Button (1.1rem)</a>
+              <br>
+              <a href="#" class="family-cta" style="background: var(--christmas-green); color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 6px; display: inline-block; margin: 0.5rem;">Family CTA</a>
+            </div>
+            <p class="meta">
+              <strong>Desktop CTA:</strong> 1.1rem, padding: 1rem 2rem<br>
+              <strong>Hover:</strong> Color changes to var(--christmas-gold)
+            </p>
+          </div>
+        </section>
+
+        <!-- Responsive Breakpoints -->
+        <section class="location-section">
+          <h2>Responsive Breakpoints</h2>
+          
+          <div class="sketch-card sketch seed-7">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-responsive">
+                  <feturbulence type="fractalNoise" basefrequency="0.5" numoctaves="1" seed="7"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-responsive)"></rect>
+            </svg>
+            <h4>Media Query Breakpoints</h4>
+            <div class="typography-examples">
+              <p><strong>Mobile:</strong> max-width: 1023px</p>
+              <p><strong>Desktop:</strong> min-width: 1024px</p>
+              <p><strong>Large Desktop:</strong> min-width: 1440px</p>
+              <p><strong>Small Mobile:</strong> max-width: 480px</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Color System -->
+        <section class="location-section">
+          <h2>Color Variables</h2>
+          
+          <div class="sketch-card sketch seed-8">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-colors">
+                  <feturbulence type="fractalNoise" basefrequency="0.4" numoctaves="1" seed="8"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-colors)"></rect>
+            </svg>
+            <h4>CSS Custom Properties</h4>
+            <div class="typography-examples">
+              <p style="color: var(--christmas-red);"><strong>--christmas-red:</strong> Main accent color</p>
+              <p style="color: var(--christmas-green);"><strong>--christmas-green:</strong> Secondary accent</p>
+              <p style="color: var(--christmas-gold);"><strong>--christmas-gold:</strong> Highlight color</p>
+              <p style="color: var(--text-white);"><strong>--text-white:</strong> Primary text</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Identified Issues -->
+        <section class="location-section">
+          <h2>🚨 Inconsistencies Found</h2>
+          
+          <div class="sketch-card sketch seed-9" style="border-color: #ff6b6b;">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-issues">
+                  <feturbulence type="fractalNoise" basefrequency="0.3" numoctaves="1" seed="9"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="#ff6b6b" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-issues)"></rect>
+            </svg>
+            <h4 style="color: #ff6b6b;">Issues to Fix</h4>
+            <div class="typography-examples">
+              <p><strong>1. Font Size Units Mixing:</strong> px, rem, em mixed throughout</p>
+              <p><strong>2. Multiple sizes for same elements:</strong></p>
+              <ul style="margin-left: 1rem;">
+                <li>Footer text: 0.95rem, 1rem, 14px in different places</li>
+                <li>Event dates: 1em, 1.1rem, 1rem variants</li>
+                <li>Body text: 18px, 1.125rem, 1rem inconsistent</li>
+              </ul>
+              <p><strong>3. Overuse of !important:</strong> Many font-size declarations use !important</p>
+              <p><strong>4. Mobile vs Desktop inconsistencies:</strong></p>
+              <ul style="margin-left: 1rem;">
+                <li>Some elements don't have mobile variants</li>
+                <li>Event thumbnails: 80px desktop, 64px mobile</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section class="location-section">
+          <h2>📋 Recommended Solutions</h2>
+          
+          <div class="sketch-card sketch seed-10" style="border-color: var(--christmas-green);">
+            <svg class="sketch-border" viewbox="0 0 100 100" aria-hidden="true" preserveaspectratio="none">
+              <defs>
+                <filter id="wobble-solutions">
+                  <feturbulence type="fractalNoise" basefrequency="0.2" numoctaves="1" seed="10"></feturbulence>
+                  <fedisplacementmap in="SourceGraphic" scale="1"></fedisplacementmap>
+                </filter>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="var(--christmas-green)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke" filter="url(#wobble-solutions)"></rect>
+            </svg>
+            <h4 style="color: var(--christmas-green);">Proposed Standardization</h4>
+            <div class="typography-examples">
+              <p><strong>1. Standardize to rem units only</strong></p>
+              <p><strong>2. Create typography utility classes:</strong></p>
+              <ul style="margin-left: 1rem;">
+                <li>.text-xs: 0.75rem (12px)</li>
+                <li>.text-sm: 0.875rem (14px)</li>  
+                <li>.text-base: 1rem (16px)</li>
+                <li>.text-lg: 1.125rem (18px)</li>
+                <li>.text-xl: 1.25rem (20px)</li>
+                <li>.text-2xl: 1.5rem (24px)</li>
+              </ul>
+              <p><strong>3. Remove unnecessary !important declarations</strong></p>
+              <p><strong>4. Create consistent mobile/desktop scale system</strong></p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL FOOTER - Mobile menu footer -->
+{% render 'footer-snap' %}
