@@ -549,7 +549,7 @@ h1, h2 {
   font-family: 'Providence Sans', sans-serif !important;
   font-weight: normal !important;
   margin: 0 0 1.5rem 0 !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   letter-spacing: 0.02em !important;
   border: none !important;
   border-bottom: none !important;
@@ -576,12 +576,12 @@ h1 {
   font-size: 3rem !important; 
   font-weight: normal !important; 
   margin-bottom: 2rem !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   line-height: 1.2 !important;
 }
 h2 { 
   font-size: 2.5rem !important; 
-  color: var(--text-white) !important;
+  color: var(--text-white);
   font-weight: normal !important;
   margin: 3rem 0 1.5rem 0 !important;
   border-bottom: none !important;
@@ -591,14 +591,14 @@ h3 {
   font-size: 2rem !important; 
   font-weight: normal !important;
   margin: 2rem 0 1rem 0 !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   border-bottom: none !important;
   padding-bottom: 0 !important;
 }
 h4 { 
   font-size: 1.5rem !important; 
   font-weight: normal !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
 }
 
 p {
@@ -1258,29 +1258,7 @@ body.footer-expanded {
 
 /* Removed duplicate - correct style is below */
 
-.faq-question {
-  font-family: 'Providence Sans', -apple-system, sans-serif !important;
-  font-size: 1.125rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  color: var(--text-white) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: none !important;
-  padding: 1rem 0 !important;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  margin: 0 !important;
-}
-
-.faq-question:hover {
-  color: var(--christmas-gold) !important;
-}
-
-.faq-question.active {
-  color: var(--christmas-red) !important;
-}
+/* REMOVED - Consolidated in final FAQ section below */
 
 .faq-answer {
   padding: 0 0 1rem 0;
@@ -1598,9 +1576,7 @@ h6 {
   font-size: 1.125rem !important; /* Increased from 1rem */
 }
 
-.faq-question {
-  font-size: 1.25rem !important; /* Increased from 1.125rem */
-}
+/* REMOVED - Consolidated in final FAQ section below */
 
 /* Tab button font size */
 .tab {
@@ -1611,31 +1587,8 @@ h6 {
   font-size: 1.1875rem; /* 19px equivalent in REM */
 }
 
-/* FAQ IMPROVEMENTS */
-.faq-question {
-  font-family: 'Providence Sans', -apple-system, sans-serif !important;
-  font-size: 1.35rem !important; 
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  color: var(--text-white) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: none !important;
-  padding: 1.25rem 0 !important;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  margin: 0 !important;
-  transition: all 0.3s ease !important;
-}
-
-.faq-question:hover {
-  color: var(--christmas-green) !important;
-}
-
-.faq-question.active {
-  color: var(--christmas-red) !important;
-}
+/* REMOVED - Consolidated in final FAQ section below */
+/* REMOVED */
 
 .faq-answer {
   padding: 0 0 1.5rem 0;
@@ -1759,7 +1712,7 @@ h6 {
 
 .faq-nav-link {
   display: inline-block;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   text-decoration: none !important;
   font-size: 1.125rem !important; /* 18px - bigger */
   font-weight: 500;
@@ -1789,19 +1742,23 @@ h6 {
   background: rgba(15, 47, 31, 0.5);
 }
 
-/* FAQ Question Button */
+/* FAQ Question Button - CONSOLIDATED & CLEAN */
 .faq-question {
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
   border: none;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 1.188rem !important; /* 19px equivalent */
+  font-size: 1.188rem; /* 19px equivalent */
   font-weight: 600;
+  font-stretch: normal;
   text-align: left;
-  padding: 1.25rem 6rem 1.25rem 1.5rem !important; /* Much more right padding - NEVER change */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1.25rem 6rem 1.25rem 1.5rem;
+  margin: 0;
   cursor: pointer;
-  transition: none !important; /* NO transitions at all */
+  transition: none;
   position: relative;
   line-height: 1.4;
 }
@@ -1825,12 +1782,12 @@ h6 {
 
 /* FAQ Question Active State - Keep white, don't change color */
 .faq-question.active {
-  color: var(--text-white) !important;
+  color: var(--text-white);
 }
 
 /* Simple hover - Keep white, don't change color */
 .faq-question:hover {
-  color: var(--text-white) !important;
+  color: var(--text-white);
 }
 
 /* FAQ Answer */
@@ -1880,7 +1837,7 @@ h6 {
 
 /* FAQ Section Headers */
 .faq-section-header {
-  color: var(--text-white) !important;
+  color: var(--text-white);
   margin: 3rem 0 2rem 0;
   font-size: 2rem;
 }
@@ -2067,7 +2024,7 @@ h6 {
 
 .featured-event-card h4 {
   margin: 0 0 1rem 0 !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   font-size: 1.25rem !important;
 }
 
@@ -2125,7 +2082,7 @@ h6 {
 
 .event-item .event-info h4 {
   margin: 0 0 0.5rem 0 !important;
-  color: var(--text-white) !important;
+  color: var(--text-white);
   font-size: 1.125rem !important;
 }
 
