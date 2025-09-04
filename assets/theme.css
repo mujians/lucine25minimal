@@ -2561,31 +2561,19 @@ a.cta[href*="maps"]:after {
     text-align: center;
   }
   
-  .footer-nav-icon {
-    display: inline-block;
-    margin-right: 0.75rem;
-    font-size: 1.2em;
-  }
-  
   .footer-link-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    text-align: center;
     padding: 1rem 0;
     font-size: 20px;
     font-weight: bold;
     text-decoration: none !important;
     color: white;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: color 0.3s ease;
   }
   
   .footer-link-main:hover {
     color: var(--christmas-gold);
-  }
-  
-  .footer-link-main:last-child {
-    border-bottom: none;
   }
   
   /* Footer container single column */

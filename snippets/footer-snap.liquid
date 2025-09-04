@@ -17,17 +17,6 @@
         {% assign main_menu = linklists['menu-principale'] %}
         {% for link in main_menu.links %}
           <a href="{{ link.url }}" class="footer-link-main" target="_self">
-            <span class="footer-nav-icon">
-              {% if link.title contains 'Biglietti' %}🎫
-              {% elsif link.title contains 'FAQ' %}❓
-              {% elsif link.title contains 'Eventi' %}🎄
-              {% elsif link.title contains 'Menu' or link.title contains 'Ristoro' %}🍽️
-              {% elsif link.title contains 'Storia' %}📖
-              {% elsif link.title contains 'Visitare' %}👀
-              {% elsif link.title contains 'Parcheggi' or link.title contains 'Info' %}🚗
-              {% else %}✨
-              {% endif %}
-            </span>
             {{ link.title | upcase }}
           </a>
         {% endfor %}
