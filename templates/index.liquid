@@ -17,19 +17,13 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 <!-- Navigation Container -->
 <div class="navigation-container" data-tabs-section>
-  <!-- Mobile Menu -->
-  <div class="mobile-menu">
-    <div class="menu-tabs">
-      <button class="tab active" onclick="window.location.href='/'">Home</button>
-      
-      <!-- Menu dinamico da Shopify -->
-      {% assign main_menu = linklists['menu-principale'] %}
-      {% for link in main_menu.links %}
-        <button class="tab" onclick="window.location.href='{{ link.url }}'">
-          {{ link.title }}
-        </button>
-      {% endfor %}
-    </div>
+  <!-- Mobile Burger Menu -->
+  <div class="mobile-header">
+    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
 
   <!-- Include sidebar navigation -->

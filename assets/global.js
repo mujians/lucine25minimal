@@ -1257,3 +1257,25 @@ class ProductRecommendations extends HTMLElement {
 }
 
 customElements.define('product-recommendations', ProductRecommendations);
+
+// Mobile Footer Toggle Functionality
+function toggleMobileFooter() {
+  const footer = document.getElementById('snap-footer');
+  const trigger = document.getElementById('footer-trigger');
+  
+  if (footer && trigger) {
+    footer.classList.toggle('footer-open');
+    trigger.style.display = footer.classList.contains('footer-open') ? 'none' : 'flex';
+  }
+}
+
+// Close footer function (called by footer close button)
+function closeFooter() {
+  const footer = document.getElementById('snap-footer');
+  const trigger = document.getElementById('footer-trigger');
+  
+  if (footer && trigger) {
+    footer.classList.remove('footer-open');
+    trigger.style.display = 'flex';
+  }
+}
