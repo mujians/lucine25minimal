@@ -2541,74 +2541,74 @@ a.cta[href*="maps"]:after {
     display: none !important;
   }
   
-  /* Footer event info column */
-  .footer-event-info {
+  /* Close button in same position as burger menu */
+  .footer-close-btn {
+    position: fixed !important;
+    top: 20px !important;
+    left: 20px !important;
+    z-index: 1001 !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  /* Main navigation styled */
+  .footer-nav-main {
     text-align: center;
   }
   
-  .footer-logo-img {
-    max-width: 150px;
-    height: auto;
-    margin-bottom: 0.5rem;
-  }
-  
-  .footer-dates {
-    color: var(--christmas-gold);
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0.5rem 0 0.25rem 0;
-  }
-  
-  .footer-closed {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    margin: 0;
-  }
-  
-  /* Enhanced footer navigation with icons */
   .footer-nav-icon {
     display: inline-block;
-    margin-right: 0.5rem;
-    font-size: 1.1em;
+    margin-right: 0.75rem;
+    font-size: 1.2em;
   }
   
-  .footer-link {
+  .footer-link-main {
     display: flex;
     align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    justify-content: center;
+    padding: 1rem 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none !important;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: color 0.3s ease;
   }
   
-  .footer-link:last-child {
+  .footer-link-main:hover {
+    color: var(--christmas-gold);
+  }
+  
+  .footer-link-main:last-child {
     border-bottom: none;
   }
   
-  /* Footer container responsive grid */
+  /* Footer container single column */
   .footer-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2rem;
-    padding: 2rem 1.5rem;
+    display: block;
+    padding: 3rem 2rem 2rem;
   }
   
-  /* Stack columns on smaller mobile screens */
-  @media (max-width: 480px) {
-    .footer-container {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      text-align: center;
-    }
-    
-    .footer-event-info,
-    .footer-nav,
-    .footer-column {
-      text-align: center;
-    }
-    
-    .footer-link {
-      justify-content: center;
-    }
+  /* Legal info styled */
+  .footer-legal {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
+  
+  .legal-line {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0.25rem 0;
+  }
+  
 }
 
 /* Mobile Burger Menu Styles */

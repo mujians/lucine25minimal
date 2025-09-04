@@ -1283,11 +1283,13 @@ function toggleMobileFooter() {
 
 // Close footer function (called by footer close button)
 function closeFooter() {
+  console.log('🔍 closeFooter called from close button');
   const footer = document.getElementById('snap-footer');
-  const trigger = document.getElementById('footer-trigger');
   
-  if (footer && trigger) {
-    footer.classList.remove('footer-open');
-    trigger.style.display = 'flex';
+  if (footer) {
+    // Use the same logic as burger menu
+    footer.classList.remove('show', 'expanded');
+    document.body.classList.remove('footer-expanded');
+    console.log('🔴 Footer closed by close button');
   }
 }
