@@ -11,9 +11,11 @@
   
   <div class="footer-container">
     
-    <!-- Menu Navigazione (una sola colonna centrata) -->
+    <!-- Menu Navigazione con logo piccolo -->
     <div class="footer-column footer-nav-main">
-      <h3 class="menu-title">MENU</h3>
+      <div class="footer-mobile-logo">
+        <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/lucine-di-natale-logo-white-2025.png?v=1757004485" alt="Lucine di Natale" class="footer-logo-small" />
+      </div>
       <nav class="footer-menu">
         {% assign main_menu = linklists['menu-principale'] %}
         {% for link in main_menu.links %}

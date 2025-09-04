@@ -2571,15 +2571,17 @@ a.cta[href*="maps"]:after {
     text-align: center;
   }
   
-  .menu-title {
-    color: white !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
-    margin-bottom: 1.5rem !important;
-    margin-top: 0 !important;
-    text-align: center !important;
+  .footer-mobile-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-logo-small {
+    width: 80px !important;
+    height: auto !important;
+    max-width: 80px !important;
     display: block !important;
-    opacity: 1 !important;
+    margin: 0 auto !important;
   }
   
   .footer-link-main {
