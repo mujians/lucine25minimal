@@ -1,27 +1,8 @@
-<!-- Desktop wrapper con sidebar come le altre pagine -->
-<div class="navigation-container top" data-tabs-section>
-  <!-- Mobile Burger Menu -->
-  <div class="mobile-header">
-    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </div>
-
-  <!-- Include sidebar navigation -->
-  {% assign current_page_title = 'Biglietti' %}
-  {% render 'sidebar-navigation' %}
-
-  <!-- Content Area -->
-  <div class="content-wrapper">
-    <div class="content show">
-      <div class="formatted-content">
-        <section
-          id="MainProduct-{{ section.id }}"
-          class="product-main-section"
-          data-section="{{ section.id }}"
-        >
+<section
+  id="MainProduct-{{ section.id }}"
+  class="page-width section-{{ section.id }}-padding"
+  data-section="{{ section.id }}"
+>
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
@@ -2409,14 +2390,7 @@
     }
   </style>
 
-        </section>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- GLOBAL FOOTER - Mobile menu footer -->
-{% render 'footer-snap' %}
+</section>
 {% render 'evey-custom-code' %}
 {% schema %}
 {
