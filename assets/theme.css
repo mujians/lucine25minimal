@@ -2177,49 +2177,51 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* Company Info in Sidebar */
-  .company-info {
-    text-align: center;
-    margin: 2rem 0 1.5rem 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .company-info p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.75rem;
-    margin: 0.3rem 0;
-    line-height: 1.3;
-  }
-  
-  .company-info strong {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.8rem;
-  }
-  
+  /* Comune Logo */
   .comune-logo {
     max-width: 120px !important;
     height: auto !important;
-    margin: 1rem auto 0.5rem auto;
+    margin: 1.5rem auto 1rem auto;
     display: block;
     opacity: 1; /* Full opacity as requested */
   }
   
-  /* Legal Links in Sidebar */
+  /* Legal Links in Sidebar - Bigger */
   .sidebar-legal {
     text-align: center;
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
+    font-size: 0.9rem; /* Increased from 0.75rem */
+    margin: 1rem 0;
+    font-weight: 500;
   }
   
   .sidebar-legal a {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.7); /* More visible */
     text-decoration: none;
     transition: color 0.3s ease;
   }
   
   .sidebar-legal a:hover {
     color: var(--christmas-gold);
+  }
+  
+  /* Company Info in Sidebar - Smaller */
+  .company-info {
+    text-align: center;
+    margin: 1rem 0 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .company-info p {
+    color: rgba(255, 255, 255, 0.4); /* Less prominent */
+    font-size: 0.65rem; /* Smaller text */
+    margin: 0.2rem 0;
+    line-height: 1.3;
+  }
+  
+  .company-info strong {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.7rem; /* Smaller */
   }
   
   /* Hide mobile footer trigger on desktop */
