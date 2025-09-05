@@ -2801,15 +2801,6 @@ a.cta[href*="maps"]:after {
     width: 100% !important;
     padding-top: 0 !important;
   }
-}
-
-  
-  .content-wrapper {
-    margin-left: 0 !important;
-    width: 100% !important;
-    padding-top: 80px !important;
-  }
-}
 
 /* Desktop - Hide mobile elements and add content padding */
 @media (min-width: 1024px) {
@@ -2827,8 +2818,49 @@ a.cta[href*="maps"]:after {
 button[data-evey-trigger],
 [data-evey-string],
 .evey-scheduler-button,
-.evey-btn {
+.evey-btn,
+.evey-scheduler-container,
+.evey-scheduler-container button {
   visibility: visible !important;
   display: block !important;
   opacity: 1 !important;
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* Mobile specific fix for Evey button */
+@media (max-width: 1023px) {
+  .evey-scheduler-container {
+    position: relative !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+  
+  button[data-evey-trigger="scheduler"] {
+    visibility: visible !important;
+    display: block !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Ensure product section doesn't block Evey elements */
+  .section-main-product {
+    overflow: visible !important;
+  }
+  
+  .product__info {
+    overflow: visible !important;
+    z-index: auto !important;
+  }
+  
+  /* Fix potential content wrapper issues on mobile */
+  .content-wrapper {
+    overflow: visible !important;
+  }
 }
