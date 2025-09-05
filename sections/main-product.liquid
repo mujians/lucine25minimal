@@ -8,20 +8,6 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // COMPREHENSIVE EVEY BUTTON DIAGNOSTIC LOGGING
-    console.log('🔍 === EVEY BUTTON DIAGNOSTIC STARTING ===');
-    console.log('📱 Device Info:', {
-      userAgent: navigator.userAgent,
-      screenSize: screen.width + 'x' + screen.height,
-      windowSize: window.innerWidth + 'x' + window.innerHeight,
-      isMobile: window.innerWidth < 1024,
-      orientation: screen.orientation?.type || 'unknown'
-    });
-    
-    // Deep inspection function
-    function deepInspectEveyButton() {
-      console.log('\n🔬 === DEEP INSPECTION AT', new Date().toTimeString().split(' ')[0], '===');
-      
       // Find all Evey-related elements
       const eveyContainer = document.querySelector('.evey-scheduler-container');
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
@@ -31,7 +17,6 @@
       if (eveyContainer) {
         const containerStyles = getComputedStyle(eveyContainer);
         const containerRect = eveyContainer.getBoundingClientRect();
-        console.log('📦 Evey Container Found:', {
           classes: eveyContainer.className,
           id: eveyContainer.id || 'no-id',
           parentElement: eveyContainer.parentElement?.className || 'no-parent',
@@ -64,7 +49,6 @@
         while (parent && level <= 5) {
           const parentStyles = getComputedStyle(parent);
           if (parentStyles.display === 'none' || parentStyles.visibility === 'hidden' || parentStyles.opacity === '0') {
-            console.log(`⚠️ Parent level ${level} is hiding element:`, {
               tagName: parent.tagName,
               className: parent.className,
               display: parentStyles.display,
@@ -76,14 +60,12 @@
           level++;
         }
       } else {
-        console.log('❌ Evey Container NOT FOUND');
       }
       
       // Button analysis
       if (eveyButton) {
         const buttonStyles = getComputedStyle(eveyButton);
         const buttonRect = eveyButton.getBoundingClientRect();
-        console.log('🔘 Evey Button Found:', {
           text: eveyButton.textContent,
           classes: eveyButton.className,
           attributes: Array.from(eveyButton.attributes).map(a => a.name + '=' + a.value),
@@ -117,24 +99,20 @@
             buttonRect.left + buttonRect.width/2,
             buttonRect.top + buttonRect.height/2
           ).includes(eveyButton);
-          console.log('🎯 Button clickability test:', isClickable ? 'PASS' : 'FAIL - Something is blocking it');
           
           if (!isClickable) {
             const blockingElements = document.elementsFromPoint(
               buttonRect.left + buttonRect.width/2,
               buttonRect.top + buttonRect.height/2
             );
-            console.log('🚫 Elements blocking the button:', blockingElements.map(el => ({
               tagName: el.tagName,
               className: el.className,
               zIndex: getComputedStyle(el).zIndex
             })));
           }
         } catch (e) {
-          console.log('⚠️ Could not test clickability:', e.message);
         }
       } else {
-        console.log('❌ Evey Button NOT FOUND');
         
         // Try to find any button with Evey classes
         const allButtons = document.querySelectorAll('button');
@@ -145,7 +123,6 @@
         );
         
         if (eveyButtons.length > 0) {
-          console.log('🔍 Found potential Evey buttons:', eveyButtons.map(b => ({
             text: b.textContent,
             className: b.className,
             dataAttributes: Array.from(b.attributes).filter(a => a.name.startsWith('data')).map(a => a.name)
@@ -155,9 +132,7 @@
       
       // Check for any Evey app elements
       const allEveyElements = document.querySelectorAll('[class*="evey"], [id*="evey"], [data-evey]');
-      console.log(`📊 Total Evey-related elements found: ${allEveyElements.length}`);
       if (allEveyElements.length > 0) {
-        console.log('📋 Evey elements list:', Array.from(allEveyElements).slice(0, 5).map(el => ({
           tagName: el.tagName,
           className: el.className,
           id: el.id,
@@ -170,12 +145,10 @@
     deepInspectEveyButton(); // Immediate
     
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('📌 DOM Content Loaded');
       deepInspectEveyButton();
     });
     
     window.addEventListener('load', () => {
-      console.log('📌 Window Fully Loaded');
       deepInspectEveyButton();
     });
     
@@ -186,7 +159,6 @@
     [500, 1000, 2000].forEach(delay => {
       setTimeout(() => {
         if (inspectionCount < maxInspections) {
-          console.log(`⏱️ After ${delay}ms delay (check ${inspectionCount + 1}/${maxInspections}):`);
           deepInspectEveyButton();
           inspectionCount++;
         }
@@ -199,7 +171,6 @@
     
     const mutationObserver = new MutationObserver((mutations) => {
       if (mutationLogCount >= maxMutationLogs) {
-        console.log('📊 Mutation logging stopped after', maxMutationLogs, 'events to keep console clean');
         mutationObserver.disconnect();
         return;
       }
@@ -210,10 +181,8 @@
             if (node.nodeType === 1) { // Element node
               if (node.className?.includes('evey') || node.querySelector?.('[class*="evey"]')) {
                 if (node.className?.includes('evey-scheduler-container')) {
-                  console.log('🎉 EVEY SCHEDULER CONTAINER ADDED!');
                   setTimeout(() => {
                     deepInspectEveyButton();
-                    console.log('=== FINAL ANALYSIS COMPLETE ===');
                   }, 500);
                 }
                 mutationLogCount++;
@@ -233,11 +202,9 @@
         attributeOldValue: true,
         attributeFilter: ['style', 'class']
       });
-      console.log('👁️ Mutation Observer activated');
     });
     
     // REPLACEMENT STRATEGY - Create our own tooltips outside Evey's control
-    console.log('🚀 CUSTOM TOOLTIP SYSTEM STARTING');
     
     // Store our custom tooltips
     const customTooltips = new Map();
@@ -269,11 +236,6 @@
       }
       if (!variantContainer) {
         // Log what we're working with
-        console.log('Icon element:', iconElement);
-        console.log('Parent:', iconElement.parentElement);
-        console.log('Parent classes:', iconElement.parentElement?.className);
-        console.log('Grandparent:', iconElement.parentElement?.parentElement);
-        console.log('Grandparent classes:', iconElement.parentElement?.parentElement?.className);
         
         // Just center it on screen
         customTooltip.style.cssText = `
@@ -359,7 +321,6 @@
       document.body.appendChild(customTooltip);
       customTooltips.set(variantName, customTooltip);
       
-      console.log(`✨ Created custom tooltip for ${variantName}`);
       return customTooltip;
     }
     
@@ -371,7 +332,6 @@
       e.preventDefault();
       e.stopPropagation();
       
-      console.log('👆 Info icon clicked!');
       
       const variantName = clickedIcon.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
       
@@ -381,11 +341,9 @@
         if (existing.style.display === 'none') {
           // Re-show it
           existing.style.display = 'block';
-          console.log(`👁️ Re-showing custom tooltip for ${variantName}`);
         } else {
           // Hide it
           existing.style.display = 'none';
-          console.log(`🙈 Hiding custom tooltip for ${variantName}`);
         }
         return;
       }
@@ -397,7 +355,6 @@
       }
       
       if (!eveyTooltip) {
-        console.log('❌ No Evey tooltip found to copy');
         return;
       }
       
@@ -434,7 +391,6 @@
         if (eveyButton.disabled || eveyButton.hasAttribute('disabled')) {
           eveyButton.removeAttribute('disabled');
           eveyButton.disabled = false;
-          console.log('✅ Enabled Evey button');
         }
         
         // Force visibility without changing layout
@@ -445,7 +401,6 @@
         // Check if button is inside a form that submits to cart
         const parentForm = eveyButton.closest('form');
         if (parentForm && parentForm.action && parentForm.action.includes('/cart')) {
-          console.log('🚨 EVEY BUTTON IS INSIDE CART FORM! Moving it outside...', parentForm.action);
           
           // SOLUTION: Move button OUTSIDE the cart form
           const container = eveyButton.parentElement;
@@ -460,11 +415,9 @@
           // Update reference to new button
           eveyButton = newButton;
           
-          console.log('✅ Evey button moved outside cart form');
           
           // Re-apply event listeners to the moved button
           eveyButton.addEventListener('click', function(e) {
-            console.log('🎯 Moved Evey button click intercepted');
             e.stopImmediatePropagation();
             e.stopPropagation();
           }, true);
@@ -493,7 +446,6 @@
         
         // FORCE BLOCK: Add click listener to prevent all cart behavior
         eveyButton.addEventListener('click', function(e) {
-          console.log('🎯 Evey button direct click intercepted');
           // Stop all propagation to prevent shop_events_listener from catching it
           e.stopImmediatePropagation();
           e.stopPropagation();
@@ -503,7 +455,6 @@
         // NUCLEAR OPTION - Force absolute positioning if still invisible
         const rect = eveyButton.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) {
-          console.log('⚠️ Button still has 0 dimensions, applying nuclear fix');
           eveyButton.style.cssText = `
             position: fixed !important;
             bottom: 20px !important;
@@ -530,14 +481,11 @@
           `;
         }
         
-        console.log('✅ Applied aggressive styling to Evey button');
         
         // IMMEDIATE NUCLEAR CHECK - Right after applying styles
         setTimeout(() => {
           const immediateRect = eveyButton.getBoundingClientRect();
-          console.log('🔥 IMMEDIATE CHECK - Button dimensions after styling:', immediateRect.width, 'x', immediateRect.height);
           if (immediateRect.width === 0 || immediateRect.height === 0) {
-            console.log('🚀 IMMEDIATE NUCLEAR ACTIVE - Making button visible NOW');
             eveyButton.style.cssText = `
               position: fixed !important;
               bottom: 20px !important;
@@ -562,7 +510,6 @@
               pointer-events: auto !important;
               box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
             `;
-            console.log('✅ IMMEDIATE NUCLEAR APPLIED');
           }
         }, 100);
       }
@@ -576,7 +523,6 @@
           min-width: 200px !important;
           min-height: 50px !important;
         `;
-        console.log('✅ Fixed Evey container visibility and size');
       }
     }
     
@@ -585,9 +531,7 @@
       const forcedBtn = document.querySelector('button[data-evey-trigger="scheduler"]');
       if (forcedBtn) {
         const forcedRect = forcedBtn.getBoundingClientRect();
-        console.log('🔥 FORCE CHECK - Button dimensions:', forcedRect.width, 'x', forcedRect.height);
         if (forcedRect.width === 0 || forcedRect.height === 0) {
-          console.log('🚀 NUCLEAR FORCE ACTIVE - Making button visible NOW');
           forcedBtn.style.cssText = `
             position: fixed !important;
             bottom: 20px !important;
@@ -612,32 +556,26 @@
             pointer-events: auto !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
           `;
-          console.log('✅ NUCLEAR FORCE APPLIED');
         } else {
-          console.log('✅ Button has dimensions, nuclear not needed');
         }
       }
     }, 3000);
     
     // Run on load and after delays - only 3 times
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('🔧 Starting Evey button fix attempts...');
       fixEveyButton();
     });
     
     setTimeout(() => { 
       fixEveyButton();
-      console.log('✅ Fix attempt 1/3');
     }, 1000);
     
     setTimeout(() => { 
       fixEveyButton();
-      console.log('✅ Fix attempt 2/3');
     }, 2000);
     
     setTimeout(() => { 
       fixEveyButton();
-      console.log('✅ Fix attempt 3/3 - stopping automatic fixes');
     }, 3000);
     
     // Monitor for any style changes and reapply
@@ -647,7 +585,6 @@
         if (eveyButton && eveyButton.matches('button[data-evey-trigger="scheduler"]')) {
           // Check if button was disabled
           if (eveyButton.disabled || eveyButton.hasAttribute('disabled')) {
-            console.log('⚠️ Evey button was disabled, fixing...');
             fixEveyButton();
           }
         }
@@ -665,7 +602,6 @@
         const eveyContainer = document.querySelector('.evey-scheduler-container');
         
         if (!eveyButton && eveyContainer) {
-          console.log('🚨 Evey button was destroyed, attempting recreation...');
           
           // Try to trigger Evey to recreate the button
           const eveyApp = document.querySelector('[class*="evey__multi-variant"]');
@@ -679,7 +615,6 @@
           setTimeout(() => {
             const stillNoButton = !document.querySelector('button[data-evey-trigger="scheduler"]');
             if (stillNoButton && eveyContainer) {
-              console.log('🔨 Creating fallback button...');
               createFallbackButton(eveyContainer);
             }
           }, 500);
@@ -688,7 +623,6 @@
         }
       }, 2000); // Check every 2 seconds
       
-      console.log('🔄 Started button recreation monitoring');
     }
     
     function createFallbackButton(container) {
@@ -723,7 +657,6 @@
       
       // Add click handler that tries to trigger the real Evey functionality
       fallbackBtn.addEventListener('click', () => {
-        console.log('🎯 Fallback button clicked');
         
         // Try to find and trigger the real Evey button if it exists
         const realButton = document.querySelector('button[data-evey-trigger="scheduler"]:not(.fallback-scheduler-btn)');
@@ -739,7 +672,6 @@
       });
       
       container.appendChild(fallbackBtn);
-      console.log('✅ Fallback button created');
     }
     
     // Start monitoring
@@ -1687,26 +1619,21 @@
                 <h3 style="color: var(--christmas-red); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Biglietti Parco</h3>
 <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 19px;">Questi biglietti garantiscono l'accesso ad un giorno e una fascia oraria specifica.</p>                <!-- REMOVED sketch-border SVG -->
                 <script>
-                  console.log("🎯 Rendering Evey app block");
                   
                   // Fix Evey disabled state and layout issues
                   function fixEveyLayout() {
-                    console.log("🔧 Running Evey layout fix");
                     
                     const eveyCard = document.querySelector('.sketch-card.evey-override');
                     if (!eveyCard) {
-                      console.log("❌ Evey card not found");
                       return;
                     }
                     
                     // Remove ALL inline styles that disable elements
                     const variantContainers = eveyCard.querySelectorAll('.evey__variant-container');
                     variantContainers.forEach((container, index) => {
-                      console.log(`📦 Variant ${index} inline style:`, container.getAttribute('style'));
                       
                       // Remove problematic inline styles
                       if (container.style.pointerEvents) {
-                        console.log(`🚫 Removing disabled state from variant ${index}`);
                         container.style.pointerEvents = '';
                         container.style.opacity = '';
                         container.style.filter = '';
@@ -1717,14 +1644,12 @@
                     // Stabilize layout
                     const currentHeight = eveyCard.offsetHeight;
                     eveyCard.style.minHeight = Math.max(currentHeight, 300) + 'px';
-                    console.log(`📏 Set card min-height: ${eveyCard.style.minHeight}`);
                     
                     // Fix form
                     const eveyForm = eveyCard.querySelector('form, .evey__multi-variant-selector');
                     if (eveyForm) {
                       eveyForm.style.minHeight = '250px';
                       eveyForm.style.display = 'block';
-                      console.log("✅ Form stabilized");
                     }
                     
                     // Monitor for Evey changes
@@ -1734,7 +1659,6 @@
                           const target = mutation.target;
                           if (target.classList.contains('evey__variant-container')) {
                             if (target.style.pointerEvents === 'none') {
-                              console.log("🔄 Evey tried to disable variant, fixing...");
                               target.style.pointerEvents = '';
                               target.style.opacity = '';
                               target.style.filter = '';
@@ -1753,7 +1677,6 @@
                       });
                     });
                     
-                    console.log("👁️ Mutation observer active");
                   }
 
                   
@@ -1863,28 +1786,20 @@
                             // Evey disables the button when no date is selected, regardless of ticket quantity
                             const noDateSelected = btn.disabled || btn.classList.contains('disabled');
                             
-                            console.log('⚠️ WARNING CHECK:');
-                            console.log('  - Button disabled:', btn.disabled);
-                            console.log('  - Has disabled class:', btn.classList.contains('disabled'));
-                            console.log('  - Should show warning:', noDateSelected);
                             
                             // Show warning when NO DATE is selected
                             if (noDateSelected) {
-                              console.log('📢 SHOWING WARNING TOOLTIP');
                               
                               // Show warning tooltip - OUTSIDE THE BUTTON
                               let warningTooltip = document.getElementById('date-warning-tooltip-global');
                               if (!warningTooltip) {
-                                console.log('  - Creating new tooltip');
                                 warningTooltip = document.createElement('div');
                                 warningTooltip.id = 'date-warning-tooltip-global';
                                 warningTooltip.className = 'date-warning-tooltip';
-                                warningTooltip.innerHTML = '⚠️ È necessario selezionare la data e l\'orario prima dell\'acquisto';
                                 
                                 // Add to body, not to button
                                 document.body.appendChild(warningTooltip);
                               } else {
-                                console.log('  - Tooltip already exists');
                               }
                               
                               // Position tooltip relative to button
@@ -1917,15 +1832,8 @@
                                 
                                 // Log actual computed styles
                                 const computed = window.getComputedStyle(warningTooltip);
-                                console.log('📊 TOOLTIP ACTUAL STATE:');
-                                console.log('  - Computed opacity:', computed.opacity);
-                                console.log('  - Computed display:', computed.display);
-                                console.log('  - Computed visibility:', computed.visibility);
-                                console.log('  - Computed z-index:', computed.zIndex);
-                                console.log('  - Computed background:', computed.backgroundColor);
                               }
                             } else {
-                              console.log('✅ Date selected, no warning needed');
                             }
                           });
                           
@@ -1962,7 +1870,6 @@
               <div class="sketch-card evey-override" style="padding: 1.5rem; margin: 1.5rem 0;">
                 <!-- Title and description inside Evey card for coherence -->
                 <h3 style="color: var(--christmas-red); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Biglietti Parco</h3>
-<p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 19px;">Questi biglietti garantiscono l'accesso ad un giorno e una fascia oraria specifica.</p><script>console.log("Rendering Evey block directly");</script>
                 {% render block %}
               </div>
             {%- when 'text' -%}
@@ -2581,23 +2488,16 @@
   <script>
     // Mobile-friendly tooltip enhancement - AFTER all tooltips are created
     (function initMobileTooltips() {
-      console.log('🚀 Mobile Tooltip Script STARTED');
       
       function setupTooltips() {
         try {
-          console.log('📱 Mobile Tooltip Enhancement Loading...');
-          console.log('🔧 User Agent:', navigator.userAgent);
-          console.log('📏 Window size:', window.innerWidth + 'x' + window.innerHeight);
-          console.log('📱 Is Mobile:', window.innerWidth <= 768);
           
           // Wait a bit for Evey tooltips to be fully created
           setTimeout(() => {
             try {
         const existingTooltips = document.querySelectorAll('.evey-ticket-tooltip');
-        console.log('🔍 Found existing tooltips:', existingTooltips.length);
         
         existingTooltips.forEach((tooltip, index) => {
-          console.log(`📋 Processing tooltip ${index + 1}:`, {
             hasContent: tooltip.innerHTML.length > 0,
             parentElement: tooltip.parentElement?.className,
             currentOpacity: tooltip.style.opacity,
@@ -2613,7 +2513,6 @@
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
-                  console.log(`🔄 Tooltip ${index + 1} state changed:`, {
                     opacity: tooltip.style.opacity,
                     visibility: tooltip.style.visibility,
                     transform: tooltip.style.transform,
@@ -2639,21 +2538,16 @@
             closeBtn.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log(`❌ Mobile close button clicked for tooltip ${index + 1}`);
-              console.log(`📉 HIDING tooltip ${index + 1} via close button`);
               tooltip.style.opacity = '0';
               tooltip.style.transform = 'translateY(-10px)';
               tooltip.style.pointerEvents = 'none';
-              console.log(`✅ Tooltip ${index + 1} hidden successfully`);
             });
             
-            console.log('✅ Added close button to tooltip', index + 1);
           }
           
           // Find the corresponding info icon
           const infoIcon = tooltip.parentElement?.querySelector('.evey-info-icon');
           if (infoIcon) {
-            console.log(`🎯 Found info icon for tooltip ${index + 1}:`, {
               className: infoIcon.className,
               innerHTML: infoIcon.innerHTML.substring(0, 50) + '...',
               boundingRect: infoIcon.getBoundingClientRect()
@@ -2662,7 +2556,6 @@
             // Track ALL events on info icon
             ['click', 'touchstart', 'touchend', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout'].forEach(eventType => {
               infoIcon.addEventListener(eventType, (e) => {
-                console.log(`👆 Event '${eventType}' on info icon ${index + 1}:`, {
                   eventType,
                   target: e.target.className,
                   currentTarget: e.currentTarget.className,
@@ -2679,7 +2572,6 @@
               e.stopPropagation();
               
               const isVisible = tooltip.style.opacity === '1';
-              console.log(`📱 Mobile click on info icon ${index + 1}:`, {
                 tooltipIndex: index + 1,
                 currentlyVisible: isVisible,
                 action: isVisible ? 'closing' : 'opening',
@@ -2689,16 +2581,13 @@
               
               if (isVisible) {
                 // Close this tooltip
-                console.log(`📉 HIDING tooltip ${index + 1} via click`);
                 tooltip.style.opacity = '0';
                 tooltip.style.transform = 'translateY(-10px)';
                 tooltip.style.pointerEvents = 'none';
-                console.log(`✅ Tooltip ${index + 1} hidden`);
               } else {
                 // Close all other tooltips first
                 existingTooltips.forEach((otherTooltip, otherIndex) => {
                   if (otherTooltip !== tooltip && otherTooltip.style.opacity === '1') {
-                    console.log(`🔄 Closing other tooltip ${otherIndex + 1}`);
                     otherTooltip.style.opacity = '0';
                     otherTooltip.style.transform = 'translateY(-10px)';
                     otherTooltip.style.pointerEvents = 'none';
@@ -2706,11 +2595,9 @@
                 });
                 
                 // Open this tooltip
-                console.log(`📈 SHOWING tooltip ${index + 1} via click`);
                 tooltip.style.opacity = '1';
                 tooltip.style.transform = 'translateY(0)';
                 tooltip.style.pointerEvents = 'auto';
-                console.log(`✅ Tooltip ${index + 1} shown:`, {
                   finalOpacity: tooltip.style.opacity,
                   finalTransform: tooltip.style.transform,
                   finalPointerEvents: tooltip.style.pointerEvents,
@@ -2719,9 +2606,7 @@
               }
             });
             
-            console.log('✅ Added mobile click handler to info icon', index + 1);
           } else {
-            console.log('⚠️ No info icon found for tooltip', index + 1);
           }
         });
         
@@ -2729,7 +2614,6 @@
         document.addEventListener('click', (e) => {
           const clickTarget = e.target.closest('.evey-info-icon') ? 'info-icon' : 
                              e.target.closest('.evey-ticket-tooltip') ? 'tooltip' : 'outside';
-          console.log('👆 Document click:', {
             target: clickTarget,
             elementClass: e.target.className,
             coordinates: { x: e.clientX, y: e.clientY }
@@ -2738,9 +2622,7 @@
           if (!e.target.closest('.evey-info-icon') && !e.target.closest('.evey-ticket-tooltip')) {
             const openTooltips = Array.from(existingTooltips).filter(t => t.style.opacity === '1');
             if (openTooltips.length > 0) {
-              console.log('🔄 Closing all tooltips (clicked outside)', openTooltips.length, 'open tooltips');
               openTooltips.forEach((tooltip, i) => {
-                console.log(`📉 HIDING tooltip via outside click: ${i + 1}`);
                 tooltip.style.opacity = '0';
                 tooltip.style.transform = 'translateY(-10px)';
                 tooltip.style.pointerEvents = 'none';
@@ -2749,7 +2631,6 @@
           }
         });
         
-              console.log('✅ Mobile tooltip enhancement completed');
             } catch (error) {
               console.error('❌ Error in tooltip setup:', error);
             }
@@ -2761,10 +2642,8 @@
       
       // Try both immediate and DOMContentLoaded
       if (document.readyState === 'loading') {
-        console.log('📄 Document still loading, waiting for DOMContentLoaded');
         document.addEventListener('DOMContentLoaded', setupTooltips);
       } else {
-        console.log('📄 Document already loaded, running immediately');
         setupTooltips();
       }
     })();
