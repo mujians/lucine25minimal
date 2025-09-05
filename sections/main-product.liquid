@@ -438,6 +438,10 @@
         }
         
         // Force visibility without changing layout
+        // Remove Shopify cart classes that trigger automatic cart behavior
+        eveyButton.classList.remove('btn', 'action-button', 'button', 'Button', 'Button--secondary');
+        eveyButton.classList.add('evey-scheduler-btn');
+        
         eveyButton.style.cssText = `
           visibility: visible !important;
           display: block !important;
