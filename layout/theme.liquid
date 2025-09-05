@@ -25,6 +25,55 @@
   <script src="{{ 'global.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   
+  <!-- DOM Analysis Script -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        console.log('=== DOM ANALYSIS FOR {{ request.page_type | upcase }} PAGE ===');
+        
+        // Find main content container
+        const mainContent = document.getElementById('MainContent');
+        if (mainContent) {
+          console.log('📄 MAIN CONTENT STRUCTURE:');
+          logDOMStructure(mainContent, 0, 4); // Max 4 levels deep
+        }
+        
+        // Find title element
+        const title = document.querySelector('h1');
+        if (title) {
+          console.log('🔤 TITLE ELEMENT:');
+          console.log('  Text:', title.textContent);
+          console.log('  Classes:', title.className);
+          console.log('  Parent classes:', title.parentElement?.className);
+          console.log('  Computed styles:', {
+            fontSize: getComputedStyle(title).fontSize,
+            color: getComputedStyle(title).color,
+            textAlign: getComputedStyle(title).textAlign,
+            marginTop: getComputedStyle(title).marginTop,
+            marginBottom: getComputedStyle(title).marginBottom,
+            paddingTop: getComputedStyle(title).paddingTop,
+            fontFamily: getComputedStyle(title).fontFamily
+          });
+        }
+      }, 1000);
+    });
+    
+    function logDOMStructure(element, level, maxLevel) {
+      if (level > maxLevel) return;
+      
+      const indent = '  '.repeat(level);
+      const tag = element.tagName?.toLowerCase() || 'text';
+      const classes = element.className ? ` class="${element.className}"` : '';
+      const id = element.id ? ` id="${element.id}"` : '';
+      
+      console.log(`${indent}${tag}${id}${classes}`);
+      
+      // Only log direct children, not all text nodes
+      Array.from(element.children || []).forEach(child => {
+        logDOMStructure(child, level + 1, maxLevel);
+      });
+    }
+  </script>
 </head>
 <body class="template-{{ request.page_type | handle }}">
   
