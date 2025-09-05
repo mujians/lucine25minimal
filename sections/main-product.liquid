@@ -1263,24 +1263,28 @@
       background: transparent !important;
     }
     
-    /* Minimal CSS for Evey and Open Ticket cards to work */
-    .sketch-card {
+    /* Product-specific sketch cards (Evey, Open Ticket) - more specific than theme.css */
+    .formatted-content .sketch-card,
+    .product__info .sketch-card {
       position: relative;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1rem;
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      padding: 1rem 1.5rem !important;
+      margin-bottom: 1rem !important;
+      transition: all 0.3s ease !important;
     }
     
-    /* Consistent spacing inside cards like normal cards */
-    .sketch-card h3:first-child,
-    .sketch-card h4:first-child {
+    /* Consistent spacing inside product cards like normal menu-section-cards */
+    .formatted-content .sketch-card h3:first-child,
+    .formatted-content .sketch-card h4:first-child,
+    .product__info .sketch-card h3:first-child,
+    .product__info .sketch-card h4:first-child {
       margin-top: 0.5rem !important;
     }
     
-    .sketch-card p:last-child {
+    .formatted-content .sketch-card p:last-child,
+    .product__info .sketch-card p:last-child {
       margin-bottom: 0.5rem !important;
     }
     
