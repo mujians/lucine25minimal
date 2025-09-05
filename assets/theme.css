@@ -84,10 +84,25 @@
   transition: all 0.3s ease;
 }
 
+/* Mobile content padding to clear fixed icons */
+@media (max-width: 1023px) {
+  body {
+    padding-top: 80px; /* Clear space for burger menu and cart icon */
+  }
+  
+  .mobile-product-original {
+    padding-top: 20px; /* Additional spacing for product pages */
+  }
+}
+
 @media (min-width: 1024px) {
   .mobile-cart-icon,
   .burger-menu {
     display: none;
+  }
+  
+  body {
+    padding-top: 0; /* No padding needed on desktop */
   }
 }
 
