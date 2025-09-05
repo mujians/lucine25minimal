@@ -97,7 +97,7 @@
   /* PRIORITY FIX: Evey button must be clickable on mobile */
   button[data-evey-trigger="scheduler"] {
     position: relative !important;
-    z-index: 99999 !important;
+    z-index: 995 !important;
     pointer-events: auto !important;
     cursor: pointer !important;
     touch-action: manipulation !important;
@@ -105,7 +105,7 @@
   
   .evey-scheduler-container {
     position: relative !important;
-    z-index: 99998 !important;
+    z-index: 994 !important;
     pointer-events: auto !important;
   }
   
@@ -2968,7 +2968,7 @@ button[data-evey-trigger],
 @media (max-width: 1023px) {
   .evey-scheduler-container {
     position: relative !important;
-    z-index: 9999 !important;
+    z-index: 995 !important;
     pointer-events: auto !important;
     transform: none !important;
   }
@@ -2980,7 +2980,7 @@ button[data-evey-trigger],
     pointer-events: auto !important;
     cursor: pointer !important;
     position: relative !important;
-    z-index: 9999 !important;
+    z-index: 995 !important;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
