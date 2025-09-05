@@ -26,6 +26,52 @@ function closeFooter() {
   }
 }
 
+// DEBUG: Track all clicks to understand Evey button behavior
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🔍 Setting up click tracking...');
+  
+  // Track all button clicks
+  document.addEventListener('click', function(event) {
+    const target = event.target;
+    const closest = target.closest('button, a');
+    
+    console.log('🔍 CLICK EVENT:', {
+      target: target.tagName + (target.className ? '.' + target.className.split(' ').join('.') : ''),
+      targetText: target.textContent?.substring(0, 50) + '...',
+      closest: closest ? closest.tagName + (closest.className ? '.' + closest.className.split(' ').join('.') : '') : 'none',
+      closestText: closest?.textContent?.substring(0, 50) + '...',
+      href: closest?.href || 'no href',
+      dataEvey: closest?.getAttribute('data-evey-trigger') || 'no data-evey',
+      coordinates: { x: event.clientX, y: event.clientY },
+      timestamp: new Date().toLocaleTimeString()
+    });
+    
+    // Special tracking for Evey button
+    if (closest && closest.getAttribute('data-evey-trigger') === 'scheduler') {
+      console.log('🎯 EVEY BUTTON CLICKED!', {
+        element: closest,
+        text: closest.textContent,
+        href: closest.href || 'no href - should be button behavior',
+        disabled: closest.disabled,
+        onclick: closest.onclick ? 'has onclick' : 'no onclick',
+        parentElement: closest.parentElement?.className,
+        boundingRect: closest.getBoundingClientRect()
+      });
+    }
+    
+    // Special tracking for cart icon clicks
+    if (closest && closest.href && closest.href.includes('/cart')) {
+      console.log('🛒 CART ICON CLICKED!', {
+        element: closest,
+        href: closest.href,
+        coordinates: { x: event.clientX, y: event.clientY }
+      });
+    }
+  }, true); // Use capture phase to catch everything
+  
+  console.log('✅ Click tracking active');
+});
+
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(
