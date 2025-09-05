@@ -1,7 +1,7 @@
 {
   "sections": {
-    "main": {
-      "type": "main-product",
+    "test_evey": {
+      "type": "evey-test",
       "blocks": {
         "evey_block": {
           "type": "shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8",
@@ -17,23 +17,10 @@
       "block_order": [
         "evey_block"
       ],
-      "settings": {
-        "enable_sticky_info": false,
-        "media_size": "medium",
-        "constrain_to_viewport": true,
-        "media_fit": "contain",
-        "gallery_layout": "stacked",
-        "media_position": "left",
-        "image_zoom": "none",
-        "mobile_thumbnails": "hide",
-        "hide_variants": false,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 44
-      }
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "test_evey"
   ]
 }

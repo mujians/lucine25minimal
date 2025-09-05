@@ -1,0 +1,26 @@
+<div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+  <h1>Test Evey Block</h1>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8' %}
+        <div style="margin: 20px 0; border: 2px solid #ccc; padding: 20px;">
+          {{ block.shopify_attributes }}
+          <h3>Evey Block Container</h3>
+          <!-- Evey app block will render here -->
+        </div>
+    {% endcase %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Evey Test Section",
+  "blocks": [
+    {
+      "type": "evey_block",
+      "name": "Evey Block",
+      "settings": []
+    }
+  ]
+}
+{% endschema %}
