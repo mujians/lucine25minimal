@@ -513,18 +513,97 @@
       });
     });
     
-    // Start observing once DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
+    // PERSISTENT BUTTON RECREATION - keeps recreating if destroyed
+    let buttonRecreationInterval;
+    
+    function startButtonRecreation() {
+      clearInterval(buttonRecreationInterval);
+      
+      buttonRecreationInterval = setInterval(() => {
         const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
-        if (eveyButton) {
-          buttonObserver.observe(eveyButton, { 
-            attributes: true, 
-            attributeFilter: ['style', 'class', 'disabled'] 
-          });
-          console.log('👁️ Monitoring Evey button for changes');
+        const eveyContainer = document.querySelector('.evey-scheduler-container');
+        
+        if (!eveyButton && eveyContainer) {
+          console.log('🚨 Evey button was destroyed, attempting recreation...');
+          
+          // Try to trigger Evey to recreate the button
+          const eveyApp = document.querySelector('[class*="evey__multi-variant"]');
+          if (eveyApp) {
+            // Trigger a change event that might make Evey recreate the button
+            const event = new Event('change', { bubbles: true });
+            eveyApp.dispatchEvent(event);
+          }
+          
+          // Also try to recreate manually
+          setTimeout(() => {
+            const stillNoButton = !document.querySelector('button[data-evey-trigger="scheduler"]');
+            if (stillNoButton && eveyContainer) {
+              console.log('🔨 Creating fallback button...');
+              createFallbackButton(eveyContainer);
+            }
+          }, 500);
+        } else if (eveyButton) {
+          fixEveyButton(); // Apply our fixes if button exists
         }
-      }, 1000);
+      }, 2000); // Check every 2 seconds
+      
+      console.log('🔄 Started button recreation monitoring');
+    }
+    
+    function createFallbackButton(container) {
+      // Remove any existing fallback
+      const existing = container.querySelector('.fallback-scheduler-btn');
+      if (existing) existing.remove();
+      
+      // Create our own button
+      const fallbackBtn = document.createElement('button');
+      fallbackBtn.className = 'fallback-scheduler-btn btn action-button';
+      fallbackBtn.textContent = 'Seleziona data e ora';
+      fallbackBtn.setAttribute('data-evey-trigger', 'scheduler');
+      
+      fallbackBtn.style.cssText = `
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 100% !important;
+        background: #d32f2f !important;
+        color: white !important;
+        border: none !important;
+        padding: 15px !important;
+        font-size: 16px !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        text-transform: uppercase !important;
+        margin: 10px 0 !important;
+        z-index: 99999 !important;
+        position: relative !important;
+      `;
+      
+      // Add click handler that tries to trigger the real Evey functionality
+      fallbackBtn.addEventListener('click', () => {
+        console.log('🎯 Fallback button clicked');
+        
+        // Try to find and trigger the real Evey button if it exists
+        const realButton = document.querySelector('button[data-evey-trigger="scheduler"]:not(.fallback-scheduler-btn)');
+        if (realButton) {
+          realButton.click();
+        } else {
+          // Try to trigger Evey events
+          const eveyEvent = new CustomEvent('evey:scheduler', { bubbles: true });
+          container.dispatchEvent(eveyEvent);
+          
+          alert('Seleziona prima una variante di biglietto, poi prova di nuovo.');
+        }
+      });
+      
+      container.appendChild(fallbackBtn);
+      console.log('✅ Fallback button created');
+    }
+    
+    // Start monitoring
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(startButtonRecreation, 3000); // Start after 3 seconds
     });
   </script>
   
