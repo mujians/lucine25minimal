@@ -11,7 +11,7 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 999;
   display: block;
 }
 
@@ -55,7 +55,7 @@
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1000;
+  z-index: 999;
   width: 50px;
   height: 50px;
   background: rgba(255, 255, 255, 0.9);
@@ -92,6 +92,21 @@
   
   .mobile-product-original {
     padding-top: 20px; /* Additional spacing for product pages */
+  }
+  
+  /* PRIORITY FIX: Evey button must be clickable on mobile */
+  button[data-evey-trigger="scheduler"] {
+    position: relative !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+  }
+  
+  .evey-scheduler-container {
+    position: relative !important;
+    z-index: 99998 !important;
+    pointer-events: auto !important;
   }
 }
 
