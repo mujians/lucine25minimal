@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const target = event.target;
     const closest = target.closest('button, a');
     
-    console.log('🔍 CLICK EVENT:', {
+    const clickInfo = {
       target: target.tagName + (target.className ? '.' + target.className.split(' ').join('.') : ''),
       targetText: target.textContent?.substring(0, 50) + '...',
       closest: closest ? closest.tagName + (closest.className ? '.' + closest.className.split(' ').join('.') : '') : 'none',
@@ -44,11 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
       dataEvey: closest?.getAttribute('data-evey-trigger') || 'no data-evey',
       coordinates: { x: event.clientX, y: event.clientY },
       timestamp: new Date().toLocaleTimeString()
-    });
+    };
+    
+    console.log('🔍 CLICK EVENT:', clickInfo);
     
     // Special tracking for Evey button
     if (closest && closest.getAttribute('data-evey-trigger') === 'scheduler') {
-      console.log('🎯 EVEY BUTTON CLICKED!', {
+      const eveyInfo = {
         element: closest,
         text: closest.textContent,
         href: closest.href || 'no href - should be button behavior',
@@ -56,16 +58,38 @@ document.addEventListener('DOMContentLoaded', function() {
         onclick: closest.onclick ? 'has onclick' : 'no onclick',
         parentElement: closest.parentElement?.className,
         boundingRect: closest.getBoundingClientRect()
-      });
+      };
+      console.log('🎯 EVEY BUTTON CLICKED!', eveyInfo);
+      
+      // PREVENT NAVIGATION TO KEEP LOGS - for debugging only
+      if (closest.href) {
+        event.preventDefault();
+        alert('🎯 EVEY BUTTON DEBUG:\n\n' + 
+              'Element: ' + closest.tagName + '.' + closest.className + '\n' +
+              'Text: ' + closest.textContent + '\n' +
+              'Href: ' + closest.href + '\n' +
+              'Should NOT have href! This is the problem!\n\n' +
+              'Check console for full details');
+        return false;
+      }
     }
     
-    // Special tracking for cart icon clicks
+    // Special tracking for cart icon clicks  
     if (closest && closest.href && closest.href.includes('/cart')) {
-      console.log('🛒 CART ICON CLICKED!', {
+      const cartInfo = {
         element: closest,
         href: closest.href,
         coordinates: { x: event.clientX, y: event.clientY }
-      });
+      };
+      console.log('🛒 CART ICON CLICKED!', cartInfo);
+      
+      // PREVENT NAVIGATION TO KEEP LOGS - for debugging only
+      event.preventDefault();
+      alert('🛒 CART ICON DEBUG:\n\n' + 
+            'Href: ' + closest.href + '\n' +
+            'Coordinates: ' + event.clientX + ',' + event.clientY + '\n\n' +
+            'Check console for full details');
+      return false;
     }
   }, true); // Use capture phase to catch everything
   
