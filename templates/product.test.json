@@ -1,4 +1,5 @@
 {
+  "layout": "theme.test",
   "sections": {
     "test_evey": {
       "type": "evey-test",
