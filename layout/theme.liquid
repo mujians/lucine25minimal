@@ -125,7 +125,9 @@
           <div class="content-wrapper">
             <div class="content show">
               <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-                {{ content_for_layout }}
+                <div id="single-content">
+                  {{ content_for_layout }}
+                </div>
               </div>
             </div>
           </div>
@@ -134,8 +136,35 @@
 
       <!-- Mobile Original Product (only <1024px) -->
       <div class="mobile-product-original">
-        {{ content_for_layout }}
+        <!-- Content moved here via JS on mobile, not duplicated -->
+        <div id="mobile-content-target"></div>
       </div>
+      
+      <script>
+        // Move content to appropriate container based on screen size
+        function moveContent() {
+          const content = document.getElementById('single-content');
+          const mobileTarget = document.getElementById('mobile-content-target');
+          
+          if (window.innerWidth < 1024) {
+            // Mobile: move content to mobile container
+            if (content && mobileTarget && !mobileTarget.hasChildNodes()) {
+              mobileTarget.appendChild(content);
+            }
+          } else {
+            // Desktop: content stays in original position
+            const desktopParent = document.querySelector('.content-wrapper .content > div');
+            if (content && desktopParent && content.parentElement !== desktopParent) {
+              desktopParent.appendChild(content);
+            }
+          }
+        }
+        
+        // Run on load and resize
+        window.addEventListener('load', moveContent);
+        window.addEventListener('resize', moveContent);
+        moveContent(); // Run immediately
+      </script>
 
       <style>
       /* Desktop: mostra wrapper con sidebar, nascondi mobile */
