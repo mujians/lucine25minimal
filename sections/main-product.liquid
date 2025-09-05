@@ -738,7 +738,33 @@
   </style>
 
   <style>
-    /* Product page aligned with other pages - no extra wrappers */
+    /* Product page aligned with other pages - reset all extra spacing */
+    
+    /* Reset container paddings that don't exist in normal pages */
+    .formatted-content {
+      padding: 20px !important; /* Same as normal pages */
+    }
+    
+    .container,
+    .page-width {
+      max-width: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    
+    /* Reset product-specific spacings */
+    .product__info-container,
+    .product__info-container > * {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    
+    /* Reset any wrapper spacings */
+    .product__info-wrapper {
+      padding: 0 !important;
+      margin: 0 !important;
+      max-width: 100% !important;
+    }
     
     /* Product title - override any conflicting styles */
     .product__title h1,
@@ -816,19 +842,7 @@
       grid-template-columns: 1fr !important;
     }
     
-    /* Container styling - following pagina-base-funzionante pattern */
-    .formatted-content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    
-    .container,
-    .page-width {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+    /* Container styling - align with normal pages (no extra containers) */
     
     /* Info blocks and guides - full width, not cards */
     .product-block__content,
@@ -839,14 +853,7 @@
       box-shadow: none !important;
     }
     
-    /* Product info wrapper - unified card system */
-    .product__info-wrapper {
-      padding: 0 !important;
-      max-width: 100% !important;
-      border: none !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-    }
+    /* Product info wrapper - already reset above */
     
     /* Hide product title - will be replaced with custom liquid */
     /* Keep product title visible */
