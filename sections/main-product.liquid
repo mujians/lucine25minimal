@@ -224,9 +224,117 @@
         });
       }
     });
+    // FORCE EVEY BUTTON VISIBILITY ON MOBILE
+    function forceEveyButtonVisibility() {
+      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+      const eveyContainer = document.querySelector('.evey-scheduler-container');
+      
+      if (eveyButton) {
+        // Force button to be visible
+        eveyButton.style.cssText = `
+          visibility: visible !important;
+          display: block !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          position: relative !important;
+          z-index: 99999 !important;
+          width: 100% !important;
+        `;
+        console.log('✅ Forced Evey button visibility');
+      }
+      
+      if (eveyContainer) {
+        eveyContainer.style.cssText = `
+          visibility: visible !important;
+          display: block !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          position: relative !important;
+          z-index: 99999 !important;
+        `;
+        console.log('✅ Forced Evey container visibility');
+      }
+    }
+    
+    // Run on load and after delays to catch any late-loading elements
+    document.addEventListener('DOMContentLoaded', forceEveyButtonVisibility);
+    setTimeout(forceEveyButtonVisibility, 500);
+    setTimeout(forceEveyButtonVisibility, 1000);
+    setTimeout(forceEveyButtonVisibility, 2000);
+    setTimeout(forceEveyButtonVisibility, 3000);
+    
+    // Also run when window resizes (mobile orientation change)
+    window.addEventListener('resize', forceEveyButtonVisibility);
+    
+    // Monitor for any style changes and reapply
+    const observer = new MutationObserver(() => {
+      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+      if (eveyButton && (eveyButton.style.display === 'none' || eveyButton.style.visibility === 'hidden')) {
+        forceEveyButtonVisibility();
+      }
+    });
+    
+    // Start observing once DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+      if (eveyButton) {
+        observer.observe(eveyButton, { 
+          attributes: true, 
+          attributeFilter: ['style', 'class'] 
+        });
+      }
+    });
   </script>
   
   <style>
+    /* FORCE EVEY BUTTON VISIBILITY ON ALL DEVICES */
+    .evey-scheduler-container {
+      visibility: visible !important;
+      display: block !important;
+      opacity: 1 !important;
+      position: relative !important;
+      z-index: 99999 !important;
+      pointer-events: auto !important;
+      margin: 20px 0 !important;
+      width: 100% !important;
+    }
+    
+    button[data-evey-trigger="scheduler"],
+    .evey-scheduler-container button {
+      visibility: visible !important;
+      display: block !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      position: relative !important;
+      z-index: 99999 !important;
+      width: 100% !important;
+      min-height: 44px !important;
+      -webkit-tap-highlight-color: transparent !important;
+      touch-action: manipulation !important;
+    }
+    
+    /* Mobile specific overrides */
+    @media (max-width: 1023px) {
+      .evey-scheduler-container,
+      button[data-evey-trigger="scheduler"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+        position: relative !important;
+        z-index: 999999 !important;
+      }
+      
+      /* Ensure nothing can hide the button */
+      .product__info .evey-scheduler-container,
+      #MainProduct .evey-scheduler-container,
+      .main-product .evey-scheduler-container {
+        display: block !important;
+        visibility: visible !important;
+      }
+    }
+    
     /* HIDE ALL EVEY TOOLTIPS PERMANENTLY */
     .evey-ticket-tooltip,
     .evey__ticket-tooltip,
