@@ -481,6 +481,40 @@
         }
         
         console.log('✅ Applied aggressive styling to Evey button');
+        
+        // IMMEDIATE NUCLEAR CHECK - Right after applying styles
+        setTimeout(() => {
+          const immediateRect = eveyButton.getBoundingClientRect();
+          console.log('🔥 IMMEDIATE CHECK - Button dimensions after styling:', immediateRect.width, 'x', immediateRect.height);
+          if (immediateRect.width === 0 || immediateRect.height === 0) {
+            console.log('🚀 IMMEDIATE NUCLEAR ACTIVE - Making button visible NOW');
+            eveyButton.style.cssText = `
+              position: fixed !important;
+              bottom: 20px !important;
+              left: 50% !important;
+              transform: translateX(-50%) !important;
+              width: calc(100% - 40px) !important;
+              max-width: 400px !important;
+              height: 50px !important;
+              background: #d32f2f !important;
+              color: white !important;
+              border: none !important;
+              padding: 15px !important;
+              font-size: 18px !important;
+              font-weight: bold !important;
+              border-radius: 8px !important;
+              cursor: pointer !important;
+              text-transform: uppercase !important;
+              z-index: 999999 !important;
+              visibility: visible !important;
+              display: block !important;
+              opacity: 1 !important;
+              pointer-events: auto !important;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+            `;
+            console.log('✅ IMMEDIATE NUCLEAR APPLIED');
+          }
+        }, 100);
       }
       
       if (eveyContainer) {
