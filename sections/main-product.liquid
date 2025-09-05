@@ -445,13 +445,29 @@
         // Check if button is inside a form that submits to cart
         const parentForm = eveyButton.closest('form');
         if (parentForm && parentForm.action && parentForm.action.includes('/cart')) {
-          console.log('🚨 EVEY BUTTON IS INSIDE CART FORM!', parentForm.action);
-          // Prevent form submission
-          parentForm.addEventListener('submit', function(e) {
-            console.log('🚫 Preventing cart form submission for Evey button');
-            e.preventDefault();
-            return false;
-          });
+          console.log('🚨 EVEY BUTTON IS INSIDE CART FORM! Moving it outside...', parentForm.action);
+          
+          // SOLUTION: Move button OUTSIDE the cart form
+          const container = eveyButton.parentElement;
+          const newButton = eveyButton.cloneNode(true);
+          
+          // Remove old button from form
+          eveyButton.remove();
+          
+          // Insert new button AFTER the form (outside of it)
+          parentForm.insertAdjacentElement('afterend', newButton);
+          
+          // Update reference to new button
+          eveyButton = newButton;
+          
+          console.log('✅ Evey button moved outside cart form');
+          
+          // Re-apply event listeners to the moved button
+          eveyButton.addEventListener('click', function(e) {
+            console.log('🎯 Moved Evey button click intercepted');
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+          }, true);
         }
         
         eveyButton.style.cssText = `
