@@ -12,11 +12,9 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "discount_info": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "<h1>Lucine di Natale 2025</h1>"
-          }
+        "title": {
+          "type": "title",
+          "settings": {}
         },
         "custom_liquid_NkmUjk": {
           "type": "custom_liquid",
@@ -62,7 +60,7 @@
         }
       },
       "block_order": [
-        "discount_info",
+        "title",
         "custom_liquid_NkmUjk",
         "price",
         "buy_buttons",

@@ -795,6 +795,32 @@
       }
     }
     
+    /* Mobile: ensure same spacing/padding reset as desktop */
+    @media (max-width: 1023px) {
+      .formatted-content {
+        padding: 0 !important; /* Same reset as desktop */
+      }
+      
+      .container,
+      .page-width {
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      .product__info-container,
+      .product__info-container > * {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      .product__info-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+    
     .price {
       color: #ffb300;
     }
