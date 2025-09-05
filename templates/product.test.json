@@ -2,7 +2,7 @@
   "layout": "theme.test",
   "sections": {
     "test_evey": {
-      "type": "evey-test",
+      "type": "evey-clean-test",
       "blocks": {
         "evey_block": {
           "type": "shopify://apps/evey-events-tickets/blocks/multi-variant-selector/0ff19eb4-83c2-40c2-b780-a501fc99b6d8",
