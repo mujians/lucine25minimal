@@ -414,23 +414,41 @@
         });
       }
     });
-    // FORCE EVEY BUTTON VISIBILITY ON MOBILE
+    // FORCE EVEY BUTTON VISIBILITY AND ENABLE IT
     function forceEveyButtonVisibility() {
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
       const eveyContainer = document.querySelector('.evey-scheduler-container');
       
       if (eveyButton) {
-        // Force button to be visible
+        // Remove disabled attribute
+        eveyButton.removeAttribute('disabled');
+        eveyButton.disabled = false;
+        
+        // Force button to be visible and clickable
         eveyButton.style.cssText = `
           visibility: visible !important;
           display: block !important;
           opacity: 1 !important;
           pointer-events: auto !important;
-          position: relative !important;
-          z-index: 99999 !important;
-          width: 100% !important;
+          position: fixed !important;
+          z-index: 999999 !important;
+          width: calc(100% - 40px) !important;
+          left: 20px !important;
+          bottom: 100px !important;
+          background: #2e7d32 !important;
+          color: white !important;
+          padding: 15px !important;
+          font-size: 18px !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         `;
-        console.log('✅ Forced Evey button visibility');
+        
+        // Update button text to Italian
+        if (eveyButton.textContent.includes('Choose')) {
+          eveyButton.textContent = 'Seleziona data e ora';
+        }
+        
+        console.log('✅ Forced Evey button visibility and enabled it');
       }
       
       if (eveyContainer) {
@@ -439,11 +457,24 @@
           display: block !important;
           opacity: 1 !important;
           pointer-events: auto !important;
-          position: relative !important;
-          z-index: 99999 !important;
+          position: fixed !important;
+          z-index: 999998 !important;
+          bottom: 100px !important;
+          left: 0 !important;
+          right: 0 !important;
+          padding: 0 20px !important;
         `;
         console.log('✅ Forced Evey container visibility');
       }
+      
+      // Find and remove any overlapping elements
+      const blockingElements = document.querySelectorAll('.mobile-footer-trigger, .mobile-nav, .snap-footer');
+      blockingElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom > window.innerHeight - 200) {
+          el.style.zIndex = '1';
+        }
+      });
     }
     
     // Run on load and after delays to catch any late-loading elements
@@ -457,22 +488,35 @@
     window.addEventListener('resize', forceEveyButtonVisibility);
     
     // Monitor for any style changes and reapply
-    const observer = new MutationObserver(() => {
-      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
-      if (eveyButton && (eveyButton.style.display === 'none' || eveyButton.style.visibility === 'hidden')) {
-        forceEveyButtonVisibility();
-      }
+    const buttonObserver = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        const eveyButton = mutation.target;
+        if (eveyButton && eveyButton.matches('button[data-evey-trigger="scheduler"]')) {
+          // Check if button was disabled or hidden
+          if (eveyButton.disabled || 
+              eveyButton.hasAttribute('disabled') ||
+              eveyButton.style.display === 'none' || 
+              eveyButton.style.visibility === 'hidden' ||
+              eveyButton.style.opacity === '0') {
+            console.log('⚠️ Evey button was disabled/hidden, fixing...');
+            forceEveyButtonVisibility();
+          }
+        }
+      });
     });
     
     // Start observing once DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
-      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
-      if (eveyButton) {
-        observer.observe(eveyButton, { 
-          attributes: true, 
-          attributeFilter: ['style', 'class'] 
-        });
-      }
+      setTimeout(() => {
+        const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+        if (eveyButton) {
+          buttonObserver.observe(eveyButton, { 
+            attributes: true, 
+            attributeFilter: ['style', 'class', 'disabled'] 
+          });
+          console.log('👁️ Monitoring Evey button for changes');
+        }
+      }, 1000);
     });
   </script>
   
