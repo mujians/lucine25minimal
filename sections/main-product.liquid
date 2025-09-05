@@ -494,12 +494,32 @@
   </script>
   
   <style>
-    /* Minimal fix for Evey button visibility */
+    /* Fix for Evey button visibility and clickability */
     @media (max-width: 1023px) {
-      /* Ensure Evey button is not hidden on mobile */
+      /* Ensure Evey button is not hidden on mobile and is clickable */
       .evey-scheduler-container button[data-evey-trigger="scheduler"]:not([disabled]) {
         opacity: 1 !important;
         pointer-events: auto !important;
+        position: relative !important;
+        z-index: 9999 !important;
+      }
+      
+      /* Fix the blocking mobile-product-original element */
+      .mobile-product-original {
+        pointer-events: none !important;
+        position: relative !important;
+        z-index: 1 !important;
+      }
+      
+      /* Allow pointer events on child elements that need them */
+      .mobile-product-original * {
+        pointer-events: auto !important;
+      }
+      
+      /* Ensure Evey container has high z-index */
+      .evey-scheduler-container {
+        position: relative !important;
+        z-index: 9998 !important;
       }
     }
     
