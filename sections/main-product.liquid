@@ -1,9 +1,5 @@
 
-<section
-  id="MainProduct-{{ section.id }}"
-  class="page-width section-{{ section.id }}-padding"
-  data-section="{{ section.id }}"
->
+<!-- Product section content without extra wrapper -->
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
@@ -742,17 +738,7 @@
   </style>
 
   <style>
-    /* Align product page with other pages */
-    #MainProduct-{{ section.id }} {
-      background: transparent;
-      padding-top: 0 !important;
-    }
-    
-    #MainProduct-{{ section.id }}.page-width {
-      max-width: 100%;
-      padding: 0;
-      margin: 0;
-    }
+    /* Product page aligned with other pages - no extra wrappers */
     
     /* Product title - override any conflicting styles */
     .product__title h1,
@@ -2862,7 +2848,7 @@
     }
   </style>
 
-</section>
+<!-- End product content -->
 {% render 'evey-custom-code' %}
 
 
