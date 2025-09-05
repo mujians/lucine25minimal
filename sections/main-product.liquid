@@ -8,33 +8,223 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-    // LOADING DEBUGGING - Track what gets loaded
-    console.log('🚀 PRODUCT PAGE SCRIPT STARTING');
-    console.log('📱 User Agent:', navigator.userAgent);
-    console.log('📏 Screen size:', screen.width + 'x' + screen.height);
-    console.log('📏 Window size:', window.innerWidth + 'x' + window.innerHeight);
-    console.log('📱 Is Mobile detected:', window.innerWidth < 1024);
+    // COMPREHENSIVE EVEY BUTTON DIAGNOSTIC LOGGING
+    console.log('🔍 === EVEY BUTTON DIAGNOSTIC STARTING ===');
+    console.log('📱 Device Info:', {
+      userAgent: navigator.userAgent,
+      screenSize: screen.width + 'x' + screen.height,
+      windowSize: window.innerWidth + 'x' + window.innerHeight,
+      isMobile: window.innerWidth < 1024,
+      orientation: screen.orientation?.type || 'unknown'
+    });
     
-    // Check what's loaded
-    console.log('📦 CSS files loaded:', Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href.split('/').pop()));
-    console.log('📦 JS files loaded:', Array.from(document.querySelectorAll('script[src]')).map(s => s.src.split('/').pop()));
-    console.log('📦 Sidebar element:', document.querySelector('.desktop-sidebar') ? 'EXISTS' : 'MISSING');
-    console.log('📦 Content wrapper:', document.querySelector('.content-wrapper') ? 'EXISTS' : 'MISSING');
-    console.log('📦 Available scripts:', Object.keys(window).filter(k => k.toLowerCase().includes('evey')));
-    console.log('📦 jQuery available:', typeof window.jQuery !== 'undefined');
+    // Deep inspection function
+    function deepInspectEveyButton() {
+      console.log('\n🔬 === DEEP INSPECTION AT', new Date().toTimeString().split(' ')[0], '===');
+      
+      // Find all Evey-related elements
+      const eveyContainer = document.querySelector('.evey-scheduler-container');
+      const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+      const eveyApp = document.querySelector('[class*="evey"]');
+      
+      // Container analysis
+      if (eveyContainer) {
+        const containerStyles = getComputedStyle(eveyContainer);
+        const containerRect = eveyContainer.getBoundingClientRect();
+        console.log('📦 Evey Container Found:', {
+          classes: eveyContainer.className,
+          id: eveyContainer.id || 'no-id',
+          parentElement: eveyContainer.parentElement?.className || 'no-parent',
+          innerHTML: eveyContainer.innerHTML.substring(0, 100) + '...',
+          computedStyles: {
+            display: containerStyles.display,
+            visibility: containerStyles.visibility,
+            opacity: containerStyles.opacity,
+            position: containerStyles.position,
+            zIndex: containerStyles.zIndex,
+            overflow: containerStyles.overflow,
+            pointerEvents: containerStyles.pointerEvents,
+            width: containerStyles.width,
+            height: containerStyles.height,
+          },
+          boundingRect: {
+            top: containerRect.top,
+            left: containerRect.left,
+            width: containerRect.width,
+            height: containerRect.height,
+            isVisible: containerRect.width > 0 && containerRect.height > 0
+          },
+          offsetParent: eveyContainer.offsetParent?.tagName || 'null',
+          isHidden: eveyContainer.offsetParent === null
+        });
+        
+        // Check parent hierarchy for hiding
+        let parent = eveyContainer.parentElement;
+        let level = 1;
+        while (parent && level <= 5) {
+          const parentStyles = getComputedStyle(parent);
+          if (parentStyles.display === 'none' || parentStyles.visibility === 'hidden' || parentStyles.opacity === '0') {
+            console.log(`⚠️ Parent level ${level} is hiding element:`, {
+              tagName: parent.tagName,
+              className: parent.className,
+              display: parentStyles.display,
+              visibility: parentStyles.visibility,
+              opacity: parentStyles.opacity
+            });
+          }
+          parent = parent.parentElement;
+          level++;
+        }
+      } else {
+        console.log('❌ Evey Container NOT FOUND');
+      }
+      
+      // Button analysis
+      if (eveyButton) {
+        const buttonStyles = getComputedStyle(eveyButton);
+        const buttonRect = eveyButton.getBoundingClientRect();
+        console.log('🔘 Evey Button Found:', {
+          text: eveyButton.textContent,
+          classes: eveyButton.className,
+          attributes: Array.from(eveyButton.attributes).map(a => a.name + '=' + a.value),
+          computedStyles: {
+            display: buttonStyles.display,
+            visibility: buttonStyles.visibility,
+            opacity: buttonStyles.opacity,
+            position: buttonStyles.position,
+            zIndex: buttonStyles.zIndex,
+            pointerEvents: buttonStyles.pointerEvents,
+            cursor: buttonStyles.cursor,
+            width: buttonStyles.width,
+            height: buttonStyles.height,
+            color: buttonStyles.color,
+            backgroundColor: buttonStyles.backgroundColor
+          },
+          boundingRect: {
+            top: buttonRect.top,
+            left: buttonRect.left,
+            width: buttonRect.width,
+            height: buttonRect.height,
+            isInViewport: buttonRect.top < window.innerHeight && buttonRect.bottom > 0
+          },
+          isClickable: buttonStyles.pointerEvents !== 'none' && buttonStyles.cursor === 'pointer',
+          hasEventListeners: typeof eveyButton.onclick === 'function' || eveyButton.hasAttribute('onclick')
+        });
+        
+        // Test if button is actually clickable
+        try {
+          const isClickable = document.elementsFromPoint(
+            buttonRect.left + buttonRect.width/2,
+            buttonRect.top + buttonRect.height/2
+          ).includes(eveyButton);
+          console.log('🎯 Button clickability test:', isClickable ? 'PASS' : 'FAIL - Something is blocking it');
+          
+          if (!isClickable) {
+            const blockingElements = document.elementsFromPoint(
+              buttonRect.left + buttonRect.width/2,
+              buttonRect.top + buttonRect.height/2
+            );
+            console.log('🚫 Elements blocking the button:', blockingElements.map(el => ({
+              tagName: el.tagName,
+              className: el.className,
+              zIndex: getComputedStyle(el).zIndex
+            })));
+          }
+        } catch (e) {
+          console.log('⚠️ Could not test clickability:', e.message);
+        }
+      } else {
+        console.log('❌ Evey Button NOT FOUND');
+        
+        // Try to find any button with Evey classes
+        const allButtons = document.querySelectorAll('button');
+        const eveyButtons = Array.from(allButtons).filter(b => 
+          b.className.includes('evey') || 
+          b.hasAttribute('data-evey-trigger') ||
+          b.textContent.toLowerCase().includes('seleziona')
+        );
+        
+        if (eveyButtons.length > 0) {
+          console.log('🔍 Found potential Evey buttons:', eveyButtons.map(b => ({
+            text: b.textContent,
+            className: b.className,
+            dataAttributes: Array.from(b.attributes).filter(a => a.name.startsWith('data')).map(a => a.name)
+          })));
+        }
+      }
+      
+      // Check for any Evey app elements
+      const allEveyElements = document.querySelectorAll('[class*="evey"], [id*="evey"], [data-evey]');
+      console.log(`📊 Total Evey-related elements found: ${allEveyElements.length}`);
+      if (allEveyElements.length > 0) {
+        console.log('📋 Evey elements list:', Array.from(allEveyElements).slice(0, 5).map(el => ({
+          tagName: el.tagName,
+          className: el.className,
+          id: el.id,
+          isVisible: getComputedStyle(el).display !== 'none'
+        })));
+      }
+    }
     
-    // Watch for Evey elements
-    const checkEveyButton = () => {
-      const eveyBtn = document.querySelector('[data-evey-trigger="scheduler"]');
-      console.log('🎯 Evey button found:', eveyBtn);
-      console.log('🎯 Evey button visible:', eveyBtn ? getComputedStyle(eveyBtn).visibility : 'not found');
-      console.log('🎯 Evey button display:', eveyBtn ? getComputedStyle(eveyBtn).display : 'not found');
-    };
+    // Run inspection at multiple times
+    deepInspectEveyButton(); // Immediate
     
-    // Check immediately and after DOM load
-    checkEveyButton();
-    document.addEventListener('DOMContentLoaded', checkEveyButton);
-    setTimeout(checkEveyButton, 2000); // Also check after 2 seconds
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('📌 DOM Content Loaded');
+      deepInspectEveyButton();
+    });
+    
+    window.addEventListener('load', () => {
+      console.log('📌 Window Fully Loaded');
+      deepInspectEveyButton();
+    });
+    
+    // Check after delays for async loading
+    [500, 1000, 2000, 3000, 5000].forEach(delay => {
+      setTimeout(() => {
+        console.log(`⏱️ After ${delay}ms delay:`);
+        deepInspectEveyButton();
+      }, delay);
+    });
+    
+    // Monitor mutations
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) { // Element node
+              if (node.className?.includes('evey') || node.querySelector?.('[class*="evey"]')) {
+                console.log('🆕 Evey element added to DOM:', {
+                  tagName: node.tagName,
+                  className: node.className
+                });
+                setTimeout(deepInspectEveyButton, 100);
+              }
+            }
+          });
+        }
+        
+        if (mutation.type === 'attributes' && mutation.target.className?.includes('evey')) {
+          console.log('🔄 Evey element attribute changed:', {
+            target: mutation.target.tagName + '.' + mutation.target.className,
+            attribute: mutation.attributeName,
+            oldValue: mutation.oldValue
+          });
+        }
+      });
+    });
+    
+    // Start observing when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      mutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['style', 'class']
+      });
+      console.log('👁️ Mutation Observer activated');
+    });
     
     // REPLACEMENT STRATEGY - Create our own tooltips outside Evey's control
     console.log('🚀 CUSTOM TOOLTIP SYSTEM STARTING');
