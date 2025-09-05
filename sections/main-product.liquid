@@ -424,22 +424,57 @@
         });
       }
     });
-    // ENABLE EVEY BUTTON IF DISABLED - MINIMAL FIX
+    // ENABLE AND SHOW EVEY BUTTON - AGGRESSIVE FIX
     function fixEveyButton() {
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+      const eveyContainer = document.querySelector('.evey-scheduler-container');
       
       if (eveyButton) {
-        // Only remove disabled attribute, don't change styles
+        // Remove disabled attribute
         if (eveyButton.disabled || eveyButton.hasAttribute('disabled')) {
           eveyButton.removeAttribute('disabled');
           eveyButton.disabled = false;
           console.log('✅ Enabled Evey button');
         }
         
+        // Force visibility and styles
+        eveyButton.style.cssText = `
+          visibility: visible !important;
+          display: block !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          position: relative !important;
+          z-index: 99999 !important;
+          width: 100% !important;
+          background: #2e7d32 !important;
+          color: white !important;
+          border: none !important;
+          padding: 15px !important;
+          font-size: 16px !important;
+          border-radius: 6px !important;
+          cursor: pointer !important;
+          text-transform: uppercase !important;
+        `;
+        
         // Update button text to Italian if needed
         if (eveyButton.textContent.includes('Choose')) {
           eveyButton.textContent = 'Seleziona data e ora';
         }
+        
+        console.log('✅ Applied aggressive styling to Evey button');
+      }
+      
+      if (eveyContainer) {
+        eveyContainer.style.cssText = `
+          visibility: visible !important;
+          display: block !important;
+          opacity: 1 !important;
+          position: relative !important;
+          z-index: 99998 !important;
+          width: 100% !important;
+          margin: 20px 0 !important;
+        `;
+        console.log('✅ Fixed Evey container visibility');
       }
     }
     
