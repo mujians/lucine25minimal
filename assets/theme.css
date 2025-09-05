@@ -2799,7 +2799,7 @@ a.cta[href*="maps"]:after {
   .content-wrapper {
     margin-left: 0 !important;
     width: 100% !important;
-    padding-top: 0 !important;
+    /* Removed padding-top: 0 to allow proper spacing */
   }
 
 /* Desktop - Hide mobile elements and add content padding */

@@ -19,19 +19,8 @@
   padding-bottom: 0 !important;
 }
 
-/* TEST: Show sidebar on mobile for product page */
-body:has(.section-main-product) .desktop-sidebar {
-  display: block !important;
-}
-
-@media (max-width: 1023px) {
-  body:has(.section-main-product) .desktop-sidebar {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-  }
-}
+/* Sidebar should remain hidden on mobile to avoid layout conflicts */
+/* Removed forced desktop sidebar on mobile which was breaking Evey app */
 
 /* Fix Evey buttons visibility in product page */
 #MainProduct button[data-evey-trigger],
