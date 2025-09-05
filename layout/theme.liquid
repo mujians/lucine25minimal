@@ -61,9 +61,8 @@
   <main id="MainContent" role="main">
     
     {% if request.page_type == 'product' %}
-      <!-- Desktop Product Wrapper with Sidebar (only >1024px) -->
-      <div class="desktop-product-wrapper">
-        <div class="navigation-container top" data-tabs-section>
+      <!-- Product Page with Sidebar -->
+      <div class="navigation-container top" data-tabs-section>
           <!-- Mobile Menu (hidden on desktop) -->
           <div class="mobile-menu" style="display: none;">
             <div class="menu-tabs">
@@ -141,14 +140,11 @@
             </div>
           </nav>
 
-          <!-- Content Area -->
-          <div class="content-wrapper">
-            <div class="content show">
-              <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-                <div id="single-content">
-                  {{ content_for_layout }}
-                </div>
-              </div>
+        <!-- Content Area -->
+        <div class="content-wrapper">
+          <div class="content show">
+            <div class="formatted-content" id="single-content">
+              {{ content_for_layout }}
             </div>
           </div>
         </div>
@@ -173,7 +169,7 @@
             }
           } else {
             // Desktop: content stays in original position
-            const desktopParent = document.querySelector('.content-wrapper .content > div');
+            const desktopParent = document.querySelector('.content.show');
             if (content && desktopParent && content.parentElement !== desktopParent) {
               desktopParent.appendChild(content);
             }
@@ -187,23 +183,22 @@
       </script>
 
       <style>
-      /* Desktop: mostra wrapper con sidebar, nascondi mobile */
-      @media (min-width: 1024px) {
-        .desktop-product-wrapper {
-          display: block;
-        }
-        .mobile-product-original {
-          display: none;
-        }
-      }
-
-      /* Mobile: nascondi wrapper, mostra versione mobile originale */
+      /* Mobile: nascondi navigation-container, mostra versione mobile */
       @media (max-width: 1023px) {
-        .desktop-product-wrapper {
-          display: none;
-        }
+        {% if request.page_type == 'product' %}
+          .navigation-container {
+            display: none !important;
+          }
+          .mobile-product-original {
+            display: block;
+          }
+        {% endif %}
+      }
+      
+      /* Desktop: mostra navigation-container, nascondi mobile */
+      @media (min-width: 1024px) {
         .mobile-product-original {
-          display: block;
+          display: none;
         }
       }
       </style>
