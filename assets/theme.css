@@ -3029,13 +3029,79 @@ button[data-evey-trigger],
   }
   
   /* Medium Icons (24px) - For secondary interface elements */
-  .medium-icons {
+  .medium-icons,
+  .product__view-details .icon,
+  .media-gallery .icon,
+  .trust-badge svg,
+  .location-icon svg {
     width: 24px !important;
     height: 24px !important;
     max-width: 24px !important;
     max-height: 24px !important;
   }
   
+  /* Star Rating Icons (16px) - Consistent with UI icons */
+  .star-rating svg,
+  [aria-label*="stars"] svg {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+  }
+  
+  /* Cart Icons (32px) - With circle styling */
+  .cart-icons,
+  .mobile-cart-icon .cart-icon {
+    width: 32px !important;
+    height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+  }
+  
+  /* Cart icon circle styling */
+  .mobile-cart-icon a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .mobile-cart-icon a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+  
+  .mobile-cart-icon .cart-icon {
+    fill: white;
+    stroke: none;
+  }
+  
+  /* Cart count badge positioning */
+  .mobile-cart-icon .cart-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--christmas-red);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
   /* Preserve Evey app icons - Don't override */
   [class*="evey"] .icon,
   [class*="evey"] svg,
