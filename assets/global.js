@@ -1,3 +1,31 @@
+// Mobile Burger Menu Functions
+function toggleMobileFooter() {
+  console.log('🔍 toggleMobileFooter called from burger menu');
+  const footer = document.getElementById('snap-footer');
+  if (footer) {
+    const isActive = footer.classList.contains('active');
+    if (isActive) {
+      footer.classList.remove('active');
+      document.body.classList.remove('footer-active');
+      console.log('🔴 Footer closed by burger menu');
+    } else {
+      footer.classList.add('active');
+      document.body.classList.add('footer-active');
+      console.log('🟢 Footer opened by burger menu');
+    }
+  }
+}
+
+function closeFooter() {
+  console.log('🔍 closeFooter called');
+  const footer = document.getElementById('snap-footer');
+  if (footer) {
+    footer.classList.remove('active');
+    document.body.classList.remove('footer-active');
+    console.log('🔴 Footer closed');
+  }
+}
+
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(
