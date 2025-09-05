@@ -754,13 +754,33 @@
       margin: 0;
     }
     
-    /* Product title - use same style as other pages */
-    .product__title h1 {
-      font-size: 3rem;
-      color: var(--text-white);
-      margin-bottom: 2rem;
-      text-align: left;
-      font-family: inherit;
+    /* Product title - override any conflicting styles */
+    .product__title h1,
+    .product__title.formatted-content h1 {
+      font-size: 3rem !important;
+      color: var(--text-white) !important;
+      margin-bottom: 2rem !important;
+      text-align: left !important;
+      font-family: 'Providence Sans', sans-serif !important;
+      text-transform: uppercase !important;
+      font-weight: normal !important;
+      letter-spacing: 0.02em !important;
+      line-height: 1.2 !important;
+    }
+    
+    @media (min-width: 1024px) {
+      .product__title h1,
+      .product__title.formatted-content h1 {
+        font-size: 3rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+    }
+    
+    @media (min-width: 1440px) {
+      .product__title h1,
+      .product__title.formatted-content h1 {
+        font-size: 3.5rem !important;
+      }
     }
     
     .price {
@@ -1894,13 +1914,8 @@
                 {{- block.settings.text -}}
               </p>
             {%- when 'title' -%}
-              <div class="product__title" {{ block.shopify_attributes }}>
+              <div class="product__title formatted-content" {{ block.shopify_attributes }}>
                 <h1>{{ product.title | escape }}</h1>
-                <a href="{{ product.url }}" class="product__title">
-                  <h2 class="h1">
-                    {{ product.title | escape }}
-                  </h2>
-                </a>
               </div>
 
             <!-- MultiVariants app code start [ https://apps.shopify.com/multivariants ] -->
