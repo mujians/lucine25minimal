@@ -438,9 +438,21 @@
         }
         
         // Force visibility without changing layout
-        // Remove Shopify cart classes that trigger automatic cart behavior
-        eveyButton.classList.remove('btn', 'action-button', 'button', 'Button', 'Button--secondary');
+        // Remove ALL Shopify classes that trigger automatic cart behavior
+        eveyButton.className = ''; // Clear all classes
         eveyButton.classList.add('evey-scheduler-btn');
+        
+        // Check if button is inside a form that submits to cart
+        const parentForm = eveyButton.closest('form');
+        if (parentForm && parentForm.action && parentForm.action.includes('/cart')) {
+          console.log('🚨 EVEY BUTTON IS INSIDE CART FORM!', parentForm.action);
+          // Prevent form submission
+          parentForm.addEventListener('submit', function(e) {
+            console.log('🚫 Preventing cart form submission for Evey button');
+            e.preventDefault();
+            return false;
+          });
+        }
         
         eveyButton.style.cssText = `
           visibility: visible !important;
@@ -462,6 +474,15 @@
           setUppercaseText();
         });
         observer.observe(eveyButton, { childList: true, characterData: true, subtree: true });
+        
+        // FORCE BLOCK: Add click listener to prevent all cart behavior
+        eveyButton.addEventListener('click', function(e) {
+          console.log('🎯 Evey button direct click intercepted');
+          // Stop all propagation to prevent shop_events_listener from catching it
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+          // Don't prevent default - let Evey handle the click
+        }, true); // Use capture phase to run before other listeners
         
         // NUCLEAR OPTION - Force absolute positioning if still invisible
         const rect = eveyButton.getBoundingClientRect();
