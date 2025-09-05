@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{{ page_title }}</title>
   {{ content_for_header }}
+  
+  <!-- Test: Add main theme CSS to see if it breaks Evey -->
+  <link href="{{ 'theme.css' | asset_url }}" rel="stylesheet" type="text/css" media="all">
 </head>
 <body>
-  {{ content_for_layout }}
+  <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+    <h1>🧪 Debug Test - With Theme CSS</h1>
+    <p>Testando se il CSS del tema rompe Evey...</p>
+    {{ content_for_layout }}
+  </div>
 </body>
 </html>
