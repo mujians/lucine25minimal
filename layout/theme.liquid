@@ -28,7 +28,15 @@
 </head>
 <body class="template-{{ request.page_type | handle }}">
   
-  <!-- Testing: Only Cart Icon -->
+  <!-- Mobile Header Elements -->
+  <div class="mobile-header">
+    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
   <div class="mobile-cart-icon">
     <a href="/cart" aria-label="Carrello">
       <svg class="cart-icon" viewBox="0 0 24 24">
