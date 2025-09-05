@@ -141,8 +141,25 @@
       </div>
       
       <script>
+        // Track Evey button position before and after move
+        function logEveyPosition(when) {
+          const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+          if (eveyButton) {
+            const nextElement = eveyButton.nextElementSibling;
+            const prevElement = eveyButton.previousElementSibling;
+            console.log(`🎯 EVEY POSITION ${when}:`, {
+              parent: eveyButton.parentElement?.className,
+              prevSibling: prevElement?.className || prevElement?.tagName || 'none',
+              nextSibling: nextElement?.className || nextElement?.tagName || 'none',
+              buttonText: eveyButton.textContent
+            });
+          }
+        }
+        
         // Move content to appropriate container based on screen size
         function moveContent() {
+          logEveyPosition('BEFORE MOVE');
+          
           const content = document.getElementById('single-content');
           const mobileTarget = document.getElementById('mobile-content-target');
           
@@ -150,12 +167,14 @@
             // Mobile: move content to mobile container
             if (content && mobileTarget && !mobileTarget.hasChildNodes()) {
               mobileTarget.appendChild(content);
+              logEveyPosition('AFTER MOBILE MOVE');
             }
           } else {
             // Desktop: content stays in original position
             const desktopParent = document.querySelector('.content-wrapper .content > div');
             if (content && desktopParent && content.parentElement !== desktopParent) {
               desktopParent.appendChild(content);
+              logEveyPosition('AFTER DESKTOP MOVE');
             }
           }
         }
@@ -164,6 +183,49 @@
         window.addEventListener('load', moveContent);
         window.addEventListener('resize', moveContent);
         moveContent(); // Run immediately
+        
+        // Monitor Evey button for any changes
+        setTimeout(() => {
+          const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+          if (eveyButton && eveyButton.parentElement) {
+            console.log('📍 MONITORING EVEY BUTTON PARENT FOR CHANGES');
+            
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                  const eveyMoved = Array.from(mutation.removedNodes).some(node => 
+                    node === eveyButton || (node.contains && node.contains(eveyButton))
+                  );
+                  
+                  if (eveyMoved) {
+                    console.log('⚠️ EVEY BUTTON WAS MOVED!', {
+                      from: mutation.target.className,
+                      removedNodes: mutation.removedNodes.length,
+                      addedNodes: mutation.addedNodes.length
+                    });
+                    
+                    // Find where it went
+                    setTimeout(() => {
+                      const newEvey = document.querySelector('button[data-evey-trigger="scheduler"]');
+                      if (newEvey) {
+                        console.log('📍 EVEY NEW LOCATION:', {
+                          parent: newEvey.parentElement?.className,
+                          nextSibling: newEvey.nextElementSibling?.className || 'none'
+                        });
+                      }
+                    }, 10);
+                  }
+                }
+              });
+            });
+            
+            // Watch the entire form for changes
+            const form = eveyButton.closest('form');
+            if (form) {
+              observer.observe(form, { childList: true, subtree: true });
+            }
+          }
+        }, 1000);
       </script>
 
       <style>
