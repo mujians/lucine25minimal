@@ -1,0 +1,37 @@
+<div style="border: 1px dashed #999; padding: 10px; margin: 10px 0;">
+  <p><strong>Evey Clean Test Section</strong></p>
+  
+  {% for block in section.blocks %}
+    <div style="border: 1px solid #ccc; margin: 10px 0; padding: 15px;">
+      {{ block.shopify_attributes }}
+      <p>Evey Block Type: {{ block.type }}</p>
+      <!-- L'app block Evey verrà renderizzato qui -->
+    </div>
+  {% endfor %}
+  
+  {% if section.blocks.size == 0 %}
+    <p style="color: #666; font-style: italic;">
+      Nessun blocco aggiunto. Vai nell'editor del tema e aggiungi il blocco Evey Events qui.
+    </p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Evey Clean Test",
+  "class": "evey-clean-test-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "test_title",
+      "label": "Test Title",
+      "default": "Evey Test"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}
