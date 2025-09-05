@@ -742,14 +742,25 @@
   </style>
 
   <style>
-    /* Our design system colors/fonts */
+    /* Align product page with other pages */
     #MainProduct-{{ section.id }} {
       background: transparent;
+      padding-top: 0 !important;
     }
     
-    .product__title {
-      color: #d32f2f;
-      font-family: 'Homemade Apple', cursive;
+    #MainProduct-{{ section.id }}.page-width {
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    
+    /* Product title - use same style as other pages */
+    .product__title h1 {
+      font-size: 3rem;
+      color: var(--text-white);
+      margin-bottom: 2rem;
+      text-align: left;
+      font-family: inherit;
     }
     
     .price {
@@ -832,8 +843,11 @@
     }
     
     /* Hide product title - will be replaced with custom liquid */
+    /* Keep product title visible */
     .product__title {
-      display: none !important;
+      display: block !important;
+      margin: 0;
+      padding: 0;
     }
     
     /* Price styling - integrated with cards */
