@@ -437,23 +437,12 @@
           console.log('✅ Enabled Evey button');
         }
         
-        // Force visibility and styles
+        // Force visibility without changing layout
         eveyButton.style.cssText = `
           visibility: visible !important;
           display: block !important;
           opacity: 1 !important;
           pointer-events: auto !important;
-          position: relative !important;
-          z-index: 99999 !important;
-          width: 100% !important;
-          background: #2e7d32 !important;
-          color: white !important;
-          border: none !important;
-          padding: 15px !important;
-          font-size: 16px !important;
-          border-radius: 6px !important;
-          cursor: pointer !important;
-          text-transform: uppercase !important;
         `;
         
         // Update button text to Italian if needed
@@ -469,10 +458,6 @@
           visibility: visible !important;
           display: block !important;
           opacity: 1 !important;
-          position: relative !important;
-          z-index: 99998 !important;
-          width: 100% !important;
-          margin: 20px 0 !important;
         `;
         console.log('✅ Fixed Evey container visibility');
       }
@@ -608,32 +593,16 @@
   </script>
   
   <style>
-    /* Fix for Evey button visibility and clickability */
+    /* Minimal fix for Evey button visibility */
     @media (max-width: 1023px) {
-      /* Ensure Evey button is not hidden on mobile and is clickable */
-      .evey-scheduler-container button[data-evey-trigger="scheduler"]:not([disabled]) {
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        position: relative !important;
-        z-index: 9999 !important;
-      }
-      
       /* Fix the blocking mobile-product-original element */
       .mobile-product-original {
         pointer-events: none !important;
-        position: relative !important;
-        z-index: 1 !important;
       }
       
       /* Allow pointer events on child elements that need them */
       .mobile-product-original * {
         pointer-events: auto !important;
-      }
-      
-      /* Ensure Evey container has high z-index */
-      .evey-scheduler-container {
-        position: relative !important;
-        z-index: 9998 !important;
       }
     }
     
