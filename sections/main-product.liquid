@@ -450,6 +450,36 @@
           eveyButton.textContent = 'Seleziona data e ora';
         }
         
+        // NUCLEAR OPTION - Force absolute positioning if still invisible
+        const rect = eveyButton.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+          console.log('⚠️ Button still has 0 dimensions, applying nuclear fix');
+          eveyButton.style.cssText = `
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100% - 40px) !important;
+            max-width: 400px !important;
+            height: 50px !important;
+            background: #d32f2f !important;
+            color: white !important;
+            border: none !important;
+            padding: 15px !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            text-transform: uppercase !important;
+            z-index: 999999 !important;
+            visibility: visible !important;
+            display: block !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          `;
+        }
+        
         console.log('✅ Applied aggressive styling to Evey button');
       }
       
