@@ -6,13 +6,16 @@
   <title>{{ page_title }}</title>
   {{ content_for_header }}
   
-  <!-- Test: Add main theme CSS to see if it breaks Evey -->
+  <!-- Test: Add main theme CSS + JS to see what breaks Evey -->
   <link href="{{ 'theme.css' | asset_url }}" rel="stylesheet" type="text/css" media="all">
+  <link href="{{ 'section-main-product.css' | asset_url }}" rel="stylesheet" type="text/css" media="all">
+  <script src="{{ 'global.js' | asset_url }}" defer></script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
 </head>
 <body>
   <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
-    <h1>🧪 Debug Test - With Theme CSS</h1>
-    <p>Testando se il CSS del tema rompe Evey...</p>
+    <h1>🧪 Debug Test - With Theme CSS + JS</h1>
+    <p>Testando se CSS + JavaScript del tema rompono Evey...</p>
     {{ content_for_layout }}
   </div>
 </body>
