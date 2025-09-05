@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <title>Test Evey - {{ product.title }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  {{ content_for_header }}
+  <style>
+    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+    .test-container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #333; }
+    .evey-container { border: 2px solid #ddd; padding: 20px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Test Evey Block - {{ product.title }}</h1>
+    <p>Template pulito senza interferenze del tema</p>
+    
+    <div class="evey-container">
+      <h3>Evey Events Block:</h3>
+      {% render 'evey-events-tickets-multi-variant-selector', 
+         product: product,
+         show_service_fees: true,
+         sold_out_color: '#ff0000',
+         limit_reached_color: '#777777',
+         padding_x: 0,
+         padding_y: 0 %}
+    </div>
+  </div>
+</body>
+</html>
