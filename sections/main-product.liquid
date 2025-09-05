@@ -445,17 +445,17 @@
           pointer-events: auto !important;
         `;
         
-        // Ensure text-transform is applied and persists
-        const ensureUppercase = () => {
-          if (eveyButton) {
-            eveyButton.style.textTransform = 'uppercase';
+        // Force uppercase text directly  
+        const setUppercaseText = () => {
+          if (eveyButton && (eveyButton.textContent.includes('Choose') || eveyButton.textContent.includes('Seleziona'))) {
+            eveyButton.textContent = 'SELEZIONA DATA E ORA';
           }
         };
-        ensureUppercase();
+        setUppercaseText();
         
-        // Re-apply uppercase after any text changes
+        // Re-apply uppercase text after any changes
         const observer = new MutationObserver(() => {
-          ensureUppercase();
+          setUppercaseText();
         });
         observer.observe(eveyButton, { childList: true, characterData: true, subtree: true });
         
@@ -658,7 +658,7 @@
       // Create our own button
       const fallbackBtn = document.createElement('button');
       fallbackBtn.className = 'fallback-scheduler-btn btn action-button';
-      fallbackBtn.textContent = 'Seleziona data e ora';
+      fallbackBtn.textContent = 'SELEZIONA DATA E ORA';
       fallbackBtn.setAttribute('data-evey-trigger', 'scheduler');
       
       fallbackBtn.style.cssText = `
