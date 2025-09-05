@@ -22,9 +22,28 @@
       <h3>Evey App Block (deve essere aggiunto nel template editor):</h3>
       <p>Vai nell'editor del tema e aggiungi il blocco Evey qui sotto</p>
       
-      <!-- Section per app block -->
+      <!-- Evey Events Tickets Direct Integration -->
       <div id="evey-test-section">
-        {% section 'evey-clean-test' %}
+        <div class="evey-integration">
+          <h3>Evey Direct Integration:</h3>
+          
+          <!-- Include Evey Script -->
+          <script src="https://evey-files.s3.amazonaws.com/js/online_store.js?shop={{ shop.permanent_domain }}"></script>
+          
+          <!-- Evey Container -->
+          <div class="evey__multi-variant-selector" data-product-id="{{ product.id }}">
+            <div class="evey-scheduler-container">
+              <!-- Evey will inject content here -->
+            </div>
+          </div>
+          
+          <script>
+            // Initialize Evey if available
+            if (window.Evey && window.Evey.init) {
+              window.Evey.init();
+            }
+          </script>
+        </div>
       </div>
     </div>
   </div>
