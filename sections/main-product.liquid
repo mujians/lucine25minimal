@@ -496,6 +496,45 @@
       }
     }
     
+    // FORCE NUCLEAR OPTION - Execute immediately
+    setTimeout(() => {
+      const forcedBtn = document.querySelector('button[data-evey-trigger="scheduler"]');
+      if (forcedBtn) {
+        const forcedRect = forcedBtn.getBoundingClientRect();
+        console.log('🔥 FORCE CHECK - Button dimensions:', forcedRect.width, 'x', forcedRect.height);
+        if (forcedRect.width === 0 || forcedRect.height === 0) {
+          console.log('🚀 NUCLEAR FORCE ACTIVE - Making button visible NOW');
+          forcedBtn.style.cssText = `
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100% - 40px) !important;
+            max-width: 400px !important;
+            height: 50px !important;
+            background: #d32f2f !important;
+            color: white !important;
+            border: none !important;
+            padding: 15px !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            text-transform: uppercase !important;
+            z-index: 999999 !important;
+            visibility: visible !important;
+            display: block !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          `;
+          console.log('✅ NUCLEAR FORCE APPLIED');
+        } else {
+          console.log('✅ Button has dimensions, nuclear not needed');
+        }
+      }
+    }, 3000);
+    
     // Run on load and after delays - only 3 times
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔧 Starting Evey button fix attempts...');
