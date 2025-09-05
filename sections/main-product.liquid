@@ -445,10 +445,19 @@
           pointer-events: auto !important;
         `;
         
-        // Update button text to Italian if needed
-        if (eveyButton.textContent.includes('Choose')) {
-          eveyButton.textContent = 'Seleziona data e ora';
-        }
+        // Ensure text-transform is applied and persists
+        const ensureUppercase = () => {
+          if (eveyButton) {
+            eveyButton.style.textTransform = 'uppercase';
+          }
+        };
+        ensureUppercase();
+        
+        // Re-apply uppercase after any text changes
+        const observer = new MutationObserver(() => {
+          ensureUppercase();
+        });
+        observer.observe(eveyButton, { childList: true, characterData: true, subtree: true });
         
         // NUCLEAR OPTION - Force absolute positioning if still invisible
         const rect = eveyButton.getBoundingClientRect();
