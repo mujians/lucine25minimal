@@ -414,92 +414,42 @@
         });
       }
     });
-    // FORCE EVEY BUTTON VISIBILITY AND ENABLE IT
-    function forceEveyButtonVisibility() {
+    // ENABLE EVEY BUTTON IF DISABLED - MINIMAL FIX
+    function fixEveyButton() {
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
-      const eveyContainer = document.querySelector('.evey-scheduler-container');
       
       if (eveyButton) {
-        // Remove disabled attribute
-        eveyButton.removeAttribute('disabled');
-        eveyButton.disabled = false;
+        // Only remove disabled attribute, don't change styles
+        if (eveyButton.disabled || eveyButton.hasAttribute('disabled')) {
+          eveyButton.removeAttribute('disabled');
+          eveyButton.disabled = false;
+          console.log('✅ Enabled Evey button');
+        }
         
-        // Force button to be visible and clickable
-        eveyButton.style.cssText = `
-          visibility: visible !important;
-          display: block !important;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-          position: fixed !important;
-          z-index: 999999 !important;
-          width: calc(100% - 40px) !important;
-          left: 20px !important;
-          bottom: 100px !important;
-          background: #2e7d32 !important;
-          color: white !important;
-          padding: 15px !important;
-          font-size: 18px !important;
-          border-radius: 8px !important;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-        `;
-        
-        // Update button text to Italian
+        // Update button text to Italian if needed
         if (eveyButton.textContent.includes('Choose')) {
           eveyButton.textContent = 'Seleziona data e ora';
         }
-        
-        console.log('✅ Forced Evey button visibility and enabled it');
       }
-      
-      if (eveyContainer) {
-        eveyContainer.style.cssText = `
-          visibility: visible !important;
-          display: block !important;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-          position: fixed !important;
-          z-index: 999998 !important;
-          bottom: 100px !important;
-          left: 0 !important;
-          right: 0 !important;
-          padding: 0 20px !important;
-        `;
-        console.log('✅ Forced Evey container visibility');
-      }
-      
-      // Find and remove any overlapping elements
-      const blockingElements = document.querySelectorAll('.mobile-footer-trigger, .mobile-nav, .snap-footer');
-      blockingElements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.bottom > window.innerHeight - 200) {
-          el.style.zIndex = '1';
-        }
-      });
     }
     
     // Run on load and after delays to catch any late-loading elements
-    document.addEventListener('DOMContentLoaded', forceEveyButtonVisibility);
-    setTimeout(forceEveyButtonVisibility, 500);
-    setTimeout(forceEveyButtonVisibility, 1000);
-    setTimeout(forceEveyButtonVisibility, 2000);
-    setTimeout(forceEveyButtonVisibility, 3000);
-    
-    // Also run when window resizes (mobile orientation change)
-    window.addEventListener('resize', forceEveyButtonVisibility);
+    document.addEventListener('DOMContentLoaded', fixEveyButton);
+    setTimeout(fixEveyButton, 500);
+    setTimeout(fixEveyButton, 1000);
+    setTimeout(fixEveyButton, 2000);
+    setTimeout(fixEveyButton, 3000);
+    setTimeout(fixEveyButton, 5000);
     
     // Monitor for any style changes and reapply
     const buttonObserver = new MutationObserver((mutations) => {
       mutations.forEach(mutation => {
         const eveyButton = mutation.target;
         if (eveyButton && eveyButton.matches('button[data-evey-trigger="scheduler"]')) {
-          // Check if button was disabled or hidden
-          if (eveyButton.disabled || 
-              eveyButton.hasAttribute('disabled') ||
-              eveyButton.style.display === 'none' || 
-              eveyButton.style.visibility === 'hidden' ||
-              eveyButton.style.opacity === '0') {
-            console.log('⚠️ Evey button was disabled/hidden, fixing...');
-            forceEveyButtonVisibility();
+          // Check if button was disabled
+          if (eveyButton.disabled || eveyButton.hasAttribute('disabled')) {
+            console.log('⚠️ Evey button was disabled, fixing...');
+            fixEveyButton();
           }
         }
       });
@@ -521,51 +471,12 @@
   </script>
   
   <style>
-    /* FORCE EVEY BUTTON VISIBILITY ON ALL DEVICES */
-    .evey-scheduler-container {
-      visibility: visible !important;
-      display: block !important;
-      opacity: 1 !important;
-      position: relative !important;
-      z-index: 99999 !important;
-      pointer-events: auto !important;
-      margin: 20px 0 !important;
-      width: 100% !important;
-    }
-    
-    button[data-evey-trigger="scheduler"],
-    .evey-scheduler-container button {
-      visibility: visible !important;
-      display: block !important;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-      cursor: pointer !important;
-      position: relative !important;
-      z-index: 99999 !important;
-      width: 100% !important;
-      min-height: 44px !important;
-      -webkit-tap-highlight-color: transparent !important;
-      touch-action: manipulation !important;
-    }
-    
-    /* Mobile specific overrides */
+    /* Minimal fix for Evey button visibility */
     @media (max-width: 1023px) {
-      .evey-scheduler-container,
-      button[data-evey-trigger="scheduler"] {
-        display: block !important;
-        visibility: visible !important;
+      /* Ensure Evey button is not hidden on mobile */
+      .evey-scheduler-container button[data-evey-trigger="scheduler"]:not([disabled]) {
         opacity: 1 !important;
-        transform: none !important;
-        position: relative !important;
-        z-index: 999999 !important;
-      }
-      
-      /* Ensure nothing can hide the button */
-      .product__info .evey-scheduler-container,
-      #MainProduct .evey-scheduler-container,
-      .main-product .evey-scheduler-container {
-        display: block !important;
-        visibility: visible !important;
+        pointer-events: auto !important;
       }
     }
     
