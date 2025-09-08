@@ -4,21 +4,6 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
   <script>
-      // Force payment icons to be 36px
-      document.addEventListener('DOMContentLoaded', function() {
-        const paymentIcons = document.querySelectorAll('.payment-icons-container svg');
-        paymentIcons.forEach(svg => {
-          svg.setAttribute('width', '36');
-          svg.setAttribute('height', '36');
-          svg.style.width = '36px';
-          svg.style.height = '36px';
-          svg.style.minWidth = '36px';
-          svg.style.minHeight = '36px';
-          svg.style.maxWidth = '36px';
-          svg.style.maxHeight = '36px';
-        });
-      });
-      
       // Find all Evey-related elements
       const eveyContainer = document.querySelector('.evey-scheduler-container');
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
@@ -2835,12 +2820,11 @@
         </div>
         
         <!-- Right: Payment Icons -->
-        <div class="payment-icons-container" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          {% for type in shop.enabled_payment_types %}
-            <span class="payment-icon payment-logo-large">
-              {{ type | payment_type_svg_tag }}
-            </span>
-          {% endfor %}
+        <div class="payment-icons-container" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/visa-logo.svg?v=1757342345" alt="Visa" style="height: 32px; width: auto;">
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/mastercard-logo.svg?v=1757342345" alt="Mastercard" style="height: 32px; width: auto;">
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/amex-logo.svg?v=1757342345" alt="American Express" style="height: 32px; width: auto;">
+          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/paypal-logo.svg?v=1757342345" alt="PayPal" style="height: 32px; width: auto;">
         </div>
         
       </div>
