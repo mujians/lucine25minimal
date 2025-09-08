@@ -2822,7 +2822,7 @@
         <!-- Right: Payment Icons -->
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           {% for type in shop.enabled_payment_types %}
-            <span class="payment-icon payment-logo-large" style="display: flex; align-items: center; justify-content: center;">
+            <span class="payment-icon payment-logo-large" style="display: flex; align-items: center; justify-content: center; width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important;">
               {{ type | payment_type_svg_tag }}
             </span>
           {% endfor %}
@@ -2859,12 +2859,27 @@
     /* Nuclear option: override Shopify's global 16px icon rule */
     .trust-section .payment-logo-large svg,
     .payment-logo-large svg,
+    .payment-icon svg,
+    span.payment-icon svg,
+    span.payment-logo-large svg,
     [class*="payment"] svg {
       height: 36px !important;
       width: 36px !important;
-      max-width: none !important;
-      min-width: auto !important;
-      max-height: none !important;
+      min-width: 36px !important;
+      min-height: 36px !important;
+      max-width: 36px !important;
+      max-height: 36px !important;
+    }
+    
+    /* Force payment icon containers to be 36px */
+    span.payment-icon,
+    span.payment-logo-large {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      min-height: 36px !important;
+      max-width: 36px !important;
+      max-height: 36px !important;
     }
     
     .mobile-break {
