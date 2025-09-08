@@ -1601,33 +1601,43 @@ body.footer-expanded {
 /* QUOTE CARD WITH SKETCH BACKGROUND */
 .sketch-quote-card {
   position: relative;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-white);
   border-radius: 16px;
-  padding: 2.5rem 2rem;
-  margin: 2.5rem 0;
-  min-height: 120px;
+  padding: 2rem 1.5rem;
+  margin: 2rem 0;
+  min-height: 100px;
+  overflow: visible;
 }
 
+@media (min-width: 1024px) {
+  .sketch-quote-card {
+    padding: 2.5rem 3rem;
+    margin: 3rem 0;
+  }
+}
 
 .quote-sketch-background {
   position: absolute;
-  inset: -10px;
-  width: calc(100% + 20px);
-  height: calc(100% + 20px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
+  opacity: 0.8;
 }
 
 /* RESPONSIVE QUOTE PATTERN */
 .quote-sketch-background path {
-  stroke-dasharray: 2 1; /* Mobile default */
+  stroke-dasharray: 3 2; /* Mobile default */
+  stroke-width: 1;
 }
 
 @media (min-width: 1024px) {
   .quote-sketch-background path {
-    stroke-dasharray: 4 2; /* Desktop: larger pattern */
-    stroke-width: 1.5;
+    stroke-dasharray: 5 3; /* Desktop: larger pattern */
+    stroke-width: 1.2;
   }
 }
 
@@ -1637,47 +1647,69 @@ body.footer-expanded {
   text-align: center;
 }
 
-/* Typography quotes with Homemade Apple font */
+/* Typography quotes - Smaller and better positioned */
 .quote-content::before,
 .quote-content::after {
   font-family: 'Providence Sans', sans-serif;
-  font-size: 3rem;
+  font-size: 1.5rem;
   color: var(--christmas-gold);
-  opacity: 0.7;
+  opacity: 0.5;
   position: absolute;
   line-height: 1;
 }
 
+@media (min-width: 1024px) {
+  .quote-content::before,
+  .quote-content::after {
+    font-size: 2rem;
+  }
+}
+
 .quote-content::before {
   content: '"';
-  top: -0.5rem;
-  left: -1rem;
+  top: -0.8rem;
+  left: -0.5rem;
 }
 
 .quote-content::after {
   content: '"';
-  bottom: -1.5rem;
-  right: -1rem;
+  bottom: -0.8rem;
+  right: -0.5rem;
 }
 
 .quote-text {
-  font-size: 1.2rem !important;
+  font-size: 1rem !important;
   font-style: italic;
   color: var(--text-white);
   margin: 0 0 1rem 0;
-  line-height: 1.5;
+  line-height: 1.6;
   font-family: 'Providence Sans', sans-serif;
   position: relative;
   z-index: 2;
+  padding: 0 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .quote-text {
+    font-size: 1.1rem !important;
+    padding: 0 1rem;
+  }
 }
 
 .quote-author {
-  font-size: 1rem !important;
-  color: var(--christmas-green);
+  font-size: 0.9rem !important;
+  color: var(--christmas-gold);
   font-weight: 600;
   font-family: 'Providence Sans', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-align: right;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .quote-author {
+    font-size: 1rem !important;
+  }
 }
 
 /* FONT SIZE IMPROVEMENTS - Ensure minimums */
