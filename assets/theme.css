@@ -1619,25 +1619,35 @@ body.footer-expanded {
 
 .quote-sketch-background {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
+  max-width: 600px; /* Limit width on desktop */
   pointer-events: none;
   z-index: 0;
   opacity: 0.8;
+}
+
+@media (min-width: 1024px) {
+  .quote-sketch-background {
+    width: 90%;
+    height: 90%;
+  }
 }
 
 /* RESPONSIVE QUOTE PATTERN */
 .quote-sketch-background path {
   stroke-dasharray: 3 2; /* Mobile default */
   stroke-width: 1;
+  vector-effect: non-scaling-stroke; /* Keep stroke consistent */
 }
 
 @media (min-width: 1024px) {
   .quote-sketch-background path {
     stroke-dasharray: 5 3; /* Desktop: larger pattern */
-    stroke-width: 1.2;
+    stroke-width: 1;
   }
 }
 
