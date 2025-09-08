@@ -3020,12 +3020,18 @@ button[data-evey-trigger],
   /* Payment Method Icons (36px) - Larger for better visibility */
   .payment-icons,
   .payment-method-icon,
+  .payment-icon svg,
+  .payment-logo-large svg,
   [class*="payment"] .icon,
-  [class*="payment"] svg {
+  [class*="payment"] svg,
+  .payment-icon,
+  .payment-logo-large {
     width: 36px !important;
     height: 36px !important;
     max-width: 36px !important;
     max-height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
   }
   
   /* Medium Icons (24px) - For secondary interface elements */
