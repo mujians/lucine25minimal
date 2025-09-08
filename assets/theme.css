@@ -1601,13 +1601,13 @@ body.footer-expanded {
 /* QUOTE CARD WITH SKETCH BACKGROUND */
 .sketch-quote-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent; /* No background - let SVG handle it */
   color: var(--text-white);
   border-radius: 16px;
   padding: 2rem 1.5rem;
   margin: 2rem 0;
   min-height: 100px;
-  overflow: visible;
+  overflow: hidden; /* Contain content within borders */
 }
 
 @media (min-width: 1024px) {
@@ -1619,21 +1619,20 @@ body.footer-expanded {
 
 .quote-sketch-background {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  max-width: 600px; /* Limit width on desktop */
   pointer-events: none;
   z-index: 0;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 @media (min-width: 1024px) {
-  .quote-sketch-background {
-    width: 90%;
-    height: 90%;
+  .sketch-quote-card {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
