@@ -2820,11 +2820,12 @@
         </div>
         
         <!-- Right: Payment Icons -->
-        <div class="payment-icons-container" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/visa-logo.svg?v=1757342345" alt="Visa" style="height: 32px; width: auto;">
-          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/mastercard-logo.svg?v=1757342345" alt="Mastercard" style="height: 32px; width: auto;">
-          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/amex-logo.svg?v=1757342345" alt="American Express" style="height: 32px; width: auto;">
-          <img src="https://cdn.shopify.com/s/files/1/0605/2983/6205/files/paypal-logo.svg?v=1757342345" alt="PayPal" style="height: 32px; width: auto;">
+        <div class="payment-icons-container" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          {% for type in shop.enabled_payment_types %}
+            <span class="payment-icon payment-logo-large">
+              {{ type | payment_type_svg_tag }}
+            </span>
+          {% endfor %}
         </div>
         
       </div>
@@ -2846,39 +2847,11 @@
       opacity: 0.8;
     }
     
+    /* Payment icons - let's see default size first */
     .payment-logo-large {
-      height: 36px !important;
-      width: 36px !important;
-      min-height: 36px !important;
-      min-width: 36px !important;
-      max-height: 36px !important;
-      max-width: 36px !important;
-    }
-    
-    /* Nuclear option: override Shopify's global 16px icon rule */
-    .trust-section .payment-logo-large svg,
-    .payment-logo-large svg,
-    .payment-icon svg,
-    span.payment-icon svg,
-    span.payment-logo-large svg,
-    [class*="payment"] svg {
-      height: 36px !important;
-      width: 36px !important;
-      min-width: 36px !important;
-      min-height: 36px !important;
-      max-width: 36px !important;
-      max-height: 36px !important;
-    }
-    
-    /* Force payment icon containers to be 36px */
-    span.payment-icon,
-    span.payment-logo-large {
-      width: 36px !important;
-      height: 36px !important;
-      min-width: 36px !important;
-      min-height: 36px !important;
-      max-width: 36px !important;
-      max-height: 36px !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .mobile-break {
