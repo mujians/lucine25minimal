@@ -1633,14 +1633,14 @@ body.footer-expanded {
 }
 
 /* Quote-specific border pattern - matching sketch-card specs */
-.sketch-quote-card .sketch-border rect {
-  stroke: var(--christmas-gold);
-  stroke-width: 3.2; /* Same as regular sketch-cards */
-  stroke-dasharray: 14 8 6 12 10 9; /* Same pattern as regular cards */
-  animation: quoteFlow 30s linear infinite;
+.sketch-quote-card.seed-quote .sketch-border rect {
+  stroke: var(--christmas-gold) !important;
+  stroke-width: 3.2 !important; /* Same as regular sketch-cards */
+  stroke-dasharray: 14 8 6 12 10 9 !important; /* Same pattern as regular cards */
+  animation: dashFlowQuote 20s linear infinite !important; /* Animated border */
 }
 
-@keyframes quoteFlow {
+@keyframes dashFlowQuote {
   from {
     stroke-dashoffset: 0;
   }
