@@ -1632,12 +1632,12 @@ body.footer-expanded {
   z-index: -1;
 }
 
-/* Quote-specific border pattern */
+/* Quote-specific border pattern - matching sketch-card specs */
 .sketch-quote-card .sketch-border rect {
   stroke: var(--christmas-gold);
-  stroke-width: 2.5;
-  stroke-dasharray: 8 4 3 6; /* Unique pattern for quotes */
-  animation: quoteFlow 25s linear infinite;
+  stroke-width: 3.2; /* Same as regular sketch-cards */
+  stroke-dasharray: 14 8 6 12 10 9; /* Same pattern as regular cards */
+  animation: quoteFlow 30s linear infinite;
 }
 
 @keyframes quoteFlow {
@@ -1645,7 +1645,7 @@ body.footer-expanded {
     stroke-dashoffset: 0;
   }
   to {
-    stroke-dashoffset: -21; /* Sum of dasharray */
+    stroke-dashoffset: -59; /* Sum of dasharray: 14+8+6+12+10+9 */
   }
 }
 
@@ -1658,37 +1658,39 @@ body.footer-expanded {
 /* No quote marks - cleaner look */
 
 .quote-text {
-  font-size: 1rem !important;
+  font-size: 1.125rem !important; /* Same as body text */
   font-style: italic;
   color: var(--text-white);
   margin: 0 0 1rem 0;
-  line-height: 1.6;
+  line-height: 1.7; /* Same as body */
   font-family: 'Providence Sans', sans-serif;
   position: relative;
   z-index: 2;
-  padding: 0 0.5rem;
+  padding: 0;
 }
 
 @media (min-width: 1024px) {
   .quote-text {
-    font-size: 1.1rem !important;
-    padding: 0 1rem;
+    font-size: 1.25rem !important; /* Slightly larger on desktop */
+    padding: 0;
   }
 }
 
 .quote-author {
-  font-size: 0.9rem !important;
+  font-size: 1rem !important;
   color: var(--christmas-gold);
   font-weight: 600;
   font-family: 'Providence Sans', sans-serif;
-  text-align: right;
+  text-align: center; /* Centered alignment */
   opacity: 0.9;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 @media (min-width: 1024px) {
   .quote-author {
-    font-size: 1rem !important;
+    font-size: 1.125rem !important;
   }
 }
 
