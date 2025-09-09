@@ -21,6 +21,13 @@
         <span class="nav-text">{{ link.title }}</span>
       </button>
     {% endfor %}
+    
+    <!-- Show Cart link only when on cart page -->
+    {% if current_page_title == 'Carrello' %}
+      <button class="nav-item active">
+        <span class="nav-text">Carrello</span>
+      </button>
+    {% endif %}
   </div>
   
   <div class="sidebar-footer">
