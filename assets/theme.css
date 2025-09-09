@@ -1598,55 +1598,54 @@ body.footer-expanded {
   margin: 0.5rem;
 }
 
-/* QUOTE CARD WITH SKETCH BACKGROUND */
+/* QUOTE CARD - Uses sketch-card style with gold accent */
 .sketch-quote-card {
   position: relative;
-  background: transparent; /* No background - let SVG handle it */
+  background: transparent;
   color: var(--text-white);
   border-radius: 16px;
-  padding: 2rem 1.5rem;
-  margin: 2rem 0;
+  padding: 2.5rem 2rem;
+  margin: 2.5rem 0;
   min-height: 100px;
-  overflow: hidden; /* Contain content within borders */
+}
+
+/* Quote card specific seed variation */
+.sketch-quote-card.seed-quote {
+  --sketch-ink: var(--christmas-gold); /* Gold border for quotes */
 }
 
 @media (min-width: 1024px) {
   .sketch-quote-card {
-    padding: 2.5rem 3rem;
-    margin: 3rem 0;
+    padding: 3rem 3.5rem;
+    margin: 3rem auto;
+    max-width: 800px;
   }
 }
 
-.quote-sketch-background {
+/* Use same sketch-border system as regular cards */
+.sketch-quote-card .sketch-border {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;
-  opacity: 1;
+  z-index: -1;
 }
 
-@media (min-width: 1024px) {
-  .sketch-quote-card {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+/* Quote-specific border pattern */
+.sketch-quote-card .sketch-border rect {
+  stroke: var(--christmas-gold);
+  stroke-width: 2.5;
+  stroke-dasharray: 8 4 3 6; /* Unique pattern for quotes */
+  animation: quoteFlow 25s linear infinite;
+}
+
+@keyframes quoteFlow {
+  from {
+    stroke-dashoffset: 0;
   }
-}
-
-/* RESPONSIVE QUOTE PATTERN */
-.quote-sketch-background path {
-  stroke-dasharray: 3 2; /* Mobile default */
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke; /* Keep stroke consistent */
-}
-
-@media (min-width: 1024px) {
-  .quote-sketch-background path {
-    stroke-dasharray: 5 3; /* Desktop: larger pattern */
-    stroke-width: 1;
+  to {
+    stroke-dashoffset: -21; /* Sum of dasharray */
   }
 }
 
@@ -1656,35 +1655,7 @@ body.footer-expanded {
   text-align: center;
 }
 
-/* Typography quotes - Smaller and better positioned */
-.quote-content::before,
-.quote-content::after {
-  font-family: 'Providence Sans', sans-serif;
-  font-size: 1.5rem;
-  color: var(--christmas-gold);
-  opacity: 0.5;
-  position: absolute;
-  line-height: 1;
-}
-
-@media (min-width: 1024px) {
-  .quote-content::before,
-  .quote-content::after {
-    font-size: 2rem;
-  }
-}
-
-.quote-content::before {
-  content: '"';
-  top: -0.8rem;
-  left: -0.5rem;
-}
-
-.quote-content::after {
-  content: '"';
-  bottom: -0.8rem;
-  right: -0.5rem;
-}
+/* No quote marks - cleaner look */
 
 .quote-text {
   font-size: 1rem !important;
