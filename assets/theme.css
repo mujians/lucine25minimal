@@ -2142,6 +2142,26 @@ h6 {
   transition: all 0.3s ease;
 }
 
+/* Clickable card styles */
+a.menu-section-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a.menu-section-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--christmas-gold);
+  transform: translateX(4px);
+}
+
+/* Ensure text colors remain consistent in linked cards */
+a.menu-section-card h3,
+a.menu-section-card p {
+  color: inherit;
+}
+
 /* Compensate h3 top margin and p bottom margin in cards */
 .menu-section-card h3:first-child {
   margin-top: 0.5rem !important;
