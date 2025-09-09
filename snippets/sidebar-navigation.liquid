@@ -18,17 +18,6 @@
         {% endif %}
       {% endif %}
       <button class="nav-item {% if is_current %}active{% endif %}" onclick="window.location.href='{{ link.url }}'">
-        <span class="nav-icon">
-          {% if link.title contains 'Biglietti' %}🎫
-          {% elsif link.title contains 'FAQ' %}❓
-          {% elsif link.title contains 'Eventi' %}🎄
-          {% elsif link.title contains 'Menu' or link.title contains 'Ristoro' %}🍽️
-          {% elsif link.title contains 'Storia' %}📖
-          {% elsif link.title contains 'Visitare' %}👀
-          {% elsif link.title contains 'Parcheggi' or link.title contains 'Info' %}🚗
-          {% else %}✨
-          {% endif %}
-        </span>
         <span class="nav-text">{{ link.title }}</span>
       </button>
     {% endfor %}

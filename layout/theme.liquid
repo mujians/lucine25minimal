@@ -134,17 +134,6 @@
               {% assign main_menu = linklists['menu-principale'] %}
               {% for link in main_menu.links %}
                 <button class="nav-item" onclick="window.location.href='{{ link.url }}'">
-                  <span class="nav-icon">
-                    {% if link.title contains 'Biglietti' %}🎫
-                    {% elsif link.title contains 'FAQ' %}❓
-                    {% elsif link.title contains 'Eventi' %}🎄
-                    {% elsif link.title contains 'Menu' or link.title contains 'Ristoro' %}🍽️
-                    {% elsif link.title contains 'Storia' %}📖
-                    {% elsif link.title contains 'Visitare' %}👀
-                    {% elsif link.title contains 'Parcheggi' %}🚗
-                    {% else %}✨
-                    {% endif %}
-                  </span>
                   <span class="nav-text">{{ link.title }}</span>
                 </button>
               {% endfor %}
