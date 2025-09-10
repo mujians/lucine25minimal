@@ -1830,12 +1830,30 @@
                               totalQuantity += val;
                             });
                             
+                            // DEBUG LOG
+                            console.log('🔍 Tooltip Debug:', {
+                              buttonDisabled: btn.disabled,
+                              buttonClassList: btn.className,
+                              noDateSelected: noDateSelected,
+                              quantityInputsFound: quantityInputs.length,
+                              totalQuantity: totalQuantity,
+                              allInputValues: Array.from(quantityInputs).map(inp => ({
+                                value: inp.value,
+                                name: inp.name,
+                                selector: inp.className
+                              }))
+                            });
+                            
                             // Determine what message to show
                             let tooltipMessage = '';
                             if (noDateSelected) {
                               tooltipMessage = '⚠️ Devi scegliere prima una data dal calendario!';
+                              console.log('📅 Showing DATE message');
                             } else if (totalQuantity === 0) {
                               tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
+                              console.log('🎫 Showing TICKETS message');
+                            } else {
+                              console.log('✅ No tooltip needed - everything OK');
                             }
                             
                             // Show warning tooltip only if there's a message
