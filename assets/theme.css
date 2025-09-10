@@ -3008,6 +3008,58 @@ button[data-evey-trigger],
   z-index: 999 !important;
 }
 
+/* Fix Evey calendar modal month name visibility */
+.evey-modal,
+.evey-calendar,
+.evey-scheduler-modal {
+  color: inherit !important;
+  z-index: 9999 !important;
+}
+
+.evey-modal *,
+.evey-calendar *,
+.evey-scheduler-modal * {
+  color: inherit !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure month name and calendar headers are visible */
+.evey-modal .evey-month,
+.evey-modal .evey-month-name,
+.evey-modal .evey-calendar-header,
+.evey-modal .evey-calendar-month,
+.evey-modal .month-name,
+.evey-modal .calendar-month,
+.evey-modal .calendar-header,
+.evey-calendar .month-name,
+.evey-calendar .calendar-month,
+.evey-calendar .calendar-header,
+.evey-scheduler-modal .month-name,
+.evey-scheduler-modal .calendar-month,
+.evey-scheduler-modal .calendar-header,
+/* Additional selectors for Evey calendar elements */
+[class*="evey"] [class*="month"],
+[class*="evey"] [class*="calendar-header"],
+[class*="evey"] h1,
+[class*="evey"] h2,
+[class*="evey"] h3,
+[class*="evey"] .title,
+[id*="evey"] [class*="month"],
+[id*="evey"] [class*="calendar-header"],
+[id*="evey"] h1,
+[id*="evey"] h2,
+[id*="evey"] h3,
+[id*="evey"] .title {
+  color: #333 !important;
+  font-weight: 600 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  background-color: transparent !important;
+  text-shadow: none !important;
+}
+
 /* Mobile specific fix for Evey button */
 @media (max-width: 1023px) {
   .evey-scheduler-container {
