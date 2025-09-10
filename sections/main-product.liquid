@@ -1832,10 +1832,13 @@
                                 warningTooltip = document.createElement('div');
                                 warningTooltip.id = 'date-warning-tooltip-global';
                                 warningTooltip.className = 'date-warning-tooltip';
+                                warningTooltip.innerHTML = '⚠️ Devi scegliere prima una data dal calendario!';
                                 
                                 // Add to body, not to button
                                 document.body.appendChild(warningTooltip);
                               } else {
+                                // Update existing tooltip content
+                                warningTooltip.innerHTML = '⚠️ Devi scegliere prima una data dal calendario!';
                               }
                               
                               // Position tooltip relative to button
