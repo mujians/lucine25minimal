@@ -1822,9 +1822,24 @@
                             // Evey disables the button when no date is selected, regardless of ticket quantity
                             const noDateSelected = btn.disabled || btn.classList.contains('disabled');
                             
+                            // Check total quantity selected across all variants
+                            const quantityInputs = document.querySelectorAll('.evey__variant-container input[type="number"], input[name*="quantity"]');
+                            let totalQuantity = 0;
+                            quantityInputs.forEach(input => {
+                              const val = parseInt(input.value) || 0;
+                              totalQuantity += val;
+                            });
                             
-                            // Show warning when NO DATE is selected
+                            // Determine what message to show
+                            let tooltipMessage = '';
                             if (noDateSelected) {
+                              tooltipMessage = '⚠️ Devi scegliere prima una data dal calendario!';
+                            } else if (totalQuantity === 0) {
+                              tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
+                            }
+                            
+                            // Show warning tooltip only if there's a message
+                            if (tooltipMessage) {
                               
                               // Show warning tooltip - OUTSIDE THE BUTTON
                               let warningTooltip = document.getElementById('date-warning-tooltip-global');
@@ -1832,14 +1847,13 @@
                                 warningTooltip = document.createElement('div');
                                 warningTooltip.id = 'date-warning-tooltip-global';
                                 warningTooltip.className = 'date-warning-tooltip';
-                                warningTooltip.innerHTML = '⚠️ Devi scegliere prima una data dal calendario!';
                                 
                                 // Add to body, not to button
                                 document.body.appendChild(warningTooltip);
-                              } else {
-                                // Update existing tooltip content
-                                warningTooltip.innerHTML = '⚠️ Devi scegliere prima una data dal calendario!';
                               }
+                              
+                              // Update tooltip content
+                              warningTooltip.innerHTML = tooltipMessage;
                               
                               // Position tooltip relative to button
                               if (warningTooltip) {
@@ -1873,6 +1887,11 @@
                                 const computed = window.getComputedStyle(warningTooltip);
                               }
                             } else {
+                              // Hide tooltip when everything is OK (date selected AND tickets added)
+                              const warningTooltip = document.getElementById('date-warning-tooltip-global');
+                              if (warningTooltip) {
+                                warningTooltip.style.display = 'none';
+                              }
                             }
                           });
                           
