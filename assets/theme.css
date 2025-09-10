@@ -3008,32 +3008,6 @@ button[data-evey-trigger],
   z-index: 999 !important;
 }
 
-/* Fix error message visibility in product form */
-.product-form__error-message-wrapper {
-  background-color: #d32f2f !important;
-  color: white !important;
-  padding: 10px 15px !important;
-  border-radius: 8px !important;
-  margin-bottom: 15px !important;
-}
-
-.product-form__error-message {
-  color: white !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  display: inline-block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-.product-form__error-message-wrapper svg {
-  fill: white !important;
-}
-
-.product-form__error-message-wrapper:not([hidden]) {
-  display: flex !important;
-  align-items: center !important;
-}
 
 /* Mobile specific fix for Evey button */
 @media (max-width: 1023px) {

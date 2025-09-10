@@ -96,17 +96,32 @@ if (!customElements.get('product-form')) {
       }
 
       handleErrorMessage(errorMessage = false) {
-        if (this.hideErrors) return;
+        console.log('🔍 handleErrorMessage called with:', errorMessage);
+        
+        if (this.hideErrors) {
+          console.log('❌ hideErrors is true, returning');
+          return;
+        }
 
         this.errorMessageWrapper =
           this.errorMessageWrapper || this.querySelector('.product-form__error-message-wrapper');
-        if (!this.errorMessageWrapper) return;
+        if (!this.errorMessageWrapper) {
+          console.log('❌ No error message wrapper found');
+          return;
+        }
+        
         this.errorMessage = this.errorMessage || this.errorMessageWrapper.querySelector('.product-form__error-message');
+        if (!this.errorMessage) {
+          console.log('❌ No error message element found');
+          return;
+        }
 
         this.errorMessageWrapper.toggleAttribute('hidden', !errorMessage);
 
         if (errorMessage) {
+          console.log('✅ Setting error message text:', errorMessage);
           this.errorMessage.textContent = errorMessage;
+          console.log('📝 Error element after setting:', this.errorMessage);
         }
       }
     }
