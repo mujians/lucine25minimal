@@ -1,5 +1,14 @@
 console.log('🚀 product-form.js loaded!');
 
+// Check if product-form elements exist in DOM
+setTimeout(() => {
+  const productForms = document.querySelectorAll('product-form');
+  console.log('🔍 Found product-form elements:', productForms.length);
+  productForms.forEach((form, index) => {
+    console.log(`📋 Product form ${index}:`, form);
+  });
+}, 1000);
+
 if (!customElements.get('product-form')) {
   customElements.define(
     'product-form',
