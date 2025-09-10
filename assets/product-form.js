@@ -1,9 +1,12 @@
+console.log('🚀 product-form.js loaded!');
+
 if (!customElements.get('product-form')) {
   customElements.define(
     'product-form',
     class ProductForm extends HTMLElement {
       constructor() {
         super();
+        console.log('🏗️ ProductForm constructor called');
 
         this.form = this.querySelector('form');
         this.form.querySelector('[name=id]').disabled = false;
