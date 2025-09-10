@@ -4,6 +4,19 @@ console.log('🚀 product-form.js loaded!');
 setTimeout(() => {
   const productForms = document.querySelectorAll('product-form');
   console.log('🔍 Found product-form elements:', productForms.length);
+  
+  // Check for regular forms too
+  const allForms = document.querySelectorAll('form');
+  console.log('📝 Found regular form elements:', allForms.length);
+  
+  // Check for elements with product-form class
+  const productFormClass = document.querySelectorAll('.product-form');
+  console.log('🎯 Found .product-form class elements:', productFormClass.length);
+  
+  // Check for error message wrapper
+  const errorWrappers = document.querySelectorAll('.product-form__error-message-wrapper');
+  console.log('❌ Found error message wrappers:', errorWrappers.length);
+  
   productForms.forEach((form, index) => {
     console.log(`📋 Product form ${index}:`, form);
   });
