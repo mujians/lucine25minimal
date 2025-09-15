@@ -329,7 +329,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   gap: 1.5rem;
   overflow: hidden;
   flex: 1;
-  backdrop-filter: blur(6px);
   padding: 10px;
 }
 
@@ -496,10 +495,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   z-index: 2;
 }
 
-/* Apply blur to container, not individual cards */
-.features-container {
-  backdrop-filter: blur(6px) !important;
-}
+/* No blur on containers anymore */
 
 .mobile-features-slideshow .feature-icon {
   font-size: 3rem;
