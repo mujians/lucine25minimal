@@ -32,6 +32,134 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   </div> <!-- end content-wrapper -->
 </div>
 
+<!-- Desktop Features Carousel -->
+<div class="desktop-features-carousel">
+  <div class="carousel-header">
+    <p class="carousel-dates">Dal 6 dicembre al 6 gennaio</p>
+  </div>
+  
+  <div class="carousel-container">
+    <button class="carousel-nav carousel-prev" onclick="desktopCarouselPrev()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    
+    <div class="carousel-track">
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-1">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">💡</div>
+          <h4>+1 milione di lucine</h4>
+          <p>Un mare di luci che illumina la magia del Natale</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-2">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 14 8 10 12 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🗺️</div>
+          <h4>≈ 1km di percorso</h4>
+          <p>Un viaggio incantato attraverso le meraviglie natalizie</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-3">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6 14 8 12 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🚌</div>
+          <h4>Servizio navetta gratuito</h4>
+          <p>Comodo trasporto direttamente all'ingresso</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-4">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 10 6 14 9 12" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🅿️</div>
+          <h4>Parcheggio gratuito</h4>
+          <p>Ampi spazi per la tua auto senza costi aggiuntivi</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-5">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="12 8 10 6 14 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🍕</div>
+          <h4>Stand gastronomico</h4>
+          <p>Delizie locali per rendere perfetta la tua visita</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-6">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="9 12 8 10 6 14" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🎄</div>
+          <h4>Mercatino natalizio</h4>
+          <p>Artigianato locale e regali unici per tutti</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-1">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🎭</div>
+          <h4>Eventi speciali</h4>
+          <p>Spettacoli e animazioni per grandi e piccini</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-2">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 14 8 10 12 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🎨</div>
+          <h4>+20 installazioni fatte a mano</h4>
+          <p>Opere d'arte uniche create dai nostri artigiani</p>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="sketch-card sketch seed-3">
+          <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+            <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6 14 8 12 9" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="feature-icon">🐕</div>
+          <h4>Pet friendly</h4>
+          <p>Benvenuti anche i tuoi amici a quattro zampe</p>
+        </div>
+      </div>
+    </div>
+    
+    <button class="carousel-nav carousel-next" onclick="desktopCarouselNext()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+  
+  <div class="carousel-cta">
+    <a href="/products/biglietto-parco-lucine-di-natale-2025" class="cta-button">
+      Acquista Biglietti
+    </a>
+  </div>
+</div>
+
 <!-- Mobile Features Slideshow (completely outside navigation container) -->
 <div class="mobile-features-slideshow">
   <div class="slideshow-content">
@@ -150,6 +278,148 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 </div>
 
 <style>
+/* Desktop Features Carousel - Only visible on desktop */
+.desktop-features-carousel {
+  display: none;
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+/* Show only on desktop */
+@media (min-width: 1024px) {
+  .desktop-features-carousel {
+    display: block;
+  }
+}
+
+.carousel-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.carousel-dates {
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 20px;
+  border-radius: 25px;
+  display: inline-block;
+}
+
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow: hidden;
+  flex: 1;
+  backdrop-filter: blur(8px);
+  padding: 10px;
+}
+
+.carousel-slide {
+  flex: 0 0 calc(25% - 1.125rem);
+  transition: transform 0.5s ease;
+}
+
+.carousel-slide .sketch-card {
+  min-height: 200px;
+  padding: 1.2rem;
+  text-align: center;
+  position: relative;
+}
+
+/* Background for desktop cards */
+.desktop-features-carousel .sketch-card::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  z-index: 0;
+}
+
+/* Position SVG and content */
+.desktop-features-carousel .sketch-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.desktop-features-carousel .sketch-card > *:not(.sketch-border):not(::before) {
+  position: relative;
+  z-index: 2;
+}
+
+.desktop-features-carousel .feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.desktop-features-carousel .sketch-card h4 {
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.desktop-features-carousel .sketch-card p {
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Navigation arrows */
+.carousel-nav {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.carousel-nav:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.carousel-cta {
+  text-align: center;
+}
+
 /* Mobile Features Slideshow - Only visible on mobile */
 .mobile-features-slideshow {
   display: none;
@@ -316,6 +586,50 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 </style>
 
 <script>
+// Desktop Carousel Controller
+let desktopCarouselIndex = 0;
+const totalSlides = 9;
+const slidesPerView = 4;
+
+function updateDesktopCarousel() {
+  const track = document.querySelector('.carousel-track');
+  const slides = document.querySelectorAll('.carousel-slide');
+  
+  if (!track || !slides.length) return;
+  
+  slides.forEach((slide, index) => {
+    const offset = -desktopCarouselIndex * (100 / slidesPerView);
+    slide.style.transform = `translateX(${offset}%)`;
+  });
+}
+
+function desktopCarouselNext() {
+  if (desktopCarouselIndex < totalSlides - slidesPerView) {
+    desktopCarouselIndex++;
+    updateDesktopCarousel();
+  } else {
+    desktopCarouselIndex = 0; // Loop back to start
+    updateDesktopCarousel();
+  }
+}
+
+function desktopCarouselPrev() {
+  if (desktopCarouselIndex > 0) {
+    desktopCarouselIndex--;
+    updateDesktopCarousel();
+  } else {
+    desktopCarouselIndex = totalSlides - slidesPerView; // Loop to end
+    updateDesktopCarousel();
+  }
+}
+
+// Auto-advance carousel
+setInterval(() => {
+  if (window.innerWidth >= 1024) {
+    desktopCarouselNext();
+  }
+}, 5000);
+
 // Mobile Features Slideshow Controller
 document.addEventListener('DOMContentLoaded', function() {
   const slideshow = document.querySelector('.mobile-features-slideshow');
