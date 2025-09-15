@@ -19,27 +19,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   text-decoration: none;
   position: relative;
   transition: all 0.3s ease;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .mobile-cart-icon a:hover {
-  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
 }
 
 .cart-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   fill: white;
 }
 
 .cart-count {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -2px;
+  right: -2px;
   background: var(--christmas-red);
   color: white;
   font-size: 12px;
