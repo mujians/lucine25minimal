@@ -283,9 +283,9 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   display: none;
   position: fixed;
   bottom: 10%;
-  left: 50%;
+  left: calc(300px + ((100% - 300px) / 2)); /* Account for sidebar */
   transform: translateX(-50%);
-  width: 90%;
+  width: calc(100% - 350px);
   max-width: 1200px;
   z-index: 100;
   pointer-events: auto;
@@ -329,7 +329,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   gap: 1.5rem;
   overflow: hidden;
   flex: 1;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
   padding: 10px;
 }
 
@@ -345,18 +345,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
 }
 
-/* Background for desktop cards */
-.desktop-features-carousel .sketch-card::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  z-index: 0;
-}
+/* No background for desktop cards - removed */
 
 /* Position SVG and content */
 .desktop-features-carousel .sketch-border {
@@ -499,18 +488,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   z-index: 1;
 }
 
-/* Background inside SVG area - matching SVG rect exact positioning */
-.mobile-features-slideshow .sketch-card::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  z-index: 0;
-}
+/* No background for mobile cards either - removed */
 
 /* Content above background */
 .mobile-features-slideshow .sketch-card > *:not(.sketch-border):not(::before) {
@@ -520,7 +498,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 /* Apply blur to container, not individual cards */
 .features-container {
-  backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(6px) !important;
 }
 
 .mobile-features-slideshow .feature-icon {
