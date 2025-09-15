@@ -130,9 +130,13 @@
 }
 
 @media (min-width: 1024px) {
-  .mobile-cart-icon,
   .burger-menu {
     display: none;
+  }
+  
+  /* Keep cart icon visible on desktop too */
+  .mobile-cart-icon {
+    display: block;
   }
   
   body {
