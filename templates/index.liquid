@@ -219,17 +219,33 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
 }
 
-/* Background that follows SVG shape */
+/* SVG behind content */
+.mobile-features-slideshow .sketch-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Background inside SVG area */
 .mobile-features-slideshow .sketch-card::before {
   content: '';
   position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  bottom: 4px;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 12px;
-  z-index: -1;
+  top: 8%;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  z-index: 0;
+}
+
+/* Content above background */
+.mobile-features-slideshow .sketch-card > *:not(.sketch-border):not(::before) {
+  position: relative;
+  z-index: 2;
 }
 
 /* Apply blur to container, not individual cards */
