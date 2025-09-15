@@ -570,35 +570,34 @@ const totalSlides = 9;
 const slidesPerView = 4;
 
 function updateDesktopCarousel() {
-  const track = document.querySelector('.carousel-track');
   const slides = document.querySelectorAll('.carousel-slide');
   
-  if (!track || !slides.length) return;
+  if (!slides.length) return;
   
   slides.forEach((slide, index) => {
-    const offset = -desktopCarouselIndex * (100 / slidesPerView);
+    // Calculate position for each slide - move by 25% (one card width) per index
+    const slideWidth = 100 / slidesPerView;
+    const offset = -desktopCarouselIndex * slideWidth;
     slide.style.transform = `translateX(${offset}%)`;
   });
 }
 
 function desktopCarouselNext() {
-  if (desktopCarouselIndex < totalSlides - slidesPerView) {
-    desktopCarouselIndex++;
-    updateDesktopCarousel();
-  } else {
-    desktopCarouselIndex = 0; // Loop back to start
-    updateDesktopCarousel();
+  desktopCarouselIndex++;
+  // Allow continuous scrolling, reset when reaching end
+  if (desktopCarouselIndex > totalSlides - slidesPerView) {
+    desktopCarouselIndex = 0;
   }
+  updateDesktopCarousel();
 }
 
 function desktopCarouselPrev() {
-  if (desktopCarouselIndex > 0) {
-    desktopCarouselIndex--;
-    updateDesktopCarousel();
-  } else {
-    desktopCarouselIndex = totalSlides - slidesPerView; // Loop to end
-    updateDesktopCarousel();
+  desktopCarouselIndex--;
+  // Allow continuous scrolling, go to end when reaching start
+  if (desktopCarouselIndex < 0) {
+    desktopCarouselIndex = totalSlides - slidesPerView;
   }
+  updateDesktopCarousel();
 }
 
 // Auto-advance carousel
