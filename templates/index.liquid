@@ -322,6 +322,8 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   align-items: center;
   gap: 2rem;
   margin-bottom: 1.5rem;
+  overflow: hidden; /* Contain the sliding cards */
+  max-width: 100%;
 }
 
 .carousel-track {
@@ -331,6 +333,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   flex: 1;
   padding: 10px;
   transition: transform 0.5s ease;
+  position: relative;
 }
 
 .carousel-slide {
