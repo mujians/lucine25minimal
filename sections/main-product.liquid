@@ -1827,30 +1827,39 @@
                             }
                             
                             // Button is disabled - need to determine why
-                            // Check if quantity inputs are visible and enabled (means date is selected)
-                            const quantityInputs = document.querySelectorAll('.evey__variant-container input[type="number"]:not([disabled]), input[name*="quantity"]:not([disabled])');
-                            const visibleQuantityInputs = Array.from(quantityInputs).filter(input => {
-                              const style = window.getComputedStyle(input);
-                              return style.display !== 'none' && style.visibility !== 'hidden' && input.offsetParent !== null;
-                            });
+                            // Look for Evey scheduler button to check if date is selected
+                            const eveySchedulerBtn = document.querySelector('button[data-evey-trigger="scheduler"]');
+                            const dateIsSelected = eveySchedulerBtn && !eveySchedulerBtn.disabled;
                             
+                            // Check total quantity
+                            const quantityInputs = document.querySelectorAll('.evey__variant-container input[type="number"], input[name*="quantity"]');
                             let totalQuantity = 0;
-                            visibleQuantityInputs.forEach(input => {
+                            quantityInputs.forEach(input => {
                               const val = parseInt(input.value) || 0;
                               totalQuantity += val;
                             });
                             
+                            // DEBUG
+                            console.log('Tooltip check:', {
+                              buttonDisabled,
+                              eveySchedulerBtn: !!eveySchedulerBtn,
+                              schedulerDisabled: eveySchedulerBtn?.disabled,
+                              dateIsSelected,
+                              totalQuantity,
+                              quantityInputsCount: quantityInputs.length
+                            });
+                            
                             let tooltipMessage = '';
                             
-                            if (visibleQuantityInputs.length === 0) {
-                              // No quantity inputs visible = no date selected yet
+                            // If the scheduler button exists and is disabled, no date selected
+                            // If the scheduler button is enabled, date is selected
+                            if (eveySchedulerBtn && eveySchedulerBtn.disabled) {
                               tooltipMessage = '⚠️ Devi scegliere prima una data dal calendario!';
                             } else if (totalQuantity === 0) {
-                              // Quantity inputs are visible but none selected = date selected, need tickets
                               tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
                             } else {
-                              // Has quantities but button still disabled = processing or other issue
-                              tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
+                              // Has quantities but button still disabled = maybe processing
+                              tooltipMessage = '';
                             }
                             
                             // Show warning tooltip only if there's a message
