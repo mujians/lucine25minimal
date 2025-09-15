@@ -168,6 +168,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   max-width: 380px;
   z-index: 500;
   pointer-events: auto;
+  padding: 20px 0;
 }
 
 /* Show only on mobile */
@@ -179,8 +180,8 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .features-container {
   position: relative;
-  overflow: hidden;
-  height: 280px;
+  overflow: visible;
+  height: 320px;
 }
 
 .features-slide {
@@ -202,9 +203,14 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   transform: translateX(-100%);
 }
 
-/* Mobile Features Cards - use sketch-card system */
+/* Mobile Features Cards - use sketch-card system with proper background */
 .mobile-features-slideshow .sketch-card {
   min-height: 220px;
+  background: rgba(30, 50, 30, 0.9) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 10px 0;
 }
 
 .mobile-features-slideshow .feature-icon {
@@ -260,28 +266,29 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .cta-button {
   display: inline-block;
-  background: #DC2626 !important;
-  color: #FFFFFF !important;
+  background: rgb(46, 125, 50) !important;
+  color: rgb(255, 255, 255) !important;
   text-decoration: none;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 1.1rem;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
-  border: 3px solid #FFD700 !important;
+  border: 1.66667px solid rgb(46, 125, 50) !important;
   backdrop-filter: blur(15px);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  font-family: "Providence Sans", -apple-system, sans-serif;
 }
 
 .cta-button:hover {
-  background: #B91C1C !important;
+  background: rgb(56, 142, 60) !important;
   color: #FFFFFF !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-  border-color: #FBBF24 !important;
+  border-color: rgb(56, 142, 60) !important;
 }
 
 /* Touch/Swipe area */
