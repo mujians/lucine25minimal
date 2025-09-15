@@ -330,11 +330,12 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   overflow: hidden;
   flex: 1;
   padding: 10px;
+  transition: transform 0.5s ease;
 }
 
 .carousel-slide {
   flex: 0 0 calc(25% - 1.125rem);
-  transition: transform 0.5s ease;
+  transition: none; /* Remove individual slide transitions */
 }
 
 .carousel-slide .sketch-card {
@@ -344,7 +345,18 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
 }
 
-/* No background for desktop cards - removed */
+/* Background for all sketch cards */
+.sketch-card::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  z-index: 0;
+}
 
 /* Position SVG and content */
 .desktop-features-carousel .sketch-border {
@@ -487,7 +499,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   z-index: 1;
 }
 
-/* No background for mobile cards either - removed */
 
 /* Content above background */
 .mobile-features-slideshow .sketch-card > *:not(.sketch-border):not(::before) {
@@ -566,16 +577,14 @@ const totalSlides = 9;
 const slidesPerView = 4;
 
 function updateDesktopCarousel() {
-  const slides = document.querySelectorAll('.carousel-slide');
+  const track = document.querySelector('.carousel-track');
   
-  if (!slides.length) return;
+  if (!track) return;
   
-  slides.forEach((slide, index) => {
-    // Calculate position for each slide - move by 25% (one card width) per index
-    const slideWidth = 100 / slidesPerView;
-    const offset = -desktopCarouselIndex * slideWidth;
-    slide.style.transform = `translateX(${offset}%)`;
-  });
+  // Move the entire track, not individual slides
+  const slideWidth = 100 / slidesPerView;
+  const offset = -desktopCarouselIndex * slideWidth;
+  track.style.transform = `translateX(${offset}%)`;
 }
 
 function desktopCarouselNext() {
