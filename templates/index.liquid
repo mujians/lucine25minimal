@@ -30,16 +30,17 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
       </div>
     </div>
   </div> <!-- end content-wrapper -->
+</div>
 
-  <!-- Mobile Features Slideshow (outside content wrapper) -->
-  <div class="mobile-features-slideshow">
-          <div class="slideshow-content">
-            <div class="slideshow-header">
-              <p class="slideshow-dates">Dal 6 dicembre al 6 gennaio</p>
-            </div>
-            <div class="features-container">
-            <div class="features-slide active">
-              <div class="sketch-card sketch seed-1">
+<!-- Mobile Features Slideshow (completely outside navigation container) -->
+<div class="mobile-features-slideshow">
+  <div class="slideshow-content">
+    <div class="slideshow-header">
+      <p class="slideshow-dates">Dal 6 dicembre al 6 gennaio</p>
+    </div>
+    <div class="features-container">
+      <div class="features-slide active">
+        <div class="sketch-card sketch seed-1">
                 <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
                   <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
                 </svg>
@@ -157,20 +158,21 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
               Acquista Biglietti
             </a>
           </div>
-        </div>
+    </div>
+  </div>
 </div>
 
 <style>
 /* Mobile Features Slideshow - Only visible on mobile */
 .mobile-features-slideshow {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 380px;
-  z-index: 500;
+  z-index: 9999;
   pointer-events: auto;
 }
 
