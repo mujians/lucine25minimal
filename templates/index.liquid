@@ -160,15 +160,14 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 /* Mobile Features Slideshow - Only visible on mobile */
 .mobile-features-slideshow {
   display: none;
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: 90%;
   max-width: 380px;
   z-index: 500;
   pointer-events: auto;
-  padding: 20px 0;
 }
 
 /* Show only on mobile */
@@ -226,7 +225,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   margin-bottom: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .mobile-features-slideshow .sketch-card p {
@@ -234,7 +232,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   font-size: 0.95rem;
   line-height: 1.3;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Slide Indicators */
@@ -279,7 +276,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   transition: all 0.3s ease;
   border: 1.66667px solid rgb(46, 125, 50) !important;
   backdrop-filter: blur(15px);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   font-family: "Providence Sans", -apple-system, sans-serif;
 }
 
