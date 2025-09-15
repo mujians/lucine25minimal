@@ -1818,42 +1818,39 @@
                       cartButtons.forEach(btn => {
                         if (btn.id !== 'open-add-to-cart') { // Skip Open Ticket button
                           btn.addEventListener('mouseenter', function() {
-                            // Check if button is disabled - that means NO DATE is selected
-                            // Evey disables the button when no date is selected, regardless of ticket quantity
-                            const noDateSelected = btn.disabled || btn.classList.contains('disabled');
+                            // Check if button is disabled
+                            const buttonDisabled = btn.disabled || btn.classList.contains('disabled');
                             
-                            // Check total quantity selected across all variants
-                            const quantityInputs = document.querySelectorAll('.evey__variant-container input[type="number"], input[name*="quantity"]');
+                            if (!buttonDisabled) {
+                              // Button is enabled, no tooltip needed
+                              return;
+                            }
+                            
+                            // Button is disabled - need to determine why
+                            // Check if quantity inputs are visible and enabled (means date is selected)
+                            const quantityInputs = document.querySelectorAll('.evey__variant-container input[type="number"]:not([disabled]), input[name*="quantity"]:not([disabled])');
+                            const visibleQuantityInputs = Array.from(quantityInputs).filter(input => {
+                              const style = window.getComputedStyle(input);
+                              return style.display !== 'none' && style.visibility !== 'hidden' && input.offsetParent !== null;
+                            });
+                            
                             let totalQuantity = 0;
-                            quantityInputs.forEach(input => {
+                            visibleQuantityInputs.forEach(input => {
                               const val = parseInt(input.value) || 0;
                               totalQuantity += val;
                             });
                             
-                            // DEBUG LOG
-                            console.log('🔍 Tooltip Debug:', {
-                              buttonDisabled: btn.disabled,
-                              buttonClassList: btn.className,
-                              noDateSelected: noDateSelected,
-                              quantityInputsFound: quantityInputs.length,
-                              totalQuantity: totalQuantity,
-                              allInputValues: Array.from(quantityInputs).map(inp => ({
-                                value: inp.value,
-                                name: inp.name,
-                                selector: inp.className
-                              }))
-                            });
-                            
-                            // Determine what message to show
                             let tooltipMessage = '';
-                            if (noDateSelected) {
+                            
+                            if (visibleQuantityInputs.length === 0) {
+                              // No quantity inputs visible = no date selected yet
                               tooltipMessage = '⚠️ Devi scegliere prima una data dal calendario!';
-                              console.log('📅 Showing DATE message');
                             } else if (totalQuantity === 0) {
+                              // Quantity inputs are visible but none selected = date selected, need tickets
                               tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
-                              console.log('🎫 Showing TICKETS message');
                             } else {
-                              console.log('✅ No tooltip needed - everything OK');
+                              // Has quantities but button still disabled = processing or other issue
+                              tooltipMessage = '⚠️ Devi aggiungere dei biglietti al carrello!';
                             }
                             
                             // Show warning tooltip only if there's a message
