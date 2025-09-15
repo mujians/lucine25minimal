@@ -27,10 +27,373 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
     <div class="content show">
       <div class="formatted-content">
         <!-- Homepage vuota - solo video background -->
+        
+        <!-- Mobile Features Slideshow (only visible on mobile) -->
+        <div class="mobile-features-slideshow">
+          <div class="features-container">
+            <div class="features-slide active">
+              <div class="sketch-card feature-card seed-1">
+                <div class="feature-icon">💡</div>
+                <div class="feature-content">
+                  <h3>+1 milione di lucine</h3>
+                  <p>Un mare di luci che illumina la magia del Natale</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-2">
+                <div class="feature-icon">🗺️</div>
+                <div class="feature-content">
+                  <h3>≈ 1km di percorso</h3>
+                  <p>Un viaggio incantato attraverso le meraviglie natalizie</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-3">
+                <div class="feature-icon">🚌</div>
+                <div class="feature-content">
+                  <h3>Servizio navetta gratuito</h3>
+                  <p>Comodo trasporto direttamente all'ingresso</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-4">
+                <div class="feature-icon">🅿️</div>
+                <div class="feature-content">
+                  <h3>Parcheggio gratuito</h3>
+                  <p>Ampi spazi per la tua auto senza costi aggiuntivi</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-5">
+                <div class="feature-icon">🍕</div>
+                <div class="feature-content">
+                  <h3>Stand gastronomico</h3>
+                  <p>Delizie locali per rendere perfetta la tua visita</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-6">
+                <div class="feature-icon">🎄</div>
+                <div class="feature-content">
+                  <h3>Mercatino natalizio</h3>
+                  <p>Artigianato locale e regali unici per tutti</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-1">
+                <div class="feature-icon">🎭</div>
+                <div class="feature-content">
+                  <h3>Eventi speciali</h3>
+                  <p>Spettacoli e animazioni per grandi e piccini</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-2">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-content">
+                  <h3>+20 installazioni fatte a mano</h3>
+                  <p>Opere d'arte uniche create dai nostri artigiani</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="features-slide">
+              <div class="sketch-card feature-card seed-3">
+                <div class="feature-icon">🐕</div>
+                <div class="feature-content">
+                  <h3>Pet friendly</h3>
+                  <p>Benvenuti anche i tuoi amici a quattro zampe</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide indicators -->
+          <div class="slide-indicators">
+            <div class="indicator active" data-slide="0"></div>
+            <div class="indicator" data-slide="1"></div>
+            <div class="indicator" data-slide="2"></div>
+            <div class="indicator" data-slide="3"></div>
+            <div class="indicator" data-slide="4"></div>
+            <div class="indicator" data-slide="5"></div>
+            <div class="indicator" data-slide="6"></div>
+            <div class="indicator" data-slide="7"></div>
+            <div class="indicator" data-slide="8"></div>
+          </div>
+          
+          <!-- Purchase button -->
+          <div class="features-cta">
+            <a href="/products/biglietto-parco-lucine-di-natale-2025" class="cta-button">
+              🎫 Acquista Biglietti
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div> <!-- end content-wrapper -->
 </div>
+
+<style>
+/* Mobile Features Slideshow - Only visible on mobile */
+.mobile-features-slideshow {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  z-index: 500;
+  pointer-events: auto;
+}
+
+/* Show only on mobile */
+@media (max-width: 1023px) {
+  .mobile-features-slideshow {
+    display: block;
+  }
+}
+
+.features-container {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+}
+
+.features-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.features-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.features-slide.prev {
+  transform: translateX(-100%);
+}
+
+/* Feature Card Styling - Using site's sketch-card system */
+.feature-card {
+  background: rgba(20, 30, 20, 0.85) !important;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(139, 210, 162, 0.4) !important;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin: 0;
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.feature-content h3 {
+  color: var(--christmas-gold);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.feature-content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  line-height: 1.4;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Slide Indicators */
+.slide-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem 0;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: var(--christmas-gold);
+  transform: scale(1.2);
+}
+
+/* CTA Button */
+.features-cta {
+  text-align: center;
+}
+
+.cta-button {
+  display: inline-block;
+  background: var(--christmas-red);
+  color: white;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.cta-button:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Touch/Swipe area */
+.features-container {
+  touch-action: pan-y;
+  user-select: none;
+}
+</style>
+
+<script>
+// Mobile Features Slideshow Controller
+document.addEventListener('DOMContentLoaded', function() {
+  const slideshow = document.querySelector('.mobile-features-slideshow');
+  const container = document.querySelector('.features-container');
+  const slides = document.querySelectorAll('.features-slide');
+  const indicators = document.querySelectorAll('.indicator');
+  
+  if (!slideshow || slides.length === 0) return;
+  
+  let currentSlide = 0;
+  let startX = 0;
+  let isTouch = false;
+  let autoSlideInterval;
+  
+  // Auto-slide functionality
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      nextSlide();
+    }, 4000); // Change slide every 4 seconds
+  }
+  
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+  
+  // Slide navigation
+  function goToSlide(index) {
+    // Remove all classes
+    slides.forEach(slide => {
+      slide.classList.remove('active', 'prev');
+    });
+    
+    indicators.forEach(indicator => {
+      indicator.classList.remove('active');
+    });
+    
+    // Set current slide
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+    
+    currentSlide = index;
+  }
+  
+  function nextSlide() {
+    const next = (currentSlide + 1) % slides.length;
+    goToSlide(next);
+  }
+  
+  function prevSlide() {
+    const prev = (currentSlide - 1 + slides.length) % slides.length;
+    goToSlide(prev);
+  }
+  
+  // Touch/Swipe handling
+  container.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isTouch = true;
+    stopAutoSlide();
+  });
+  
+  container.addEventListener('touchmove', (e) => {
+    if (!isTouch) return;
+    e.preventDefault(); // Prevent scrolling
+  });
+  
+  container.addEventListener('touchend', (e) => {
+    if (!isTouch) return;
+    
+    const endX = e.changedTouches[0].clientX;
+    const deltaX = startX - endX;
+    const threshold = 50; // Minimum swipe distance
+    
+    if (Math.abs(deltaX) > threshold) {
+      if (deltaX > 0) {
+        nextSlide(); // Swipe left = next slide
+      } else {
+        prevSlide(); // Swipe right = previous slide
+      }
+    }
+    
+    isTouch = false;
+    startAutoSlide(); // Restart auto-slide
+  });
+  
+  // Click indicators
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+      stopAutoSlide();
+      goToSlide(index);
+      startAutoSlide();
+    });
+  });
+  
+  // Pause auto-slide on hover/touch
+  slideshow.addEventListener('mouseenter', stopAutoSlide);
+  slideshow.addEventListener('mouseleave', startAutoSlide);
+  
+  // Start auto-slide
+  startAutoSlide();
+  
+  console.log('🎠 Mobile Features Slideshow initialized with', slides.length, 'slides');
+});
+</script>
 
 
 <!-- ERUDA MOBILE DEBUGGER (TEMPORARY) -->
