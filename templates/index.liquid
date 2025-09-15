@@ -139,19 +139,6 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
             </div>
           </div>
           
-          <!-- Slide indicators -->
-          <div class="slide-indicators">
-            <div class="indicator active" data-slide="0"></div>
-            <div class="indicator" data-slide="1"></div>
-            <div class="indicator" data-slide="2"></div>
-            <div class="indicator" data-slide="3"></div>
-            <div class="indicator" data-slide="4"></div>
-            <div class="indicator" data-slide="5"></div>
-            <div class="indicator" data-slide="6"></div>
-            <div class="indicator" data-slide="7"></div>
-            <div class="indicator" data-slide="8"></div>
-          </div>
-          
           <!-- Purchase button -->
           <div class="features-cta">
             <a href="/products/biglietto-parco-lucine-di-natale-2025" class="cta-button">
@@ -205,7 +192,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
   overflow: visible;
   height: 240px;
-  margin-bottom: 10px;
+  margin-bottom: 1.5rem;
 }
 
 .features-slide {
@@ -244,7 +231,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 }
 
 .mobile-features-slideshow .sketch-card h4 {
-  color: var(--christmas-gold) !important;
+  color: #FFFFFF !important;
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
@@ -259,32 +246,10 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   margin: 0;
 }
 
-/* Slide Indicators */
-.slide-indicators {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: 0;
-}
-
-.indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.indicator.active {
-  background: var(--christmas-gold);
-  transform: scale(1.2);
-}
-
 /* CTA Button */
 .features-cta {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 1.5rem;
 }
 
 .cta-button {
@@ -406,14 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startAutoSlide(); // Restart auto-slide
   });
   
-  // Click indicators
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => {
-      stopAutoSlide();
-      goToSlide(index);
-      startAutoSlide();
-    });
-  });
+  // Click indicators - removed since no indicators
   
   // Pause auto-slide on hover/touch
   slideshow.addEventListener('mouseenter', stopAutoSlide);
