@@ -1859,31 +1859,6 @@
                               });
                             });
                             
-                            // DETAILED DEBUG LOG
-                            console.log('🎯 EVEY STATE CHECK:', {
-                              '1_EVEY_BUTTON': {
-                                exists: !!eveySchedulerBtn,
-                                text: schedulerText,
-                                dateIsSelected: dateIsSelected
-                              },
-                              '2_QUANTITIES': {
-                                totalQuantity: totalQuantity,
-                                eveyInputsCount: eveyQuantityInputs.length,
-                                allInputsCount: allQuantityInputs.length,
-                                details: quantityDetails
-                              },
-                              '3_CART_BUTTON': {
-                                disabled: buttonDisabled,
-                                element: btn.tagName,
-                                id: btn.id,
-                                className: btn.className
-                              },
-                              '4_RESULT': {
-                                message: !dateIsSelected ? '⚠️ SHOW: Choose date' : 
-                                        totalQuantity === 0 ? '⚠️ SHOW: Add tickets' : 
-                                        '✅ SHOW: Nothing (has date + tickets)'
-                              }
-                            });
                             
                             let tooltipMessage = '';
                             
