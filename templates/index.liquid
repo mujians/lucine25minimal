@@ -166,15 +166,11 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 .mobile-features-slideshow {
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  justify-content: center;
-  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 90%;
   max-width: 380px;
-  margin: 0 auto;
   z-index: 500;
   pointer-events: auto;
 }
@@ -182,7 +178,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 /* Show only on mobile */
 @media (max-width: 1023px) {
   .mobile-features-slideshow {
-    display: flex;
+    display: block;
   }
 }
 
