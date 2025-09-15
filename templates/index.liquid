@@ -45,8 +45,51 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
       </svg>
     </button>
     
-    <div class="carousel-track">
-      <div class="carousel-slide">
+    <div class="carousel-track-wrapper">
+      <div class="carousel-track">
+        <!-- Clone last 4 slides at beginning for seamless loop -->
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-6">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="9 12 8 10 6 14" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🎄</div>
+            <h4>Mercatino natalizio</h4>
+            <p>Artigianato locale e regali unici per tutti</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-1">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🎭</div>
+            <h4>Eventi speciali</h4>
+            <p>Spettacoli e animazioni per grandi e piccini</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-2">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 14 8 10 12 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🎨</div>
+            <h4>+20 installazioni fatte a mano</h4>
+            <p>Opere d'arte uniche create dai nostri artigiani</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-3">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6 14 8 12 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🐕</div>
+            <h4>Pet friendly</h4>
+            <p>Benvenuti anche i tuoi amici a quattro zampe</p>
+          </div>
+        </div>
+        <!-- Original slides -->
+        <div class="carousel-slide">
         <div class="sketch-card sketch seed-1">
           <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
             <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
@@ -142,6 +185,47 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
           <div class="feature-icon">🐕</div>
           <h4>Pet friendly</h4>
           <p>Benvenuti anche i tuoi amici a quattro zampe</p>
+        </div>
+        <!-- Clone first 4 slides at end for seamless loop -->
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-1">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="14 8 6 12 10 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">💡</div>
+            <h4>+1 milione di lucine</h4>
+            <p>Un mare di luci che illumina la magia del Natale</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-2">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="6 14 8 10 12 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🗺️</div>
+            <h4>≈ 1km di percorso</h4>
+            <p>Un viaggio incantato attraverso le meraviglie natalizie</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-3">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6 14 8 12 9" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🚌</div>
+            <h4>Servizio navetta gratuito</h4>
+            <p>Comodo trasporto direttamente all'ingresso</p>
+          </div>
+        </div>
+        <div class="carousel-slide clone">
+          <div class="sketch-card sketch seed-4">
+            <svg class="sketch-border" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+              <rect x="4" y="4" width="92" height="92" rx="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 10 6 14 9 12" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="feature-icon">🅿️</div>
+            <h4>Parcheggio gratuito</h4>
+            <p>Ampi spazi per la tua auto senza costi aggiuntivi</p>
+          </div>
         </div>
       </div>
     </div>
@@ -322,18 +406,21 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   align-items: center;
   gap: 2rem;
   margin-bottom: 1.5rem;
-  overflow: hidden; /* Contain the sliding cards */
   max-width: 100%;
+}
+
+.carousel-track-wrapper {
+  overflow: hidden;
+  flex: 1;
+  position: relative;
 }
 
 .carousel-track {
   display: flex;
   gap: 1.5rem;
-  overflow: hidden;
-  flex: 1;
   padding: 10px;
   transition: transform 0.5s ease;
-  position: relative;
+  transform: translateX(calc(-100% / 4 * 4)); /* Start at real first slide, not clones */
 }
 
 .carousel-slide {
@@ -574,39 +661,81 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 </style>
 
 <script>
-// Desktop Carousel Controller
-let desktopCarouselIndex = 0;
+// Desktop Carousel Controller with infinite loop
+let desktopCarouselIndex = 4; // Start at first real slide (after 4 clones)
 const totalSlides = 9;
 const slidesPerView = 4;
+let isTransitioning = false;
 
-function updateDesktopCarousel() {
+function updateDesktopCarousel(instant = false) {
   const track = document.querySelector('.carousel-track');
   
   if (!track) return;
   
-  // Move the entire track, not individual slides
+  // Temporarily disable transition for instant repositioning
+  if (instant) {
+    track.style.transition = 'none';
+  }
+  
+  // Move the entire track
   const slideWidth = 100 / slidesPerView;
   const offset = -desktopCarouselIndex * slideWidth;
   track.style.transform = `translateX(${offset}%)`;
+  
+  // Re-enable transition after instant move
+  if (instant) {
+    setTimeout(() => {
+      track.style.transition = 'transform 0.5s ease';
+    }, 10);
+  }
 }
 
 function desktopCarouselNext() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
   desktopCarouselIndex++;
-  // Allow continuous scrolling, reset when reaching end
-  if (desktopCarouselIndex > totalSlides - slidesPerView) {
-    desktopCarouselIndex = 0;
-  }
   updateDesktopCarousel();
+  
+  // Check if we've reached the cloned slides at the end
+  if (desktopCarouselIndex >= totalSlides + 4) {
+    setTimeout(() => {
+      desktopCarouselIndex = 4; // Jump back to first real slide
+      updateDesktopCarousel(true);
+      isTransitioning = false;
+    }, 500);
+  } else {
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 500);
+  }
 }
 
 function desktopCarouselPrev() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
   desktopCarouselIndex--;
-  // Allow continuous scrolling, go to end when reaching start
-  if (desktopCarouselIndex < 0) {
-    desktopCarouselIndex = totalSlides - slidesPerView;
-  }
   updateDesktopCarousel();
+  
+  // Check if we've reached the cloned slides at the beginning
+  if (desktopCarouselIndex < 4) {
+    setTimeout(() => {
+      desktopCarouselIndex = totalSlides + 3; // Jump to last real slide
+      updateDesktopCarousel(true);
+      isTransitioning = false;
+    }, 500);
+  } else {
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 500);
+  }
 }
+
+// Initialize carousel position
+document.addEventListener('DOMContentLoaded', function() {
+  updateDesktopCarousel(true);
+});
 
 // Auto-advance carousel
 setInterval(() => {
