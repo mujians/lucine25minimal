@@ -147,7 +147,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
           <!-- Purchase button -->
           <div class="features-cta">
             <a href="/products/biglietto-parco-lucine-di-natale-2025" class="cta-button">
-              🎫 Acquista Biglietti
+              Acquista Biglietti
             </a>
           </div>
         </div>
@@ -161,9 +161,9 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 .mobile-features-slideshow {
   display: none;
   position: fixed;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   width: 90%;
   max-width: 380px;
   z-index: 500;
@@ -205,11 +205,12 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 /* Mobile Features Cards - use sketch-card system with proper background */
 .mobile-features-slideshow .sketch-card {
   min-height: 220px;
-  background: rgba(30, 50, 30, 0.9) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
   backdrop-filter: blur(15px) !important;
   border-radius: 12px;
   padding: 1.5rem;
   margin: 10px 0;
+  text-align: center;
 }
 
 .mobile-features-slideshow .feature-icon {
@@ -263,9 +264,9 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .cta-button {
   display: inline-block;
-  background: rgb(46, 125, 50) !important;
+  background: #DC2626 !important;
   color: rgb(255, 255, 255) !important;
-  text-decoration: none;
+  text-decoration: none !important;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -274,17 +275,18 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   letter-spacing: 0.5px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
-  border: 1.66667px solid rgb(46, 125, 50) !important;
+  border: 1.66667px solid #DC2626 !important;
   backdrop-filter: blur(15px);
   font-family: "Providence Sans", -apple-system, sans-serif;
 }
 
 .cta-button:hover {
-  background: rgb(56, 142, 60) !important;
+  background: #B91C1C !important;
   color: #FFFFFF !important;
+  text-decoration: none !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-  border-color: rgb(56, 142, 60) !important;
+  border-color: #B91C1C !important;
 }
 
 /* Touch/Swipe area */
