@@ -27,9 +27,12 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
     <div class="content show">
       <div class="formatted-content">
         <!-- Homepage vuota - solo video background -->
-        
-        <!-- Mobile Features Slideshow (only visible on mobile) -->
-        <div class="mobile-features-slideshow">
+      </div>
+    </div>
+  </div> <!-- end content-wrapper -->
+
+  <!-- Mobile Features Slideshow (outside content wrapper) -->
+  <div class="mobile-features-slideshow">
           <div class="slideshow-content">
             <div class="slideshow-header">
               <p class="slideshow-dates">Dal 6 dicembre al 6 gennaio</p>
@@ -154,11 +157,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
               Acquista Biglietti
             </a>
           </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div> <!-- end content-wrapper -->
 </div>
 
 <style>
