@@ -229,16 +229,16 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   z-index: 1;
 }
 
-/* Background inside SVG area */
+/* Background inside SVG area - matching SVG rect exact positioning */
 .mobile-features-slideshow .sketch-card::before {
   content: '';
   position: absolute;
-  top: 8%;
-  left: 8%;
-  right: 8%;
-  bottom: 8%;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  border-radius: 10px;
   z-index: 0;
 }
 
