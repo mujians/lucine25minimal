@@ -18,6 +18,14 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 <!-- Navigation Container -->
 <div class="navigation-container" data-tabs-section>
+  <!-- Mobile Burger Menu -->
+  <div class="mobile-header">
+    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 
   <!-- Include sidebar navigation -->
   {% assign current_page_title = 'Home' %}
