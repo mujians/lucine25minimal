@@ -673,10 +673,97 @@
     // Start monitoring
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(startButtonRecreation, 3000); // Start after 3 seconds
+      
+      // NEW: Optimize Evey loading experience
+      function showEveyWhenReady() {
+        const eveyElements = document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [id*="evey"], [data-evey]');
+        let checkCount = 0;
+        const maxChecks = 50; // 10 secondi massimo
+        
+        const checkEveyReady = setInterval(() => {
+          checkCount++;
+          
+          // Trova elementi Evey
+          const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+          const eveyVariants = document.querySelectorAll('[class*="evey__variant"]');
+          
+          // Controlla se Evey è caricato e tradotto in italiano
+          const isReady = eveyButton && 
+            (eveyButton.textContent.includes('SELEZIONA') || eveyButton.textContent.includes('Seleziona')) &&
+            !eveyButton.textContent.includes('Choose') && 
+            !eveyButton.textContent.includes('Select') &&
+            eveyVariants.length > 0;
+          
+          if (isReady || checkCount >= maxChecks) {
+            clearInterval(checkEveyReady);
+            
+            // Mostra tutti gli elementi Evey
+            eveyElements.forEach(el => {
+              el.classList.add('loaded');
+            });
+            
+            // Nascondi skeleton se presente
+            const skeleton = document.querySelector('.evey-skeleton');
+            if (skeleton) {
+              skeleton.remove();
+            }
+            
+            console.log('Evey loaded and ready:', isReady ? 'Yes' : 'Timeout');
+          }
+        }, 200);
+      }
+      
+      // Aggiungi skeleton loader prima che Evey carichi
+      function addEveySkeletonLoader() {
+        const productForm = document.querySelector('.product-form__cart-submit');
+        if (productForm) {
+          const skeleton = document.createElement('div');
+          skeleton.className = 'evey-skeleton';
+          skeleton.innerHTML = '<div style="height: 100%; border-radius: 8px; background: inherit;"></div>';
+          productForm.insertAdjacentElement('beforebegin', skeleton);
+        }
+      }
+      
+      // Avvia ottimizzazioni Evey
+      setTimeout(() => {
+        addEveySkeletonLoader();
+        showEveyWhenReady();
+      }, 100);
     });
   </script>
   
   <style>
+    /* Hide Evey during loading to prevent English flash */
+    .evey-scheduler-container,
+    [class*="evey__"],
+    [id*="evey"],
+    [data-evey] {
+      opacity: 0 !important;
+      transition: opacity 0.3s ease !important;
+    }
+    
+    .evey-scheduler-container.loaded,
+    [class*="evey__"].loaded,
+    [id*="evey"].loaded,
+    [data-evey].loaded {
+      opacity: 1 !important;
+    }
+    
+    /* Skeleton loader for Evey */
+    .evey-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: 8px;
+      height: 50px;
+      margin: 1rem 0;
+    }
+    
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
     /* Minimal fix for Evey button visibility */
     @media (max-width: 1023px) {
       /* Fix the blocking mobile-product-original element */
