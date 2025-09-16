@@ -2600,37 +2600,6 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* EMERGENCY FIX - Force social icon styling with nuclear specificity */
-  .social-icon[aria-label="TikTok"] {
-    background: red !important;
-    color: yellow !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-  }
-  
-  #snap-footer .footer-social-links a.social-icon {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-  }
-  
-  #snap-footer .footer-social-links a.social-icon:hover {
-    background: var(--christmas-gold) !important;
-    color: white !important;
-    transform: translateY(-2px) !important;
-  }
   
   /* Better spacing for footer sections on mobile */
   @media (max-width: 1023px) {
