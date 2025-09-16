@@ -13,6 +13,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   <video autoplay muted loop playsinline>
     <source src="https://cdn.shopify.com/videos/c/o/v/088cf9e084664519ad8bf3af537b87fe.mp4" type="video/mp4">
   </video>
+  <div class="video-overlay"></div>
 </div>
 
 <!-- Navigation Container -->
@@ -390,14 +391,12 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .carousel-dates {
   color: #FFFFFF;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: rgba(0, 0, 0, 0.3);
   padding: 10px 20px;
-  border-radius: 25px;
   display: inline-block;
 }
 
@@ -436,18 +435,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
 }
 
-/* Background for all sketch cards */
-.sketch-card::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  z-index: 0;
-}
+/* Remove individual card backgrounds - now using video overlay */
 
 /* Position SVG and content */
 .desktop-features-carousel .sketch-border {
@@ -473,7 +461,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .desktop-features-carousel .sketch-card h4 {
   color: #FFFFFF;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -482,8 +470,8 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .desktop-features-carousel .sketch-card p {
   color: #FFFFFF;
-  font-size: 0.85rem;
-  line-height: 1.2;
+  font-size: 1rem;
+  line-height: 1.3;
   margin: 0;
 }
 
@@ -540,14 +528,12 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .slideshow-dates {
   color: #FFFFFF;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: rgba(0, 0, 0, 0.3);
   padding: 8px 16px;
-  border-radius: 20px;
   display: inline-block;
 }
 
@@ -611,7 +597,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .mobile-features-slideshow .sketch-card h4 {
   color: #FFFFFF !important;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
   text-transform: uppercase;
@@ -620,7 +606,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 .mobile-features-slideshow .sketch-card p {
   color: #FFFFFF !important;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   line-height: 1.3;
   margin: 0;
 }
@@ -662,6 +648,16 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 .features-container {
   touch-action: pan-y;
   user-select: none;
+}
+/* Video overlay for uniform background */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
 }
 </style>
 
