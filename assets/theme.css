@@ -2608,8 +2608,11 @@ a.cta[href*="maps"]:after {
     padding: 10px !important;
   }
   
-  /* Fix mobile footer social icons - higher specificity than user agent */
-  .snap-footer.show .footer-social-links .social-icon {
+  /* Fix mobile footer social icons - same as working inline CSS */
+  .footer-social-links a[aria-label="Facebook"],
+  .footer-social-links a[aria-label="Instagram"],
+  .footer-social-links a[aria-label="TikTok"],
+  .footer-social-links a[aria-label="Spotify"] {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3208,4 +3211,32 @@ button[data-evey-trigger],
     max-width: none !important;
     max-height: none !important;
   }
+}
+
+/* FORCE SOCIAL ICON CSS AT END OF FILE - MAXIMUM SPECIFICITY */
+#snap-footer a.social-icon,
+.snap-footer a.social-icon,
+.footer-social-links a.social-icon,
+a.social-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+/* FORCE FOOTER H4 CSS */
+#snap-footer h4,
+.snap-footer h4,
+.footer-social h4 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin: 0 0 1rem 0 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
