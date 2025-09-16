@@ -2600,6 +2600,14 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
+  /* TEST if CSS loads in mobile footer */
+  .test-mobile-css {
+    background: red !important;
+    color: yellow !important;
+    font-size: 20px !important;
+    padding: 10px !important;
+  }
+  
   /* Fix mobile footer social icons - higher specificity than user agent */
   .footer-social-links .social-icon {
     display: inline-flex !important;
