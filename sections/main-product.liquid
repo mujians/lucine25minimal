@@ -674,32 +674,45 @@
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(startButtonRecreation, 3000); // Start after 3 seconds
       
-      // NEW: Optimize Evey loading experience
+      // NEW: Optimize Evey loading experience  
       function showEveyWhenReady() {
-        const eveyElements = document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [id*="evey"], [data-evey]');
         let checkCount = 0;
-        const maxChecks = 50; // 10 secondi massimo
+        const maxChecks = 25; // 5 secondi massimo
         
         const checkEveyReady = setInterval(() => {
           checkCount++;
           
-          // Trova elementi Evey
+          // Trova elementi Evey - controlla anche se sono nascosti
+          const eveyElements = document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [id*="evey"], [data-evey]');
           const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
           const eveyVariants = document.querySelectorAll('[class*="evey__variant"]');
+          const eveyContainer = document.querySelector('.evey-scheduler-container');
           
-          // Controlla se Evey è caricato e tradotto in italiano
-          const isReady = eveyButton && 
-            (eveyButton.textContent.includes('SELEZIONA') || eveyButton.textContent.includes('Seleziona')) &&
-            !eveyButton.textContent.includes('Choose') && 
-            !eveyButton.textContent.includes('Select') &&
-            eveyVariants.length > 0;
+          console.log(`Check ${checkCount}: Button=${!!eveyButton}, Variants=${eveyVariants.length}, Container=${!!eveyContainer}`);
+          if (eveyButton) console.log(`Button text: "${eveyButton.textContent}"`);
           
-          if (isReady || checkCount >= maxChecks) {
+          // Condizioni più flessibili per il rilevamento
+          const hasEveyElements = eveyElements.length > 0;
+          const hasButton = eveyButton !== null;
+          const hasVariants = eveyVariants.length > 0;
+          
+          // Se abbiamo elementi Evey, mostrali (anche se non perfettamente tradotti)
+          const shouldShow = hasEveyElements && (hasButton || hasVariants || checkCount >= 10);
+          
+          if (shouldShow || checkCount >= maxChecks) {
             clearInterval(checkEveyReady);
+            
+            console.log('Showing Evey elements:', {
+              reason: shouldShow ? 'Elements found' : 'Timeout',
+              elements: eveyElements.length,
+              hasButton,
+              hasVariants
+            });
             
             // Mostra tutti gli elementi Evey
             eveyElements.forEach(el => {
               el.classList.add('loaded');
+              el.style.opacity = '1'; // Force show
             });
             
             // Nascondi skeleton se presente
@@ -708,7 +721,20 @@
               skeleton.remove();
             }
             
-            console.log('Evey loaded and ready:', isReady ? 'Yes' : 'Timeout');
+            // Se non ci sono elementi Evey dopo il timeout, rimuovi l'occultamento globale
+            if (!hasEveyElements && checkCount >= maxChecks) {
+              console.log('No Evey elements found, removing global hide');
+              const style = document.createElement('style');
+              style.innerHTML = `
+                .evey-scheduler-container,
+                [class*="evey__"],
+                [id*="evey"],
+                [data-evey] {
+                  opacity: 1 !important;
+                }
+              `;
+              document.head.appendChild(style);
+            }
           }
         }, 200);
       }
@@ -729,6 +755,24 @@
         addEveySkeletonLoader();
         showEveyWhenReady();
       }, 100);
+      
+      // FALLBACK DI SICUREZZA: rimuovi occultamento dopo 3 secondi comunque
+      setTimeout(() => {
+        const hiddenElements = document.querySelectorAll('.evey-scheduler-container:not(.loaded), [class*="evey__"]:not(.loaded), [id*="evey"]:not(.loaded), [data-evey]:not(.loaded)');
+        if (hiddenElements.length > 0) {
+          console.log('Safety fallback: forcing show of', hiddenElements.length, 'Evey elements');
+          hiddenElements.forEach(el => {
+            el.classList.add('loaded');
+            el.style.opacity = '1';
+          });
+        }
+        
+        // Rimuovi skeleton se ancora presente
+        const skeleton = document.querySelector('.evey-skeleton');
+        if (skeleton) {
+          skeleton.remove();
+        }
+      }, 3000);
     });
   </script>
   
