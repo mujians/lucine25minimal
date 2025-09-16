@@ -2600,7 +2600,19 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* Force social icon styling in mobile footer with highest specificity */
+  /* EMERGENCY FIX - Force social icon styling with nuclear specificity */
+  .social-icon[aria-label="TikTok"] {
+    background: red !important;
+    color: yellow !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+  }
+  
   #snap-footer .footer-social-links a.social-icon {
     display: inline-flex !important;
     align-items: center !important;
