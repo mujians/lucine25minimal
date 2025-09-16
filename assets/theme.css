@@ -2600,14 +2600,9 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* Fix social icons in footer - no underline and correct colors */
-  .footer-social-links .social-icon {
+  /* Social icons should never have underline */
+  .social-icon {
     text-decoration: none !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-  }
-  
-  .footer-social-links .social-icon:hover {
-    color: white !important;
   }
   
   /* Better spacing for footer sections on mobile */
