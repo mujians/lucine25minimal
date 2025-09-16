@@ -21,9 +21,11 @@
       <nav class="footer-menu">
         {% assign main_menu = linklists['menu-principale'] %}
         {% for link in main_menu.links %}
-          <a href="{{ link.url }}" class="footer-link-main" target="_self">
-            {{ link.title | upcase }}
-          </a>
+          {% unless link.title contains 'Eventi' %}
+            <a href="{{ link.url }}" class="footer-link-main" target="_self">
+              {{ link.title | upcase }}
+            </a>
+          {% endunless %}
         {% endfor %}
       </nav>
     </div>
