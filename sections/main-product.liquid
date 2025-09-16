@@ -1624,8 +1624,27 @@
 
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
 
-  <div class="container">
-  <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
+<!-- Desktop wrapper con sidebar -->
+<div class="navigation-container top" data-tabs-section>
+  <!-- Mobile Burger Menu -->
+  <div class="mobile-header">
+    <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Include sidebar navigation -->
+  {% assign current_page_title = product.title %}
+  {% render 'sidebar-navigation' %}
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="content show">
+      <div class="formatted-content">
+        <div class="container">
+        <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper{% if section.settings.media_position == 'right' %} medium-hide large-up-hide{% endif %}">
       {% if product.media.size > 0 %}
         <!-- Media gallery removed - hidden on mobile, not needed -->
@@ -2900,8 +2919,14 @@
       </div>
       {% endif %}
       
+        </div>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- Include snap footer -->
+{% render 'footer-snap' %}
   
   <style>
     .trust-badge-google:hover {
