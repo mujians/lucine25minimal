@@ -104,6 +104,15 @@
     {% if request.page_type == 'product' %}
       <!-- Product Page with Sidebar -->
       <div class="navigation-container top" data-tabs-section>
+          <!-- Mobile Burger Menu -->
+          <div class="mobile-header">
+            <button class="burger-menu" onclick="toggleMobileFooter()" aria-label="Apri menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+          
           <!-- Mobile Menu (hidden on desktop) -->
           <div class="mobile-menu" style="display: none;">
             <div class="menu-tabs">
