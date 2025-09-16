@@ -2600,6 +2600,27 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
+  /* Fix social icons in footer - no underline and correct colors */
+  .footer-social-links .social-icon {
+    text-decoration: none !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+  
+  .footer-social-links .social-icon:hover {
+    color: white !important;
+  }
+  
+  /* Better spacing for footer sections on mobile */
+  @media (max-width: 1023px) {
+    .footer-social {
+      padding-bottom: 2rem;
+    }
+    
+    .footer-comune {
+      margin-top: 2rem;
+    }
+  }
+  
   /* Comune Logo */
   .comune-logo {
     max-width: 120px !important;
@@ -2959,9 +2980,10 @@ a.cta[href*="maps"]:after {
   /* Legal info styled */
   .footer-legal {
     text-align: center;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
     /* Removed background - should use main green background only */
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
   }
   
   .legal-line {
