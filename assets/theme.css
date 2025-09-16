@@ -1155,7 +1155,7 @@ body.footer-expanded {
   opacity: 0.7;
 }
 
-.footer-legal .legal-link {
+.footer-legal a {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -1164,7 +1164,7 @@ body.footer-expanded {
   transition: color 0.3s ease;
 }
 
-.footer-legal .legal-link:hover {
+.footer-legal a:hover {
   color: var(--christmas-green);
 }
 
@@ -2600,44 +2600,6 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* FORCE social icons styling - nuclear approach */
-  a.social-icon {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-    background: red !important;
-    color: yellow !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-  }
-  
-  a.social-icon:hover {
-    background: var(--christmas-gold) !important;
-    color: white !important;
-    transform: translateY(-2px) !important;
-  }
-  
-  
-  /* Fix footer social title font size */
-  .footer-social h4 {
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-  }
-  
-  /* Better spacing for footer sections on mobile */
-  @media (max-width: 1023px) {
-    .footer-social {
-      padding-bottom: 2rem;
-    }
-    
-    .footer-comune {
-      margin-top: 2rem;
-    }
-  }
-  
   /* Comune Logo */
   .comune-logo {
     max-width: 120px !important;
@@ -2997,10 +2959,9 @@ a.cta[href*="maps"]:after {
   /* Legal info styled */
   .footer-legal {
     text-align: center;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    padding: 1.5rem;
     /* Removed background - should use main green background only */
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 2rem;
   }
   
   .legal-line {
