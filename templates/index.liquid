@@ -743,15 +743,26 @@ function desktopCarouselPrev() {
   }
 }
 
-// Initialize carousel position
+// Initialize carousel position with verification
 document.addEventListener('DOMContentLoaded', function() {
-  updateDesktopCarousel(true);
+  const track = document.querySelector('.carousel-track');
+  if (track) {
+    console.log('🎠 Desktop carousel initialized');
+    updateDesktopCarousel(true);
+  } else {
+    console.warn('⚠️ Desktop carousel track not found');
+  }
 });
 
-// Auto-advance carousel
-setInterval(() => {
-  if (window.innerWidth >= 1024) {
-    desktopCarouselNext();
+// Auto-advance carousel with error handling
+let desktopAutoInterval = setInterval(() => {
+  try {
+    if (window.innerWidth >= 1024 && !isTransitioning) {
+      console.log('🎠 Desktop auto-scroll triggered');
+      desktopCarouselNext();
+    }
+  } catch (error) {
+    console.error('❌ Desktop auto-scroll error:', error);
   }
 }, 5000);
 
@@ -769,10 +780,15 @@ document.addEventListener('DOMContentLoaded', function() {
   let isTouch = false;
   let autoSlideInterval;
   
-  // Auto-slide functionality
+  // Auto-slide functionality with error handling
   function startAutoSlide() {
     autoSlideInterval = setInterval(() => {
-      nextSlide();
+      try {
+        console.log('📱 Mobile auto-scroll triggered');
+        nextSlide();
+      } catch (error) {
+        console.error('❌ Mobile auto-scroll error:', error);
+      }
     }, 4000); // Change slide every 4 seconds
   }
   
@@ -865,13 +881,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check for style conflicts
   const activeSlide = document.querySelector('.features-slide.active');
   if (activeSlide) {
-    const cardStyles = window.getComputedStyle(activeSlide.querySelector('.feature-card'));
-    console.log('🎨 Card styles:', {
-      background: cardStyles.background,
-      color: cardStyles.color,
-      border: cardStyles.border,
-      zIndex: cardStyles.zIndex
-    });
+    const card = activeSlide.querySelector('.sketch-card');
+    if (card) {
+      const cardStyles = window.getComputedStyle(card);
+      console.log('🎨 Card styles:', {
+        background: cardStyles.background,
+        color: cardStyles.color,
+        border: cardStyles.border,
+        zIndex: cardStyles.zIndex
+      });
+    }
   }
   
   // Check button styles
