@@ -2600,9 +2600,24 @@ a.cta[href*="maps"]:after {
     transform: translateY(-2px);
   }
   
-  /* Social icons should never have underline */
-  .social-icon {
+  /* Force social icon styling in footer mobile */
+  .footer-social-links .social-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
     text-decoration: none !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .footer-social-links .social-icon:hover {
+    background: var(--christmas-gold) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
   }
   
   /* Better spacing for footer sections on mobile */
