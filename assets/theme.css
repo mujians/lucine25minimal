@@ -2608,8 +2608,8 @@ a.cta[href*="maps"]:after {
     width: 36px !important;
     height: 36px !important;
     border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
+    background: red !important;
+    color: yellow !important;
     text-decoration: none !important;
     transition: all 0.3s ease !important;
   }
