@@ -964,9 +964,9 @@ ul li::before {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #0f2f1f;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(15, 47, 31, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem 0;
   transform: translateY(100%);
@@ -977,22 +977,20 @@ ul li::before {
   opacity: 0;
 }
 
-.snap-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='mobileGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23mobileGrain)'/%3E%3C/svg%3E");
-}
-
-/* Ensure footer content is above texture */
+/* Footer content with proper z-index layering */
 .footer-container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.footer-legal {
+  position: relative;
+  z-index: 2;
+}
+
+.footer-comune {
+  position: relative;
+  z-index: 2;
 }
 
 /* Footer visible state - slides up from bottom */
