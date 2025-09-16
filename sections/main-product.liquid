@@ -674,41 +674,67 @@
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(startButtonRecreation, 3000); // Start after 3 seconds
       
-      // Smart Evey language detection
-      function waitForItalianEvey() {
-        const observer = new MutationObserver(() => {
+      // Smart Evey detection with fallback
+      function waitForEvey() {
+        let checkCount = 0;
+        const maxChecks = 20; // 4 secondi
+        
+        const checkForEvey = setInterval(() => {
+          checkCount++;
+          
+          // Cerca qualsiasi elemento Evey
+          const eveyElements = document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger], [class*="evey-"]');
           const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
-          if (eveyButton && eveyButton.textContent) {
+          const anyEveyButton = document.querySelector('button[class*="evey"], button[id*="evey"]');
+          
+          let shouldShow = false;
+          
+          if (eveyButton) {
             const text = eveyButton.textContent.toLowerCase();
-            const isItalian = text.includes('seleziona') || text.includes('scegli');
-            const isEnglish = text.includes('choose') || text.includes('select');
-            
-            if (isItalian && !isEnglish) {
-              // Evey è in italiano! Mostra tutto
-              document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger]').forEach(el => {
-                el.classList.add('evey-ready');
-              });
-              observer.disconnect();
+            // Se c'è testo italiano, mostra subito
+            if (text.includes('seleziona') || text.includes('scegli')) {
+              shouldShow = true;
             }
+            // Se dopo 2 secondi c'è un button, mostra comunque
+            else if (checkCount >= 10) {
+              shouldShow = true;
+            }
+          } 
+          // Se ci sono elementi Evey ma nessun button, mostra dopo 2 sec
+          else if (eveyElements.length > 0 && checkCount >= 10) {
+            shouldShow = true;
           }
-        });
-        
-        observer.observe(document.body, { 
-          childList: true, 
-          subtree: true,
-          characterData: true 
-        });
-        
-        // Fallback dopo 4 secondi
-        setTimeout(() => {
-          document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger]').forEach(el => {
-            el.classList.add('evey-ready');
-          });
-          observer.disconnect();
-        }, 4000);
+          // Se dopo 4 secondi non c'è niente, mostra tutto comunque
+          else if (checkCount >= maxChecks) {
+            shouldShow = true;
+          }
+          
+          if (shouldShow) {
+            // Mostra tutti gli elementi
+            document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger], [class*="evey-"]').forEach(el => {
+              el.classList.add('evey-ready');
+            });
+            
+            // Se non abbiamo trovato nulla, rimuovi l'occultamento globale
+            if (eveyElements.length === 0 && !eveyButton) {
+              const style = document.createElement('style');
+              style.innerHTML = `
+                .evey-scheduler-container,
+                [class*="evey__"],
+                [data-evey-trigger],
+                [class*="evey-"] {
+                  opacity: 1 !important;
+                }
+              `;
+              document.head.appendChild(style);
+            }
+            
+            clearInterval(checkForEvey);
+          }
+        }, 200);
       }
       
-      waitForItalianEvey();
+      waitForEvey();
     });
   </script>
   
