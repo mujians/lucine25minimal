@@ -414,7 +414,7 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   position: relative;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   margin-bottom: 1.5rem;
   max-width: 100%;
 }
@@ -423,19 +423,21 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   overflow: hidden;
   flex: 1;
   position: relative;
+  min-width: 0; /* Allow flexbox to shrink */
 }
 
 .carousel-track {
   display: flex;
-  gap: 1.5rem;
-  padding: 10px;
+  gap: 1rem;
   transition: transform 0.5s ease;
-  transform: translateX(calc(-100% / 4 * 4)); /* Start at real first slide, not clones */
+  align-items: stretch;
 }
 
 .carousel-slide {
-  flex: 0 0 calc(25% - 1.125rem);
-  transition: none; /* Remove individual slide transitions */
+  flex: none; /* No flex growth/shrink */
+  width: calc(25% - 0.75rem); /* 25% minus shared gap space */
+  min-width: 200px; /* Minimum card width */
+  transition: none;
 }
 
 .carousel-slide .sketch-card {
@@ -680,18 +682,30 @@ let isTransitioning = false;
 
 function updateDesktopCarousel(instant = false) {
   const track = document.querySelector('.carousel-track');
+  const wrapper = document.querySelector('.carousel-track-wrapper');
+  const slides = document.querySelectorAll('.carousel-slide');
   
-  if (!track) return;
+  if (!track || !wrapper || slides.length === 0) return;
   
   // Temporarily disable transition for instant repositioning
   if (instant) {
     track.style.transition = 'none';
   }
   
-  // Move the entire track
-  const slideWidth = 100 / slidesPerView;
-  const offset = -desktopCarouselIndex * slideWidth;
-  track.style.transform = `translateX(${offset}%)`;
+  // Calculate available space and adjust slide width
+  const wrapperWidth = wrapper.offsetWidth;
+  const gap = 16; // 1rem = 16px
+  const slideWidth = (wrapperWidth - (gap * 3)) / 4; // 4 slides, 3 gaps
+  
+  // Update slide widths to fit exactly
+  slides.forEach(slide => {
+    slide.style.width = `${slideWidth}px`;
+  });
+  
+  // Calculate movement based on current slide width
+  const moveDistance = slideWidth + gap;
+  const offset = -desktopCarouselIndex * moveDistance;
+  track.style.transform = `translateX(${offset}px)`;
   
   // Re-enable transition after instant move
   if (instant) {
@@ -745,7 +759,21 @@ function desktopCarouselPrev() {
 
 // Initialize carousel position
 document.addEventListener('DOMContentLoaded', function() {
-  updateDesktopCarousel(true);
+  // Wait for layout to be calculated
+  setTimeout(() => {
+    updateDesktopCarousel(true);
+  }, 100);
+});
+
+// Handle window resize
+let resizeTimeout;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (window.innerWidth >= 1024) {
+      updateDesktopCarousel(true);
+    }
+  }, 250);
 });
 
 // Auto-advance carousel
