@@ -673,21 +673,80 @@
     // Start monitoring
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(startButtonRecreation, 3000); // Start after 3 seconds
+      
+      // Smart Evey language detection
+      function waitForItalianEvey() {
+        const observer = new MutationObserver(() => {
+          const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
+          if (eveyButton && eveyButton.textContent) {
+            const text = eveyButton.textContent.toLowerCase();
+            const isItalian = text.includes('seleziona') || text.includes('scegli');
+            const isEnglish = text.includes('choose') || text.includes('select');
+            
+            if (isItalian && !isEnglish) {
+              // Evey è in italiano! Mostra tutto
+              document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger]').forEach(el => {
+                el.classList.add('evey-ready');
+              });
+              observer.disconnect();
+            }
+          }
+        });
+        
+        observer.observe(document.body, { 
+          childList: true, 
+          subtree: true,
+          characterData: true 
+        });
+        
+        // Fallback dopo 4 secondi
+        setTimeout(() => {
+          document.querySelectorAll('.evey-scheduler-container, [class*="evey__"], [data-evey-trigger]').forEach(el => {
+            el.classList.add('evey-ready');
+          });
+          observer.disconnect();
+        }, 4000);
+      }
+      
+      waitForItalianEvey();
     });
   </script>
   
   <style>
-    /* Simple solution: Hide Evey for 2 seconds then show */
+    /* Hide Evey until Italian text is ready */
     .evey-scheduler-container,
     [class*="evey__"],
     [data-evey-trigger] {
-      visibility: hidden;
-      animation: showEvey 0.3s ease forwards;
-      animation-delay: 2s;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
     
-    @keyframes showEvey {
-      to { visibility: visible; }
+    .evey-scheduler-container.evey-ready,
+    [class*="evey__"].evey-ready,
+    [data-evey-trigger].evey-ready {
+      opacity: 1;
+    }
+    
+    /* Preloader per Evey */
+    .evey-scheduler-container:not(.evey-ready)::before {
+      content: "Caricamento biglietti...";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #666;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
     
     /* Minimal fix for Evey button visibility */
