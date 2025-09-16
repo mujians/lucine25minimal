@@ -1155,7 +1155,7 @@ body.footer-expanded {
   opacity: 0.7;
 }
 
-.footer-legal a {
+.footer-legal .legal-link {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -1164,7 +1164,7 @@ body.footer-expanded {
   transition: color 0.3s ease;
 }
 
-.footer-legal a:hover {
+.footer-legal .legal-link:hover {
   color: var(--christmas-green);
 }
 
