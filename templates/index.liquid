@@ -459,7 +459,9 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
   z-index: 1;
 }
 
-.desktop-features-carousel .sketch-card > *:not(.sketch-border):not(::before) {
+.desktop-features-carousel .feature-icon,
+.desktop-features-carousel .sketch-card h4,
+.desktop-features-carousel .sketch-card p {
   position: relative;
   z-index: 2;
 }
@@ -592,7 +594,9 @@ console.log('{{ forloop.index }}. {{ link.title }} - URL: {{ link.url }}');
 
 
 /* Content above background */
-.mobile-features-slideshow .sketch-card > *:not(.sketch-border):not(::before) {
+.mobile-features-slideshow .feature-icon,
+.mobile-features-slideshow .sketch-card h4,
+.mobile-features-slideshow .sketch-card p {
   position: relative;
   z-index: 2;
 }
