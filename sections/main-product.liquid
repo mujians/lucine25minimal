@@ -677,6 +677,19 @@
   </script>
   
   <style>
+    /* Simple solution: Hide Evey for 2 seconds then show */
+    .evey-scheduler-container,
+    [class*="evey__"],
+    [data-evey-trigger] {
+      visibility: hidden;
+      animation: showEvey 0.3s ease forwards;
+      animation-delay: 2s;
+    }
+    
+    @keyframes showEvey {
+      to { visibility: visible; }
+    }
+    
     /* Minimal fix for Evey button visibility */
     @media (max-width: 1023px) {
       /* Fix the blocking mobile-product-original element */
