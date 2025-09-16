@@ -697,11 +697,9 @@
         
         // Cerca tutti i button e vedi i loro testi
         const allButtons = Array.from(document.querySelectorAll('button'));
-        console.log('🔍 All buttons:', allButtons.map(b => ({
-          text: b.textContent.trim(),
-          classes: b.className,
-          attributes: Array.from(b.attributes).map(a => `${a.name}="${a.value}"`).join(' ')
-        })));
+        console.log('🔍 All buttons:', allButtons.map(b => 
+          `Text:"${b.textContent.trim()}" Classes:"${b.className}" Attrs:"${Array.from(b.attributes).map(a => a.name + '=' + a.value).join(' ')}"`
+        ));
       }, 500);
       
       // MUTATION OBSERVER per vedere cosa si aggiunge al DOM
@@ -717,22 +715,16 @@
                                element.querySelector && element.querySelector('[class*="evey"], [id*="evey"]');
                 
                 if (hasEvey) {
-                  console.log('🆕 NEW EVEY ELEMENT ADDED:', {
-                    element: element,
-                    tagName: element.tagName,
-                    className: element.className,
-                    id: element.id,
-                    innerHTML: element.innerHTML.substring(0, 200) + '...'
-                  });
+                  console.log('🆕 NEW EVEY ELEMENT ADDED:', 
+                    `Tag:${element.tagName} Class:"${element.className}" ID:"${element.id}" HTML:"${element.innerHTML.substring(0, 100)}..."`
+                  );
                 }
                 
                 // Log anche se è un button
                 if (element.tagName === 'BUTTON') {
-                  console.log('🆕 NEW BUTTON ADDED:', {
-                    text: element.textContent,
-                    classes: element.className,
-                    attributes: Array.from(element.attributes).map(a => `${a.name}="${a.value}"`).join(' ')
-                  });
+                  console.log('🆕 NEW BUTTON ADDED:', 
+                    `Text:"${element.textContent}" Classes:"${element.className}" Attrs:"${Array.from(element.attributes).map(a => a.name + '=' + a.value).join(' ')}"`
+                  );
                 }
               }
             });
@@ -740,12 +732,9 @@
           
           // Log anche cambi di attributi
           if (mutation.type === 'attributes' && mutation.target.tagName === 'BUTTON') {
-            console.log('🔄 BUTTON ATTRIBUTE CHANGED:', {
-              element: mutation.target,
-              attribute: mutation.attributeName,
-              oldValue: mutation.oldValue,
-              newValue: mutation.target.getAttribute(mutation.attributeName)
-            });
+            console.log('🔄 BUTTON ATTRIBUTE CHANGED:', 
+              `Attr:${mutation.attributeName} Old:"${mutation.oldValue}" New:"${mutation.target.getAttribute(mutation.attributeName)}"`
+            );
           }
         });
       });
@@ -802,12 +791,7 @@
           const hasButton = eveyButton !== null;
           const hasVariants = eveyVariants.length > 0;
           
-          console.log('✅ Status:', {
-            eveyElements: hasEveyElements,
-            button: hasButton,
-            variants: hasVariants,
-            buttonText: eveyButton?.textContent || 'N/A'
-          });
+          console.log('✅ Status:', `Elements:${hasEveyElements} Button:${hasButton} Variants:${hasVariants} Text:"${eveyButton?.textContent || 'N/A'}"`);
           
           // Se abbiamo elementi Evey, mostrali (anche se non perfettamente tradotti)
           const shouldShow = hasEveyElements && (hasButton || hasVariants || checkCount >= 10);
@@ -815,12 +799,7 @@
           if (shouldShow || checkCount >= maxChecks) {
             clearInterval(checkEveyReady);
             
-            console.log('Showing Evey elements:', {
-              reason: shouldShow ? 'Elements found' : 'Timeout',
-              elements: eveyElements.length,
-              hasButton,
-              hasVariants
-            });
+            console.log('Showing Evey elements:', `Reason:${shouldShow ? 'Elements found' : 'Timeout'} Count:${eveyElements.length} Button:${hasButton} Variants:${hasVariants}`);
             
             // Mostra tutti gli elementi Evey
             eveyElements.forEach(el => {
