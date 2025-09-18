@@ -3239,10 +3239,12 @@ a.social-icon {
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* FIX EVEY CALENDAR MONTH NAME VISIBILITY */
+/* FIX EVEY CALENDAR MONTH NAME VISIBILITY - FORCE OVERRIDE */
 .monthAndYear.content,
 .card-header .monthAndYear.content,
-.evey-calendar .monthAndYear.content {
+.evey-calendar .monthAndYear.content,
+div.monthAndYear.content,
+[class*="evey"] .monthAndYear.content {
   color: #000 !important;
   font-size: 1.2rem !important;
   font-weight: 600 !important;
@@ -3250,6 +3252,15 @@ a.social-icon {
   visibility: visible !important;
   opacity: 1 !important;
   text-align: center !important;
+  transform: translateY(0) !important;
+}
+
+/* Override .content class issues in Evey context */
+.card-header .content,
+[class*="evey"] .content.monthAndYear {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
 }
 
 /* Ensure calendar header is visible */
