@@ -332,10 +332,10 @@ main, #MainContent {
 /* MIDDLE POSITION */
 /* Middle content rimosso - solo top position */
 
-/* Animazione per quando il content appare/scompare */
+/* Animazione per quando il content appare/scompare 
 .content {
   transform: translateY(50px);
-}
+}*/
 
 .content.show {
   transform: translateY(0);
