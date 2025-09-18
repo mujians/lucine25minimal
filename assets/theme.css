@@ -3238,3 +3238,26 @@ a.social-icon {
   margin: 0 0 1rem 0 !important;
   color: rgba(255, 255, 255, 0.9) !important;
 }
+
+/* FIX EVEY CALENDAR MONTH NAME VISIBILITY */
+.monthAndYear.content,
+.card-header .monthAndYear.content,
+.evey-calendar .monthAndYear.content {
+  color: #000 !important;
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+/* Ensure calendar header is visible */
+.card-header {
+  background: #fff !important;
+  color: #000 !important;
+  padding: 0.5rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
