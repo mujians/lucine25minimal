@@ -3239,12 +3239,13 @@ a.social-icon {
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* FIX EVEY CALENDAR MONTH NAME VISIBILITY - FORCE OVERRIDE */
-.monthAndYear.content,
+/* FIX EVEY CALENDAR - ULTIMATE SPECIFICITY OVERRIDE */
+.evey-modal .evey-calendar-container .card-header .monthAndYear.content,
+.evey-calendar-container .card-header .monthAndYear.content,
+.evey-calendar-container .monthAndYear.content,
 .card-header .monthAndYear.content,
-.evey-calendar .monthAndYear.content,
 div.monthAndYear.content,
-[class*="evey"] .monthAndYear.content {
+.monthAndYear.content {
   color: #000 !important;
   font-size: 1.2rem !important;
   font-weight: 600 !important;
@@ -3252,15 +3253,27 @@ div.monthAndYear.content,
   visibility: visible !important;
   opacity: 1 !important;
   text-align: center !important;
-  transform: translateY(0) !important;
+  /* Keep original transform for positioning */
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Override .content class issues in Evey context */
-.card-header .content,
-[class*="evey"] .content.monthAndYear {
+/* NUCLEAR OVERRIDE - Target ALL .content in Evey calendar context */
+.evey-modal .content,
+.evey-calendar-container .content,
+.evey-calendar-container .card-header .content,
+.evey-modal .evey-calendar-container .content {
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translateY(0) !important;
+  /* Keep original transform */
+}
+
+/* Specific fix for the exact selector path */
+.evey-modal .evey-calendar-container .inner-container .card .card-header .monthAndYear.content {
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Keep original transform */
+  color: #000 !important;
 }
 
 /* Ensure calendar header is visible */
