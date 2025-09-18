@@ -311,7 +311,10 @@ main, #MainContent {
 }
 
 /* CONTENT - No internal scroll, natural page flow */
-.content {
+/* Apply only to navigation content, not Evey */
+.navigation-container .content,
+.content-wrapper .content,
+.content:not(.monthAndYear) {
   display: block;
   color: white;
   padding: 20px;
@@ -320,6 +323,15 @@ main, #MainContent {
   transform: translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   visibility: hidden;
+}
+
+/* Ensure Evey calendar content is always visible */
+.evey-modal .content,
+.evey-calendar-container .content,
+.card-header .content,
+.monthAndYear.content {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .content.show {
