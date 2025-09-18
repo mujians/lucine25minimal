@@ -311,10 +311,7 @@ main, #MainContent {
 }
 
 /* CONTENT - No internal scroll, natural page flow */
-/* Apply only to navigation content, not Evey */
-.navigation-container .content,
-.content-wrapper .content,
-.content:not(.monthAndYear) {
+/*.content {
   display: block;
   color: white;
   padding: 20px;
@@ -323,16 +320,7 @@ main, #MainContent {
   transform: translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   visibility: hidden;
-}
-
-/* Ensure Evey calendar content is always visible */
-.evey-modal .content,
-.evey-calendar-container .content,
-.card-header .content,
-.monthAndYear.content {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
+}*/
 
 .content.show {
   background: transparent;
@@ -3249,51 +3237,4 @@ a.social-icon {
   text-align: center !important;
   margin: 0 0 1rem 0 !important;
   color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* FIX EVEY CALENDAR - ULTIMATE SPECIFICITY OVERRIDE */
-.evey-modal .evey-calendar-container .card-header .monthAndYear.content,
-.evey-calendar-container .card-header .monthAndYear.content,
-.evey-calendar-container .monthAndYear.content,
-.card-header .monthAndYear.content,
-div.monthAndYear.content,
-.monthAndYear.content {
-  color: #000 !important;
-  font-size: 1.2rem !important;
-  font-weight: 600 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  text-align: center !important;
-  /* Keep original transform for positioning */
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* NUCLEAR OVERRIDE - Target ALL .content in Evey calendar context */
-.evey-modal .content,
-.evey-calendar-container .content,
-.evey-calendar-container .card-header .content,
-.evey-modal .evey-calendar-container .content {
-  opacity: 1 !important;
-  visibility: visible !important;
-  /* Keep original transform */
-}
-
-/* Specific fix for the exact selector path */
-.evey-modal .evey-calendar-container .inner-container .card .card-header .monthAndYear.content {
-  opacity: 1 !important;
-  visibility: visible !important;
-  /* Keep original transform */
-  color: #000 !important;
-}
-
-/* Ensure calendar header is visible */
-.card-header {
-  background: #fff !important;
-  color: #000 !important;
-  padding: 0.5rem 1rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
 }
