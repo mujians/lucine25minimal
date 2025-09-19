@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { addWhatsAppUser, findUserBySession } from '../utils/whatsapp-storage.js';
 
 // Rate limiting semplice (in memoria)
 const rateLimitMap = new Map();
@@ -88,6 +89,63 @@ export default async function handler(req, res) {
 
     let reply = resp?.choices?.[0]?.message?.content?.trim();
     
+    // Gestione raccolta numero WhatsApp
+    if (reply.includes('WHATSAPP_REQUEST') || message.toLowerCase().includes('whatsapp') || 
+        message.toLowerCase().includes('notifiche') || message.toLowerCase().includes('aggiornamenti')) {
+      
+      // Verifica se ha già fornito un numero
+      const phonePattern = /(\+39\s?)?(\d{3}\s?\d{3}\s?\d{4}|\d{10})/;
+      const phoneMatch = message.match(phonePattern);
+      
+      if (phoneMatch) {
+        // Numero fornito - salvalo e conferma
+        const phoneNumber = phoneMatch[0].replace(/\s/g, '');
+        const formattedPhone = phoneNumber.startsWith('+39') ? phoneNumber : '+39' + phoneNumber;
+        
+        // Salva nel database
+        const currentSessionId = sessionId || generateSessionId();
+        const saved = addWhatsAppUser(currentSessionId, formattedPhone, {
+          source: 'chatbot',
+          user_agent: req.headers['user-agent'],
+          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+        });
+        
+        if (saved) {
+          // Invia notifica di benvenuto WhatsApp
+          try {
+            await fetch(`${req.protocol}://${req.get('host')}/api/whatsapp`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'send_template',
+                to: formattedPhone,
+                templateName: 'welcome',
+                templateData: {
+                  name: 'Visitatore',
+                  event: 'Lucine di Natale Leggiuno'
+                }
+              })
+            });
+          } catch (error) {
+            console.error('❌ Errore invio benvenuto WhatsApp:', error);
+          }
+        }
+        
+        return res.status(200).json({
+          reply: `✅ Perfetto! Ho salvato il tuo numero WhatsApp: ${formattedPhone}\n\nRiceverai notifiche per:\n📱 Aggiornamenti biglietti\n🎫 Conferme prenotazione\n💬 Supporto diretto\n\n${saved ? '🟢 Sistema attivo' : '🟡 Salvato localmente'}\n\nPer disattivare scrivi "STOP WhatsApp"`,
+          sessionId: currentSessionId,
+          whatsapp_number: formattedPhone,
+          whatsapp_saved: saved
+        });
+      } else {
+        // Richiedi il numero
+        return res.status(200).json({
+          reply: `📱 **Attiva notifiche WhatsApp**\n\nPer ricevere aggiornamenti istantanei su biglietti e supporto, condividi il tuo numero WhatsApp:\n\n**Esempio:** +39 123 456 7890\n\n✨ Riceverai:\n🎫 Conferme prenotazione\n📱 Aggiornamenti evento\n💬 Supporto prioritario\n\n*Rispetta la privacy - solo notifiche essenziali*`,
+          sessionId: sessionId || generateSessionId()
+        });
+      }
+    }
+
     // Se OpenAI ha riconosciuto una richiesta di prenotazione
     if (reply.includes('BOOKING_REQUEST')) {
       const bookingRequest = parseBookingRequest(message);
@@ -112,6 +170,31 @@ export default async function handler(req, res) {
               
               if (cartResult.success && cartResult.action === 'cart_added') {
                 reply = `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}\n\n💡 Ricorda di selezionare l'orario preferito durante il checkout.`;
+                
+                // Invia notifica WhatsApp se utente registrato
+                const whatsappUser = findUserBySession(sessionId);
+                if (whatsappUser && whatsappUser.active) {
+                  try {
+                    await fetch(`${req.protocol}://${req.get('host')}/api/whatsapp`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        action: 'send_template',
+                        to: whatsappUser.phone_number,
+                        templateName: 'cart_added',
+                        templateData: {
+                          quantity: bookingRequest.quantity,
+                          ticketType: 'Intero',
+                          eventDate: targetDate.formatted,
+                          cartUrl: cartResult.cart_url
+                        }
+                      })
+                    });
+                    console.log('📱 WhatsApp notifica carrello inviata');
+                  } catch (error) {
+                    console.error('❌ Errore notifica WhatsApp carrello:', error);
+                  }
+                }
               }
             } catch (error) {
               console.error('❌ Fallback automatico:', error);
@@ -235,12 +318,14 @@ REGOLE IMPORTANTI:
 - Se qualcuno chiede di acquistare biglietti, fornisci sempre il link: ${ticketUrl}
 - Per date/orari specifici rimanda sempre al calendario sul sito di acquisto
 - PRENOTAZIONI SPECIFICHE: Se qualcuno vuole biglietti per date specifiche (es: "biglietti per il 23 dicembre"), rispondi con "BOOKING_REQUEST" seguito dalla data
+- WHATSAPP NOTIFICHE: Se qualcuno chiede notifiche, aggiornamenti o WhatsApp, rispondi con "WHATSAPP_REQUEST" per attivare la raccolta numero
 - Se la data richiesta è 24 o 31 dicembre, avvisa che il parco è CHIUSO in quelle date
 - LINKS: Quando fornisci link, usa sempre URLs complete senza testo aggiuntivo - il sistema li renderà automaticamente cliccabili e belli
 - Non dire "clicca qui" o "vai a" - lascia solo l'URL pulito che verrà convertito in button
 - Se non sai rispondere con certezza, di' che non hai informazioni specifiche
 - Per domande complesse suggerisci sempre il contatto email: ${kb.contact.email}
 - Per urgenze suggerisci WhatsApp: ${kb.contact.whatsapp}
+- Suggerisci sempre le notifiche WhatsApp per un'esperienza migliore
 - Sii sempre cortese e utile`;
 }
 
@@ -304,7 +389,7 @@ function generateSessionId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-async function tryCreateTicket(message, sessionId, req) {
+async function tryCreateTicket(message, sessionId, req, whatsappNumber = null) {
   try {
     // Timeout dopo 5 secondi per evitare timeout Vercel
     const controller = new AbortController();
@@ -316,10 +401,12 @@ async function tryCreateTicket(message, sessionId, req) {
       body: JSON.stringify({
         user_id: sessionId || generateSessionId(),
         user_email: 'utente@lucinedinatale.it', // Email generica, in produzione dovrebbe essere raccolta
-        user_phone: null,
+        user_phone: whatsappNumber,
+        whatsapp_number: whatsappNumber,
         question: message,
-        priority: 'medium',
-        source: 'chatbot_escalation'
+        priority: whatsappNumber ? 'high' : 'medium', // Priorità alta se ha WhatsApp
+        source: 'chatbot_escalation',
+        whatsapp_enabled: !!whatsappNumber
       }),
       signal: controller.signal
     });
