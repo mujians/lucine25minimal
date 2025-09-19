@@ -71,6 +71,56 @@ export default async function handler(req, res) {
       realtimeInfo = await getRealtimeTicketInfo();
     }
     
+    // Analizza se è una richiesta di prenotazione
+    const bookingRequest = parseBookingRequest(message);
+    
+    // Se è una richiesta di prenotazione specifica, gestiscila
+    if (bookingRequest.isBookingRequest && bookingRequest.dates.length > 0) {
+      
+      // Controlla date chiuse (24 e 31 dicembre)
+      const closedDates = ['2024-12-24', '2024-12-31'];
+      const invalidDates = bookingRequest.dates.filter(date => 
+        closedDates.includes(date.formatted)
+      );
+      
+      if (invalidDates.length > 0) {
+        const invalidDatesList = invalidDates.map(d => `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`).join(', ');
+        return res.status(200).json({
+          reply: `⚠️ Attenzione: Il parco è CHIUSO il ${invalidDatesList}.\n\nPer le altre date, usa il calendario di prenotazione:\n🎫 ${knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025'}\n\nPer assistenza specifica contatta:\n📧 ${knowledgeBase.contact.email}`,
+          sessionId: sessionId || generateSessionId()
+        });
+      }
+      
+      // Per richieste singole con data specifica, prova aggiunta automatica
+      if (bookingRequest.dates.length === 1 && bookingRequest.quantity && bookingRequest.quantity <= 4) {
+        const targetDate = bookingRequest.dates[0];
+        
+        try {
+          const cartResult = await addToCartDirect('intero', bookingRequest.quantity, targetDate.formatted);
+          
+          if (cartResult.success && cartResult.action === 'cart_added') {
+            return res.status(200).json({
+              reply: `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}\n\n💡 Ricorda di selezionare l'orario preferito durante il checkout.`,
+              sessionId: sessionId || generateSessionId(),
+              cart_url: cartResult.cart_url
+            });
+          }
+        } catch (error) {
+          console.error('❌ Fallback automatico:', error);
+        }
+      }
+      
+      // Fallback al metodo manuale per richieste complesse o fallimenti
+      const datesList = bookingRequest.dates.map(d => 
+        `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
+      ).join(' e ');
+      
+      return res.status(200).json({
+        reply: `🎫 Per prenotare ${bookingRequest.quantity || 'i biglietti'} per il ${datesList}, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025'}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello\n\n💡 Suggerimento: Il biglietto OPEN (€25) ti dà massima flessibilità senza vincoli di data/ora.`,
+        sessionId: sessionId || generateSessionId()
+      });
+    }
+
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     // Context dinamico basato su knowledge base + info real-time
@@ -390,6 +440,158 @@ function extractEveyCalendarInfo(html) {
     console.error('❌ Errore estrazione Evey:', error);
     return null;
   }
+}
+
+async function addToCartDirect(ticketType, quantity, eventDate, eventTime = '18:00') {
+  try {
+    // Mappa tipi biglietti a variant IDs
+    const variantMap = {
+      'intero': '51699961233747',
+      'ridotto': '51700035944787', 
+      'saltafila': '51700063207763',
+      'open': '10082871050579'
+    };
+    
+    const variantId = variantMap[ticketType.toLowerCase()] || variantMap['intero'];
+    
+    // Genera event ID simulato (formato simile a Evey)
+    const eventId = `chatbot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Formatta data per display
+    const dateObj = new Date(eventDate);
+    const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                       'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+    const eventLabel = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()} - ${eventTime}`;
+    
+    // Prepara dati form per Shopify Cart API
+    const formData = new FormData();
+    formData.append('id', variantId);
+    formData.append('quantity', quantity.toString());
+    formData.append('properties[_event_id]', eventId);
+    formData.append('properties[Event]', eventLabel);
+    formData.append('properties[Source]', 'Chatbot Lucy');
+    
+    // Timeout di 5 secondi
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    const response = await fetch('https://lucinedinatale.it/cart/add.js', {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; LucyChatbot/1.0)'
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (response.ok) {
+      const result = await response.json();
+      return {
+        success: true,
+        action: 'cart_added',
+        cart_url: 'https://lucinedinatale.it/cart',
+        message: `✅ Aggiunto al carrello: ${quantity} bigliett${quantity > 1 ? 'i' : 'o'} ${ticketType} per ${eventLabel}`,
+        cart_data: result
+      };
+    } else {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error('❌ Errore aggiunta carrello diretta:', error);
+    
+    // Fallback al metodo originale
+    const baseUrl = 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025';
+    return {
+      success: false,
+      action: 'redirect_to_product',
+      url: baseUrl,
+      message: `⚠️ Aggiunta automatica fallita. Vai al link per prenotare manualmente ${quantity} bigliett${quantity > 1 ? 'i' : 'o'} ${ticketType} per ${eventDate}.`
+    };
+  }
+}
+
+async function addToCart(ticketType, quantity, eventDate = null) {
+  try {
+    // Per ora creiamo un link diretto che aprirà la pagina prodotto con parametri
+    const baseUrl = 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025';
+    
+    // Se abbiamo una data specifica, aggiungiamo parametri URL
+    let cartUrl = baseUrl;
+    if (eventDate) {
+      cartUrl += `?date=${eventDate}&type=${ticketType}&qty=${quantity}`;
+    }
+    
+    return {
+      success: true,
+      action: 'redirect_to_product',
+      url: cartUrl,
+      message: `Ti sto portando alla pagina di acquisto per ${quantity} bigliett${quantity > 1 ? 'i' : 'o'} ${ticketType}${eventDate ? ` per il ${eventDate}` : ''}.`
+    };
+    
+  } catch (error) {
+    console.error('❌ Errore aggiunta carrello:', error);
+    return {
+      success: false,
+      message: 'Errore durante aggiunta al carrello. Vai al link per acquistare manualmente.'
+    };
+  }
+}
+
+function parseBookingRequest(message) {
+  const lowerMessage = message.toLowerCase();
+  
+  // Pattern per riconoscere richieste di prenotazione
+  const bookingPatterns = [
+    /prenotare?\s+(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i,
+    /voglio\s+(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i,
+    /(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i
+  ];
+  
+  const datePattern = /(\d{1,2})\s+(dicembre|gennaio|febbraio)/gi;
+  const quantityPattern = /(\d+)\s+bigliett[oi]/i;
+  
+  const matches = {
+    isBookingRequest: false,
+    tickets: [],
+    dates: []
+  };
+  
+  // Cerca pattern di prenotazione
+  for (const pattern of bookingPatterns) {
+    const match = lowerMessage.match(pattern);
+    if (match) {
+      matches.isBookingRequest = true;
+      break;
+    }
+  }
+  
+  // Estrai quantità
+  const qtyMatch = lowerMessage.match(quantityPattern);
+  if (qtyMatch) {
+    matches.quantity = parseInt(qtyMatch[1]);
+  }
+  
+  // Estrai date
+  const dateMatches = [...lowerMessage.matchAll(datePattern)];
+  dateMatches.forEach(match => {
+    const day = parseInt(match[1]);
+    const month = match[2];
+    const monthMap = { 'dicembre': 12, 'gennaio': 1, 'febbraio': 2 };
+    const year = monthMap[month] === 12 ? 2024 : 2025;
+    
+    matches.dates.push({
+      day,
+      month: monthMap[month],
+      year,
+      formatted: `${year}-${String(monthMap[month]).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    });
+  });
+  
+  return matches;
 }
 
 function getDefaultKnowledgeBase() {
