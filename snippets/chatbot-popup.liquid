@@ -352,6 +352,78 @@
   background: var(--christmas-green);
   transform: translateY(-1px);
 }
+/* Chat Links */
+.chat-link {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 4px 2px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.chat-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-decoration: none;
+}
+
+.product-link {
+  background: linear-gradient(135deg, var(--christmas-red), #d32f2f);
+  color: white;
+  border-color: var(--christmas-red);
+}
+
+.product-link:hover {
+  background: linear-gradient(135deg, #d32f2f, var(--christmas-red));
+  color: white;
+  border-color: #d32f2f;
+}
+
+.cart-link {
+  background: linear-gradient(135deg, var(--christmas-gold), #f57c00);
+  color: var(--christmas-red);
+  border-color: var(--christmas-gold);
+}
+
+.cart-link:hover {
+  background: linear-gradient(135deg, #f57c00, var(--christmas-gold));
+  color: var(--christmas-red);
+  border-color: #f57c00;
+}
+
+.email-link {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border-color: #4CAF50;
+}
+
+.email-link:hover {
+  background: linear-gradient(135deg, #45a049, #4CAF50);
+  color: white;
+  border-color: #45a049;
+}
+
+.whatsapp-link {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  border-color: #25D366;
+}
+
+.whatsapp-link:hover {
+  background: linear-gradient(135deg, #128C7E, #25D366);
+  color: white;
+  border-color: #128C7E;
+}
+
+.chat-link:active {
+  transform: translateY(0);
+}
+
 </style>
 
 <!-- Chatbot Container -->
@@ -439,7 +511,7 @@ function initializeChatbot() {
   container.style.display = 'block';
 
   // Configurazione
-  const BACKEND_URL = 'https://chatbot-backend-768hrcsjz-brunos-projects-075c84f2.vercel.app/api/chat';
+  const BACKEND_URL = 'https://chatbot-backend-j1ttkh11s-brunos-projects-075c84f2.vercel.app/api/chat';
   let sessionId = generateSessionId();
   let isPopupOpen = false;
 
@@ -559,7 +631,45 @@ function initializeChatbot() {
     
     const bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'message-bubble';
-    bubbleDiv.innerHTML = escapeHtml(text).replace(/\n\n/g, '<br><br>');
+    
+    // Processa il testo per rendere i link cliccabili e belli
+    let processedText = escapeHtml(text);
+    
+    // Converte URL in link cliccabili con beauty text
+    processedText = processedText.replace(
+      /(https?:\/\/lucinedinatale\.it\/products\/[^\s]+)/g, 
+      '<a href="$1" target="_blank" class="chat-link product-link">🎫 Prenota biglietti</a>'
+    );
+    
+    // Altri link generici (carrello, etc)
+    processedText = processedText.replace(
+      /(https?:\/\/lucinedinatale\.it\/cart[^\s]*)/g, 
+      '<a href="$1" target="_blank" class="chat-link cart-link">🛒 Vai al carrello</a>'
+    );
+    
+    // Email links
+    processedText = processedText.replace(
+      /(info@lucinedinatale\.it)/g,
+      '<a href="mailto:$1" class="chat-link email-link">📧 $1</a>'
+    );
+    
+    // WhatsApp links
+    processedText = processedText.replace(
+      /(https?:\/\/wa\.me\/[^\s]+)/g,
+      '<a href="$1" target="_blank" class="chat-link whatsapp-link">📱 Contatta WhatsApp</a>'
+    );
+    
+    // Altri link generici
+    processedText = processedText.replace(
+      /(https?:\/\/[^\s]+)/g,
+      '<a href="$1" target="_blank" class="chat-link">🔗 Apri link</a>'
+    );
+    
+    // Converte line breaks
+    processedText = processedText.replace(/\n\n/g, '<br><br>');
+    processedText = processedText.replace(/\n/g, '<br>');
+    
+    bubbleDiv.innerHTML = processedText;
     
     messageDiv.appendChild(bubbleDiv);
     messagesContainer.appendChild(messageDiv);

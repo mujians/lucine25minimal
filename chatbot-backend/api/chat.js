@@ -236,6 +236,8 @@ REGOLE IMPORTANTI:
 - Per date/orari specifici rimanda sempre al calendario sul sito di acquisto
 - PRENOTAZIONI SPECIFICHE: Se qualcuno vuole biglietti per date specifiche (es: "biglietti per il 23 dicembre"), rispondi con "BOOKING_REQUEST" seguito dalla data
 - Se la data richiesta è 24 o 31 dicembre, avvisa che il parco è CHIUSO in quelle date
+- LINKS: Quando fornisci link, usa sempre URLs complete senza testo aggiuntivo - il sistema li renderà automaticamente cliccabili e belli
+- Non dire "clicca qui" o "vai a" - lascia solo l'URL pulito che verrà convertito in button
 - Se non sai rispondere con certezza, di' che non hai informazioni specifiche
 - Per domande complesse suggerisci sempre il contatto email: ${kb.contact.email}
 - Per urgenze suggerisci WhatsApp: ${kb.contact.whatsapp}
