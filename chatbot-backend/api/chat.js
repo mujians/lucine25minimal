@@ -218,14 +218,29 @@ export default async function handler(req, res) {
     
     // Controlla se la risposta è troppo generica o indica incertezza
     if (!reply || isLowConfidenceReply(reply)) {
-      // Prova escalation automatica al sistema ticket
-      const ticketResult = await tryCreateTicket(message, sessionId, req);
       
-      if (ticketResult.success) {
-        reply = `🎫 ${ticketResult.message}\n\nTicket ID: #${ticketResult.ticket_id}\n\n📧 Riceverai risposta via email entro 24h.`;
+      // Controlla se l'utente ha già confermato (messaggio contiene "sì" o "conferma")
+      const confirmationPattern = /(sì|si|conferma|contatta|operatore|help|aiuto)/i;
+      const isConfirming = confirmationPattern.test(message.toLowerCase());
+      
+      if (isConfirming && message.toLowerCase().includes('operatore')) {
+        // Utente ha confermato - crea ticket
+        const whatsappUser = findUserBySession(sessionId);
+        const ticketResult = await tryCreateTicket(message, sessionId, req, whatsappUser?.phone_number);
+        
+        if (ticketResult.success) {
+          reply = `✅ ${ticketResult.message}\n\nTicket ID: #${ticketResult.ticket_id}\n\n📧 Riceverai risposta via email entro 24h.${whatsappUser ? '\n📱 Ti contatteremo anche su WhatsApp!' : ''}`;
+        } else {
+          reply = `❌ Errore nella creazione del ticket. Contatta direttamente:\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`;
+        }
       } else {
-        // Fallback al comportamento originale
-        reply = formatEscapeResponse(knowledgeBase.escape_routes.no_answer);
+        // Prima richiesta - chiedi conferma
+        return res.status(200).json({
+          reply: `🤔 Non ho trovato una risposta precisa alla tua domanda.\n\n**Vuoi che contatti un operatore umano?**\n\nUn operatore potrà aiutarti con informazioni dettagliate e supporto personalizzato.\n\n✅ Rispondi **"Sì, contatta operatore"** per creare un ticket\n❌ Oppure prova:\n📧 Email: ${knowledgeBase.contact.email}\n📱 WhatsApp: ${knowledgeBase.contact.whatsapp}`,
+          sessionId: sessionId || generateSessionId(),
+          needsConfirmation: true,
+          confirmationType: 'ticket_creation'
+        });
       }
     }
 
@@ -238,12 +253,14 @@ export default async function handler(req, res) {
     console.log('IP:', req.headers['x-forwarded-for'] || 'unknown');
     console.log('================');
 
-    // Aggiungi suggerimenti se appropriato
+    // Aggiungi smart actions contestuali
+    const smartActions = getSmartActions(reply, message, knowledgeBase);
     const suggestions = getSuggestions(message, knowledgeBase);
 
     return res.status(200).json({ 
       reply,
       suggestions,
+      smartActions,
       sessionId: sessionId || generateSessionId()
     });
 
@@ -382,6 +399,91 @@ function getSuggestions(userMessage, knowledgeBase) {
   }
   
   return suggestions.slice(0, 3);
+}
+
+function getSmartActions(reply, userMessage, knowledgeBase) {
+  const actions = [];
+  const lowerReply = reply.toLowerCase();
+  const lowerMessage = userMessage.toLowerCase();
+  
+  // 🎫 AZIONI BIGLIETTI
+  if (lowerReply.includes('bigliett') || lowerReply.includes('prenotare') || lowerMessage.includes('bigliett')) {
+    actions.push({
+      type: 'primary',
+      icon: '🎫',
+      text: 'Prenota Biglietti',
+      url: knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025',
+      description: 'Calendario con date e orari disponibili'
+    });
+  }
+  
+  // 🚗 AZIONI PARCHEGGI  
+  if (lowerReply.includes('parcheggi') || lowerReply.includes('auto') || lowerMessage.includes('parcheggi')) {
+    actions.push({
+      type: 'info',
+      icon: '🚗',
+      text: 'Mappa Parcheggi',
+      url: 'https://maps.google.com/search/parcheggi+leggiuno',
+      description: 'P1-P5 con navetta gratuita'
+    });
+  }
+  
+  // ⏰ AZIONI ORARI
+  if (lowerReply.includes('orar') || lowerReply.includes('17:30') || lowerMessage.includes('quando')) {
+    actions.push({
+      type: 'info', 
+      icon: '⏰',
+      text: 'Orari Dettagliati',
+      url: 'https://lucinedinatale.it/info-orari',
+      description: '17:30-23:00, ultimo ingresso 22:30'
+    });
+  }
+  
+  // 🛒 AZIONI CARRELLO (se menzione carrello)
+  if (lowerReply.includes('carrello') || lowerReply.includes('cart')) {
+    actions.push({
+      type: 'success',
+      icon: '🛒', 
+      text: 'Vai al Carrello',
+      url: 'https://lucinedinatale.it/cart',
+      description: 'Completa il tuo acquisto'
+    });
+  }
+  
+  // 📱 AZIONI WHATSAPP (se non attivato)
+  if (!lowerReply.includes('whatsapp') && actions.length < 2) {
+    actions.push({
+      type: 'secondary',
+      icon: '📱',
+      text: 'Attiva Notifiche WhatsApp', 
+      action: 'whatsapp_signup',
+      description: 'Ricevi aggiornamenti istantanei'
+    });
+  }
+  
+  // 📧 AZIONI EMAIL (per supporto)
+  if (lowerReply.includes('contatta') || lowerReply.includes('supporto')) {
+    actions.push({
+      type: 'secondary',
+      icon: '📧',
+      text: 'Invia Email',
+      url: `mailto:${knowledgeBase.contact.email}?subject=Richiesta informazioni Lucine di Natale`,
+      description: 'Supporto diretto via email'
+    });
+  }
+  
+  // 🗺️ AZIONI COME ARRIVARE
+  if (lowerReply.includes('arrivare') || lowerReply.includes('posizione') || lowerMessage.includes('dove')) {
+    actions.push({
+      type: 'info',
+      icon: '🗺️',
+      text: 'Come Arrivare',
+      url: 'https://maps.google.com/search/leggiuno+varese',
+      description: 'Indicazioni stradali e mezzi pubblici'
+    });
+  }
+  
+  return actions.slice(0, 3); // Max 3 azioni per non sovracaricare
 }
 
 
