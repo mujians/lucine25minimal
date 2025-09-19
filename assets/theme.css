@@ -1,3 +1,10 @@
+/* === CUSTOM FONT === */
+@font-face {
+  font-family: 'Lucine di Natale';
+  src: url('{{ "lucine-di-natale.ttf" | asset_url }}') format('truetype');
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -151,10 +158,10 @@
 }
 
 /* CUSTOM FONTS */
-/* Using only Providence Sans - Homemade Apple removed */
+/* Using only Lucine di Natale - Homemade Apple removed */
 
 @font-face {
-  font-family: 'Providence Sans';
+  font-family: 'Lucine di Natale';
   src: url('ProvidenceSansRegular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -164,7 +171,7 @@
 body {
   background: #0f2f1f;
   color: white;
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   font-size: 1.125rem; /* 18px minimum - base body size */
   /* Allow natural scrolling - no height restrictions */
@@ -288,7 +295,7 @@ main, #MainContent {
   border-radius: 10px;
   cursor: pointer;
   font-size: 1rem; /* 16px equivalent in REM */
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -406,7 +413,7 @@ main, #MainContent {
 .special-event-info h3 {
   color: var(--christmas-red);
   margin-bottom: 0.5rem;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
 }
 
 .card-container {
@@ -694,7 +701,7 @@ main, #MainContent {
 
 /* TYPOGRAPHY SYSTEM - MIXED FONTS */
 h1, h2 {
-  font-family: 'Providence Sans', sans-serif !important;
+  font-family: 'Lucine di Natale', sans-serif !important;
   font-weight: normal !important;
   margin: 0 0 1.5rem 0 !important;
   color: var(--text-white);
@@ -707,7 +714,7 @@ h1, h2 {
 }
 
 h3, h4, h5, h6 {
-  font-family: 'Providence Sans', -apple-system, sans-serif !important;
+  font-family: 'Lucine di Natale', -apple-system, sans-serif !important;
   font-weight: 400 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -755,7 +762,7 @@ p {
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.6;
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
 /* CHRISTMAS COLOR PALETTE */
@@ -891,7 +898,7 @@ ul li::before {
 }
 
 .sketch-card h4 {
-  font-family: 'Providence Sans', -apple-system, sans-serif !important;
+  font-family: 'Lucine di Natale', -apple-system, sans-serif !important;
   font-size: 1.35rem !important;
   margin: 0 0 0.5rem 0 !important;
   color: var(--card-text) !important;
@@ -1098,7 +1105,7 @@ body.footer-expanded {
 
 .footer-column h4 {
   color: var(--christmas-red);
-  font-family: 'Providence Sans', sans-serif !important;
+  font-family: 'Lucine di Natale', sans-serif !important;
   font-size: 0.85em;
   font-weight: normal !important;
   text-transform: uppercase;
@@ -1118,7 +1125,7 @@ body.footer-expanded {
   color: white;
   font-size: 1em;
   margin-bottom: 0.5rem;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1158,7 +1165,7 @@ body.footer-expanded {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   transition: color 0.3s ease;
 }
 
@@ -1173,14 +1180,14 @@ body.footer-expanded {
 
 /* Company name styling */
 .footer-legal .company-name {
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   text-transform: uppercase;
   font-weight: normal;
 }
 
 /* Contacts section in legal */
 .footer-legal .contacts {
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
 }
 
 /* Fascia bianca con logo Comune */
@@ -1239,7 +1246,7 @@ body.footer-expanded {
   height: 100%;
   gap: 8px;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   font-size: 0.9em;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1305,7 +1312,7 @@ body.footer-expanded {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   font-size: 0.95em;
   transition: color 0.3s ease;
 }
@@ -1368,7 +1375,7 @@ body.footer-expanded {
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 1.125rem; /* 18px minimum */
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1463,7 +1470,7 @@ body.footer-expanded {
   margin-bottom: 1.5rem;
   line-height: 1.6;
   color: var(--text-white);
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
 .formatted-content ul,
@@ -1671,7 +1678,7 @@ body.footer-expanded {
   color: var(--text-white);
   margin: 0 0 1rem 0;
   line-height: 1.7; /* Same as body */
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   position: relative;
   z-index: 2;
   padding: 0;
@@ -1688,7 +1695,7 @@ body.footer-expanded {
   font-size: 1rem !important;
   color: var(--christmas-gold);
   font-weight: 600;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   text-align: center; /* Centered alignment */
   opacity: 0.9;
   margin-top: 1rem;
@@ -1711,7 +1718,7 @@ p {
   font-size: 1.2rem; /* Increased from 1.125rem */
 }
 
-/* Ensure Providence Sans never goes below 15px */
+/* Ensure Lucine di Natale never goes below 15px */
 h5 {
   font-size: 1.25rem !important; /* Minimum 20px at base 16px - increased */
 }
@@ -1799,7 +1806,7 @@ h6 {
 
 /* EVENT COMPONENTS FONT SIZE IMPROVEMENTS */
 .event-date {
-  font-size: 1rem !important; /* Minimum size for Providence Sans */
+  font-size: 1rem !important; /* Minimum size for Lucine di Natale */
 }
 
 .featured-content .event-date {
@@ -1930,7 +1937,7 @@ h6 {
   background: rgba(255, 255, 255, 0.05);
   border: none;
   color: var(--text-white);
-  font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.188rem; /* 19px equivalent */
   font-weight: 600;
   font-stretch: normal;
@@ -1958,7 +1965,7 @@ h6 {
   line-height: 1;
   width: 2rem;
   text-align: center;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   letter-spacing: 0.1em;
 }
 
@@ -1991,7 +1998,7 @@ h6 {
   transform: translateY(-50%) rotate(0deg);
   font-size: 2.2em;
   font-weight: 400;
-  font-family: 'Providence Sans', sans-serif;
+  font-family: 'Lucine di Natale', sans-serif;
   letter-spacing: 0;
 }
 
@@ -2525,7 +2532,7 @@ a.cta[href*="maps"]:after {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1.1875rem; /* 19px - same as body text */
-    font-family: 'Providence Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   }
   
   .nav-item:hover {
