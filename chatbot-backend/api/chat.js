@@ -71,56 +71,6 @@ export default async function handler(req, res) {
       realtimeInfo = await getRealtimeTicketInfo();
     }
     
-    // Analizza se è una richiesta di prenotazione
-    const bookingRequest = parseBookingRequest(message);
-    
-    // Se è una richiesta di prenotazione specifica, gestiscila
-    if (bookingRequest.isBookingRequest && bookingRequest.dates.length > 0) {
-      
-      // Controlla date chiuse (24 e 31 dicembre)
-      const closedDates = ['2024-12-24', '2024-12-31'];
-      const invalidDates = bookingRequest.dates.filter(date => 
-        closedDates.includes(date.formatted)
-      );
-      
-      if (invalidDates.length > 0) {
-        const invalidDatesList = invalidDates.map(d => `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`).join(', ');
-        return res.status(200).json({
-          reply: `⚠️ Attenzione: Il parco è CHIUSO il ${invalidDatesList}.\n\nPer le altre date, usa il calendario di prenotazione:\n🎫 ${knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025'}\n\nPer assistenza specifica contatta:\n📧 ${knowledgeBase.contact.email}`,
-          sessionId: sessionId || generateSessionId()
-        });
-      }
-      
-      // Per richieste singole con data specifica, prova aggiunta automatica
-      if (bookingRequest.dates.length === 1 && bookingRequest.quantity && bookingRequest.quantity <= 4) {
-        const targetDate = bookingRequest.dates[0];
-        
-        try {
-          const cartResult = await addToCartDirect('intero', bookingRequest.quantity, targetDate.formatted);
-          
-          if (cartResult.success && cartResult.action === 'cart_added') {
-            return res.status(200).json({
-              reply: `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}\n\n💡 Ricorda di selezionare l'orario preferito durante il checkout.`,
-              sessionId: sessionId || generateSessionId(),
-              cart_url: cartResult.cart_url
-            });
-          }
-        } catch (error) {
-          console.error('❌ Fallback automatico:', error);
-        }
-      }
-      
-      // Fallback al metodo manuale per richieste complesse o fallimenti
-      const datesList = bookingRequest.dates.map(d => 
-        `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
-      ).join(' e ');
-      
-      return res.status(200).json({
-        reply: `🎫 Per prenotare ${bookingRequest.quantity || 'i biglietti'} per il ${datesList}, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025'}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello\n\n💡 Suggerimento: Il biglietto OPEN (€25) ti dà massima flessibilità senza vincoli di data/ora.`,
-        sessionId: sessionId || generateSessionId()
-      });
-    }
-
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     // Context dinamico basato su knowledge base + info real-time
@@ -137,6 +87,50 @@ export default async function handler(req, res) {
     });
 
     let reply = resp?.choices?.[0]?.message?.content?.trim();
+    
+    // Se OpenAI ha riconosciuto una richiesta di prenotazione
+    if (reply.includes('BOOKING_REQUEST')) {
+      const bookingRequest = parseBookingRequest(message);
+      
+        // Controlla date chiuse (24 e 31 dicembre)
+        const closedDates = ['2024-12-24', '2024-12-31'];
+        const invalidDates = bookingRequest.dates.filter(date => 
+          closedDates.includes(date.formatted)
+        );
+        
+        if (invalidDates.length > 0) {
+          const invalidDatesList = invalidDates.map(d => `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`).join(', ');
+          reply = `⚠️ Attenzione: Il parco è CHIUSO il ${invalidDatesList}.\n\nPer le altre date, usa il calendario di prenotazione:\n🎫 ${knowledgeBase.products?.main_ticket?.url}\n\nPer assistenza specifica contatta:\n📧 ${knowledgeBase.contact.email}`;
+        } else {
+          // Per richieste singole con data specifica, prova aggiunta automatica
+          if (bookingRequest.dates.length === 1 && bookingRequest.quantity && bookingRequest.quantity <= 4) {
+            const targetDate = bookingRequest.dates[0];
+            
+            try {
+              const cartResult = await addToCartDirect('intero', bookingRequest.quantity, targetDate.formatted);
+              
+              if (cartResult.success && cartResult.action === 'cart_added') {
+                reply = `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}\n\n💡 Ricorda di selezionare l'orario preferito durante il checkout.`;
+              }
+            } catch (error) {
+              console.error('❌ Fallback automatico:', error);
+            }
+          }
+          
+          // Se non è stata aggiunta automaticamente, usa calendario
+          if (!reply.includes('Aggiunto al carrello')) {
+            const datesList = bookingRequest.dates.map(d => 
+              `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
+            ).join(' e ');
+            
+            reply = `🎫 Per prenotare ${bookingRequest.quantity || ''} biglietti per il ${datesList}, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello`;
+          }
+        }
+      } else {
+        // Richiesta di prenotazione senza date specifiche
+        reply = `🎫 Per prenotare biglietti, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello`;
+      }
+    }
     
     // Controlla se la risposta è troppo generica o indica incertezza
     if (!reply || isLowConfidenceReply(reply)) {
@@ -239,6 +233,8 @@ REGOLE IMPORTANTI:
 - Se qualcuno chiede date disponibili o calendario, menziona che il sistema di prenotazione ha un calendario interattivo
 - Se qualcuno chiede di acquistare biglietti, fornisci sempre il link: ${ticketUrl}
 - Per date/orari specifici rimanda sempre al calendario sul sito di acquisto
+- PRENOTAZIONI SPECIFICHE: Se qualcuno vuole biglietti per date specifiche (es: "biglietti per il 23 dicembre"), rispondi con "BOOKING_REQUEST" seguito dalla data
+- Se la data richiesta è 24 o 31 dicembre, avvisa che il parco è CHIUSO in quelle date
 - Se non sai rispondere con certezza, di' che non hai informazioni specifiche
 - Per domande complesse suggerisci sempre il contatto email: ${kb.contact.email}
 - Per urgenze suggerisci WhatsApp: ${kb.contact.whatsapp}
@@ -544,15 +540,23 @@ async function addToCart(ticketType, quantity, eventDate = null) {
 function parseBookingRequest(message) {
   const lowerMessage = message.toLowerCase();
   
-  // Pattern per riconoscere richieste di prenotazione
+  // Pattern per riconoscere richieste di prenotazione (con typos)
   const bookingPatterns = [
-    /prenotare?\s+(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i,
-    /voglio\s+(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i,
-    /(\d+)\s+bigliett[oi].*?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i
+    /prenotar[ei]?\s+(\d+)?\s*bigl?iett[oi]/i,  // prenotare, typos
+    /voglio\s+(\d+)?\s*bigl?iett[oi]/i,
+    /(\d+)\s+bigl?iett[oi]/i,
+    /(devo|dovrei|bisogna|serve|evo)\s+.*bigl?iett[oi]/i,  // evo = typo di devo
+    /(prend[ei]r[ei]|prendr[ei])\s+.*bigl?iett[oi]/i,  // prendere con typos
+    /comprar[ei]\s+.*bigl?iett[oi]/i,
+    /acquistar[ei]\s+.*bigl?iett[oi]/i,
+    /bigl?iett[oi].*per\s+il\s+(\d{1,2})/i,
+    // Catch-all per date specifiche
+    /(per\s+il\s+)?(\d{1,2})\s+(dicembre|gennaio|febbraio)/i
   ];
   
   const datePattern = /(\d{1,2})\s+(dicembre|gennaio|febbraio)/gi;
-  const quantityPattern = /(\d+)\s+bigliett[oi]/i;
+  // Quantità NON da numeri che sono date (escludi 1-31)
+  const quantityPattern = /(?:^|\s)(\d+)\s+bigl?iett[oi](?!\s*(dicembre|gennaio|febbraio))/i;
   
   const matches = {
     isBookingRequest: false,
@@ -572,7 +576,10 @@ function parseBookingRequest(message) {
   // Estrai quantità
   const qtyMatch = lowerMessage.match(quantityPattern);
   if (qtyMatch) {
-    matches.quantity = parseInt(qtyMatch[1]);
+    matches.quantity = parseInt(qtyMatch[1] || qtyMatch[2]) || 1;
+  } else {
+    // Se non trova quantità specifica ma è una richiesta di prenotazione, assume 1
+    matches.quantity = 1;
   }
   
   // Estrai date
@@ -589,6 +596,16 @@ function parseBookingRequest(message) {
       year,
       formatted: `${year}-${String(monthMap[month]).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     });
+  });
+  
+  // Debug log
+  console.log('🔍 BOOKING PARSE:', {
+    original: message,
+    lower: lowerMessage,
+    isBookingRequest: matches.isBookingRequest,
+    quantity: matches.quantity,
+    dates: matches.dates.map(d => d.formatted),
+    datesCount: matches.dates.length
   });
   
   return matches;
