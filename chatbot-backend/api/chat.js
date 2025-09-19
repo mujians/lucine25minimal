@@ -60,10 +60,21 @@ export default async function handler(req, res) {
     // Carica knowledge base
     const knowledgeBase = loadKnowledgeBase();
     
+    // Fetch info real-time se la domanda riguarda biglietti/acquisti/date
+    let realtimeInfo = null;
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.includes('bigliett') || lowerMessage.includes('acquist') || 
+        lowerMessage.includes('comprar') || lowerMessage.includes('prezzo') ||
+        lowerMessage.includes('disponib') || lowerMessage.includes('data') ||
+        lowerMessage.includes('quando') || lowerMessage.includes('calendario') ||
+        lowerMessage.includes('orari') || lowerMessage.includes('slot')) {
+      realtimeInfo = await getRealtimeTicketInfo();
+    }
+    
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // Context dinamico basato su knowledge base
-    const context = buildContextFromKnowledgeBase(knowledgeBase);
+    // Context dinamico basato su knowledge base + info real-time
+    const context = buildContextFromKnowledgeBase(knowledgeBase, realtimeInfo);
 
     const resp = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -129,7 +140,28 @@ function loadKnowledgeBase() {
   }
 }
 
-function buildContextFromKnowledgeBase(kb) {
+function buildContextFromKnowledgeBase(kb, realtimeInfo = null) {
+  const ticketUrl = kb.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025';
+  const availabilityText = realtimeInfo?.available === false ? 
+    '\n⚠️ ATTENZIONE: Biglietti attualmente SOLD OUT sul sito' : 
+    '\n✅ Acquista online per posto garantito';
+
+  // Info calendario Evey se disponibili
+  let calendarInfo = '';
+  if (realtimeInfo?.calendar?.has_evey_calendar) {
+    calendarInfo = '\n\n📅 CALENDARIO DISPONIBILITÀ:';
+    if (realtimeInfo.calendar.calendar_active) {
+      calendarInfo += '\n- Sistema di prenotazione attivo con calendario';
+      calendarInfo += '\n- Seleziona data e ora direttamente sul sito';
+      if (realtimeInfo.calendar.found_dates?.length > 0) {
+        calendarInfo += `\n- Alcune date rilevate: ${realtimeInfo.calendar.found_dates.join(', ')}`;
+      }
+    } else {
+      calendarInfo += '\n- ⚠️ Calendario momentaneamente non disponibile';
+    }
+    calendarInfo += '\n- Per date specifiche visita il link acquisto biglietti';
+  }
+
   return `Sei l'assistente virtuale delle Lucine di Natale di Leggiuno. Rispondi sempre in italiano, in modo cordiale e preciso.
 
 EVENTO: ${kb.event.name}
@@ -138,13 +170,13 @@ Orari: ${kb.event.hours.open}-${kb.event.hours.close} (ultimo ingresso ${kb.even
 Luogo: ${kb.event.location.city}, ${kb.event.location.area}
 
 BIGLIETTI:
-- Adulti: €${kb.tickets.prices.adult}
-- Bambini (3-12): €${kb.tickets.prices.child}  
-- Famiglia (2+2): €${kb.tickets.prices.family}
+- Intero: €${kb.tickets.prices.intero} (${kb.products?.main_ticket?.variants?.intero || 'accesso standard'})
+- Ridotto (3-12 anni): €${kb.tickets.prices.ridotto} (${kb.products?.main_ticket?.variants?.ridotto || 'bambini e disabili'})
+- SaltaFila: €${kb.tickets.prices.saltafila} (${kb.products?.main_ticket?.variants?.saltafila || 'accesso prioritario'})
+- Open Ticket: €${kb.tickets.prices.open} (${kb.products?.main_ticket?.variants?.open || 'massima flessibilità'})
 - Under 3: Gratis
-- SALTAFILA: Accesso prioritario nella fascia oraria scelta
-- OPEN: Ingresso libero + priorità sempre
 - ${kb.tickets.discounts.online}
+🎫 ACQUISTA: ${ticketUrl}${availabilityText}${calendarInfo}
 
 PARCHEGGI: P1-P5, navetta gratuita ${kb.parking.shuttle.hours} ${kb.parking.shuttle.frequency}
 
@@ -154,6 +186,9 @@ SERVIZI:
 - Mercatini e stand gastronomici
 
 REGOLE IMPORTANTI:
+- Se qualcuno chiede date disponibili o calendario, menziona che il sistema di prenotazione ha un calendario interattivo
+- Se qualcuno chiede di acquistare biglietti, fornisci sempre il link: ${ticketUrl}
+- Per date/orari specifici rimanda sempre al calendario sul sito di acquisto
 - Se non sai rispondere con certezza, di' che non hai informazioni specifiche
 - Per domande complesse suggerisci sempre il contatto email: ${kb.contact.email}
 - Per urgenze suggerisci WhatsApp: ${kb.contact.whatsapp}
@@ -271,6 +306,89 @@ async function tryCreateTicket(message, sessionId, req) {
   } catch (error) {
     console.error('❌ Errore creazione ticket:', error);
     return { success: false };
+  }
+}
+
+async function getRealtimeTicketInfo() {
+  try {
+    // Timeout di 5 secondi per permettere analisi Evey
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    const response = await fetch('https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; LucineBot/1.0)'
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) return null;
+    
+    const html = await response.text();
+    
+    // Estrai info sui biglietti disponibili
+    const ticketInfo = {
+      available: !html.includes('Sold out') && !html.includes('Maximum reached'),
+      url: 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025'
+    };
+    
+    // Estrai prezzi se diversi da knowledge base
+    const priceMatches = html.match(/€(\d+),00/g);
+    if (priceMatches) {
+      ticketInfo.prices_found = priceMatches;
+    }
+    
+    // Estrai informazioni Evey sul calendario
+    const eveyInfo = extractEveyCalendarInfo(html);
+    if (eveyInfo) {
+      ticketInfo.calendar = eveyInfo;
+    }
+    
+    return ticketInfo;
+    
+  } catch (error) {
+    console.error('❌ Errore fetch realtime:', error);
+    return null;
+  }
+}
+
+function extractEveyCalendarInfo(html) {
+  try {
+    // Cerca pattern di date nel JavaScript di Evey
+    const datePatterns = [
+      /(\d{4}-\d{2}-\d{2})/g,  // Date formato YYYY-MM-DD
+      /"date":\s*"([^"]+)"/g,   // Date in JSON
+      /"available_dates":\s*\[([^\]]+)\]/g  // Array di date
+    ];
+    
+    const foundDates = [];
+    datePatterns.forEach(pattern => {
+      const matches = html.matchAll(pattern);
+      for (const match of matches) {
+        if (match[1]) foundDates.push(match[1]);
+      }
+    });
+    
+    // Cerca info sulla disponibilità
+    const hasCalendar = html.includes('evey') && 
+                       (html.includes('calendar') || html.includes('scheduler'));
+    
+    if (hasCalendar) {
+      return {
+        has_evey_calendar: true,
+        found_dates: [...new Set(foundDates)].slice(0, 5), // Prime 5 date uniche
+        calendar_active: !html.includes('No dates available'),
+        last_updated: new Date().toISOString()
+      };
+    }
+    
+    return null;
+    
+  } catch (error) {
+    console.error('❌ Errore estrazione Evey:', error);
+    return null;
   }
 }
 
