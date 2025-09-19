@@ -92,6 +92,7 @@ export default async function handler(req, res) {
     if (reply.includes('BOOKING_REQUEST')) {
       const bookingRequest = parseBookingRequest(message);
       
+      if (bookingRequest.dates.length > 0) {
         // Controlla date chiuse (24 e 31 dicembre)
         const closedDates = ['2024-12-24', '2024-12-31'];
         const invalidDates = bookingRequest.dates.filter(date => 
