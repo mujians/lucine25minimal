@@ -913,37 +913,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-<!-- ERUDA MOBILE DEBUGGER (TEMPORARY) -->
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>
-  eruda.init();
-  
-  // Log collector for easy copy/paste
-  window.debugLogs = [];
-  const originalLog = console.log;
-  console.log = function(...args) {
-    // Store logs with timestamp
-    const timestamp = new Date().toLocaleTimeString();
-    window.debugLogs.push(`[${timestamp}] ${args.join(' ')}`);
-    // Keep max 100 logs to avoid memory issues
-    if (window.debugLogs.length > 100) {
-      window.debugLogs.shift();
-    }
-    originalLog.apply(console, args);
-  };
-  
-  // Function to copy all logs
-  window.copyLogs = function() {
-    const allLogs = window.debugLogs.join('\n');
-    navigator.clipboard.writeText(allLogs).then(() => {
-      alert('Logs copiati negli appunti!');
-    }).catch(() => {
-      // Fallback: show logs in alert for manual copy
-      prompt('Copia questi logs:', allLogs);
-    });
-  };
-</script>
-
 <!-- BACK TO TOP BUTTON -->
 <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
