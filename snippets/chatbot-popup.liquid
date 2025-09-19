@@ -30,8 +30,9 @@
 }
 
 .chat-bubble-icon {
-  color: white;
-  font-size: 24px;
+  width: 28px;
+  height: 28px;
+  fill: white;
   animation: pulse 2s infinite;
 }
 
@@ -357,7 +358,11 @@
 <div class="chatbot-container" id="chatbotContainer" style="display: none;">
   <!-- Chat Bubble -->
   <div class="chat-bubble" id="chatBubble">
-    <div class="chat-bubble-icon">💬</div>
+    <div class="chat-bubble-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+      </svg>
+    </div>
     <div class="chat-notification" id="chatNotification" style="display: none;">1</div>
   </div>
 
@@ -365,7 +370,12 @@
   <div class="chat-popup" id="chatPopup">
     <!-- Header -->
     <div class="chat-header">
-      <div class="chat-title">💬 Lucy - Assistente Virtuale</div>
+      <div class="chat-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" style="fill: white; margin-right: 8px; vertical-align: text-bottom;">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+        Lucy - Assistente Virtuale
+      </div>
       <button class="chat-close" id="chatClose">×</button>
     </div>
 
