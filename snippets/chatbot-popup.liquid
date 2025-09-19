@@ -320,29 +320,35 @@
 
 /* Suggestions */
 .chat-suggestions {
-  padding: 0 1rem 1rem;
+  padding: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .suggestions-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .suggestion-button {
-  background: rgba(139, 195, 74, 0.15);
-  border: 1px solid var(--christmas-green);
-  color: var(--christmas-green);
-  padding: 0.4rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
+  background: var(--christmas-red);
+  border: none;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  font-weight: 500;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .suggestion-button:hover {
-  background: rgba(139, 195, 74, 0.25);
+  background: var(--christmas-green);
   transform: translateY(-1px);
 }
 </style>
@@ -379,9 +385,15 @@
     <!-- Suggestions -->
     <div class="chat-suggestions" id="chatSuggestions">
       <div class="suggestions-grid" id="suggestionsGrid">
-        <button class="suggestion-button" onclick="sendMessage('Quanto costano i biglietti?')">💰 Prezzi biglietti</button>
-        <button class="suggestion-button" onclick="sendMessage('Dove posso parcheggiare?')">🚗 Parcheggi</button>
-        <button class="suggestion-button" onclick="sendMessage('Quali sono gli orari?')">🕐 Orari</button>
+        <button class="suggestion-button" onclick="sendMessage('Quanto costano i biglietti?')">
+          <span>💰</span> Prezzi biglietti
+        </button>
+        <button class="suggestion-button" onclick="sendMessage('Dove posso parcheggiare?')">
+          <span>🚗</span> Parcheggi
+        </button>
+        <button class="suggestion-button" onclick="sendMessage('Quali sono gli orari?')">
+          <span>🕐</span> Orari
+        </button>
       </div>
     </div>
 
