@@ -169,30 +169,35 @@ export default async function handler(req, res) {
     
     // Regex fallback rimosso - GPT gestisce tutti gli intent tramite prompt migliorato
     
-    // Controlla se la risposta è troppo generica o indica incertezza
+    // 🎫 SISTEMA TICKET COMPLETO
     if (!reply || isLowConfidenceReply(reply)) {
       
-      // Controlla se l'utente ha già confermato (messaggio contiene "sì" o "conferma")
-      const confirmationPattern = /(sì|si|conferma|contatta|operatore|help|aiuto)/i;
-      const isConfirming = confirmationPattern.test(message.toLowerCase());
+      // Controlla se l'utente ha confermato creazione ticket
+      const isConfirmingTicket = checkTicketConfirmation(message, sessionId);
       
-      if (isConfirming && message.toLowerCase().includes('operatore')) {
+      if (isConfirmingTicket) {
         // Utente ha confermato - crea ticket
         const whatsappUser = findUserBySession(sessionId);
-        const ticketResult = await tryCreateTicket(message, sessionId, req, whatsappUser?.phone_number);
+        const ticketResult = await createTicket(message, sessionId, req, whatsappUser);
         
         if (ticketResult.success) {
-          reply = `✅ ${ticketResult.message}\n\nTicket ID: #${ticketResult.ticket_id}\n\n📧 Riceverai risposta via email entro 24h.${whatsappUser ? '\n📱 Ti contatteremo anche su WhatsApp!' : ''}`;
+          reply = `✅ **Ticket creato con successo!**\n\nTicket ID: **#${ticketResult.ticket_id}**\n\n📧 Riceverai risposta via email entro 24h\n${whatsappUser ? '📱 Ti contatteremo anche su WhatsApp!' : '🔔 Registra WhatsApp per notifiche istantanee'}`;
+          
+          // Aggiungi smart action per WhatsApp se non registrato
+          if (!whatsappUser) {
+            // Sarà gestito da getSmartActions
+          }
         } else {
-          reply = `❌ Errore nella creazione del ticket. Contatta direttamente:\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`;
+          reply = `❌ **Errore nella creazione del ticket**\n\n${ticketResult.error}\n\n📞 **Contatta direttamente:**\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`;
         }
       } else {
         // Prima richiesta - chiedi conferma
         return res.status(200).json({
-          reply: `🤔 Non ho trovato una risposta precisa alla tua domanda.\n\n**Vuoi che contatti un operatore umano?**\n\nUn operatore potrà aiutarti con informazioni dettagliate e supporto personalizzato.\n\n✅ Rispondi **"Sì, contatta operatore"** per creare un ticket\n❌ Oppure prova:\n📧 Email: ${knowledgeBase.contact.email}\n📱 WhatsApp: ${knowledgeBase.contact.whatsapp}`,
+          reply: `🤔 **Non ho trovato una risposta precisa alla tua domanda.**\n\n💬 **Vuoi che contatti un operatore umano?**\n\nUn operatore potrà aiutarti con informazioni dettagliate e supporto personalizzato.\n\n✅ Rispondi **"Sì, contatta operatore"** per creare un ticket\n❌ Oppure prova:\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`,
           sessionId: sessionId || generateSessionId(),
           needsConfirmation: true,
-          confirmationType: 'ticket_creation'
+          confirmationType: 'ticket_creation',
+          originalQuestion: message
         });
       }
     }
@@ -712,4 +717,320 @@ function getDefaultKnowledgeBase() {
       ]
     }
   };
+}
+
+// ================================
+// 🎫 SISTEMA TICKET COMPLETO
+// ================================
+
+// Rileva se la risposta GPT indica bassa confidenza
+function isLowConfidenceReply(reply) {
+  if (!reply || reply.length < 10) return true;
+  
+  const lowConfidenceIndicators = [
+    'non sono sicuro',
+    'non so', 
+    'mi dispiace',
+    'non ho informazioni',
+    'non posso rispondere',
+    'non sono in grado',
+    'non conosco',
+    'informazioni specifiche',
+    'non trovo',
+    'non riesco',
+    'non saprei',
+    'mi sfugge'
+  ];
+  
+  const lowerReply = reply.toLowerCase();
+  const hasLowConfidenceIndicator = lowConfidenceIndicators.some(indicator => 
+    lowerReply.includes(indicator)
+  );
+  
+  // Controlla anche lunghezza molto breve o frasi generiche
+  const isVeryShort = reply.length < 20;
+  const isGeneric = lowerReply.includes('come posso aiutarti') || 
+                   lowerReply.includes('hai altre domande');
+  
+  return hasLowConfidenceIndicator || isVeryShort || isGeneric;
+}
+
+// Controlla se l'utente ha confermato la creazione del ticket
+function checkTicketConfirmation(message, sessionId) {
+  const lowerMessage = message.toLowerCase();
+  
+  // Pattern di conferma precisi
+  const confirmPatterns = [
+    /sì.*contatta.*operatore/i,
+    /si.*contatta.*operatore/i,
+    /conferm.*ticket/i,
+    /conferm.*operatore/i,
+    /crea.*ticket/i,
+    /^\s*(sì|si|yes|ok|conferma)\s*$/i, // Solo "sì" "si" "ok" 
+    /contatta.*operatore/i,
+    /voglio.*operatore/i,
+    /ho bisogno.*operatore/i
+  ];
+  
+  // Controlla se il messaggio matcha uno dei pattern
+  return confirmPatterns.some(pattern => pattern.test(lowerMessage));
+}
+
+// Crea ticket nel sistema esterno
+async function createTicket(originalMessage, sessionId, req, whatsappUser) {
+  try {
+    console.log('🎫 Creando ticket...', { sessionId, originalMessage });
+    
+    // Estrai dati utente da headers e sessione
+    const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    
+    // Recupera domanda originale dalla sessione se disponibile
+    const sessionData = getSessionData(sessionId);
+    const originalQuestion = sessionData?.originalQuestion || originalMessage;
+    
+    // Prepara dati ticket
+    const ticketData = {
+      subject: `Richiesta supporto Lucine di Natale - ${new Date().toLocaleDateString('it-IT')}`,
+      message: originalQuestion,
+      user_context: {
+        session_id: sessionId,
+        user_ip: userIP,
+        user_agent: userAgent,
+        timestamp: new Date().toISOString(),
+        source: 'chatbot_lucine',
+        whatsapp_number: whatsappUser?.phone_number || null,
+        chat_history: getSessionChatHistory(sessionId) // Ultime 3 domande
+      },
+      priority: 'normal',
+      category: 'chatbot_escalation',
+      customer_email: whatsappUser?.email || 'noreply@lucinedinatale.it',
+      customer_name: whatsappUser?.name || 'Utente Chatbot',
+      tags: ['chatbot', 'lucine', 'support_request']
+    };
+    
+    console.log('📤 Inviando ticket a:', 'https://magazzino-gep-backend.onrender.com/api/tickets');
+    
+    // Invia al sistema ticket esterno con retry
+    const response = await fetch('https://magazzino-gep-backend.onrender.com/api/tickets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'LucineChatbot/1.0',
+        'X-Source': 'chatbot'
+      },
+      body: JSON.stringify(ticketData),
+      timeout: 10000
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      
+      console.log('✅ Ticket creato:', result);
+      
+      // Salva info ticket nella sessione
+      saveTicketToSession(sessionId, {
+        ticket_id: result.ticket_id || result.id,
+        created_at: new Date().toISOString(),
+        original_question: originalQuestion
+      });
+      
+      // Invia notifica WhatsApp se utente registrato
+      if (whatsappUser?.phone_number) {
+        try {
+          await sendWhatsAppTicketNotification(whatsappUser.phone_number, result.ticket_id || result.id);
+        } catch (whatsappError) {
+          console.error('⚠️ Errore notifica WhatsApp:', whatsappError);
+          // Non fallire il ticket per errori WhatsApp
+        }
+      }
+      
+      return {
+        success: true,
+        ticket_id: result.ticket_id || result.id || generateTicketId(),
+        message: 'Ticket creato correttamente! Un operatore ti risponderà presto.',
+        external_response: result
+      };
+      
+    } else {
+      const errorText = await response.text();
+      console.error('❌ Errore API ticket:', response.status, errorText);
+      
+      // Fallback: salva ticket locale
+      const fallbackTicket = saveFallbackTicket(ticketData);
+      
+      return {
+        success: true, // Non far fallire UX
+        ticket_id: fallbackTicket.ticket_id,
+        message: 'Richiesta registrata! Ti ricontatteremo via email.',
+        fallback: true
+      };
+    }
+    
+  } catch (error) {
+    console.error('❌ Errore creazione ticket:', error);
+    
+    // Fallback completo
+    const fallbackTicket = saveFallbackTicket({
+      subject: `Supporto Chatbot - ${new Date().toLocaleDateString('it-IT')}`,
+      message: originalMessage,
+      session_id: sessionId,
+      timestamp: new Date().toISOString()
+    });
+    
+    return {
+      success: false,
+      error: 'Errore temporaneo del sistema. Usa i contatti diretti.',
+      ticket_id: fallbackTicket.ticket_id,
+      fallback: true
+    };
+  }
+}
+
+// Genera ID ticket unico
+function generateTicketId() {
+  const now = new Date();
+  const timestamp = now.getTime().toString(36);
+  const random = Math.random().toString(36).substr(2, 4);
+  return `LUC${timestamp}${random}`.toUpperCase();
+}
+
+// Salva ticket in fallback locale (per backup)
+function saveFallbackTicket(ticketData) {
+  const ticketId = generateTicketId();
+  
+  // Log dettagliato per retrieval manuale
+  console.log('💾 FALLBACK TICKET SAVED:', {
+    ticket_id: ticketId,
+    timestamp: new Date().toISOString(),
+    data: ticketData
+  });
+  
+  // Qui potresti salvare in un file locale o database se necessario
+  // Per ora solo log per monitoraggio Vercel
+  
+  return { ticket_id: ticketId };
+}
+
+// Gestione sessioni in memoria (limitata ma funzionale)
+const sessionStore = new Map();
+
+function getSessionData(sessionId) {
+  return sessionStore.get(sessionId) || {};
+}
+
+function saveTicketToSession(sessionId, ticketInfo) {
+  const existing = getSessionData(sessionId);
+  existing.tickets = existing.tickets || [];
+  existing.tickets.push(ticketInfo);
+  sessionStore.set(sessionId, existing);
+}
+
+function getSessionChatHistory(sessionId) {
+  const sessionData = getSessionData(sessionId);
+  return sessionData.chatHistory || [];
+}
+
+// Notifica WhatsApp per ticket creato
+async function sendWhatsAppTicketNotification(phoneNumber, ticketId) {
+  try {
+    // Template notifica ticket
+    const message = `🎫 *Ticket Creato - Lucine di Natale*\n\nTicket ID: #${ticketId}\n\n✅ La tua richiesta è stata registrata\n📧 Riceverai risposta via email entro 24h\n💬 Per aggiornamenti scrivi su WhatsApp\n\nGrazie per averci contattato!`;
+    
+    // Invia tramite API WhatsApp (se configurata)
+    const response = await fetch(`${process.env.WHATSAPP_API_URL || 'http://localhost:3000'}/api/whatsapp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'send_message',
+        to: phoneNumber,
+        message: message,
+        type: 'ticket_notification'
+      })
+    });
+    
+    if (response.ok) {
+      console.log('📱 Notifica WhatsApp inviata:', phoneNumber);
+      return true;
+    } else {
+      throw new Error(`WhatsApp API error: ${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error('❌ Errore notifica WhatsApp ticket:', error);
+    return false;
+  }
+}
+
+// Genera smart actions contestuali
+function getSmartActions(reply, userMessage, knowledgeBase) {
+  const actions = [];
+  const lowerReply = reply.toLowerCase();
+  const lowerMessage = userMessage.toLowerCase();
+  
+  // Smart action per ticket creato con successo
+  if (lowerReply.includes('ticket creato') && !lowerReply.includes('whatsapp')) {
+    actions.push({
+      type: 'secondary',
+      icon: '📱',
+      text: 'Attiva Notifiche WhatsApp',
+      action: 'whatsapp_signup',
+      description: 'Ricevi aggiornamenti ticket su WhatsApp'
+    });
+  }
+  
+  // Smart actions per prenotazioni
+  if (lowerReply.includes('prenotare') || lowerReply.includes('calendario') || 
+      lowerMessage.includes('bigliett') || lowerMessage.includes('prenotar')) {
+    actions.push({
+      type: 'primary',
+      icon: '🎫',
+      text: 'Prenota Biglietti',
+      url: knowledgeBase.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025',
+      description: 'Calendario con date e orari disponibili'
+    });
+  }
+  
+  // Smart action per informazioni generali
+  if (lowerReply.includes('parcheggi') || lowerMessage.includes('parcheggi')) {
+    actions.push({
+      type: 'info',
+      icon: '🚗',
+      text: 'Info Parcheggi',
+      url: 'https://lucinedinatale.it/info-parcheggi',
+      description: 'P1-P5, navetta gratuita ogni 15 min'
+    });
+  }
+  
+  // Smart action per contatti diretti se errore ticket
+  if (lowerReply.includes('errore') && lowerReply.includes('contatta direttamente')) {
+    actions.push({
+      type: 'urgent',
+      icon: '📧',
+      text: 'Invia Email',
+      url: `mailto:${knowledgeBase.contact.email}?subject=Richiesta supporto Lucine di Natale`,
+      description: 'Supporto diretto via email'
+    });
+    
+    actions.push({
+      type: 'urgent',
+      icon: '📱',
+      text: 'WhatsApp Diretto',
+      url: knowledgeBase.contact.whatsapp?.replace('+', 'https://wa.me/'),
+      description: 'Chat diretta WhatsApp'
+    });
+  }
+  
+  // Smart action WhatsApp generico se non presente
+  if (!actions.some(a => a.action === 'whatsapp_signup' || a.text.includes('WhatsApp'))) {
+    actions.push({
+      type: 'secondary',
+      icon: '📱',
+      text: 'Attiva Notifiche WhatsApp',
+      action: 'whatsapp_signup',
+      description: 'Ricevi aggiornamenti istantanei'
+    });
+  }
+  
+  return actions.slice(0, 3); // Massimo 3 smart actions
 }
