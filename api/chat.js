@@ -64,21 +64,11 @@ export default async function handler(req, res) {
     // Carica knowledge base
     const knowledgeBase = loadKnowledgeBase();
     
-    // Fetch info real-time se la domanda riguarda biglietti/acquisti/date
-    let realtimeInfo = null;
-    const lowerMessage = message.toLowerCase();
-    if (lowerMessage.includes('bigliett') || lowerMessage.includes('acquist') || 
-        lowerMessage.includes('comprar') || lowerMessage.includes('prezzo') ||
-        lowerMessage.includes('disponib') || lowerMessage.includes('data') ||
-        lowerMessage.includes('quando') || lowerMessage.includes('calendario') ||
-        lowerMessage.includes('orari') || lowerMessage.includes('slot')) {
-      realtimeInfo = await getRealtimeTicketInfo();
-    }
-    
+    // Real-time info rimosso - sempre dati statici da knowledge base
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // Context dinamico basato su knowledge base + info real-time
-    const context = buildContextFromKnowledgeBase(knowledgeBase, realtimeInfo);
+    // Context basato solo su knowledge base statica
+    const context = buildContextFromKnowledgeBase(knowledgeBase);
 
     const resp = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -164,54 +154,12 @@ export default async function handler(req, res) {
           const invalidDatesList = invalidDates.map(d => `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`).join(', ');
           reply = `⚠️ Attenzione: Il parco è CHIUSO il ${invalidDatesList}.\n\nPer le altre date, usa il calendario di prenotazione:\n🎫 ${knowledgeBase.products?.main_ticket?.url}\n\nPer assistenza specifica contatta:\n📧 ${knowledgeBase.contact.email}`;
         } else {
-          // Per richieste singole con data specifica, prova aggiunta automatica
-          if (bookingRequest.dates.length === 1 && bookingRequest.quantity && bookingRequest.quantity <= 4) {
-            const targetDate = bookingRequest.dates[0];
-            
-            try {
-              const cartResult = await addToCartDirect('intero', bookingRequest.quantity, targetDate.formatted);
-              
-              if (cartResult.success && cartResult.action === 'cart_added') {
-                reply = `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}\n\n💡 Ricorda di selezionare l'orario preferito durante il checkout.`;
-                
-                // Invia notifica WhatsApp se utente registrato
-                const whatsappUser = findUserBySession(sessionId);
-                if (whatsappUser && whatsappUser.active) {
-                  try {
-                    await fetch(`${req.protocol}://${req.get('host')}/api/whatsapp`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        action: 'send_template',
-                        to: whatsappUser.phone_number,
-                        templateName: 'cart_added',
-                        templateData: {
-                          quantity: bookingRequest.quantity,
-                          ticketType: 'Intero',
-                          eventDate: targetDate.formatted,
-                          cartUrl: cartResult.cart_url
-                        }
-                      })
-                    });
-                    console.log('📱 WhatsApp notifica carrello inviata');
-                  } catch (error) {
-                    console.error('❌ Errore notifica WhatsApp carrello:', error);
-                  }
-                }
-              }
-            } catch (error) {
-              console.error('❌ Fallback automatico:', error);
-            }
-          }
+          // Sempre mandare al calendario per selezione precisa di data e orario
+          const datesList = bookingRequest.dates.map(d => 
+            `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
+          ).join(' e ');
           
-          // Se non è stata aggiunta automaticamente, usa calendario
-          if (!reply.includes('Aggiunto al carrello')) {
-            const datesList = bookingRequest.dates.map(d => 
-              `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
-            ).join(' e ');
-            
-            reply = `🎫 Per prenotare ${bookingRequest.quantity || ''} biglietti per il ${datesList}, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello`;
-          }
+          reply = `🎫 Per prenotare ${bookingRequest.quantity || ''} biglietti per il ${datesList}:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}\n\n📅 **Seleziona data e fascia oraria**\n🎟️ **Scegli tipo biglietto** (Intero/Ridotto/SaltaFila)\n🛒 **Aggiungi al carrello**\n\n💡 Il calendario mostra la disponibilità real-time per ogni orario!`;
         }
       } else {
         // Richiesta di prenotazione senza date specifiche
@@ -310,27 +258,9 @@ function loadKnowledgeBase() {
   }
 }
 
-function buildContextFromKnowledgeBase(kb, realtimeInfo = null) {
+function buildContextFromKnowledgeBase(kb) {
   const ticketUrl = kb.products?.main_ticket?.url || 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025';
-  const availabilityText = realtimeInfo?.available === false ? 
-    '\n⚠️ ATTENZIONE: Alcune date potrebbero essere sold out - verifica disponibilità sul sito' : 
-    '\n✅ Biglietti disponibili - acquista online per posto garantito';
-
-  // Info calendario Evey se disponibili
-  let calendarInfo = '';
-  if (realtimeInfo?.calendar?.has_evey_calendar) {
-    calendarInfo = '\n\n📅 CALENDARIO DISPONIBILITÀ:';
-    if (realtimeInfo.calendar.calendar_active) {
-      calendarInfo += '\n- Sistema di prenotazione attivo con calendario';
-      calendarInfo += '\n- Seleziona data e ora direttamente sul sito';
-      if (realtimeInfo.calendar.found_dates?.length > 0) {
-        calendarInfo += `\n- Alcune date rilevate: ${realtimeInfo.calendar.found_dates.join(', ')}`;
-      }
-    } else {
-      calendarInfo += '\n- ⚠️ Calendario momentaneamente non disponibile';
-    }
-    calendarInfo += '\n- Per date specifiche visita il link acquisto biglietti';
-  }
+  const availabilityText = '\n✅ Biglietti disponibili - usa il calendario per disponibilità real-time';
 
   return `Sei l'assistente virtuale delle Lucine di Natale di Leggiuno. Rispondi sempre in italiano, in modo cordiale e preciso.
 
@@ -346,7 +276,7 @@ BIGLIETTI:
 - Open Ticket: €${kb.tickets.prices.open} (${kb.products?.main_ticket?.variants?.open || 'massima flessibilità'})
 - Under 3: Gratis
 - ${kb.tickets.discounts.online}
-🎫 ACQUISTA: ${ticketUrl}${availabilityText}${calendarInfo}
+🎫 ACQUISTA: ${ticketUrl}${availabilityText}
 
 PARCHEGGI: P1-P5, navetta gratuita ${kb.parking.shuttle.hours} ${kb.parking.shuttle.frequency}
 
@@ -659,77 +589,7 @@ function extractEveyCalendarInfo(html) {
   }
 }
 
-async function addToCartDirect(ticketType, quantity, eventDate, eventTime = '18:00') {
-  try {
-    // Mappa tipi biglietti a variant IDs
-    const variantMap = {
-      'intero': '51699961233747',
-      'ridotto': '51700035944787', 
-      'saltafila': '51700063207763',
-      'open': '10082871050579'
-    };
-    
-    const variantId = variantMap[ticketType.toLowerCase()] || variantMap['intero'];
-    
-    // Genera event ID simulato (formato simile a Evey)
-    const eventId = `chatbot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Formatta data per display
-    const dateObj = new Date(eventDate);
-    const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                       'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
-    const eventLabel = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()} - ${eventTime}`;
-    
-    // Prepara dati form per Shopify Cart API
-    const formData = new FormData();
-    formData.append('id', variantId);
-    formData.append('quantity', quantity.toString());
-    formData.append('properties[_event_id]', eventId);
-    formData.append('properties[Event]', eventLabel);
-    formData.append('properties[Source]', 'Chatbot Lucy');
-    
-    // Timeout di 5 secondi
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    
-    const response = await fetch('https://lucinedinatale.it/cart/add.js', {
-      method: 'POST',
-      body: formData,
-      signal: controller.signal,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; LucyChatbot/1.0)'
-      }
-    });
-    
-    clearTimeout(timeoutId);
-    
-    if (response.ok) {
-      const result = await response.json();
-      return {
-        success: true,
-        action: 'cart_added',
-        cart_url: 'https://lucinedinatale.it/cart',
-        message: `✅ Aggiunto al carrello: ${quantity} bigliett${quantity > 1 ? 'i' : 'o'} ${ticketType} per ${eventLabel}`,
-        cart_data: result
-      };
-    } else {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-  } catch (error) {
-    console.error('❌ Errore aggiunta carrello diretta:', error);
-    
-    // Fallback al metodo originale
-    const baseUrl = 'https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025';
-    return {
-      success: false,
-      action: 'redirect_to_product',
-      url: baseUrl,
-      message: `⚠️ Aggiunta automatica fallita. Vai al link per prenotare manualmente ${quantity} bigliett${quantity > 1 ? 'i' : 'o'} ${ticketType} per ${eventDate}.`
-    };
-  }
-}
+// Funzione addToCartDirect rimossa - sempre redirect al calendario
 
 async function addToCart(ticketType, quantity, eventDate = null) {
   try {
