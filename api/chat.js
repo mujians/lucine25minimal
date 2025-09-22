@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { addWhatsAppUser, findUserBySession } from '../utils/whatsapp-storage.js';
 import { logConversation, detectIntent } from '../utils/sheets-logger.js';
+import { getSessionData, setSessionData, clearSessionData } from '../utils/session-store.js';
 
 // Rate limiting semplice (in memoria)
 const rateLimitMap = new Map();
@@ -63,6 +64,50 @@ export default async function handler(req, res) {
 
     // Carica knowledge base
     const knowledgeBase = loadKnowledgeBase();
+    
+    // 🔴 CHECK: Se sessione è in chat live con operatore
+    const sessionData = getSessionData(sessionId);
+    
+    // Check if session is taken by operator
+    const { isSessionWithOperator, getChatSession } = await import('./operators.js');
+    if (isSessionWithOperator(sessionId) || sessionData.mode === 'live_chat_active') {
+      // Update session mode if operator took the chat
+      if (sessionData.mode !== 'live_chat_active') {
+        setSessionData(sessionId, { mode: 'live_chat_active' });
+      }
+      
+      // Chat è gestita da operatore umano - salva messaggio utente
+      await saveUserMessageToOperatorChat(sessionId, message);
+      
+      // Controlla se ci sono messaggi dall'operatore
+      const chatSession = getChatSession(sessionId);
+      const operatorMessages = chatSession?.messages?.filter(msg => 
+        msg.type === 'operator' && 
+        !msg.delivered_to_user
+      ) || [];
+      
+      let reply;
+      if (operatorMessages.length > 0) {
+        // Invia i messaggi dell'operatore all'utente
+        const operatorReplies = operatorMessages.map(msg => {
+          msg.delivered_to_user = true; // Marca come consegnato
+          return `**${msg.operator_name}:** ${msg.message}`;
+        }).join('\n\n');
+        
+        reply = `${operatorReplies}\n\n---\n💬 *Stai parlando con un operatore*`;
+      } else {
+        reply = `💬 **Messaggio inviato all'operatore.**\n\n⏳ L'operatore sta scrivendo la risposta...\n\n*Rimani in attesa, risponderà a breve.*`;
+      }
+      
+      return res.status(200).json({
+        reply,
+        sessionId,
+        liveChat: true,
+        operatorConnected: true,
+        messageQueued: true,
+        operatorMessages: operatorMessages.length
+      });
+    }
     
     // Real-time info rimosso - sempre dati statici da knowledge base
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -796,18 +841,14 @@ function isConfirmingSupport(message) {
   return confirmPatterns.some(pattern => pattern.test(lowerMessage));
 }
 
-// Verifica disponibilità operatori (placeholder - da implementare)
+// Verifica disponibilità operatori real-time
 async function checkOperatorAvailability() {
   try {
-    // Qui dovresti implementare il check real-time
-    // Per ora simulo con random per testing
-    return Math.random() > 0.5; // 50% chance per test
-    
-    /* IMPLEMENTAZIONE REALE:
-    const response = await fetch('https://ticket-system-chat.onrender.com/api/operators/status');
-    const data = await response.json();
-    return data.available_operators > 0;
-    */
+    // Import the operators functions directly
+    const { isOperatorAvailable } = await import('./operators.js');
+    const available = isOperatorAvailable();
+    console.log('👨‍💼 Operatori disponibili:', available);
+    return available;
   } catch (error) {
     console.error('❌ Errore check operatori:', error);
     return false; // Fallback a ticket se errore
@@ -817,23 +858,27 @@ async function checkOperatorAvailability() {
 // Inizia chat live con operatore
 async function initiateLiveChat(sessionId, originalQuestion, res) {
   try {
-    console.log('🔴 Avviando chat live per sessione:', sessionId);
+    console.log('🔴 Avviando handover chat live per sessione:', sessionId);
     
-    // Qui implementi l'handover alla chat live
-    // Per ora simulo il successo
-    
+    // Imposta stato sessione per handover
     setSessionData(sessionId, {
-      mode: 'live_chat',
-      operator_connected: true,
+      mode: 'live_chat_pending',
+      originalQuestion: originalQuestion,
       handover_time: Date.now(),
-      originalQuestion
+      waiting_for_operator: true
     });
     
     return res.status(200).json({
-      reply: `👨‍💼 **Operatore connesso!**\n\nCiao! Sono qui per aiutarti.\n\n❓ **La tua domanda:** "${originalQuestion}"\n\n💬 Scrivi pure, ti rispondo in tempo reale!`,
+      reply: `🔄 **Connessione all'operatore in corso...**\n\n❓ **La tua domanda:** "${originalQuestion}"\n\n⏳ Sto cercando un operatore disponibile.\n💬 Tra poco sarai in chat live!\n\n*L'operatore vedrà la tua domanda e potrà risponderti direttamente.*`,
       sessionId,
       liveChat: true,
-      operatorConnected: true
+      operatorConnected: false,
+      waitingForOperator: true,
+      handoverData: {
+        original_question: originalQuestion,
+        session_id: sessionId,
+        timestamp: new Date().toISOString()
+      }
     });
     
   } catch (error) {
@@ -932,22 +977,56 @@ async function createSupportTicket(originalQuestion, contactInfo, sessionId) {
 }
 
 // Gestione sessioni migliorata
-const sessionStore = new Map();
+// Session management moved to utils/session-store.js
 
-function getSessionData(sessionId) {
-  if (!sessionId) return {};
-  return sessionStore.get(sessionId) || {};
+// Salva messaggio utente per operatore
+async function saveUserMessageToOperatorChat(sessionId, message) {
+  try {
+    // Import direct access to operator functions
+    const { getChatSession } = await import('./operators.js');
+    const chatSession = getChatSession(sessionId);
+    
+    if (chatSession) {
+      // Aggiungi messaggio alla chat
+      const userMessage = {
+        type: 'user',
+        message: message,
+        timestamp: new Date().toISOString(),
+        message_id: Date.now().toString()
+      };
+      
+      chatSession.messages.push(userMessage);
+      chatSession.last_message = Date.now();
+      
+      console.log(`💬 Messaggio utente salvato per operatore: ${message}`);
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('❌ Errore salvataggio messaggio:', error);
+    return false;
+  }
 }
 
-function setSessionData(sessionId, data) {
-  if (!sessionId) return;
-  const existing = getSessionData(sessionId);
-  sessionStore.set(sessionId, { ...existing, ...data });
-}
-
-function clearSessionData(sessionId) {
-  if (!sessionId) return;
-  sessionStore.delete(sessionId);
+// Verifica se la chat è stata presa da un operatore
+async function checkChatTakenByOperator(sessionId) {
+  try {
+    const response = await fetch(`/api/operators?action=chat_status&session_id=${sessionId}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.taken_by_operator || false;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('❌ Errore check chat status:', error);
+    return false;
+  }
 }
 
 // Genera smart actions contestuali
