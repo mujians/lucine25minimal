@@ -169,36 +169,62 @@ export default async function handler(req, res) {
     
     // Regex fallback rimosso - GPT gestisce tutti gli intent tramite prompt migliorato
     
-    // 🎫 SISTEMA TICKET COMPLETO
+    // 🎫 SISTEMA SUPPORTO IBRIDO (Chat Live + Ticket)
     if (!reply || isLowConfidenceReply(reply)) {
       
-      // Controlla se l'utente ha confermato creazione ticket
-      const isConfirmingTicket = checkTicketConfirmation(message, sessionId);
+      const sessionData = getSessionData(sessionId);
+      const currentStep = sessionData.supportStep || 'initial';
       
-      if (isConfirmingTicket) {
-        // Utente ha confermato - crea ticket
-        const whatsappUser = findUserBySession(sessionId);
-        const ticketResult = await createTicket(message, sessionId, req, whatsappUser);
+      if (currentStep === 'initial') {
+        // Primo step: chiedi se vuole aiuto
+        setSessionData(sessionId, { 
+          supportStep: 'requested', 
+          originalQuestion: message,
+          timestamp: Date.now()
+        });
         
-        if (ticketResult.success) {
-          reply = `✅ **Ticket creato con successo!**\n\nTicket ID: **#${ticketResult.ticket_id}**\n\n📧 Riceverai risposta via email entro 24h\n${whatsappUser ? '📱 Ti contatteremo anche su WhatsApp!' : '🔔 Registra WhatsApp per notifiche istantanee'}`;
-          
-          // Aggiungi smart action per WhatsApp se non registrato
-          if (!whatsappUser) {
-            // Sarà gestito da getSmartActions
-          }
-        } else {
-          reply = `❌ **Errore nella creazione del ticket**\n\n${ticketResult.error}\n\n📞 **Contatta direttamente:**\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`;
-        }
-      } else {
-        // Prima richiesta - chiedi conferma
         return res.status(200).json({
-          reply: `🤔 **Non ho trovato una risposta precisa alla tua domanda.**\n\n💬 **Vuoi che contatti un operatore umano?**\n\nUn operatore potrà aiutarti con informazioni dettagliate e supporto personalizzato.\n\n✅ Rispondi **"Sì, contatta operatore"** per creare un ticket\n❌ Oppure prova:\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`,
+          reply: `🤔 **Non ho trovato una risposta precisa alla tua domanda.**\n\n💬 **Vuoi che ti aiuti a contattare un operatore?**\n\n✅ Rispondi **"Sì"** per verificare disponibilità\n❌ Oppure prova:\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`,
           sessionId: sessionId || generateSessionId(),
           needsConfirmation: true,
-          confirmationType: 'ticket_creation',
-          originalQuestion: message
+          confirmationType: 'support_request'
         });
+        
+      } else if (currentStep === 'requested' && isConfirmingSupport(message)) {
+        // Secondo step: check disponibilità operatori
+        const operatorAvailable = await checkOperatorAvailability();
+        
+        if (operatorAvailable) {
+          // SCENARIO 1: Operatore disponibile → Chat Live
+          return await initiateLiveChat(sessionId, sessionData.originalQuestion, res);
+        } else {
+          // SCENARIO 2: Nessun operatore → Richiedi contatti per ticket
+          setSessionData(sessionId, { supportStep: 'contact_request' });
+          
+          return res.status(200).json({
+            reply: `⏰ **Al momento non ci sono operatori disponibili.**\n\n📝 **Vuoi aprire un ticket di supporto?**\n\nTi risponderemo via email o WhatsApp entro 24h.\n\n📧 **Invia la tua email** (es: mario@email.com)\n📱 **Oppure il tuo numero WhatsApp** (es: +39 123 456 7890)`,
+            sessionId,
+            needsConfirmation: true,
+            confirmationType: 'contact_collection'
+          });
+        }
+        
+      } else if (currentStep === 'contact_request') {
+        // Terzo step: raccolta contatti e creazione ticket
+        const contactInfo = extractContactFromMessage(message);
+        
+        if (contactInfo.valid) {
+          const ticketResult = await createSupportTicket(sessionData.originalQuestion, contactInfo, sessionId);
+          
+          if (ticketResult.success) {
+            clearSessionData(sessionId);
+            reply = `✅ **Ticket di supporto creato!**\n\nTicket ID: **#${ticketResult.ticket_id}**\n\n📧 Ti risponderemo su: ${contactInfo.contact}\n⏱️ Tempo di risposta: entro 24h\n\n💡 Conserva questo ID per riferimenti futuri.`;
+          } else {
+            reply = `❌ **Errore nella creazione del ticket.**\n\n${ticketResult.error}\n\n📞 **Contatta direttamente:**\n📧 ${knowledgeBase.contact.email}\n📱 ${knowledgeBase.contact.whatsapp}`;
+          }
+        } else {
+          reply = `❌ **Formato contatto non riconosciuto.**\n\nPer favore invia:\n📧 **Email valida** (es: mario@email.com)\n📱 **Numero WhatsApp** (es: +39 123 456 7890)\n\n💡 Riprova con il formato corretto.`;
+        }
       }
     }
 
@@ -720,7 +746,7 @@ function getDefaultKnowledgeBase() {
 }
 
 // ================================
-// 🎫 SISTEMA TICKET COMPLETO
+// 🎫 SISTEMA SUPPORTO IBRIDO CORRETTO
 // ================================
 
 // Rileva se la risposta GPT indica bassa confidenza
@@ -755,211 +781,173 @@ function isLowConfidenceReply(reply) {
   return hasLowConfidenceIndicator || isVeryShort || isGeneric;
 }
 
-// Controlla se l'utente ha confermato la creazione del ticket
-function checkTicketConfirmation(message, sessionId) {
+// Controlla se l'utente conferma richiesta supporto
+function isConfirmingSupport(message) {
   const lowerMessage = message.toLowerCase();
   
-  // Pattern di conferma precisi
   const confirmPatterns = [
-    /sì.*contatta.*operatore/i,
-    /si.*contatta.*operatore/i,
-    /conferm.*ticket/i,
-    /conferm.*operatore/i,
-    /crea.*ticket/i,
-    /^\s*(sì|si|yes|ok|conferma)\s*$/i, // Solo "sì" "si" "ok" 
-    /contatta.*operatore/i,
-    /voglio.*operatore/i,
-    /ho bisogno.*operatore/i
+    /^\s*(sì|si|yes|ok|certo|esatto)\s*$/i,
+    /sì.*per favore/i,
+    /si.*grazie/i,
+    /help/i,
+    /aiuto/i
   ];
   
-  // Controlla se il messaggio matcha uno dei pattern
   return confirmPatterns.some(pattern => pattern.test(lowerMessage));
 }
 
-// Crea ticket nel sistema esterno
-async function createTicket(originalMessage, sessionId, req, whatsappUser) {
+// Verifica disponibilità operatori (placeholder - da implementare)
+async function checkOperatorAvailability() {
   try {
-    console.log('🎫 Creando ticket...', { sessionId, originalMessage });
+    // Qui dovresti implementare il check real-time
+    // Per ora simulo con random per testing
+    return Math.random() > 0.5; // 50% chance per test
     
-    // Estrai dati utente da headers e sessione
-    const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
-    const userAgent = req.headers['user-agent'] || 'unknown';
+    /* IMPLEMENTAZIONE REALE:
+    const response = await fetch('https://ticket-system-chat.onrender.com/api/operators/status');
+    const data = await response.json();
+    return data.available_operators > 0;
+    */
+  } catch (error) {
+    console.error('❌ Errore check operatori:', error);
+    return false; // Fallback a ticket se errore
+  }
+}
+
+// Inizia chat live con operatore
+async function initiateLiveChat(sessionId, originalQuestion, res) {
+  try {
+    console.log('🔴 Avviando chat live per sessione:', sessionId);
     
-    // Recupera domanda originale dalla sessione se disponibile
-    const sessionData = getSessionData(sessionId);
-    const originalQuestion = sessionData?.originalQuestion || originalMessage;
+    // Qui implementi l'handover alla chat live
+    // Per ora simulo il successo
     
-    // Prepara dati ticket
+    setSessionData(sessionId, {
+      mode: 'live_chat',
+      operator_connected: true,
+      handover_time: Date.now(),
+      originalQuestion
+    });
+    
+    return res.status(200).json({
+      reply: `👨‍💼 **Operatore connesso!**\n\nCiao! Sono qui per aiutarti.\n\n❓ **La tua domanda:** "${originalQuestion}"\n\n💬 Scrivi pure, ti rispondo in tempo reale!`,
+      sessionId,
+      liveChat: true,
+      operatorConnected: true
+    });
+    
+  } catch (error) {
+    console.error('❌ Errore chat live:', error);
+    
+    // Fallback a ticket
+    setSessionData(sessionId, { supportStep: 'contact_request' });
+    
+    return res.status(200).json({
+      reply: `⚠️ **Errore connessione operatore.**\n\nPassiamo al ticket di supporto.\n\n📧 **Invia la tua email** per ricevere assistenza.`,
+      sessionId,
+      needsConfirmation: true,
+      confirmationType: 'contact_collection'
+    });
+  }
+}
+
+// Estrae contatti dal messaggio utente
+function extractContactFromMessage(message) {
+  const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/;
+  const phoneRegex = /(\+?[0-9]{1,4}[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9})/;
+  
+  const emailMatch = message.match(emailRegex);
+  const phoneMatch = message.match(phoneRegex);
+  
+  if (emailMatch) {
+    return {
+      valid: true,
+      type: 'email',
+      contact: emailMatch[1],
+      formatted: emailMatch[1]
+    };
+  }
+  
+  if (phoneMatch) {
+    return {
+      valid: true, 
+      type: 'phone',
+      contact: phoneMatch[1],
+      formatted: phoneMatch[1].replace(/[-.\s]/g, '')
+    };
+  }
+  
+  return { valid: false };
+}
+
+// Crea ticket nel sistema corretto
+async function createSupportTicket(originalQuestion, contactInfo, sessionId) {
+  try {
+    console.log('🎫 Creando ticket sistema:', originalQuestion);
+    
     const ticketData = {
-      subject: `Richiesta supporto Lucine di Natale - ${new Date().toLocaleDateString('it-IT')}`,
-      message: originalQuestion,
-      user_context: {
-        session_id: sessionId,
-        user_ip: userIP,
-        user_agent: userAgent,
-        timestamp: new Date().toISOString(),
-        source: 'chatbot_lucine',
-        whatsapp_number: whatsappUser?.phone_number || null,
-        chat_history: getSessionChatHistory(sessionId) // Ultime 3 domande
-      },
-      priority: 'normal',
-      category: 'chatbot_escalation',
-      customer_email: whatsappUser?.email || 'noreply@lucinedinatale.it',
-      customer_name: whatsappUser?.name || 'Utente Chatbot',
-      tags: ['chatbot', 'lucine', 'support_request']
+      user_email: contactInfo.type === 'email' ? contactInfo.contact : 'noreply@lucinedinatale.it',
+      user_phone: contactInfo.type === 'phone' ? contactInfo.formatted : '',
+      question: originalQuestion,
+      priority: 'medium'
     };
     
-    console.log('📤 Inviando ticket a:', 'https://magazzino-gep-backend.onrender.com/api/tickets');
+    console.log('📤 Ticket data:', ticketData);
     
-    // Invia al sistema ticket esterno con retry
-    const response = await fetch('https://magazzino-gep-backend.onrender.com/api/tickets', {
+    const response = await fetch('https://ticket-system-chat.onrender.com/api/tickets', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'LucineChatbot/1.0',
-        'X-Source': 'chatbot'
+        'User-Agent': 'LucineChatbot/1.0'
       },
-      body: JSON.stringify(ticketData),
-      timeout: 10000
+      body: JSON.stringify(ticketData)
     });
     
     if (response.ok) {
       const result = await response.json();
-      
       console.log('✅ Ticket creato:', result);
-      
-      // Salva info ticket nella sessione
-      saveTicketToSession(sessionId, {
-        ticket_id: result.ticket_id || result.id,
-        created_at: new Date().toISOString(),
-        original_question: originalQuestion
-      });
-      
-      // Invia notifica WhatsApp se utente registrato
-      if (whatsappUser?.phone_number) {
-        try {
-          await sendWhatsAppTicketNotification(whatsappUser.phone_number, result.ticket_id || result.id);
-        } catch (whatsappError) {
-          console.error('⚠️ Errore notifica WhatsApp:', whatsappError);
-          // Non fallire il ticket per errori WhatsApp
-        }
-      }
       
       return {
         success: true,
-        ticket_id: result.ticket_id || result.id || generateTicketId(),
-        message: 'Ticket creato correttamente! Un operatore ti risponderà presto.',
-        external_response: result
+        ticket_id: result.ticket.id,
+        message: 'Ticket creato con successo!'
       };
-      
     } else {
       const errorText = await response.text();
       console.error('❌ Errore API ticket:', response.status, errorText);
       
-      // Fallback: salva ticket locale
-      const fallbackTicket = saveFallbackTicket(ticketData);
-      
       return {
-        success: true, // Non far fallire UX
-        ticket_id: fallbackTicket.ticket_id,
-        message: 'Richiesta registrata! Ti ricontatteremo via email.',
-        fallback: true
+        success: false,
+        error: 'Errore del sistema ticket. Riprova più tardi.'
       };
     }
     
   } catch (error) {
     console.error('❌ Errore creazione ticket:', error);
-    
-    // Fallback completo
-    const fallbackTicket = saveFallbackTicket({
-      subject: `Supporto Chatbot - ${new Date().toLocaleDateString('it-IT')}`,
-      message: originalMessage,
-      session_id: sessionId,
-      timestamp: new Date().toISOString()
-    });
-    
     return {
       success: false,
-      error: 'Errore temporaneo del sistema. Usa i contatti diretti.',
-      ticket_id: fallbackTicket.ticket_id,
-      fallback: true
+      error: 'Errore di connessione. Usa i contatti diretti.'
     };
   }
 }
 
-// Genera ID ticket unico
-function generateTicketId() {
-  const now = new Date();
-  const timestamp = now.getTime().toString(36);
-  const random = Math.random().toString(36).substr(2, 4);
-  return `LUC${timestamp}${random}`.toUpperCase();
-}
-
-// Salva ticket in fallback locale (per backup)
-function saveFallbackTicket(ticketData) {
-  const ticketId = generateTicketId();
-  
-  // Log dettagliato per retrieval manuale
-  console.log('💾 FALLBACK TICKET SAVED:', {
-    ticket_id: ticketId,
-    timestamp: new Date().toISOString(),
-    data: ticketData
-  });
-  
-  // Qui potresti salvare in un file locale o database se necessario
-  // Per ora solo log per monitoraggio Vercel
-  
-  return { ticket_id: ticketId };
-}
-
-// Gestione sessioni in memoria (limitata ma funzionale)
+// Gestione sessioni migliorata
 const sessionStore = new Map();
 
 function getSessionData(sessionId) {
+  if (!sessionId) return {};
   return sessionStore.get(sessionId) || {};
 }
 
-function saveTicketToSession(sessionId, ticketInfo) {
+function setSessionData(sessionId, data) {
+  if (!sessionId) return;
   const existing = getSessionData(sessionId);
-  existing.tickets = existing.tickets || [];
-  existing.tickets.push(ticketInfo);
-  sessionStore.set(sessionId, existing);
+  sessionStore.set(sessionId, { ...existing, ...data });
 }
 
-function getSessionChatHistory(sessionId) {
-  const sessionData = getSessionData(sessionId);
-  return sessionData.chatHistory || [];
-}
-
-// Notifica WhatsApp per ticket creato
-async function sendWhatsAppTicketNotification(phoneNumber, ticketId) {
-  try {
-    // Template notifica ticket
-    const message = `🎫 *Ticket Creato - Lucine di Natale*\n\nTicket ID: #${ticketId}\n\n✅ La tua richiesta è stata registrata\n📧 Riceverai risposta via email entro 24h\n💬 Per aggiornamenti scrivi su WhatsApp\n\nGrazie per averci contattato!`;
-    
-    // Invia tramite API WhatsApp (se configurata)
-    const response = await fetch(`${process.env.WHATSAPP_API_URL || 'http://localhost:3000'}/api/whatsapp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'send_message',
-        to: phoneNumber,
-        message: message,
-        type: 'ticket_notification'
-      })
-    });
-    
-    if (response.ok) {
-      console.log('📱 Notifica WhatsApp inviata:', phoneNumber);
-      return true;
-    } else {
-      throw new Error(`WhatsApp API error: ${response.status}`);
-    }
-    
-  } catch (error) {
-    console.error('❌ Errore notifica WhatsApp ticket:', error);
-    return false;
-  }
+function clearSessionData(sessionId) {
+  if (!sessionId) return;
+  sessionStore.delete(sessionId);
 }
 
 // Genera smart actions contestuali
