@@ -20,23 +20,32 @@
   },
   "tickets": {
     "prices": {
-      "adult": 15,
-      "child": 10,
-      "family": 40,
+      "intero": 9,
+      "ridotto": 7,
+      "saltafila": 13,
+      "open": 25,
       "under3": 0
     },
     "types": {
-      "standard": {
-        "name": "Biglietto Standard",
-        "description": "Ingresso nella fascia oraria scelta"
+      "intero": {
+        "name": "Biglietto Intero",
+        "description": "Ingresso standard nella fascia oraria scelta",
+        "price": 9
+      },
+      "ridotto": {
+        "name": "Biglietto Ridotto", 
+        "description": "Per bambini 3-12 anni e disabili",
+        "price": 7
       },
       "saltafila": {
         "name": "Biglietto SALTAFILA", 
-        "description": "Accesso prioritario nella fascia oraria scelta"
+        "description": "Accesso prioritario nella fascia oraria scelta",
+        "price": 13
       },
       "open": {
         "name": "Biglietto OPEN",
-        "description": "Ingresso con data/ora libera + accesso prioritario sempre"
+        "description": "Massima flessibilità senza vincoli data/ora",
+        "price": 25
       }
     },
     "discounts": {
@@ -120,6 +129,25 @@
         "a": "In caso di annullamento riceverai un codice per prenotare gratuitamente una nuova data."
       }
     ]
+  },
+  "products": {
+    "main_ticket": {
+      "url": "https://lucinedinatale.it/products/biglietto-parco-lucine-di-natale-2025",
+      "name": "Biglietto Parco Lucine di Natale 2025",
+      "variants": {
+        "intero": "Biglietto standard per accesso nella fascia oraria scelta",
+        "ridotto": "Per bambini 3-12 anni e disabili (under 2 gratis, disabili con accompagnatore gratis)",
+        "saltafila": "Accesso prioritario saltando la fila all'ingresso, ideale per weekend",
+        "open": "Massima flessibilità senza prenotazione data/ora specifica"
+      }
+    },
+    "purchase_info": {
+      "online_advantage": "Prezzo agevolato e posto garantito",
+      "requirements": {
+        "ridotto": "Documento età bambini, certificazione per disabili",
+        "saltafila": "Valido per giorno e fascia oraria selezionata"
+      }
+    }
   },
   "contact": {
     "email": "info@lucinedinatale.it",
