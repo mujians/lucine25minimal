@@ -25,10 +25,13 @@
 | Knowledge Base | `/chatbot-backend/data/knowledge-base.json` | Database informazioni | ✅ Aggiornato |
 | WhatsApp Integration | `/chatbot-backend/api/whatsapp.js` | API WhatsApp Business | ⚠️ Parziale |
 | Ticket System | Integrato in `chat.js` | Creazione ticket supporto | ✅ Attivo |
+| Operator Management | `/chatbot-backend/api/operators.js` | Gestione operatori e chat live | ✅ Attivo |
+| Live Chat System | Integrato chat.js + operators.js | Chat real-time con operatori | ✅ Attivo |
 
 ### URL e Endpoint
 - **Frontend**: `https://lucinedinatale.it/?chatbot=test`
 - **Backend API**: `https://chatbot-backend-aicwwsgq5-brunos-projects-075c84f2.vercel.app/api/chat`
+- **Operators API**: `https://chatbot-backend-aicwwsgq5-brunos-projects-075c84f2.vercel.app/api/operators`
 - **Ticket System**: `https://magazzino-gep-backend.onrender.com/api/tickets`
 
 ---
@@ -56,6 +59,12 @@
    - URL trasformati in pulsanti beauty
    - Stili differenziati per tipo link
    - Target="_blank" automatico
+
+5. **Hybrid Support System**
+   - Handover seamless AI → Operatore umano
+   - Real-time messaging bidirezionale
+   - Gestione code e sessioni multiple
+   - Operator dashboard API completa
 
 ### ⚠️ Parzialmente Implementate
 1. **WhatsApp Business**
