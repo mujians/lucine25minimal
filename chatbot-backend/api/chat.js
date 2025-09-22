@@ -216,6 +216,47 @@ export default async function handler(req, res) {
       }
     }
     
+    // Controlla intent di acquisto che l'AI potrebbe aver perso
+    const purchaseIntents = [
+      /devo.*comprar.*bigliett/i,
+      /voglio.*comprar.*bigliett/i,
+      /bisogna.*comprar.*bigliett/i,
+      /serve.*comprar.*bigliett/i,
+      /devo.*bigliett/i,
+      /voglio.*bigliett/i,
+      /comprare.*bigliett/i,
+      /acquistar.*bigliett/i
+    ];
+    
+    if (purchaseIntents.some(pattern => pattern.test(message.toLowerCase())) && !reply.includes('BOOKING_REQUEST')) {
+      const bookingRequest = parseBookingRequest(message);
+      
+      if (bookingRequest.dates.length > 0) {
+        // Ha specificato date
+        const targetDate = bookingRequest.dates[0];
+        if (bookingRequest.quantity && bookingRequest.quantity <= 4) {
+          try {
+            const cartResult = await addToCartDirect('intero', bookingRequest.quantity, targetDate.formatted);
+            if (cartResult.success) {
+              reply = `${cartResult.message}\n\n🛒 Vai al carrello per completare l'acquisto:\n👆 ${cartResult.cart_url}`;
+            } else {
+              reply = `🎫 Per prenotare biglietti per il ${targetDate.day} ${targetDate.month === 12 ? 'dicembre' : 'gennaio'}, usa il calendario:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}`;
+            }
+          } catch (error) {
+            reply = `🎫 Per prenotare biglietti, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}`;
+          }
+        } else {
+          const datesList = bookingRequest.dates.map(d => 
+            `${d.day} ${d.month === 12 ? 'dicembre' : 'gennaio'}`
+          ).join(' e ');
+          reply = `🎫 Per prenotare biglietti per il ${datesList}, usa il calendario:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}`;
+        }
+      } else {
+        // Richiesta generica senza date
+        reply = `🎫 Per prenotare biglietti, usa il calendario interattivo:\n\n👆 ${knowledgeBase.products?.main_ticket?.url}\n\n📅 Seleziona data e orario\n🎟️ Scegli tipo biglietto\n🛒 Aggiungi al carrello`;
+      }
+    }
+    
     // Controlla se la risposta è troppo generica o indica incertezza
     if (!reply || isLowConfidenceReply(reply)) {
       
@@ -255,11 +296,10 @@ export default async function handler(req, res) {
 
     // Aggiungi smart actions contestuali
     const smartActions = getSmartActions(reply, message, knowledgeBase);
-    const suggestions = getSuggestions(message, knowledgeBase);
+    // Suggerimenti esterni rimossi per richiesta utente
 
     return res.status(200).json({ 
       reply,
-      suggestions,
       smartActions,
       sessionId: sessionId || generateSessionId()
     });
@@ -332,8 +372,7 @@ SERVIZI:
 
 REGOLE IMPORTANTI:
 - Se qualcuno chiede date disponibili o calendario, menziona che il sistema di prenotazione ha un calendario interattivo
-- Se qualcuno chiede di acquistare biglietti, fornisci sempre il link: ${ticketUrl}
-- Per date/orari specifici rimanda sempre al calendario sul sito di acquisto
+- ACQUISTO GENERALE: Se qualcuno vuole comprare/acquistare biglietti in generale (senza date specifiche), rispondi con "BOOKING_REQUEST" per attivare il sistema di prenotazione guidata
 - PRENOTAZIONI SPECIFICHE: Se qualcuno vuole biglietti per date specifiche (es: "biglietti per il 23 dicembre"), rispondi con "BOOKING_REQUEST" seguito dalla data
 - WHATSAPP NOTIFICHE: Se qualcuno chiede notifiche, aggiornamenti o WhatsApp, rispondi con "WHATSAPP_REQUEST" per attivare la raccolta numero
 - Se la data richiesta è 24 o 31 dicembre, avvisa che il parco è CHIUSO in quelle date
