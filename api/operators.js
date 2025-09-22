@@ -248,6 +248,9 @@ async function takeChat(req, res) {
     operator.lastSeen = Date.now();
     operatorStore.set(operator_id, operator);
 
+    // Log handover AI → Operatore su Google Sheets
+    await logChatHandover(session_id, chatSession, operator_name);
+
     console.log(`🔴 Chat ${session_id} presa da operatore ${operator_name}`);
 
     return res.status(200).json({
@@ -296,6 +299,9 @@ async function sendOperatorMessage(req, res) {
     // Aggiorna nella store
     activeChatSessions.set(session_id, chatSession);
 
+    // Log immediato messaggio operatore su Google Sheets
+    await logOperatorMessageImmediate(session_id, operatorMessage, chatSession);
+
     console.log(`💬 Operatore ${chatSession.operator_name}: ${message}`);
 
     return res.status(200).json({
@@ -328,6 +334,12 @@ async function releaseChat(req, res) {
     if (chatSession.operator_id !== operator_id) {
       return res.status(403).json({ error: 'Not authorized for this chat' });
     }
+
+    // Salva conversazione completa su Google Sheets
+    await saveCompleteConversationToSheets(chatSession, reason);
+    
+    // Crea ticket automatico per tracciabilità
+    const ticketResult = await createTicketFromLiveChat(chatSession, reason);
 
     // Rimuovi chat attiva
     activeChatSessions.delete(session_id);
@@ -401,6 +413,9 @@ async function saveUserMessage(req, res) {
 
     // Aggiorna nella store
     activeChatSessions.set(session_id, chatSession);
+
+    // Log immediato messaggio utente su Google Sheets  
+    await logUserMessageImmediate(session_id, userMessage, chatSession);
 
     console.log(`👤 Utente in chat ${session_id}: ${message}`);
 
@@ -500,5 +515,170 @@ async function getChatStatus(req, res) {
   } catch (error) {
     console.error('❌ Errore get chat status:', error);
     return res.status(500).json({ error: 'Error getting chat status' });
+  }
+}
+
+// Salva conversazione completa su Google Sheets
+async function saveCompleteConversationToSheets(chatSession, reason) {
+  try {
+    const { logConversation } = await import('../utils/sheets-logger.js');
+    
+    // Crea un riassunto della conversazione completa
+    const allMessages = chatSession.messages || [];
+    const userMessages = allMessages.filter(msg => msg.type === 'user');
+    const operatorMessages = allMessages.filter(msg => msg.type === 'operator');
+    
+    // Combina tutti i messaggi in una conversazione leggibile
+    const conversationSummary = allMessages.map(msg => {
+      if (msg.type === 'user') {
+        return `👤 Utente: ${msg.message}`;
+      } else if (msg.type === 'operator') {
+        return `👨‍💼 ${msg.operator_name}: ${msg.message}`;
+      }
+      return msg.message;
+    }).join('\n');
+    
+    // Log come conversazione AI normale ma con flag operatore
+    await logConversation({
+      sessionId: chatSession.session_id,
+      userMessage: chatSession.original_question || 'Chat live con operatore',
+      botReply: `[CHAT LIVE COMPLETATA]\n\n${conversationSummary}\n\n[Fine chat - Motivo: ${reason || 'completed'}]`,
+      userIP: 'live_chat',
+      smartActions: [],
+      responseTime: Date.now() - new Date(chatSession.started_at).getTime(),
+      intentDetected: 'live_chat_operator',
+      whatsappUser: false,
+      userAgent: `Operatore: ${chatSession.operator_name}`
+    });
+    
+    console.log(`📊 Chat live salvata su Google Sheets: ${chatSession.session_id}`);
+    return true;
+    
+  } catch (error) {
+    console.error('❌ Errore salvataggio Google Sheets chat live:', error);
+    return false;
+  }
+}
+
+// Crea ticket automatico dalla chat live
+async function createTicketFromLiveChat(chatSession, reason) {
+  try {
+    // Prepara dati per ticket system
+    const conversationText = chatSession.messages?.map(msg => {
+      const timestamp = new Date(msg.timestamp).toLocaleString('it-IT');
+      if (msg.type === 'user') {
+        return `[${timestamp}] Utente: ${msg.message}`;
+      } else if (msg.type === 'operator') {
+        return `[${timestamp}] ${msg.operator_name}: ${msg.message}`;
+      }
+      return `[${timestamp}] ${msg.message}`;
+    }).join('\n') || 'Nessun messaggio registrato';
+    
+    const ticketData = {
+      session_id: chatSession.session_id,
+      original_question: chatSession.original_question || 'Chat live con operatore',
+      conversation_transcript: conversationText,
+      operator_name: chatSession.operator_name,
+      started_at: chatSession.started_at,
+      ended_at: new Date().toISOString(),
+      resolution_reason: reason || 'completed',
+      status: 'resolved',
+      contact_method: 'live_chat',
+      contact_info: 'Chat live - non richiesto contatto'
+    };
+    
+    // Chiama API ticket system
+    const response = await fetch('https://magazzino-gep-backend.onrender.com/api/tickets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(ticketData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log(`🎫 Ticket creato da chat live: ${result.ticket_id || 'ID non disponibile'}`);
+      return { success: true, ticket_id: result.ticket_id };
+    } else {
+      console.error('⚠️ Errore API ticket system:', response.status);
+      return { success: false, error: 'API ticket system error' };
+    }
+    
+  } catch (error) {
+    console.error('❌ Errore creazione ticket da chat live:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Log immediato messaggio operatore su Google Sheets
+async function logOperatorMessageImmediate(sessionId, operatorMessage, chatSession) {
+  try {
+    const { logConversation } = await import('../utils/sheets-logger.js');
+    
+    await logConversation({
+      sessionId: sessionId,
+      userMessage: '[MESSAGGIO OPERATORE IN CHAT LIVE]',
+      botReply: `👨‍💼 ${operatorMessage.operator_name}: ${operatorMessage.message}`,
+      userIP: 'live_chat_operator',
+      smartActions: [],
+      responseTime: 0,
+      intentDetected: 'live_chat_operator_message',
+      whatsappUser: false,
+      userAgent: `Chat Live - ${operatorMessage.operator_name}`
+    });
+    
+    console.log(`📊 Messaggio operatore loggato immediatamente: ${sessionId}`);
+    
+  } catch (error) {
+    console.error('❌ Errore log immediato operatore:', error);
+  }
+}
+
+// Log immediato messaggio utente in chat live su Google Sheets
+async function logUserMessageImmediate(sessionId, userMessage, chatSession) {
+  try {
+    const { logConversation } = await import('../utils/sheets-logger.js');
+    
+    await logConversation({
+      sessionId: sessionId,
+      userMessage: `[CHAT LIVE] ${userMessage.message}`,
+      botReply: `[In attesa risposta operatore ${chatSession.operator_name}]`,
+      userIP: 'live_chat_user',
+      smartActions: [],
+      responseTime: 0,
+      intentDetected: 'live_chat_user_message',
+      whatsappUser: false,
+      userAgent: `Chat Live con ${chatSession.operator_name}`
+    });
+    
+    console.log(`📊 Messaggio utente loggato immediatamente: ${sessionId}`);
+    
+  } catch (error) {
+    console.error('❌ Errore log immediato utente:', error);
+  }
+}
+
+// Log handover AI → Operatore su Google Sheets
+async function logChatHandover(sessionId, chatSession, operatorName) {
+  try {
+    const { logConversation } = await import('../utils/sheets-logger.js');
+    
+    await logConversation({
+      sessionId: sessionId,
+      userMessage: chatSession.original_question || '[Domanda originale non disponibile]',
+      botReply: `🔄 [HANDOVER CHAT LIVE]\n\n👤 Domanda utente: "${chatSession.original_question}"\n👨‍💼 Chat presa da operatore: ${operatorName}\n⏰ Inizio chat live: ${chatSession.started_at}\n\n💬 Da questo momento la conversazione è gestita dall'operatore umano.`,
+      userIP: 'chat_handover',
+      smartActions: [],
+      responseTime: 0,
+      intentDetected: 'chat_handover',
+      whatsappUser: false,
+      userAgent: `Handover to ${operatorName}`
+    });
+    
+    console.log(`📊 Handover loggato: ${sessionId} → ${operatorName}`);
+    
+  } catch (error) {
+    console.error('❌ Errore log handover:', error);
   }
 }
