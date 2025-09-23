@@ -850,6 +850,8 @@ function initializeChatbot() {
           window.open(action.url, '_blank');
         } else if (action.action === 'whatsapp_signup') {
           sendMessage('voglio attivare notifiche whatsapp');
+        } else if (action.action === 'request_operator') {
+          sendMessage('request_operator');
         }
         actionsContainer.remove();
       });
