@@ -515,8 +515,9 @@
   text-align: left;
   font-family: inherit;
   width: 100%;
-  background: transparent;
-  border: 2px solid;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-light);
 }
 
 .smart-action-button.primary {
@@ -659,13 +660,13 @@
     <!-- Messages -->
     <div class="chat-messages" id="chatMessages">
       <!-- Messaggi benvenuto già come bubble -->
-      <div class="chat-message">
-        <div class="message-bubble bot-message">
+      <div class="chat-message bot">
+        <div class="message-bubble">
           Ciao! Sono Lucy, il tuo assistente virtuale. 👋
         </div>
       </div>
-      <div class="chat-message">
-        <div class="message-bubble bot-message">
+      <div class="chat-message bot">
+        <div class="message-bubble">
           Chiedimi quello che vuoi sapere.<br>Se non troviamo una risposta, ti metterò in contatto con un operatore!
         </div>
       </div>
