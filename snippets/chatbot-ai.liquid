@@ -1,4 +1,5 @@
-<!-- FAQ CHATBOT AI - Snippet Shopify -->
+<!-- FAQ CHATBOT AI - Snippet Shopify v2.1.0 -->
+<!-- Complete Widget with Smart Actions, Operator Escalation & Live Chat Support -->
 <style>
 /* Chatbot Container */
 .faq-chatbot {
@@ -61,8 +62,64 @@
 
 .bot .message-bubble {
   background: rgba(139, 195, 74, 0.1);
-  color: var(--text-white);
+  color: white;
   border: 1px solid var(--christmas-green);
+}
+
+/* Smart Actions - Pulsanti dinamici */
+.smart-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: flex-start;
+}
+
+.smart-action-button {
+  background: rgba(139, 195, 74, 0.2);
+  border: 2px solid var(--christmas-green);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: Arial, -apple-system, sans-serif;
+}
+
+.smart-action-button:hover {
+  background: var(--christmas-green);
+  transform: translateY(-1px);
+}
+
+.smart-action-button.operator {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--christmas-gold);
+}
+
+.smart-action-button.operator:hover {
+  background: var(--christmas-gold);
+  color: var(--text-dark);
+}
+
+.action-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.action-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.action-description {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 0.125rem;
 }
 
 /* Input Area */
@@ -79,7 +136,7 @@
   padding: 1rem;
   border-radius: 8px;
   font-size: 1.188rem;
-  font-family: 'Lucine di Natale', -apple-system, sans-serif;
+  font-family: Arial, -apple-system, sans-serif;
   transition: all 0.3s ease;
 }
 
@@ -103,7 +160,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Lucine di Natale', -apple-system, sans-serif;
+  font-family: Arial, -apple-system, sans-serif;
 }
 
 .chat-send-btn:hover {
@@ -147,9 +204,12 @@
 
 /* Welcome Message */
 .chat-welcome {
-  text-align: center;
-  padding: 2rem;
-  color: var(--text-gray);
+  background: rgba(139, 195, 74, 0.1);
+  border: 1px solid var(--christmas-green);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  color: white;
 }
 
 .chat-welcome h4 {
@@ -172,6 +232,15 @@
   
   .chat-send-btn {
     padding: 1rem 1.5rem;
+  }
+  
+  .smart-actions {
+    flex-direction: column;
+  }
+  
+  .smart-action-button {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
@@ -219,17 +288,58 @@
 </div>
 
 <script>
-// CONFIGURAZIONE - Backend Render deployato
+// CONFIGURAZIONE - Backend Render deployato v2.1.0
 const BACKEND_URL = 'https://lucine-chatbot.onrender.com/api/chat';
+let currentSessionId = generateSessionId();
+let isOperatorConnected = false;
+let pollingInterval = null;
 
-// Funzione per inviare messaggi (SICURA - nessuna API key esposta)
-async function sendMessage() {
+// Genera session ID unico
+function generateSessionId() {
+  return 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+}
+
+// Polling per messaggi operatore
+function startOperatorPolling() {
+  if (pollingInterval) return;
+  
+  pollingInterval = setInterval(async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL.replace('/chat', '')}/chat/poll/${currentSessionId}`);
+      const data = await response.json();
+      
+      if (data.hasNewMessages) {
+        data.messages.forEach(msg => {
+          if (msg.sender === 'OPERATOR') {
+            addMessage('bot', `👨‍💼 **${msg.metadata?.operatorName || 'Operatore'}**: ${msg.message}`);
+          }
+        });
+      }
+      
+      // Aggiorna stato connessione
+      isOperatorConnected = data.sessionStatus === 'WITH_OPERATOR';
+      
+    } catch (error) {
+      console.error('Polling error:', error);
+    }
+  }, 3000);
+}
+
+function stopOperatorPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+}
+
+// Funzione per inviare messaggi
+async function sendMessage(messageText = null) {
   const input = document.getElementById('chatInput');
   const messagesDiv = document.getElementById('chatMessages');
   const sendBtn = document.getElementById('sendBtn');
   const typingIndicator = document.getElementById('typingIndicator');
   
-  const userMessage = input.value.trim();
+  const userMessage = messageText || input.value.trim();
   if (!userMessage) return;
   
   // Rimuovi welcome message se presente
@@ -237,30 +347,25 @@ async function sendMessage() {
   if (welcome) welcome.remove();
   
   // Aggiungi messaggio utente
-  messagesDiv.innerHTML += `
-    <div class="chat-message user">
-      <div class="message-bubble">${escapeHtml(userMessage)}</div>
-    </div>
-  `;
+  addMessage('user', userMessage);
   
   // Reset input e disabilita durante invio
-  input.value = '';
-  input.disabled = true;
-  sendBtn.disabled = true;
+  if (!messageText) {
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+  }
   typingIndicator.classList.add('show');
   
-  // Scroll to bottom
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  
   try {
-    // Chiamata al backend Vercel (sicuro)
     const response = await fetch(BACKEND_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: userMessage
+        message: userMessage,
+        sessionId: currentSessionId
       })
     });
     
@@ -270,34 +375,160 @@ async function sendMessage() {
       throw new Error(data.error);
     }
     
-    const botReply = data.reply;
-    
     // Aggiungi risposta bot
-    messagesDiv.innerHTML += `
-      <div class="chat-message bot">
-        <div class="message-bubble">${escapeHtml(botReply)}</div>
-      </div>
-    `;
+    addMessage('bot', data.reply);
+    
+    // Gestisci smart actions
+    if (data.actions && data.actions.length > 0) {
+      addSmartActions(data.actions);
+    }
+    
+    // Gestisci smart actions speciali
+    if (data.smartActions && data.smartActions.length > 0) {
+      addSmartActions(data.smartActions);
+    }
+    
+    // Gestisci connessione operatore
+    if (data.status === 'connecting_operator') {
+      isOperatorConnected = true;
+      startOperatorPolling();
+      addMessage('bot', `🟢 Connesso con **${data.operator.name}**! Ora puoi chattare direttamente.`);
+    }
+    
+    if (data.status === 'with_operator') {
+      isOperatorConnected = true;
+      startOperatorPolling();
+    }
     
   } catch (error) {
-    // Messaggio di errore user-friendly
-    messagesDiv.innerHTML += `
-      <div class="chat-message bot">
-        <div class="message-bubble">
-          Mi dispiace, c'è stato un problema di connessione. 
-          Riprova tra qualche istante o contatta <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a>
-        </div>
-      </div>
-    `;
+    addMessage('bot', `Mi dispiace, c'è stato un problema di connessione. Riprova tra qualche istante o contatta <a href="mailto:info@lucinedinatale.it" style="color: var(--christmas-red);">info@lucinedinatale.it</a>`);
     console.error('Chat Error:', error);
   } finally {
     // Riabilita input
-    input.disabled = false;
-    sendBtn.disabled = false;
+    if (!messageText) {
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
     typingIndicator.classList.remove('show');
-    input.focus();
-    
-    // Scroll to bottom
+  }
+}
+
+// Aggiungi messaggio alla chat
+function addMessage(sender, message) {
+  const messagesDiv = document.getElementById('chatMessages');
+  
+  messagesDiv.innerHTML += `
+    <div class="chat-message ${sender}">
+      <div class="message-bubble">${escapeHtml(message)}</div>
+    </div>
+  `;
+  
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Aggiungi smart actions
+function addSmartActions(actions) {
+  const messagesDiv = document.getElementById('chatMessages');
+  
+  let actionHTML = '<div class="smart-actions">';
+  
+  actions.forEach(action => {
+    if (typeof action === 'string') {
+      // Azioni semplici
+      switch(action) {
+        case 'biglietti_acquisto':
+          actionHTML += `
+            <button class="smart-action-button" onclick="window.open('https://lucinedinatale.it/collections/biglietti', '_blank')">
+              🎫 <div class="action-content">
+                <div class="action-title">Acquista Biglietti</div>
+                <div class="action-description">Vai al shop ufficiale</div>
+              </div>
+            </button>
+          `;
+          break;
+        case 'richiesta_operatore':
+          actionHTML += `
+            <button class="smart-action-button operator" onclick="sendMessage('request_operator')">
+              👨‍💼 <div class="action-content">
+                <div class="action-title">Contatta Operatore</div>
+                <div class="action-description">Chat live con operatore disponibile</div>
+              </div>
+            </button>
+          `;
+          break;
+        case 'info_parcheggi':
+          actionHTML += `
+            <button class="smart-action-button" onclick="sendMessage('informazioni parcheggi')">
+              🅿️ <div class="action-content">
+                <div class="action-title">Info Parcheggi</div>
+                <div class="action-description">Dove parcheggiare e navette</div>
+              </div>
+            </button>
+          `;
+          break;
+        case 'info_orari':
+          actionHTML += `
+            <button class="smart-action-button" onclick="sendMessage('che orari avete')">
+              🕐 <div class="action-content">
+                <div class="action-title">Orari</div>
+                <div class="action-description">Apertura e chiusura</div>
+              </div>
+            </button>
+          `;
+          break;
+        case 'info_location':
+          actionHTML += `
+            <button class="smart-action-button" onclick="sendMessage('come arrivare')">
+              📍 <div class="action-content">
+                <div class="action-title">Come Arrivare</div>
+                <div class="action-description">Posizione e indicazioni</div>
+              </div>
+            </button>
+          `;
+          break;
+        case 'info_prezzi':
+          actionHTML += `
+            <button class="smart-action-button" onclick="sendMessage('quanto costa il biglietto')">
+              💰 <div class="action-content">
+                <div class="action-title">Prezzi</div>
+                <div class="action-description">Tutte le tipologie</div>
+              </div>
+            </button>
+          `;
+          break;
+      }
+    } else if (typeof action === 'object') {
+      // Azioni complesse (per ticket support)
+      const icon = action.icon || '📧';
+      const buttonClass = action.type === 'ticket_whatsapp' ? 'operator' : '';
+      
+      if (action.type === 'ticket_email') {
+        actionHTML += `
+          <button class="smart-action-button ${buttonClass}" onclick="window.open('mailto:info@lucinedinatale.it?subject=Richiesta Assistenza', '_blank')">
+            ${icon} <div class="action-content">
+              <div class="action-title">${action.text}</div>
+              <div class="action-description">${action.description}</div>
+            </div>
+          </button>
+        `;
+      } else if (action.type === 'ticket_whatsapp') {
+        actionHTML += `
+          <button class="smart-action-button ${buttonClass}" onclick="window.open('https://wa.me/393123456789?text=Ciao, ho bisogno di assistenza per Lucine di Natale', '_blank')">
+            ${icon} <div class="action-content">
+              <div class="action-title">${action.text}</div>
+              <div class="action-description">${action.description}</div>
+            </div>
+          </button>
+        `;
+      }
+    }
+  });
+  
+  actionHTML += '</div>';
+  
+  if (actionHTML !== '<div class="smart-actions"></div>') {
+    messagesDiv.innerHTML += actionHTML;
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 }
@@ -317,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Gestione mobile - previeni zoom su focus
+// Gestione mobile - previeni zoom su focus  
 document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('chatInput');
   if (input && window.innerWidth <= 768) {
@@ -328,9 +559,24 @@ document.addEventListener('DOMContentLoaded', function() {
         this.focus();
       }
     });
-    // Previeni zoom su mobile
     input.setAttribute('readonly', 'readonly');
     setTimeout(() => input.removeAttribute('readonly'), 100);
+  }
+});
+
+// Click tracking per debug
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.smart-action-button')) {
+    console.log('CLICK EVENT:', {
+      target: e.target.tagName + (e.target.className ? '.' + e.target.className.replace(/\s+/g, '.') : ''),
+      targetText: e.target.textContent?.trim(),
+      closest: e.target.closest('.smart-action-button')?.tagName + (e.target.closest('.smart-action-button')?.className ? '.' + e.target.closest('.smart-action-button').className.replace(/\s+/g, '.') : ''),
+      closestText: e.target.closest('.smart-action-button')?.textContent?.trim(),
+      href: e.target.href || 'no href',
+      dataEvey: e.target.dataset.evey || 'no data-evey',
+      coordinates: { x: e.clientX, y: e.clientY },
+      timestamp: new Date().toLocaleTimeString()
+    });
   }
 });
 </script>
