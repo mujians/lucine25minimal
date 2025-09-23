@@ -99,15 +99,14 @@
 
 /* Expanded Mode */
 .chat-popup.expanded {
-  width: calc(100vw - 40px);
-  height: calc(100vh - 40px);
-  top: 20px;
+  width: 90vw;
+  height: 90vh;
+  top: 5vh;
   bottom: auto;
-  right: 20px;
-  left: 20px;
+  right: 5vw;
+  left: auto;
   border-radius: 20px;
   max-width: 1200px;
-  margin: 0 auto;
 }
 
 /* Mobile responsive */
@@ -318,7 +317,7 @@
   resize: none;
   max-height: 100px;
   min-height: 40px;
-  font-family: 'Lucine di Natale', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
 .chat-input-field:focus {
@@ -659,9 +658,16 @@
 
     <!-- Messages -->
     <div class="chat-messages" id="chatMessages">
-      <div class="chat-welcome">
-        <h4>Ciao! Sono Lucy, il tuo assistente virtuale. 👋</h4>
-        <p>Chiedimi quello che vuoi sapere.<br>Se non troviamo una risposta, ti metterò in contatto con un operatore!</p>
+      <!-- Messaggi benvenuto già come bubble -->
+      <div class="chat-message">
+        <div class="message-bubble bot-message">
+          Ciao! Sono Lucy, il tuo assistente virtuale. 👋
+        </div>
+      </div>
+      <div class="chat-message">
+        <div class="message-bubble bot-message">
+          Chiedimi quello che vuoi sapere.<br>Se non troviamo una risposta, ti metterò in contatto con un operatore!
+        </div>
       </div>
     </div>
 
