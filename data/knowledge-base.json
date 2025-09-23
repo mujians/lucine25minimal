@@ -2,9 +2,9 @@
   "event": {
     "name": "Lucine di Natale di Leggiuno",
     "dates": {
-      "start": "2024-12-05",
-      "end": "2025-01-06",
-      "closed": ["2024-12-24", "2024-12-31"]
+      "start": "2025-12-06",
+      "end": "2026-01-06",
+      "closed": ["2025-12-24", "2025-12-31"]
     },
     "hours": {
       "open": "17:30",
@@ -15,7 +15,11 @@
       "city": "Leggiuno",
       "province": "Varese",
       "region": "Lombardia",
-      "area": "Lago Maggiore"
+      "area": "Lago Maggiore",
+      "coordinates": {
+        "lat": 45.8776751,
+        "lng": 8.62088
+      }
     }
   },
   "tickets": {
@@ -127,6 +131,18 @@
       {
         "q": "Cosa succede se piove?",
         "a": "In caso di annullamento riceverai un codice per prenotare gratuitamente una nuova data."
+      },
+      {
+        "q": "I biglietti Saltafila e Open danno accesso prioritario?",
+        "a": "Solo i biglietti Saltafila e Open permettono di saltare la fila all'ingresso per accesso prioritario."
+      },
+      {
+        "q": "Posso modificare il mio biglietto?",
+        "a": "I biglietti possono essere modificati contattando info@lucinedinatale.it."
+      },
+      {
+        "q": "Ci sono attrazioni nelle vicinanze?",
+        "a": "Sì, durante il giorno sono disponibili attrazioni partner nelle vicinanze e ristoranti convenzionati."
       }
     ]
   },
