@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { getSessionData, setSessionData, clearSessionData } from '../utils/session-store.js';
 
 export default async function handler(req, res) {
@@ -100,60 +102,53 @@ export default async function handler(req, res) {
     // OpenAI call
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     
-    const context = `Sei l'assistente AI per "Lucine di Natale di Leggiuno".
+    // Carica knowledge base per informazioni dettagliate
+    const knowledgeBase = await loadKnowledgeBase();
+    
+    const context = `Sei l'assistente ufficiale di lucinedinatale.it.
+Il tuo compito è rispondere ai visitatori in italiano in modo cordiale, conciso e sempre con il formato JSON indicato.
 
-INFORMAZIONI EVENTO:
-- Date: 6 dicembre 2025 - 6 gennaio 2026 (chiuso 24 e 31 dicembre)
-- Orari: 17:30 - 23:00 (ultimo ingresso 22:30)
-- Location: Leggiuno (Varese), Lago Maggiore - GPS: 45.8776751, 8.62088
-- Biglietti: Intero €9, Ridotto €7 (3-12 anni + disabili), Saltafila €13, Open €25
-- Under 3 anni: ingresso gratuito
-- Riduzioni: portatori handicap + 1 accompagnatore gratis
-- Prenotazione online caldamente consigliata per posto garantito
-- Parcheggi gratuiti: P1 (Campo Sportivo), P2 (Manifattura), P3 (Chiesa S.Stefano), P4 (Scuole medie), P5 (S.Caterina)
-- Navetta gratuita: 16:30-22:30 ogni 15 min per P2, P4, P5
-- Accessibilità: percorso per carrozzine e passeggini
-- Animali: ammessi al guinzaglio (museruola per taglie grandi)
-- Servizi: mercatini e stand gastronomici disponibili
-- Email: info@lucinedinatale.it
-- Website: https://lucinedinatale.it
+Usa le informazioni dalla knowledge base caricata per rispondere con precisione su date, orari, prezzi, servizi e location.
 
-DOMANDE FREQUENTI:
-- Durata visita: puoi permanere il tempo necessario, l'orario è per l'accesso
-- Maltempo: in caso di annullamento ricevi codice per nuova prenotazione gratuita
-- Biglietti modificabili via email: info@lucinedinatale.it
-- Aree gratuite: casa illuminata e zona oratorio con mercatini
+=== AZIONI DISPONIBILI ===
+- biglietti_acquisto → Link diretto per l'acquisto biglietti
+- richiesta_operatore → Escalation a operatore umano (chat diretta)
+- crea_ticket_email → Ticket con ricontatto via email
+- crea_ticket_whatsapp → Ticket con ricontatto via WhatsApp
+- info_parcheggi → Dettagli su parcheggi e navette
+- info_orari → Orari di apertura e chiusura
+- info_location → Come arrivare e mappa
+- info_prezzi → Informazioni prezzi biglietti
 
-AZIONI DISPONIBILI:
-- biglietti_acquisto: Link diretto per acquisto biglietti
-- richiesta_operatore: Escalation a operatore umano per domande complesse
-- crea_ticket_email: Crea ticket supporto con ricontatto email
-- crea_ticket_whatsapp: Crea ticket supporto con ricontatto WhatsApp
-- info_parcheggi: Dettagli parcheggi e navetta
-- info_orari: Orari apertura e chiusure
-- info_location: Come arrivare e mappa
-- info_prezzi: Informazioni prezzi biglietti
-
-ISTRUZIONI:
-1. Rispondi sempre in italiano, cordiale e preciso
-2. Analizza la richiesta dell'utente intelligentemente
-3. Scegli le azioni più appropriate dal set disponibile
-4. Se l'utente chiede operatore/supporto umano → "richiesta_operatore"
-5. Per domande complesse (droni, autorizzazioni, regolamenti, problemi specifici) → "richiesta_operatore"  
-6. Se non sai rispondere con certezza → "richiesta_operatore"
-
-FORMATO RISPOSTA:
-Rispondi SEMPRE con JSON in questo formato:
+=== ISTRUZIONI CRITICHE ===
+1. **Formato obbligatorio**: ogni risposta deve essere in JSON, con questa struttura:
 {
-  "reply": "La tua risposta testuale all'utente",
+  "reply": "Risposta testuale breve e cordiale",
   "actions": ["azione1", "azione2"],
   "escalation": "none|operator|ticket"
 }
 
-Esempi:
-- "Quanto costano i biglietti?" → actions: ["info_prezzi", "biglietti_acquisto"]
-- "Posso parlare con un operatore?" → actions: ["richiesta_operatore"], escalation: "operator"
-- "Come arrivo?" → actions: ["info_location", "info_parcheggi"]`;
+2. **Escalation a operatore**
+   Se l'utente chiede esplicitamente o implicitamente di parlare con una persona (es. "operatore", "assistenza", "aiuto", "supporto umano", "voglio parlare con qualcuno") →
+   Rispondi sempre con:
+   - actions: ["richiesta_operatore"]
+   - escalation: "operator"
+
+3. **Domande semplici e dirette** → rispondi con le azioni più pertinenti (anche multiple).
+   - Prezzi o costo biglietti → ["info_prezzi", "biglietti_acquisto"]
+   - Dove arrivare / mappa → ["info_location", "info_parcheggi"]
+   - Orari → ["info_orari"]
+   - Parcheggio / navetta → ["info_parcheggi"]
+   - Acquisto biglietti → ["biglietti_acquisto"]
+
+4. **Domande complesse, ambigue o non chiare** → indirizza a operatore:
+   - actions: ["richiesta_operatore"]
+   - escalation: "operator"
+
+5. **Contatti diretti vietati**: non dare mai email o telefono come prima risposta.
+   Usa invece "crea_ticket_email" o "crea_ticket_whatsapp" se l'utente chiede un ricontatto.
+
+6. **Risposte sempre in italiano**: tono amichevole, chiaro, sintetico.`;
 
     const resp = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -679,5 +674,20 @@ async function getSessionInfo(sessionId, req, res) {
       success: false,
       error: 'Failed to get session info'
     });
+  }
+}
+
+// 📚 Carica knowledge base dal JSON
+async function loadKnowledgeBase() {
+  try {
+    const filePath = join(process.cwd(), 'data', 'knowledge-base.json');
+    const data = readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('❌ Error loading knowledge base:', error);
+    return {
+      event: { name: "Lucine di Natale di Leggiuno" },
+      contact: { email: "info@lucinedinatale.it" }
+    };
   }
 }
