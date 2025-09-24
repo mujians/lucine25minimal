@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.3 - AGGIORNATO 24/09/2025 - Comunicazione dashboard operatore + fix formattazione link - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.4 - AGGIORNATO 24/09/2025 - Fix escalation operatore + comunicazione dashboard - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.3 - 24/09/2025 - Dashboard operatore + fix link - Caricato');
+  console.log('🤖 Chatbot v2.4 - 24/09/2025 - Fix escalation operatore - Caricato');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -823,13 +823,23 @@ function initializeChatbot() {
         sessionId = data.sessionId;
       }
 
-      // Controlla se è richiesta escalation operatore
-      if (data.reply && data.reply.includes('request_operator')) {
-        await handleOperatorEscalation();
+      // Controlla se è escalation dal backend (status connecting_operator)
+      if (data.status === 'connecting_operator') {
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+        startOperatorPolling();
+        addMessage(data.reply, 'bot');
         return;
       }
 
-      // Aggiungi risposta bot
+      // Controlla se è richiesta ticket
+      if (data.status === 'ticket_request') {
+        addMessage(data.reply, 'bot');
+        showTicketForm();
+        return;
+      }
+
+      // Aggiungi risposta bot normale
       addMessage(data.reply, 'bot');
 
       // Mostra smart actions se presenti
@@ -989,45 +999,6 @@ function initializeChatbot() {
   }
 
   // === FUNZIONI OPERATORE ===
-  
-  async function handleOperatorEscalation() {
-    try {
-      // Indica che stiamo cercando operatori
-      addMessage('🔍 Sto cercando un operatore disponibile...', 'bot');
-      
-      const response = await fetch(`${BACKEND_URL.replace('/chat', '')}/operators/status`);
-      const operators = await response.json();
-      
-      console.log('🎯 Operators status:', operators);
-      
-      const availableOperator = operators.find(op => op.isOnline && op.isActive);
-      
-      if (availableOperator) {
-        // Operatore trovato - avvia chat dal vivo
-        isOperatorMode = true;
-        addMessage('✅ **Operatore trovato!** Sei ora in chat dal vivo.', 'bot');
-        addMessage('💬 Un operatore si unirà alla conversazione a breve...', 'bot');
-        
-        // Aggiorna header per indicare modalità operatore
-        updateHeaderForOperatorMode();
-        
-        // Avvia polling per messaggi operatore
-        startOperatorPolling();
-        
-      } else {
-        // Nessun operatore disponibile
-        addMessage('⏰ **Al momento non ci sono operatori disponibili.**', 'bot');
-        addMessage('📝 Vuoi lasciare un messaggio? Ti ricontatteremo al più presto via email.', 'bot');
-        
-        // Mostra form di ticket
-        showTicketForm();
-      }
-      
-    } catch (error) {
-      console.error('🚨 Errore escalation operatore:', error);
-      addMessage('❌ Errore nel contattare gli operatori. Scrivi a info@lucinedinatale.it', 'bot');
-    }
-  }
   
   function updateHeaderForOperatorMode() {
     const chatTitle = document.querySelector('.chat-title');
