@@ -97,17 +97,7 @@
   animation: slideUp 0.3s ease;
 }
 
-/* Expanded Mode */
-.chat-popup.expanded {
-  width: 90vw;
-  height: 90vh;
-  top: 5vh;
-  bottom: auto;
-  right: 5vw;
-  left: auto;
-  border-radius: 20px;
-  max-width: 1200px;
-}
+/* Expanded mode removed */
 
 /* Mobile responsive */
 @media (max-width: 480px) {
@@ -641,18 +631,10 @@
   <div class="chat-popup" id="chatPopup">
     <!-- Header -->
     <div class="chat-header">
-      <div class="chat-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" style="fill: white; margin-right: 8px; vertical-align: text-bottom;">
-          <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-        </svg>
-        Lucy - Assistente Virtuale
+      <div class="chat-title" style="font-family: 'Lucine di Natale', -apple-system, sans-serif; text-transform: uppercase;">
+        LUCY - ASSISTENTE VIRTUALE
       </div>
       <div class="chat-controls">
-        <button class="chat-expand" id="chatExpand" title="Espandi chat">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-          </svg>
-        </button>
         <button class="chat-close" id="chatClose" title="Chiudi chat">×</button>
       </div>
     </div>
@@ -711,7 +693,6 @@ function initializeChatbot() {
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
   const closeBtn = document.getElementById('chatClose');
-  const expandBtn = document.getElementById('chatExpand');
   const input = document.getElementById('chatInputField');
   const sendBtn = document.getElementById('chatSendButton');
   const messagesContainer = document.getElementById('chatMessages');
@@ -725,12 +706,10 @@ function initializeChatbot() {
   const BACKEND_URL = 'https://chatbot-backend-3h4uzkand-brunos-projects-075c84f2.vercel.app/api/chat';
   let sessionId = generateSessionId();
   let isPopupOpen = false;
-  let isExpanded = false;
 
   // Event Listeners
   bubble.addEventListener('click', togglePopup);
   closeBtn.addEventListener('click', closePopup);
-  expandBtn.addEventListener('click', toggleExpand);
   sendBtn.addEventListener('click', sendMessage);
   input.addEventListener('keypress', handleKeyPress);
   input.addEventListener('input', autoResize);
@@ -760,30 +739,9 @@ function initializeChatbot() {
   function closePopup() {
     popup.classList.remove('show');
     isPopupOpen = false;
-    isExpanded = false;
-    popup.classList.remove('expanded');
   }
 
-  function toggleExpand() {
-    isExpanded = !isExpanded;
-    if (isExpanded) {
-      popup.classList.add('expanded');
-      expandBtn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
-        </svg>
-      `;
-      expandBtn.title = "Riduci chat";
-    } else {
-      popup.classList.remove('expanded');
-      expandBtn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-        </svg>
-      `;
-      expandBtn.title = "Espandi chat";
-    }
-  }
+  // Expand functionality removed
 
   function handleKeyPress(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
