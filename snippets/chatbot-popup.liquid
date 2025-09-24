@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.2 - AGGIORNATO 24/09/2025 - Con comunicazione dashboard operatore - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.3 - AGGIORNATO 24/09/2025 - Comunicazione dashboard operatore + fix formattazione link - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.2 - 24/09/2025 - Con dashboard operatore - Caricato');
+  console.log('🤖 Chatbot v2.3 - 24/09/2025 - Dashboard operatore + fix link - Caricato');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -857,33 +857,48 @@ function initializeChatbot() {
     // Processa il testo per rendere i link cliccabili e belli
     let processedText = escapeHtml(text);
     
-    // Converte URL in link cliccabili con beauty text
+    // Prima processa i link markdown [testo](url) per evitare conflitti
     processedText = processedText.replace(
-      /(https?:\/\/lucinedinatale\.it\/products\/[^\s]+)/g, 
+      /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      (match, linkText, url) => {
+        if (url.includes('lucinedinatale.it/products/')) {
+          return '<a href="' + url + '" target="_blank" class="chat-link product-link">🎫 ' + linkText + '</a>';
+        } else if (url.includes('lucinedinatale.it/cart')) {
+          return '<a href="' + url + '" target="_blank" class="chat-link cart-link">🛒 ' + linkText + '</a>';
+        } else if (url.includes('wa.me/')) {
+          return '<a href="' + url + '" target="_blank" class="chat-link whatsapp-link">📱 ' + linkText + '</a>';
+        } else {
+          return '<a href="' + url + '" target="_blank" class="chat-link">' + linkText + '</a>';
+        }
+      }
+    );
+    
+    // Poi processa le URL nude (solo se non sono già dentro link HTML)
+    processedText = processedText.replace(
+      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/products\/[^\s<]+)/g, 
       '<a href="$1" target="_blank" class="chat-link product-link">🎫 Prenota biglietti</a>'
     );
     
-    // Altri link generici (carrello, etc)
     processedText = processedText.replace(
-      /(https?:\/\/lucinedinatale\.it\/cart[^\s]*)/g, 
+      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/cart[^\s<]*)/g, 
       '<a href="$1" target="_blank" class="chat-link cart-link">🛒 Vai al carrello</a>'
     );
     
-    // Email links
+    // Email links (solo se non già in link HTML)
     processedText = processedText.replace(
-      /(info@lucinedinatale\.it)/g,
+      /(?<!href=")(?<!href=')(info@lucinedinatale\.it)/g,
       '<a href="mailto:$1" class="chat-link email-link">📧 $1</a>'
     );
     
-    // WhatsApp links
+    // WhatsApp links (solo se non già in link HTML)
     processedText = processedText.replace(
-      /(https?:\/\/wa\.me\/[^\s]+)/g,
+      /(?<!href=")(?<!href=')(https?:\/\/wa\.me\/[^\s<]+)/g,
       '<a href="$1" target="_blank" class="chat-link whatsapp-link">📱 Contatta WhatsApp</a>'
     );
     
-    // Altri link generici
+    // Altri link generici (solo se non già in link HTML)
     processedText = processedText.replace(
-      /(https?:\/\/[^\s]+)/g,
+      /(?<!href=")(?<!href=')(?<!class="chat-link[^"]*">)(https?:\/\/[^\s<]+)/g,
       '<a href="$1" target="_blank" class="chat-link">🔗 Apri link</a>'
     );
     
