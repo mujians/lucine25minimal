@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const closest = target.closest('button, a');
     
     const clickInfo = {
-      target: target.tagName + (target.className ? '.' + target.className.split(' ').join('.') : ''),
+      target: target.tagName + (target.className && typeof target.className === 'string' ? '.' + target.className.split(' ').join('.') : ''),
       targetText: target.textContent?.substring(0, 50) + '...',
-      closest: closest ? closest.tagName + (closest.className ? '.' + closest.className.split(' ').join('.') : '') : 'none',
+      closest: closest ? closest.tagName + (closest.className && typeof closest.className === 'string' ? '.' + closest.className.split(' ').join('.') : '') : 'none',
       closestText: closest?.textContent?.substring(0, 50) + '...',
       href: closest?.href || 'no href',
       dataEvey: closest?.getAttribute('data-evey-trigger') || 'no data-evey',
