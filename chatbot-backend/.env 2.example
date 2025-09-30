@@ -1,0 +1,15 @@
+# Rinomina questo file in .env.local per sviluppo locale
+# Su Vercel, aggiungi questa variabile nelle Settings > Environment Variables
+
+# OpenAI Configuration
+OPENAI_API_KEY=sk-your-openai-api-key-here
+
+# WhatsApp Business (Twilio)
+TWILIO_ACCOUNT_SID=your-twilio-account-sid
+TWILIO_AUTH_TOKEN=your-twilio-auth-token
+TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
+
+# Google Sheets Logging
+GOOGLE_SHEET_ID=your-google-sheet-id-here
+GOOGLE_SERVICE_ACCOUNT_EMAIL=your-service-account@project.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----"

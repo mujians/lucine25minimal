@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.4 - AGGIORNATO 24/09/2025 - Fix escalation operatore + comunicazione dashboard - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.5 - AGGIORNATO 30/09/2025 - Fix endpoint polling operatore (401 auth error) - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.4 - 24/09/2025 - Fix escalation operatore - Caricato');
+  console.log('🤖 Chatbot v2.5 - 30/09/2025 - Fix endpoint polling operatore (401 auth error) - Caricato');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -715,6 +715,7 @@ function initializeChatbot() {
   let isPopupOpen = false;
   let isOperatorMode = false;
   let pollInterval = null;
+  let lastMessageTime = null;
 
   // Event Listeners
   bubble.addEventListener('click', togglePopup);
@@ -1017,15 +1018,24 @@ function initializeChatbot() {
     
     pollInterval = setInterval(async () => {
       try {
-        const response = await fetch(`https://lucine-chatbot.onrender.com/api/operators/messages/${sessionId}`);
+        // Costruisci URL con parametro lastMessageTime se disponibile
+        let pollUrl = `https://lucine-chatbot.onrender.com/api/chat/poll/${sessionId}`;
+        if (lastMessageTime) {
+          pollUrl += `?lastMessageTime=${encodeURIComponent(lastMessageTime)}`;
+        }
+        
+        const response = await fetch(pollUrl);
         const data = await response.json();
         
         if (data.messages && data.messages.length > 0) {
           console.log('📨 Nuovi messaggi operatore:', data.messages);
           
           data.messages.forEach(msg => {
-            if (msg.sender === 'operator') {
-              addMessage(`👤 **${msg.operatorName || 'Operatore'}**: ${msg.content}`, 'operator');
+            if (msg.sender === 'OPERATOR') {
+              const operatorName = msg.metadata?.operatorName || 'Operatore';
+              addMessage(`👤 **${operatorName}**: ${msg.message}`, 'operator');
+              // Aggiorna lastMessageTime con il timestamp più recente
+              lastMessageTime = msg.timestamp;
             }
           });
         }
