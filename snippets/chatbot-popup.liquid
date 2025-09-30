@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.6 - AGGIORNATO 30/09/2025 - Fix session status check + polling auto-start - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.7 - AGGIORNATO 30/09/2025 - Add YES/NO confirmation buttons for operator escalation - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.6 - 30/09/2025 - Fix session status check + polling auto-start - Caricato');
+  console.log('🤖 Chatbot v2.7 - 30/09/2025 - Add YES/NO confirmation buttons for operator escalation - Caricato');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -966,6 +966,8 @@ function initializeChatbot() {
           sendMessage('voglio attivare notifiche whatsapp');
         } else if (action.action === 'request_operator') {
           sendMessage('request_operator');
+        } else if (action.action === 'continue_ai') {
+          sendMessage('continua con assistente AI');
         }
         actionsContainer.remove();
       });
