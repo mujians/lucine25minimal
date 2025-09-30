@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.5 - AGGIORNATO 30/09/2025 - Fix endpoint polling operatore (401 auth error) - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.6 - AGGIORNATO 30/09/2025 - Fix session status check + polling auto-start - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.5 - 30/09/2025 - Fix endpoint polling operatore (401 auth error) - Caricato');
+  console.log('🤖 Chatbot v2.6 - 30/09/2025 - Fix session status check + polling auto-start - Caricato');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -743,6 +743,10 @@ function initializeChatbot() {
     popup.classList.add('show');
     isPopupOpen = true;
     notification.style.display = 'none';
+    
+    // Controlla se la sessione è già con operatore
+    checkSessionStatus();
+    
     setTimeout(() => input.focus(), 300);
   }
 
@@ -1137,6 +1141,34 @@ function initializeChatbot() {
       addMessage('❌ Errore nell\'invio del messaggio. Riprova o scrivi a info@lucinedinatale.it', 'bot');
     }
   };
+
+  // Controlla stato sessione all'apertura del widget
+  async function checkSessionStatus() {
+    try {
+      const response = await fetch(`https://lucine-chatbot.onrender.com/api/chat/poll/${sessionId}`);
+      const data = await response.json();
+      
+      // Se la sessione è già WITH_OPERATOR, avvia il polling
+      if (data.sessionStatus === 'WITH_OPERATOR' && !isOperatorMode) {
+        console.log('🔄 Sessione già con operatore, avvio polling...');
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+        startOperatorPolling();
+        
+        // Mostra eventuali messaggi operatore già presenti
+        if (data.messages && data.messages.length > 0) {
+          data.messages.forEach(msg => {
+            if (msg.sender === 'OPERATOR') {
+              const operatorName = msg.metadata?.operatorName || 'Operatore';
+              addMessage(`👤 **${operatorName}**: ${msg.message}`, 'operator');
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('❌ Errore controllo stato sessione:', error);
+    }
+  }
 
   // Esponi sendMessage globalmente per i suggerimenti
   window.sendMessage = sendMessage;
