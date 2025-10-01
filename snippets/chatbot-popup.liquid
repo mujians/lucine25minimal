@@ -843,14 +843,14 @@ function initializeChatbot() {
         return;
       }
 
-      // Se già con operatore, mostra conferma invio
+      // Se già con operatore, non mostrare conferma (polling mostrerà risposta)
       if (data.status === 'with_operator' || data.operatorConnected) {
         isOperatorMode = true;
         updateHeaderForOperatorMode();
         if (!pollInterval) {
           startOperatorPolling();
         }
-        addMessage(data.reply || '💬 Messaggio inviato all\'operatore', 'bot');
+        // Don't show "message sent" confirmation - just wait for operator reply
         return;
       }
 
