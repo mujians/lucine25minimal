@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.9 - AGGIORNATO 01/10/2025 - Better UX: hidden commands, improved escalation messages - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v3.0 - AGGIORNATO 01/10/2025 - Real-time WebSocket: instant messages, queue updates, no polling delay - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -711,11 +711,15 @@ function initializeChatbot() {
 
   // Configurazione
   const BACKEND_URL = 'https://lucine-chatbot.onrender.com/api/chat';
+  const WS_URL = 'wss://lucine-chatbot.onrender.com';
   let sessionId = null; // Backend genererà session ID sicuro
   let isPopupOpen = false;
   let isOperatorMode = false;
   let pollInterval = null;
   let lastMessageTime = null;
+  let ws = null; // WebSocket connection
+  let wsReconnectAttempts = 0;
+  const WS_MAX_RECONNECT_ATTEMPTS = 5;
 
   // Event Listeners
   bubble.addEventListener('click', togglePopup);
@@ -753,12 +757,15 @@ function initializeChatbot() {
   function closePopup() {
     popup.classList.remove('show');
     isPopupOpen = false;
-    
+
     // Stop polling se attivo
     if (pollInterval) {
       clearInterval(pollInterval);
       pollInterval = null;
     }
+
+    // Disconnect WebSocket (optional - keeps connection alive for background updates)
+    // disconnectWebSocket();
   }
 
   // Expand functionality removed
@@ -832,6 +839,8 @@ function initializeChatbot() {
       // Aggiorna sessionId (backend genera se null)
       if (data.sessionId) {
         sessionId = data.sessionId;
+        // 📡 Initialize WebSocket connection now that we have sessionId
+        initializeWebSocketIfNeeded();
       }
 
       // Controlla se è escalation dal backend (status connecting_operator)
@@ -1206,5 +1215,161 @@ function initializeChatbot() {
       console.error('Error adding to cart:', error);
     });
   };
+
+  // ========================
+  // 📡 WEBSOCKET CONNECTION
+  // ========================
+
+  /**
+   * Connect to WebSocket for real-time notifications
+   */
+  function connectWebSocket() {
+    if (!sessionId) {
+      console.log('⚠️ Cannot connect WebSocket without sessionId');
+      return;
+    }
+
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      console.log('✅ WebSocket already connected');
+      return;
+    }
+
+    try {
+      console.log('🔌 Connecting to WebSocket:', WS_URL);
+      ws = new WebSocket(WS_URL);
+
+      ws.onopen = () => {
+        console.log('✅ WebSocket connected');
+        wsReconnectAttempts = 0;
+
+        // Authenticate with sessionId
+        ws.send(JSON.stringify({
+          type: 'widget_auth',
+          sessionId: sessionId
+        }));
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('📨 WebSocket message:', data);
+
+          handleWebSocketMessage(data);
+        } catch (error) {
+          console.error('❌ WebSocket message parse error:', error);
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('❌ WebSocket error:', error);
+      };
+
+      ws.onclose = () => {
+        console.log('👋 WebSocket disconnected');
+        ws = null;
+
+        // Reconnect with exponential backoff
+        if (wsReconnectAttempts < WS_MAX_RECONNECT_ATTEMPTS) {
+          wsReconnectAttempts++;
+          const delay = Math.min(1000 * Math.pow(2, wsReconnectAttempts), 30000);
+          console.log(`🔄 Reconnecting in ${delay}ms (attempt ${wsReconnectAttempts}/${WS_MAX_RECONNECT_ATTEMPTS})`);
+          setTimeout(connectWebSocket, delay);
+        } else {
+          console.log('❌ Max WebSocket reconnect attempts reached. Falling back to polling.');
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ WebSocket connection error:', error);
+    }
+  }
+
+  /**
+   * Handle incoming WebSocket messages
+   */
+  function handleWebSocketMessage(data) {
+    switch (data.type) {
+      case 'auth_success':
+        console.log('✅ WebSocket authenticated');
+        break;
+
+      case 'notification':
+        handleNotification(data);
+        break;
+
+      default:
+        console.log('⚠️ Unknown WebSocket message type:', data.type);
+    }
+  }
+
+  /**
+   * Handle WebSocket notifications
+   */
+  function handleNotification(notification) {
+    const event = notification.event;
+    console.log('🔔 Notification:', event, notification);
+
+    switch (event) {
+      case 'new_operator_message':
+        // Operatore ha inviato un messaggio - mostralo immediatamente
+        if (notification.message) {
+          const msg = notification.message;
+          const operatorName = msg.operatorName || 'Operatore';
+          addMessage(`${operatorName}: ${msg.message}`, 'operator');
+          lastMessageTime = msg.timestamp;
+
+          // Stop polling if WebSocket is working
+          if (pollInterval && ws && ws.readyState === WebSocket.OPEN) {
+            console.log('🔄 Stopping polling - using WebSocket instead');
+            clearInterval(pollInterval);
+            pollInterval = null;
+          }
+        }
+        break;
+
+      case 'queue_update':
+        // Posizione in coda aggiornata
+        if (notification.position !== undefined) {
+          const msg = notification.message ||
+            `📊 Posizione in coda: ${notification.position}° (attesa ~${notification.estimatedWait || '?'} min)`;
+          addMessage(msg, 'bot');
+        }
+        break;
+
+      case 'operator_connected':
+        // Operatore si è connesso
+        addMessage('✅ Un operatore si è connesso alla chat!', 'bot');
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+        break;
+
+      case 'operator_disconnected':
+        // Operatore si è disconnesso
+        addMessage('⚠️ L\'operatore si è disconnesso. Puoi continuare a scrivere.', 'bot');
+        break;
+
+      default:
+        console.log('⚠️ Unknown notification event:', event);
+    }
+  }
+
+  /**
+   * Disconnect WebSocket
+   */
+  function disconnectWebSocket() {
+    if (ws) {
+      console.log('🔌 Disconnecting WebSocket');
+      ws.close();
+      ws = null;
+    }
+  }
+
+  // Connect WebSocket when sessionId is available
+  // This will be called after first message is sent and sessionId is received
+  function initializeWebSocketIfNeeded() {
+    if (sessionId && !ws) {
+      connectWebSocket();
+    }
+  }
 }
 </script>
