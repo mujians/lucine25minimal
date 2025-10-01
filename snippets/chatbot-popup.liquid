@@ -1,4 +1,4 @@
-<!-- CHATBOT POPUP v2.8 - AGGIORNATO 01/10/2025 - Fixed endpoints, timeout, session ID - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v2.9 - AGGIORNATO 01/10/2025 - Better UX: hidden commands, improved escalation messages - Solo con ?chatbot=test -->
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.8 - 01/10/2025 - Fixed: endpoints, timeout 10s, session ID server-side, retry logic');
+  console.log('🤖 Chatbot v2.9 - 01/10/2025 - Better UX: hidden internal commands, improved escalation feedback');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -787,8 +787,13 @@ function initializeChatbot() {
     const existingActions = document.querySelector('.smart-actions-container');
     if (existingActions) existingActions.remove();
 
-    // Aggiungi messaggio utente
-    addMessage(message, 'user');
+    // Non mostrare i comandi interni come messaggi utente
+    const isInternalCommand = message === 'request_operator' || message === 'continua con assistente AI';
+
+    // Aggiungi messaggio utente (solo se non è comando interno)
+    if (!isInternalCommand) {
+      addMessage(message, 'user');
+    }
 
     // Reset input
     input.value = '';
