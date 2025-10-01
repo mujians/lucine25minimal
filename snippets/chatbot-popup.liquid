@@ -1043,9 +1043,12 @@ function initializeChatbot() {
     if (pollInterval) {
       clearInterval(pollInterval);
     }
-    
+
     console.log('🔄 Avvio polling operatore per sessione:', sessionId);
-    
+
+    // Track displayed message IDs to avoid duplicates
+    const displayedMessageIds = new Set();
+
     pollInterval = setInterval(async () => {
       try {
         // Costruisci URL con parametro lastMessageTime se disponibile
@@ -1053,23 +1056,24 @@ function initializeChatbot() {
         if (lastMessageTime) {
           pollUrl += `?lastMessageTime=${encodeURIComponent(lastMessageTime)}`;
         }
-        
+
         const response = await fetch(pollUrl);
         const data = await response.json();
-        
+
         if (data.messages && data.messages.length > 0) {
           console.log('📨 Nuovi messaggi operatore:', data.messages);
-          
+
           data.messages.forEach(msg => {
-            if (msg.sender === 'OPERATOR') {
+            if (msg.sender === 'OPERATOR' && !displayedMessageIds.has(msg.id)) {
+              displayedMessageIds.add(msg.id);
               const operatorName = msg.metadata?.operatorName || 'Operatore';
-              addMessage(`👤 **${operatorName}**: ${msg.message}`, 'operator');
+              addMessage(`${operatorName}: ${msg.message}`, 'operator');
               // Aggiorna lastMessageTime con il timestamp più recente
               lastMessageTime = msg.timestamp;
             }
           });
         }
-        
+
       } catch (error) {
         console.error('❌ Errore polling operatore:', error);
       }
