@@ -1428,7 +1428,11 @@ function initializeChatbot() {
         // Operatore vuole chiudere la conversazione
         if (notification.message) {
           const msg = notification.message;
-          addMessage(msg.message, 'bot', msg.smartActions);
+          addMessage(msg.message, 'bot');
+          // Show smart actions buttons if present
+          if (msg.smartActions && msg.smartActions.length > 0) {
+            showSmartActions(msg.smartActions);
+          }
         }
         break;
 
