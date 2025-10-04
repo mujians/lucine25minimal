@@ -720,6 +720,7 @@ function initializeChatbot() {
   let ws = null; // WebSocket connection
   let wsReconnectAttempts = 0;
   const WS_MAX_RECONNECT_ATTEMPTS = 5;
+  const displayedMessageIds = new Set(); // Track displayed messages globally
 
   // 🔗 Check if URL has ticket token for resume
   const urlParams = new URLSearchParams(window.location.search);
@@ -1076,9 +1077,6 @@ function initializeChatbot() {
     }
 
     console.log('🔄 Avvio polling operatore per sessione:', sessionId);
-
-    // Track displayed message IDs to avoid duplicates
-    const displayedMessageIds = new Set();
 
     pollInterval = setInterval(async () => {
       try {
