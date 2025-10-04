@@ -1005,6 +1005,15 @@ function initializeChatbot() {
           sendMessage('request_operator');
         } else if (action.action === 'continue_ai') {
           sendMessage('continua con assistente AI');
+        } else if (action.action === 'continue_chat') {
+          // User wants to continue with operator
+          sendMessage('continue_chat');
+        } else if (action.action === 'end_chat') {
+          // User confirms end of conversation
+          sendMessage('end_chat');
+        } else if (action.action === 'request_ticket') {
+          // User wants to open a ticket
+          sendMessage('apri ticket');
         }
         actionsContainer.remove();
       });
@@ -1075,8 +1084,8 @@ function initializeChatbot() {
           data.messages.forEach(msg => {
             if (msg.sender === 'OPERATOR' && !displayedMessageIds.has(msg.id)) {
               displayedMessageIds.add(msg.id);
-              const operatorName = msg.metadata?.operatorName || 'Operatore';
-              addMessage(`${operatorName}: ${msg.message}`, 'operator');
+              // No operator name prefix - just show the message
+              addMessage(msg.message, 'operator');
               // Aggiorna lastMessageTime con il timestamp più recente
               lastMessageTime = msg.timestamp;
             }
@@ -1168,8 +1177,8 @@ function initializeChatbot() {
         if (data.messages && data.messages.length > 0) {
           data.messages.forEach(msg => {
             if (msg.sender === 'OPERATOR') {
-              const operatorName = msg.metadata?.operatorName || 'Operatore';
-              addMessage(`👤 **${operatorName}**: ${msg.message}`, 'operator');
+              // No operator name prefix - just show the message
+              addMessage(msg.message, 'operator');
             }
           });
         }
@@ -1314,8 +1323,8 @@ function initializeChatbot() {
         // Operatore ha inviato un messaggio - mostralo immediatamente
         if (notification.message) {
           const msg = notification.message;
-          const operatorName = msg.operatorName || 'Operatore';
-          addMessage(`${operatorName}: ${msg.message}`, 'operator');
+          // No operator name prefix - just show the message
+          addMessage(msg.message, 'operator');
           lastMessageTime = msg.timestamp;
 
           // Stop polling if WebSocket is working
@@ -1346,6 +1355,14 @@ function initializeChatbot() {
       case 'operator_disconnected':
         // Operatore si è disconnesso
         addMessage('⚠️ L\'operatore si è disconnesso. Puoi continuare a scrivere.', 'bot');
+        break;
+
+      case 'closure_request':
+        // Operatore vuole chiudere la conversazione
+        if (notification.message) {
+          const msg = notification.message;
+          addMessage(msg.message, 'bot', msg.smartActions);
+        }
         break;
 
       default:
