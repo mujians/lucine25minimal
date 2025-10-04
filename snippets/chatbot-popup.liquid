@@ -916,7 +916,12 @@ function initializeChatbot() {
     
     // Processa il testo per rendere i link cliccabili e belli
     let processedText = escapeHtml(text);
-    
+
+    // Markdown: Bold (**text**) e Italic (*text* o _text_)
+    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    processedText = processedText.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    processedText = processedText.replace(/_([^_]+)_/g, '<em>$1</em>');
+
     // Prima processa i link markdown [testo](url) per evitare conflitti
     processedText = processedText.replace(
       /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
@@ -1090,10 +1095,14 @@ function initializeChatbot() {
           console.log('📨 Nuovi messaggi operatore:', data.messages);
 
           data.messages.forEach(msg => {
-            if (msg.sender === 'OPERATOR' && !displayedMessageIds.has(msg.id)) {
+            if ((msg.sender === 'OPERATOR' || msg.sender === 'SYSTEM') && !displayedMessageIds.has(msg.id)) {
               displayedMessageIds.add(msg.id);
               // No operator name prefix - just show the message
-              addMessage(msg.message, 'operator');
+              addMessage(msg.message, msg.sender === 'OPERATOR' ? 'operator' : 'bot');
+              // Show smartActions if present (e.g., closure request buttons)
+              if (msg.smartActions && msg.smartActions.length > 0) {
+                showSmartActions(msg.smartActions);
+              }
               // Aggiorna lastMessageTime con il timestamp più recente
               lastMessageTime = msg.timestamp;
             }
