@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v2.9 - 01/10/2025 - Better UX: hidden internal commands, improved escalation feedback');
+  console.log('🤖 Chatbot v3.0 - Ticket Resume + Better Operator UX');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -720,6 +720,14 @@ function initializeChatbot() {
   let ws = null; // WebSocket connection
   let wsReconnectAttempts = 0;
   const WS_MAX_RECONNECT_ATTEMPTS = 5;
+
+  // 🔗 Check if URL has ticket token for resume
+  const urlParams = new URLSearchParams(window.location.search);
+  const ticketToken = urlParams.get('ticket');
+  if (ticketToken) {
+    console.log('🎫 Ticket token found in URL:', ticketToken);
+    resumeChatFromTicket(ticketToken);
+  }
 
   // Event Listeners
   bubble.addEventListener('click', togglePopup);
@@ -1159,6 +1167,58 @@ function initializeChatbot() {
       addMessage('❌ Errore nell\'invio del messaggio. Riprova o scrivi a 📧 info@lucinedinatale.it', 'bot');
     }
   };
+
+  // 🔗 Resume chat from ticket token
+  async function resumeChatFromTicket(token) {
+    try {
+      console.log('🔗 Resuming chat from ticket token...');
+
+      const response = await fetch(`https://lucine-chatbot.onrender.com/api/chat/resume/${token}`);
+      const data = await response.json();
+
+      if (data.error) {
+        console.error('❌ Resume error:', data.message);
+        addMessage(`❌ ${data.message}`, 'bot');
+        return;
+      }
+
+      console.log('✅ Chat resumed:', data);
+
+      // Set sessionId from ticket
+      sessionId = data.sessionId;
+
+      // Open popup automatically
+      openPopup();
+
+      // Show welcome message
+      if (data.welcomeMessage) {
+        addMessage(data.welcomeMessage, 'bot');
+      }
+
+      // Load previous messages
+      if (data.messages && data.messages.length > 0) {
+        data.messages.forEach(msg => {
+          const sender = msg.sender === 'USER' ? 'user' :
+                        msg.sender === 'OPERATOR' ? 'operator' : 'bot';
+          addMessage(msg.message, sender);
+        });
+      }
+
+      // Setup operator mode if operator is connected
+      if (data.operatorConnected) {
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+        startOperatorPolling();
+      }
+
+      // Initialize WebSocket
+      initializeWebSocketIfNeeded();
+
+    } catch (error) {
+      console.error('❌ Failed to resume chat:', error);
+      addMessage('❌ Errore nel riprendere la conversazione. Riprova più tardi.', 'bot');
+    }
+  }
 
   // Controlla stato sessione all'apertura del widget
   async function checkSessionStatus() {
