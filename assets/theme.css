@@ -1595,11 +1595,16 @@ body.footer-expanded {
   border-radius: 15px;
   padding: 1.5rem;
   text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .info-box h4 {
   color: var(--christmas-gold);
   margin-bottom: 0.5rem;
+}
+
+.info-box p {
+  margin: 0;
 }
 
 .price-tag {
