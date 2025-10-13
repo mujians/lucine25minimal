@@ -1809,8 +1809,11 @@
                         });
 
                         let tooltipContent = '';
+                        let variantType = 'OTHER';
+
                         // ONLY add tooltips for ridotti and saltafila
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
+                          variantType = 'RIDOTTO';
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTI RIDOTTI</strong><br>
                             • Ingresso Gratuito per bambini fino ai 2 anni<br>
                             • Per bambini dai 3 ai 12 anni e disabili<br>
@@ -1819,13 +1822,18 @@
                             • Ha diritto al biglietto ridotto anche 1 accompagnatore per disabile<br>
                             • Accesso prioritario tramite ingresso separato`;
                         } else if (text.includes('saltafila') || text.includes('salt')) {
+                          variantType = 'SALTAFILA';
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTO SALTAFILA</strong><br>
                             • Salta-fila all'ingresso del parco<br>
                             • Nel giorno e nella fascia oraria selezionata<br>
                             • Ideale nei weekend`;
                         }
 
+                        // Debug: log variant detection
+                        console.log(`🔍 Variant "${text.substring(0, 30)}..." → ${variantType}`);
+
                         if (tooltipContent) {
+                          console.log(`✅ Creating ${variantType} tooltip`);
 
                           // Add info icon and tooltip ONLY if there's content
                           const infoIcon = document.createElement('span');
@@ -1863,7 +1871,6 @@
                           }
 
                           // Mobile e Desktop: click per toggle tooltip
-                          const variantType = text.includes('ridott') ? 'RIDOTTO' : text.includes('saltafila') ? 'SALTAFILA' : 'OTHER';
                           infoIcon.addEventListener('click', (e) => {
                             console.log(`👆 ${variantType} icon clicked`);
 
