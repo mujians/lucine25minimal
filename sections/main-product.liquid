@@ -774,51 +774,6 @@
       }
     }
     
-    /* HIDE ALL EVEY TOOLTIPS PERMANENTLY */
-    .evey-ticket-tooltip,
-    .evey__ticket-tooltip,
-    .evey-tooltip,
-    [class*="evey"][class*="tooltip"] {
-      display: none !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-    
-    /* Ensure our custom tooltips stay visible */
-    .custom-tooltip-replacement {
-      position: fixed !important;
-      z-index: 9959 !important;
-    }
-    
-    /* Style the close button properly */
-    .custom-tooltip-close:hover {
-      transform: scale(1.1);
-    }
-    
-    /* NUCLEAR CSS - Override everything with max specificity */
-    .evey-ticket-tooltip.force-visible {
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-      pointer-events: auto !important;
-      z-index: 995 !important;
-      transform: none !important;
-      transition: none !important;
-      animation: none !important;
-    }
-    
-    /* Disable all Evey animations/transitions for forced tooltips */
-    .evey-ticket-tooltip.force-visible * {
-      animation: none !important;
-      transition: none !important;
-    }
-    
-    /* Ensure parent doesn't hide it */
-    .evey__variant:has(.evey-ticket-tooltip.force-visible) {
-      z-index: 99998 !important;
-      overflow: visible !important;
-    }
   </style>
 
   <style>
