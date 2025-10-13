@@ -1884,7 +1884,7 @@
                           const tooltip = document.createElement('div');
                           tooltip.className = 'evey-ticket-tooltip';
                           tooltip.innerHTML = tooltipContent;
-                          tooltip.style.cssText = `position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 16px; line-height: 1.4; width: 280px; z-index: 999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
+                          tooltip.style.cssText = `display: block; visibility: visible; position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 16px; line-height: 1.4; width: 280px; z-index: 999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
 
                           // Make parent relative if not already
                           if (nameEl.style.position !== 'relative') {
