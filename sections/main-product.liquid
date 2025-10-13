@@ -1970,6 +1970,20 @@
                             }, 350); // After transition
                           });
 
+                          // Add click listener on tooltip itself to close it when clicked
+                          tooltip.addEventListener('click', (e) => {
+                            console.log(`🎯 TOOLTIP CLICK - Closing tooltip for "${text.substring(0, 30)}..."`);
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            // Close tooltip
+                            tooltip.style.opacity = '0';
+                            tooltip.style.transform = 'translateY(-10px)';
+                            tooltip.style.pointerEvents = 'none';
+
+                            console.log('✅ Tooltip closed via click on tooltip');
+                          });
+
                           // Restore visibility if tooltip was visible before recreation
                           if (wasVisible) {
                             console.log(`🔄 TOOLTIP CREATION - Restoring visibility for "${text}":`, {
