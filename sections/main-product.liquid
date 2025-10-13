@@ -1845,7 +1845,10 @@
                           const tooltip = document.createElement('div');
                           tooltip.className = 'evey-ticket-tooltip';
                           tooltip.innerHTML = tooltipContent;
-                          tooltip.style.cssText = `display: block; visibility: visible; position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 16px; line-height: 1.4; width: 280px; z-index: 9999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
+                          tooltip.style.cssText = `display: block; visibility: visible; position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 16px; line-height: 1.4; width: 280px; z-index: 9999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
+
+                          // Set pointer-events with !important to override CSS wildcard
+                          tooltip.style.setProperty('pointer-events', 'none', 'important');
 
                           // Make parent relative if not already
                           if (nameEl.style.position !== 'relative') {
@@ -1860,13 +1863,13 @@
                             infoIcon.addEventListener('mouseenter', () => {
                               tooltip.style.opacity = '1';
                               tooltip.style.transform = 'translateY(0)';
-                              tooltip.style.pointerEvents = 'auto';
+                              tooltip.style.setProperty('pointer-events', 'auto', 'important');
                             });
 
                             infoIcon.addEventListener('mouseleave', () => {
                               tooltip.style.opacity = '0';
                               tooltip.style.transform = 'translateY(-10px)';
-                              tooltip.style.pointerEvents = 'none';
+                              tooltip.style.setProperty('pointer-events', 'none', 'important');
                             });
                           }
 
@@ -1880,7 +1883,7 @@
                             const isVisible = tooltip.style.opacity === '1';
                             tooltip.style.opacity = isVisible ? '0' : '1';
                             tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
-                            tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
+                            tooltip.style.setProperty('pointer-events', isVisible ? 'none' : 'auto', 'important');
 
                             console.log(`   → ${isVisible ? 'CLOSED' : 'OPENED'}`);
                           });
@@ -1894,7 +1897,7 @@
                             if (tooltip.style.opacity === '1') {
                               tooltip.style.opacity = '0';
                               tooltip.style.transform = 'translateY(-10px)';
-                              tooltip.style.pointerEvents = 'none';
+                              tooltip.style.setProperty('pointer-events', 'none', 'important');
                               console.log(`🎯 ${variantType} tooltip closed (clicked on tooltip)`);
                             }
                           });
@@ -1903,7 +1906,7 @@
                           if (wasVisible) {
                             tooltip.style.opacity = '1';
                             tooltip.style.transform = 'translateY(0)';
-                            tooltip.style.pointerEvents = 'auto';
+                            tooltip.style.setProperty('pointer-events', 'auto', 'important');
                             console.log(`🔄 ${variantType} tooltip restored (was open)`);
                           }
                         }
