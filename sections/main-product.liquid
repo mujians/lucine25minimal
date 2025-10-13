@@ -1972,16 +1972,25 @@
 
                           // Add click listener on tooltip itself to close it when clicked
                           tooltip.addEventListener('click', (e) => {
-                            console.log(`🎯 TOOLTIP CLICK - Closing tooltip for "${text.substring(0, 30)}..."`);
+                            console.log(`🎯 TOOLTIP CLICK - User clicked on tooltip for "${text.substring(0, 30)}..."`, {
+                              target: e.target.className,
+                              currentOpacity: tooltip.style.opacity,
+                              timestamp: new Date().toISOString()
+                            });
+
                             e.preventDefault();
                             e.stopPropagation();
+                            e.stopImmediatePropagation(); // Block ALL other listeners
 
-                            // Close tooltip
-                            tooltip.style.opacity = '0';
-                            tooltip.style.transform = 'translateY(-10px)';
-                            tooltip.style.pointerEvents = 'none';
-
-                            console.log('✅ Tooltip closed via click on tooltip');
+                            // Only close if currently visible
+                            if (tooltip.style.opacity === '1') {
+                              console.log('✅ Closing visible tooltip');
+                              tooltip.style.opacity = '0';
+                              tooltip.style.transform = 'translateY(-10px)';
+                              tooltip.style.pointerEvents = 'none';
+                            } else {
+                              console.log('⚠️ Tooltip already hidden, ignoring click');
+                            }
                           });
 
                           // Restore visibility if tooltip was visible before recreation
