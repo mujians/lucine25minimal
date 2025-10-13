@@ -3,6 +3,13 @@
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+  <!-- Eruda Debug Console for Mobile -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    eruda.init();
+    console.log('🔧 Eruda Debug Console initialized');
+  </script>
+
   <script>
       // Find all Evey-related elements
       const eveyContainer = document.querySelector('.evey-scheduler-container');
@@ -322,26 +329,52 @@
     
     // NEW APPROACH - Create custom tooltips on click (SOLO SU MOBILE)
     // Su desktop, il sistema inline gestisce i tooltip con hover
-    if (!window.matchMedia('(hover: hover)').matches) {
-      document.addEventListener('click', function(e) {
-        const clickedIcon = e.target.closest('.evey-info-icon');
-        if (!clickedIcon) return;
+    const hasHoverSupport = window.matchMedia('(hover: hover)').matches;
+    console.log('📱 TOOLTIP DEBUG - Device hover support:', {
+      hasHoverSupport: hasHoverSupport,
+      userAgent: navigator.userAgent,
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight
+    });
 
+    if (!hasHoverSupport) {
+      console.log('📱 TOOLTIP DEBUG - Registering MOBILE listener (capture phase)');
+
+      document.addEventListener('click', function(e) {
+        console.log('👆 MOBILE LISTENER (capture) - Click detected:', {
+          target: e.target,
+          targetClass: e.target.className,
+          targetTag: e.target.tagName,
+          timestamp: new Date().toISOString()
+        });
+
+        const clickedIcon = e.target.closest('.evey-info-icon');
+        console.log('🔍 MOBILE LISTENER - Closest .evey-info-icon:', clickedIcon);
+
+        if (!clickedIcon) {
+          console.log('❌ MOBILE LISTENER - No icon found, exiting');
+          return;
+        }
+
+        console.log('✅ MOBILE LISTENER - Icon clicked! Preventing default and stopping propagation');
         e.preventDefault();
         e.stopPropagation();
 
-
         const variantName = clickedIcon.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
+        console.log('📝 MOBILE LISTENER - Variant name:', variantName);
 
         // Check if we already have a custom tooltip for this variant
         if (customTooltips.has(variantName)) {
           const existing = customTooltips.get(variantName);
-          if (existing.style.display === 'none') {
-            // Re-show it
+          const currentDisplay = existing.style.display;
+          console.log('♻️ MOBILE LISTENER - Tooltip exists, toggling. Current display:', currentDisplay);
+
+          if (currentDisplay === 'none') {
             existing.style.display = 'block';
+            console.log('👁️ MOBILE LISTENER - Showing existing tooltip');
           } else {
-            // Hide it
             existing.style.display = 'none';
+            console.log('🙈 MOBILE LISTENER - Hiding existing tooltip');
           }
           return;
         }
@@ -351,12 +384,15 @@
         if (!eveyTooltip) {
           eveyTooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
         }
+        console.log('🔎 MOBILE LISTENER - Found Evey tooltip:', eveyTooltip);
 
         if (!eveyTooltip) {
+          console.error('❌ MOBILE LISTENER - No Evey tooltip found!');
           return;
         }
 
         // Hide all other custom tooltips
+        console.log('🙈 MOBILE LISTENER - Hiding other tooltips. Count:', customTooltips.size);
         customTooltips.forEach((tooltip, name) => {
           if (name !== variantName) {
             tooltip.style.display = 'none';
@@ -364,21 +400,31 @@
         });
 
         // Create our custom tooltip
+        console.log('🎨 MOBILE LISTENER - Creating custom tooltip...');
         const created = createCustomTooltip(eveyTooltip, clickedIcon);
         if (!created) {
-          console.error('Failed to create custom tooltip');
+          console.error('❌ MOBILE LISTENER - Failed to create custom tooltip');
+        } else {
+          console.log('✅ MOBILE LISTENER - Custom tooltip created successfully');
         }
       }, true);
 
       // Clean up when clicking outside (SOLO SU MOBILE)
       document.addEventListener('click', function(e) {
-        if (!e.target.closest('.evey-info-icon') && !e.target.closest('.custom-tooltip-replacement')) {
-          // Hide all custom tooltips when clicking outside
+        const isIcon = e.target.closest('.evey-info-icon');
+        const isTooltip = e.target.closest('.custom-tooltip-replacement');
+
+        if (!isIcon && !isTooltip) {
+          console.log('👆 MOBILE LISTENER - Click outside, hiding all tooltips');
           customTooltips.forEach(tooltip => {
             tooltip.style.display = 'none';
           });
         }
       });
+
+      console.log('✅ MOBILE listeners registered');
+    } else {
+      console.log('🖥️ TOOLTIP DEBUG - DESKTOP mode - NOT registering mobile listener');
     }
     // ENABLE AND SHOW EVEY BUTTON - AGGRESSIVE FIX
     function fixEveyButton() {
@@ -1753,11 +1799,16 @@
 
                       // Add tooltips ONLY to specific variants that need them
                       const variantNames = eveyCard.querySelectorAll('.evey__variant-name, [class*="variant"] [class*="name"]');
-                      variantNames.forEach(nameEl => {
+                      console.log('🔧 TOOLTIP CREATION - Found variant names:', variantNames.length);
+
+                      variantNames.forEach((nameEl, index) => {
                         const text = nameEl.textContent.toLowerCase();
-                        
+                        console.log(`🔧 TOOLTIP CREATION - Processing variant ${index + 1}/${variantNames.length}:`, text);
+
                         // Remove ALL existing info icons and tooltips first to prevent duplicates
                         const allIconsAndTooltips = nameEl.querySelectorAll('span, .evey-ticket-tooltip, .ticket-tooltip');
+                        console.log(`🗑️ TOOLTIP CREATION - Removing ${allIconsAndTooltips.length} existing icons/tooltips`);
+
                         allIconsAndTooltips.forEach(el => {
                           if (el.innerHTML && el.innerHTML.includes('ⓘ')) {
                             el.remove();
@@ -1766,10 +1817,11 @@
                             el.remove();
                           }
                         });
-                        
+
                         let tooltipContent = '';
                         // ONLY add tooltips for ridotti and saltafila
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
+                          console.log('✅ TOOLTIP CREATION - This is a RIDOTTO variant, will add tooltip');
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTI RIDOTTI</strong><br>
                             • Ingresso Gratuito per bambini fino ai 2 anni<br>
                             • Per bambini dai 3 ai 12 anni e disabili<br>
@@ -1778,56 +1830,91 @@
                             • Ha diritto al biglietto ridotto anche 1 accompagnatore per disabile<br>
                             • Accesso prioritario tramite ingresso separato`;
                         } else if (text.includes('saltafila') || text.includes('salt')) {
+                          console.log('✅ TOOLTIP CREATION - This is a SALTAFILA variant, will add tooltip');
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTO SALTAFILA</strong><br>
                             • Salta-fila all'ingresso del parco<br>
                             • Nel giorno e nella fascia oraria selezionata<br>
                             • Ideale nei weekend`;
+                        } else {
+                          console.log('⏭️ TOOLTIP CREATION - Not a special variant, skipping');
                         }
 
                         if (tooltipContent) {
+                          console.log('🎨 TOOLTIP CREATION - Creating icon and tooltip for:', text);
+
                           // Add info icon and tooltip ONLY if there's content
                           const infoIcon = document.createElement('span');
                           infoIcon.className = 'evey-info-icon';
                           infoIcon.innerHTML = 'ⓘ';
                           infoIcon.style.cssText = 'display: inline-block; margin-left: 8px; cursor: help; color: var(--christmas-gold); font-size: 14px; opacity: 0.8;';
-                          
+
                           const tooltip = document.createElement('div');
                           tooltip.className = 'evey-ticket-tooltip';
                           tooltip.innerHTML = tooltipContent;
                           tooltip.style.cssText = `position: absolute; top: 100%; left: 0; background: rgba(0, 0, 0, 0.95); color: white; padding: 0.8rem; border-radius: 6px; font-size: 16px; line-height: 1.4; width: 280px; z-index: 999; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);`;
-                          
+
                           // Make parent relative if not already
                           if (nameEl.style.position !== 'relative') {
                             nameEl.style.position = 'relative';
                           }
-                          
+
                           nameEl.appendChild(infoIcon);
                           nameEl.appendChild(tooltip);
+
+                          console.log('✅ TOOLTIP CREATION - Icon and tooltip appended to DOM');
                           
                           // Add event listeners
+                          console.log('🎯 INLINE SYSTEM - Adding event listeners to icon:', {
+                            iconClass: infoIcon.className,
+                            variantText: text,
+                            hasHoverSupport: window.matchMedia('(hover: hover)').matches
+                          });
+
                           // Desktop: hover per mostrare tooltip (solo su dispositivi con supporto hover)
                           if (window.matchMedia('(hover: hover)').matches) {
+                            console.log('🖱️ INLINE SYSTEM - Adding HOVER listeners (desktop)');
+
                             infoIcon.addEventListener('mouseenter', () => {
+                              console.log('🖱️ INLINE SYSTEM - mouseenter triggered');
                               tooltip.style.opacity = '1';
                               tooltip.style.transform = 'translateY(0)';
                               tooltip.style.pointerEvents = 'auto';
                             });
 
                             infoIcon.addEventListener('mouseleave', () => {
+                              console.log('🖱️ INLINE SYSTEM - mouseleave triggered');
                               tooltip.style.opacity = '0';
                               tooltip.style.transform = 'translateY(-10px)';
                               tooltip.style.pointerEvents = 'none';
                             });
+                          } else {
+                            console.log('📱 INLINE SYSTEM - NOT adding hover listeners (mobile)');
                           }
 
                           // Mobile e Desktop: click per toggle tooltip
+                          console.log('👆 INLINE SYSTEM - Adding CLICK listener (for both mobile and desktop)');
                           infoIcon.addEventListener('click', (e) => {
+                            console.log('👆 INLINE SYSTEM - CLICK triggered!', {
+                              target: e.target,
+                              currentTarget: e.currentTarget,
+                              phase: e.eventPhase,
+                              bubbles: e.bubbles,
+                              cancelable: e.cancelable,
+                              timestamp: new Date().toISOString()
+                            });
+
                             e.preventDefault();
                             e.stopPropagation();
+                            console.log('🛑 INLINE SYSTEM - preventDefault and stopPropagation called');
+
                             const isVisible = tooltip.style.opacity === '1';
+                            console.log('👁️ INLINE SYSTEM - Current tooltip visibility:', isVisible);
+
                             tooltip.style.opacity = isVisible ? '0' : '1';
                             tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
                             tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
+
+                            console.log('✅ INLINE SYSTEM - Tooltip toggled to:', !isVisible ? 'VISIBLE' : 'HIDDEN');
                           });
                         }
                       });
