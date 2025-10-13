@@ -1787,35 +1787,17 @@
 
                       // Add tooltips ONLY to specific variants that need them
                       const variantNames = eveyCard.querySelectorAll('.evey__variant-name, [class*="variant"] [class*="name"]');
-                      console.log('🔧 TOOLTIP CREATION - Found variant names:', variantNames.length);
-
                       variantNames.forEach((nameEl, index) => {
                         const text = nameEl.textContent.toLowerCase();
-                        console.log(`🔧 TOOLTIP CREATION - Processing variant ${index + 1}/${variantNames.length}:`, text);
 
                         // Save visibility state of existing tooltips before removing
                         const existingTooltip = nameEl.querySelector('.evey-ticket-tooltip');
-                        // Check both inline style and computed style to handle edge cases
                         const inlineOpacity = existingTooltip ? existingTooltip.style.opacity : null;
                         const computedOpacity = existingTooltip ? window.getComputedStyle(existingTooltip).opacity : null;
                         const wasVisible = existingTooltip && (inlineOpacity === '1' || computedOpacity === '1');
 
-                        // Debug: Log detailed state
-                        if (existingTooltip) {
-                          console.log(`💾 VISIBILITY STATE CHECK for "${text}":`, {
-                            exists: !!existingTooltip,
-                            inlineOpacity: inlineOpacity,
-                            computedOpacity: computedOpacity,
-                            transform: existingTooltip.style.transform,
-                            pointerEvents: existingTooltip.style.pointerEvents,
-                            wasVisible: wasVisible,
-                            variantText: text.substring(0, 50)
-                          });
-                        }
-
                         // Remove ALL existing info icons and tooltips first to prevent duplicates
                         const allIconsAndTooltips = nameEl.querySelectorAll('span, .evey-ticket-tooltip, .ticket-tooltip');
-                        console.log(`🗑️ TOOLTIP CREATION - Removing ${allIconsAndTooltips.length} existing icons/tooltips (wasVisible: ${wasVisible})`);
 
                         allIconsAndTooltips.forEach(el => {
                           if (el.innerHTML && el.innerHTML.includes('ⓘ')) {
@@ -1829,7 +1811,6 @@
                         let tooltipContent = '';
                         // ONLY add tooltips for ridotti and saltafila
                         if (text.includes('ridott') || text.includes('bambini') || text.includes('disabil')) {
-                          console.log('✅ TOOLTIP CREATION - This is a RIDOTTO variant, will add tooltip');
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTI RIDOTTI</strong><br>
                             • Ingresso Gratuito per bambini fino ai 2 anni<br>
                             • Per bambini dai 3 ai 12 anni e disabili<br>
@@ -1838,17 +1819,13 @@
                             • Ha diritto al biglietto ridotto anche 1 accompagnatore per disabile<br>
                             • Accesso prioritario tramite ingresso separato`;
                         } else if (text.includes('saltafila') || text.includes('salt')) {
-                          console.log('✅ TOOLTIP CREATION - This is a SALTAFILA variant, will add tooltip');
                           tooltipContent = `<strong style="color: var(--christmas-gold);">BIGLIETTO SALTAFILA</strong><br>
                             • Salta-fila all'ingresso del parco<br>
                             • Nel giorno e nella fascia oraria selezionata<br>
                             • Ideale nei weekend`;
-                        } else {
-                          console.log('⏭️ TOOLTIP CREATION - Not a special variant, skipping');
                         }
 
                         if (tooltipContent) {
-                          console.log('🎨 TOOLTIP CREATION - Creating icon and tooltip for:', text);
 
                           // Add info icon and tooltip ONLY if there's content
                           const infoIcon = document.createElement('span');
@@ -1870,142 +1847,57 @@
                           nameEl.appendChild(infoIcon);
                           nameEl.appendChild(tooltip);
 
-                          console.log('✅ TOOLTIP CREATION - Icon and tooltip appended to DOM');
-                          
-                          // Add event listeners
-                          console.log('🎯 INLINE SYSTEM - Adding event listeners to icon:', {
-                            iconClass: infoIcon.className,
-                            variantText: text,
-                            hasHoverSupport: window.matchMedia('(hover: hover)').matches
-                          });
-
-                          // Desktop: hover per mostrare tooltip (solo su dispositivi con supporto hover)
+                          // Desktop: hover per mostrare tooltip
                           if (window.matchMedia('(hover: hover)').matches) {
-                            console.log('🖱️ INLINE SYSTEM - Adding HOVER listeners (desktop)');
-
                             infoIcon.addEventListener('mouseenter', () => {
-                              console.log('🖱️ INLINE SYSTEM - mouseenter triggered');
                               tooltip.style.opacity = '1';
                               tooltip.style.transform = 'translateY(0)';
                               tooltip.style.pointerEvents = 'auto';
                             });
 
                             infoIcon.addEventListener('mouseleave', () => {
-                              console.log('🖱️ INLINE SYSTEM - mouseleave triggered');
                               tooltip.style.opacity = '0';
                               tooltip.style.transform = 'translateY(-10px)';
                               tooltip.style.pointerEvents = 'none';
                             });
-                          } else {
-                            console.log('📱 INLINE SYSTEM - NOT adding hover listeners (mobile)');
                           }
 
                           // Mobile e Desktop: click per toggle tooltip
-                          console.log('👆 INLINE SYSTEM - Adding CLICK listener (for both mobile and desktop)');
+                          const variantType = text.includes('ridott') ? 'RIDOTTO' : text.includes('saltafila') ? 'SALTAFILA' : 'OTHER';
                           infoIcon.addEventListener('click', (e) => {
-                            console.log(`👆 INLINE SYSTEM - CLICK triggered on "${text.substring(0, 30)}..." icon!`, {
-                              variantType: text.includes('ridott') ? 'RIDOTTO' : text.includes('saltafila') ? 'SALTAFILA' : 'OTHER',
-                              target: e.target,
-                              currentTarget: e.currentTarget,
-                              phase: e.eventPhase,
-                              bubbles: e.bubbles,
-                              cancelable: e.cancelable,
-                              timestamp: new Date().toISOString()
-                            });
+                            console.log(`👆 ${variantType} icon clicked`);
 
                             e.preventDefault();
                             e.stopPropagation();
-                            console.log('🛑 INLINE SYSTEM - preventDefault and stopPropagation called');
 
                             const isVisible = tooltip.style.opacity === '1';
-                            console.log('👁️ INLINE SYSTEM - Current tooltip visibility:', isVisible);
-
                             tooltip.style.opacity = isVisible ? '0' : '1';
                             tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
                             tooltip.style.pointerEvents = isVisible ? 'none' : 'auto';
 
-                            console.log('✅ INLINE SYSTEM - Tooltip toggled to:', !isVisible ? 'VISIBLE' : 'HIDDEN');
-
-                            // Log computed styles to verify CSS
-                            setTimeout(() => {
-                              const computed = getComputedStyle(tooltip);
-                              const rect = tooltip.getBoundingClientRect();
-                              console.log('🎨 TOOLTIP COMPUTED STYLES:', {
-                                opacity: computed.opacity,
-                                display: computed.display,
-                                visibility: computed.visibility,
-                                zIndex: computed.zIndex,
-                                position: computed.position,
-                                top: computed.top,
-                                left: computed.left,
-                                transform: computed.transform,
-                                pointerEvents: computed.pointerEvents,
-                                width: computed.width,
-                                height: computed.height,
-                                boundingRect: {
-                                  x: rect.x,
-                                  y: rect.y,
-                                  width: rect.width,
-                                  height: rect.height,
-                                  top: rect.top,
-                                  left: rect.left,
-                                  bottom: rect.bottom,
-                                  right: rect.right,
-                                  inViewport: rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight && rect.right <= window.innerWidth
-                                }
-                              });
-
-                              // Check parent styles
-                              const parent = tooltip.parentElement;
-                              if (parent) {
-                                const parentComputed = getComputedStyle(parent);
-                                console.log('🎨 TOOLTIP PARENT STYLES:', {
-                                  overflow: parentComputed.overflow,
-                                  position: parentComputed.position,
-                                  zIndex: parentComputed.zIndex,
-                                  display: parentComputed.display,
-                                  visibility: parentComputed.visibility
-                                });
-                              }
-                            }, 350); // After transition
+                            console.log(`   → ${isVisible ? 'CLOSED' : 'OPENED'}`);
                           });
 
                           // Add click listener on tooltip itself to close it when clicked
                           tooltip.addEventListener('click', (e) => {
-                            console.log(`🎯 TOOLTIP CLICK - User clicked on tooltip for "${text.substring(0, 30)}..."`, {
-                              target: e.target.className,
-                              currentOpacity: tooltip.style.opacity,
-                              timestamp: new Date().toISOString()
-                            });
-
                             e.preventDefault();
                             e.stopPropagation();
-                            e.stopImmediatePropagation(); // Block ALL other listeners
+                            e.stopImmediatePropagation();
 
-                            // Only close if currently visible
                             if (tooltip.style.opacity === '1') {
-                              console.log('✅ Closing visible tooltip');
                               tooltip.style.opacity = '0';
                               tooltip.style.transform = 'translateY(-10px)';
                               tooltip.style.pointerEvents = 'none';
-                            } else {
-                              console.log('⚠️ Tooltip already hidden, ignoring click');
+                              console.log(`🎯 ${variantType} tooltip closed (clicked on tooltip)`);
                             }
                           });
 
                           // Restore visibility if tooltip was visible before recreation
                           if (wasVisible) {
-                            console.log(`🔄 TOOLTIP CREATION - Restoring visibility for "${text}":`, {
-                              variantText: text,
-                              beforeOpacity: tooltip.style.opacity,
-                              afterOpacity: '1',
-                              wasVisible: wasVisible
-                            });
                             tooltip.style.opacity = '1';
                             tooltip.style.transform = 'translateY(0)';
                             tooltip.style.pointerEvents = 'auto';
-                          } else {
-                            console.log(`⏸️ TOOLTIP CREATION - NOT restoring visibility for "${text}" (wasVisible: ${wasVisible})`);
+                            console.log(`🔄 ${variantType} tooltip restored (was open)`);
                           }
                         }
                       });
