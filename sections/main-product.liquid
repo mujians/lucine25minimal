@@ -1795,17 +1795,21 @@
 
                         // Save visibility state of existing tooltips before removing
                         const existingTooltip = nameEl.querySelector('.evey-ticket-tooltip');
-                        const wasVisible = existingTooltip && existingTooltip.style.opacity === '1';
+                        // Check both inline style and computed style to handle edge cases
+                        const inlineOpacity = existingTooltip ? existingTooltip.style.opacity : null;
+                        const computedOpacity = existingTooltip ? window.getComputedStyle(existingTooltip).opacity : null;
+                        const wasVisible = existingTooltip && (inlineOpacity === '1' || computedOpacity === '1');
 
                         // Debug: Log detailed state
                         if (existingTooltip) {
                           console.log(`💾 VISIBILITY STATE CHECK for "${text}":`, {
                             exists: !!existingTooltip,
-                            opacity: existingTooltip.style.opacity,
+                            inlineOpacity: inlineOpacity,
+                            computedOpacity: computedOpacity,
                             transform: existingTooltip.style.transform,
                             pointerEvents: existingTooltip.style.pointerEvents,
                             wasVisible: wasVisible,
-                            variantText: text
+                            variantText: text.substring(0, 50)
                           });
                         }
 
