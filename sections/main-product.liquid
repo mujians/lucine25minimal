@@ -320,63 +320,66 @@
       return customTooltip;
     }
     
-    // NEW APPROACH - Create custom tooltips on click
-    document.addEventListener('click', function(e) {
-      const clickedIcon = e.target.closest('.evey-info-icon');
-      if (!clickedIcon) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      
-      
-      const variantName = clickedIcon.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
-      
-      // Check if we already have a custom tooltip for this variant
-      if (customTooltips.has(variantName)) {
-        const existing = customTooltips.get(variantName);
-        if (existing.style.display === 'none') {
-          // Re-show it
-          existing.style.display = 'block';
-        } else {
-          // Hide it
-          existing.style.display = 'none';
+    // NEW APPROACH - Create custom tooltips on click (SOLO SU MOBILE)
+    // Su desktop, il sistema inline gestisce i tooltip con hover
+    if (!window.matchMedia('(hover: hover)').matches) {
+      document.addEventListener('click', function(e) {
+        const clickedIcon = e.target.closest('.evey-info-icon');
+        if (!clickedIcon) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+
+        const variantName = clickedIcon.closest('.evey__variant')?.querySelector('.evey__variant-name')?.textContent || 'Unknown';
+
+        // Check if we already have a custom tooltip for this variant
+        if (customTooltips.has(variantName)) {
+          const existing = customTooltips.get(variantName);
+          if (existing.style.display === 'none') {
+            // Re-show it
+            existing.style.display = 'block';
+          } else {
+            // Hide it
+            existing.style.display = 'none';
+          }
+          return;
         }
-        return;
-      }
-      
-      // Find Evey's tooltip to copy content
-      let eveyTooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
-      if (!eveyTooltip) {
-        eveyTooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
-      }
-      
-      if (!eveyTooltip) {
-        return;
-      }
-      
-      // Hide all other custom tooltips
-      customTooltips.forEach((tooltip, name) => {
-        if (name !== variantName) {
-          tooltip.style.display = 'none';
+
+        // Find Evey's tooltip to copy content
+        let eveyTooltip = clickedIcon.parentElement?.querySelector('.evey-ticket-tooltip');
+        if (!eveyTooltip) {
+          eveyTooltip = clickedIcon.closest('.evey__variant')?.querySelector('.evey-ticket-tooltip');
+        }
+
+        if (!eveyTooltip) {
+          return;
+        }
+
+        // Hide all other custom tooltips
+        customTooltips.forEach((tooltip, name) => {
+          if (name !== variantName) {
+            tooltip.style.display = 'none';
+          }
+        });
+
+        // Create our custom tooltip
+        const created = createCustomTooltip(eveyTooltip, clickedIcon);
+        if (!created) {
+          console.error('Failed to create custom tooltip');
+        }
+      }, true);
+
+      // Clean up when clicking outside (SOLO SU MOBILE)
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.evey-info-icon') && !e.target.closest('.custom-tooltip-replacement')) {
+          // Hide all custom tooltips when clicking outside
+          customTooltips.forEach(tooltip => {
+            tooltip.style.display = 'none';
+          });
         }
       });
-      
-      // Create our custom tooltip
-      const created = createCustomTooltip(eveyTooltip, clickedIcon);
-      if (!created) {
-        console.error('Failed to create custom tooltip');
-      }
-    }, true);
-    
-    // Clean up when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.evey-info-icon') && !e.target.closest('.custom-tooltip-replacement')) {
-        // Hide all custom tooltips when clicking outside
-        customTooltips.forEach(tooltip => {
-          tooltip.style.display = 'none';
-        });
-      }
-    });
+    }
     // ENABLE AND SHOW EVEY BUTTON - AGGRESSIVE FIX
     function fixEveyButton() {
       const eveyButton = document.querySelector('button[data-evey-trigger="scheduler"]');
