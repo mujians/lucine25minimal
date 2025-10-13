@@ -1797,6 +1797,18 @@
                         const existingTooltip = nameEl.querySelector('.evey-ticket-tooltip');
                         const wasVisible = existingTooltip && existingTooltip.style.opacity === '1';
 
+                        // Debug: Log detailed state
+                        if (existingTooltip) {
+                          console.log(`💾 VISIBILITY STATE CHECK for "${text}":`, {
+                            exists: !!existingTooltip,
+                            opacity: existingTooltip.style.opacity,
+                            transform: existingTooltip.style.transform,
+                            pointerEvents: existingTooltip.style.pointerEvents,
+                            wasVisible: wasVisible,
+                            variantText: text
+                          });
+                        }
+
                         // Remove ALL existing info icons and tooltips first to prevent duplicates
                         const allIconsAndTooltips = nameEl.querySelectorAll('span, .evey-ticket-tooltip, .ticket-tooltip');
                         console.log(`🗑️ TOOLTIP CREATION - Removing ${allIconsAndTooltips.length} existing icons/tooltips (wasVisible: ${wasVisible})`);
@@ -1954,10 +1966,17 @@
 
                           // Restore visibility if tooltip was visible before recreation
                           if (wasVisible) {
-                            console.log('🔄 TOOLTIP CREATION - Restoring visibility state (was visible before)');
+                            console.log(`🔄 TOOLTIP CREATION - Restoring visibility for "${text}":`, {
+                              variantText: text,
+                              beforeOpacity: tooltip.style.opacity,
+                              afterOpacity: '1',
+                              wasVisible: wasVisible
+                            });
                             tooltip.style.opacity = '1';
                             tooltip.style.transform = 'translateY(0)';
                             tooltip.style.pointerEvents = 'auto';
+                          } else {
+                            console.log(`⏸️ TOOLTIP CREATION - NOT restoring visibility for "${text}" (wasVisible: ${wasVisible})`);
                           }
                         }
                       });
