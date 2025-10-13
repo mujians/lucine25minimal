@@ -1793,9 +1793,13 @@
                         const text = nameEl.textContent.toLowerCase();
                         console.log(`🔧 TOOLTIP CREATION - Processing variant ${index + 1}/${variantNames.length}:`, text);
 
+                        // Save visibility state of existing tooltips before removing
+                        const existingTooltip = nameEl.querySelector('.evey-ticket-tooltip');
+                        const wasVisible = existingTooltip && existingTooltip.style.opacity === '1';
+
                         // Remove ALL existing info icons and tooltips first to prevent duplicates
                         const allIconsAndTooltips = nameEl.querySelectorAll('span, .evey-ticket-tooltip, .ticket-tooltip');
-                        console.log(`🗑️ TOOLTIP CREATION - Removing ${allIconsAndTooltips.length} existing icons/tooltips`);
+                        console.log(`🗑️ TOOLTIP CREATION - Removing ${allIconsAndTooltips.length} existing icons/tooltips (wasVisible: ${wasVisible})`);
 
                         allIconsAndTooltips.forEach(el => {
                           if (el.innerHTML && el.innerHTML.includes('ⓘ')) {
@@ -1947,6 +1951,14 @@
                               }
                             }, 350); // After transition
                           });
+
+                          // Restore visibility if tooltip was visible before recreation
+                          if (wasVisible) {
+                            console.log('🔄 TOOLTIP CREATION - Restoring visibility state (was visible before)');
+                            tooltip.style.opacity = '1';
+                            tooltip.style.transform = 'translateY(0)';
+                            tooltip.style.pointerEvents = 'auto';
+                          }
                         }
                       });
 
