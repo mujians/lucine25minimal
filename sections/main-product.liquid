@@ -1802,20 +1802,25 @@
                           nameEl.appendChild(tooltip);
                           
                           // Add event listeners
-                          infoIcon.addEventListener('mouseenter', () => {
-                            tooltip.style.opacity = '1';
-                            tooltip.style.transform = 'translateY(0)';
-                            tooltip.style.pointerEvents = 'auto';
-                          });
-                          
-                          infoIcon.addEventListener('mouseleave', () => {
-                            tooltip.style.opacity = '0';
-                            tooltip.style.transform = 'translateY(-10px)';
-                            tooltip.style.pointerEvents = 'none';
-                          });
-                          
+                          // Desktop: hover per mostrare tooltip (solo su dispositivi con supporto hover)
+                          if (window.matchMedia('(hover: hover)').matches) {
+                            infoIcon.addEventListener('mouseenter', () => {
+                              tooltip.style.opacity = '1';
+                              tooltip.style.transform = 'translateY(0)';
+                              tooltip.style.pointerEvents = 'auto';
+                            });
+
+                            infoIcon.addEventListener('mouseleave', () => {
+                              tooltip.style.opacity = '0';
+                              tooltip.style.transform = 'translateY(-10px)';
+                              tooltip.style.pointerEvents = 'none';
+                            });
+                          }
+
+                          // Mobile e Desktop: click per toggle tooltip
                           infoIcon.addEventListener('click', (e) => {
                             e.preventDefault();
+                            e.stopPropagation();
                             const isVisible = tooltip.style.opacity === '1';
                             tooltip.style.opacity = isVisible ? '0' : '1';
                             tooltip.style.transform = isVisible ? 'translateY(-10px)' : 'translateY(0)';
