@@ -1854,7 +1854,8 @@
                           const infoIcon = document.createElement('span');
                           infoIcon.className = 'evey-info-icon';
                           infoIcon.innerHTML = 'ⓘ';
-                          infoIcon.style.cssText = 'display: inline-block; margin-left: 8px; cursor: help; color: var(--christmas-gold); font-size: 14px; opacity: 0.8;';
+                          // Increase clickable area with padding and ensure it's above other elements
+                          infoIcon.style.cssText = 'display: inline-block; margin-left: 8px; cursor: pointer; color: var(--christmas-gold); font-size: 16px; opacity: 0.9; padding: 4px 6px; position: relative; z-index: 1000; touch-action: manipulation;';
 
                           const tooltip = document.createElement('div');
                           tooltip.className = 'evey-ticket-tooltip';
@@ -1902,7 +1903,8 @@
                           // Mobile e Desktop: click per toggle tooltip
                           console.log('👆 INLINE SYSTEM - Adding CLICK listener (for both mobile and desktop)');
                           infoIcon.addEventListener('click', (e) => {
-                            console.log('👆 INLINE SYSTEM - CLICK triggered!', {
+                            console.log(`👆 INLINE SYSTEM - CLICK triggered on "${text.substring(0, 30)}..." icon!`, {
+                              variantType: text.includes('ridott') ? 'RIDOTTO' : text.includes('saltafila') ? 'SALTAFILA' : 'OTHER',
                               target: e.target,
                               currentTarget: e.currentTarget,
                               phase: e.eventPhase,
