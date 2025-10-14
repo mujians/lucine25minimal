@@ -227,6 +227,10 @@
   align-items: flex-start;
 }
 
+.chat-message.system {
+  align-items: center; /* Center system messages */
+}
+
 .message-bubble {
   max-width: 80%;
   padding: 0.75rem 1rem;
@@ -262,6 +266,27 @@
   color: white;
   border-bottom-left-radius: 6px;
   border-left: 3px solid #34D399;
+}
+
+/* Operator name styling */
+.operator-name {
+  font-weight: 600;
+  opacity: 0.9;
+  font-size: 0.85em;
+  margin-right: 0.4em;
+  display: inline-block;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.system .message-bubble {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-gray);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem !important;
+  text-align: center;
+  font-style: italic;
 }
 
 /* Welcome Message */
@@ -620,6 +645,55 @@
   }
 }
 
+/* ✅ NEW: Loading indicator styles */
+.chat-loading-indicator {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.loading-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f0f0f0;
+  padding: 0.75rem 1.25rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #f4c430;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
 
 <!-- Chatbot Container -->
@@ -712,7 +786,58 @@ function initializeChatbot() {
   // Configurazione
   const BACKEND_URL = 'https://lucine-chatbot.onrender.com/api/chat';
   const WS_URL = 'wss://lucine-chatbot.onrender.com';
-  let sessionId = null; // Backend genererà session ID sicuro
+
+  // Session persistence constants
+  const SESSION_STORAGE_KEY = 'lucine_chat_session_id';
+  const SESSION_EXPIRY_KEY = 'lucine_chat_session_expiry';
+  const SESSION_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+  // Session persistence functions
+  function loadSessionId() {
+    try {
+      const storedId = localStorage.getItem(SESSION_STORAGE_KEY);
+      const expiry = localStorage.getItem(SESSION_EXPIRY_KEY);
+
+      if (storedId && expiry) {
+        const expiryDate = new Date(expiry);
+        if (expiryDate > new Date()) {
+          console.log('✅ Restored session from localStorage:', storedId);
+          return storedId;
+        } else {
+          console.log('⚠️ Session expired, clearing storage');
+          clearSessionStorage();
+        }
+      }
+    } catch (error) {
+      console.error('❌ Error loading session:', error);
+    }
+    return null;
+  }
+
+  function saveSessionId(id) {
+    try {
+      const expiry = new Date(Date.now() + SESSION_TTL);
+      localStorage.setItem(SESSION_STORAGE_KEY, id);
+      localStorage.setItem(SESSION_EXPIRY_KEY, expiry.toISOString());
+      console.log('💾 Session saved to localStorage:', id);
+    } catch (error) {
+      console.error('❌ Error saving session:', error);
+    }
+  }
+
+  function clearSessionStorage() {
+    try {
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_EXPIRY_KEY);
+      console.log('🗑️ Session storage cleared');
+    } catch (error) {
+      console.error('❌ Error clearing session:', error);
+    }
+  }
+
+  // Try to restore session from localStorage
+  let sessionId = loadSessionId();
+
   let isPopupOpen = false;
   let isOperatorMode = false;
   let pollInterval = null;
@@ -728,12 +853,16 @@ function initializeChatbot() {
   if (ticketToken) {
     console.log('🎫 Ticket token found in URL:', ticketToken);
     resumeChatFromTicket(ticketToken);
+  } else if (sessionId) {
+    // 💾 Session restored from localStorage - check status
+    console.log('💾 Session restored, checking status...');
+    checkSessionStatus();
   }
 
   // Event Listeners
   bubble.addEventListener('click', togglePopup);
   closeBtn.addEventListener('click', closePopup);
-  sendBtn.addEventListener('click', sendMessage);
+  sendBtn.addEventListener('click', () => sendMessage());
   input.addEventListener('keypress', handleKeyPress);
   input.addEventListener('input', autoResize);
 
@@ -804,7 +933,11 @@ function initializeChatbot() {
     if (existingActions) existingActions.remove();
 
     // Non mostrare i comandi interni come messaggi utente
-    const isInternalCommand = message === 'request_operator' || message === 'continua con assistente AI';
+    const isInternalCommand = message === 'request_operator' ||
+                              message === 'continua con assistente AI' ||
+                              message === 'continue_chat' ||
+                              message === 'end_chat' ||
+                              message === 'apri ticket';
 
     // Aggiungi messaggio utente (solo se non è comando interno)
     if (!isInternalCommand) {
@@ -818,6 +951,9 @@ function initializeChatbot() {
     // Disabilita input durante invio
     setInputState(false);
     showTyping();
+
+    // ✅ NEW: Show loading indicator
+    const loader = showLoadingIndicator('Invio in corso...');
 
     try {
       // Timeout controller - 10 secondi
@@ -848,6 +984,7 @@ function initializeChatbot() {
       // Aggiorna sessionId (backend genera se null)
       if (data.sessionId) {
         sessionId = data.sessionId;
+        saveSessionId(sessionId); // 💾 Persist session to localStorage
         // 📡 Initialize WebSocket connection now that we have sessionId
         initializeWebSocketIfNeeded();
       }
@@ -903,20 +1040,27 @@ function initializeChatbot() {
       });
     } finally {
       hideTyping();
+      hideLoadingIndicator(loader);  // ✅ NEW: Always hide loader
       setInputState(true);
       input.focus();
     }
   }
 
-  function addMessage(text, sender) {
+  function addMessage(text, sender, operatorName = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}`;
-    
+
     const bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'message-bubble';
-    
+
+    // Add operator name prefix if available
+    let displayText = text;
+    if (sender === 'operator' && operatorName) {
+      displayText = `<span class="operator-name">${operatorName}:</span> ${text}`;
+    }
+
     // Processa il testo per rendere i link cliccabili e belli
-    let processedText = escapeHtml(text);
+    let processedText = escapeHtml(displayText);
 
     // Markdown: Bold (**text**) e Italic (*text* o _text_)
     processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -989,27 +1133,64 @@ function initializeChatbot() {
       existingActions.remove();
     }
 
-    if (!actions || actions.length === 0) return;
+    // ✅ VALIDATION: Check if actions is valid array
+    if (!actions || !Array.isArray(actions) || actions.length === 0) {
+      console.warn('⚠️ showSmartActions called with invalid data:', actions);
+      return;
+    }
 
     // Crea container smart actions
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'smart-actions-container';
-    
+
     const actionsGrid = document.createElement('div');
     actionsGrid.className = 'smart-actions-grid';
-    
+
     actions.forEach(action => {
+      // ✅ VALIDATION: Check required fields
+      if (!action || typeof action !== 'object') {
+        console.error('❌ Invalid action object:', action);
+        return; // Skip this action
+      }
+
+      if (!action.text) {
+        console.error('❌ SmartAction missing required field "text":', action);
+        return; // Skip this action
+      }
+
+      // ✅ FALLBACKS: Provide defaults for optional fields
+      const icon = action.icon || '📌';
+      const text = action.text;
+      const description = action.description || '';
+      const type = action.type || 'secondary';
+
       const actionButton = document.createElement('button');
-      actionButton.className = `smart-action-button ${action.type}`;
-      
+      actionButton.className = `smart-action-button ${type}`;
+
       actionButton.innerHTML = `
-        <div class="action-icon">${action.icon}</div>
+        <div class="action-icon">${icon}</div>
         <div class="action-content">
-          <div class="action-text">${action.text}</div>
-          <div class="action-description">${action.description}</div>
+          <div class="action-text">${text}</div>
+          ${description ? `<div class="action-description">${description}</div>` : ''}
         </div>
       `;
       
+      // ✅ VALIDATION: Check if action is disabled (informational only)
+      if (action.disabled === true) {
+        actionButton.disabled = true;
+        actionButton.style.opacity = '0.8';
+        actionButton.style.cursor = 'default';
+        actionButton.title = 'Informazione - nessuna azione richiesta';
+      }
+
+      // ✅ VALIDATION: Check if action handler exists
+      if (!action.disabled && !action.action && !action.url) {
+        console.warn('⚠️ SmartAction has no action or url:', action);
+        actionButton.disabled = true;
+        actionButton.style.opacity = '0.6';
+        actionButton.style.cursor = 'not-allowed';
+      }
+
       actionButton.addEventListener('click', () => {
         if (action.url) {
           window.open(action.url, '_blank');
@@ -1019,6 +1200,11 @@ function initializeChatbot() {
           sendMessage('request_operator');
         } else if (action.action === 'continue_ai') {
           sendMessage('continua con assistente AI');
+        } else if (action.action === 'wait_in_queue') {
+          // ⚠️ INFORMATIONAL ONLY: This button should be disabled (shown as info)
+          // The queue state is already managed by backend
+          console.log('ℹ️ User acknowledged queue status - no action needed');
+          // Note: This action should ideally be disabled via backend (type: 'info', disabled: true)
         } else if (action.action === 'continue_chat') {
           // User wants to continue with operator
           sendMessage('continue_chat');
@@ -1028,6 +1214,8 @@ function initializeChatbot() {
         } else if (action.action === 'request_ticket') {
           // User wants to open a ticket
           sendMessage('apri ticket');
+        } else {
+          console.warn('⚠️ Unknown action:', action.action);
         }
         actionsContainer.remove();
       });
@@ -1059,6 +1247,33 @@ function initializeChatbot() {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  // ✅ NEW: Loading indicator functions
+  function showLoadingIndicator(message = 'Caricamento...') {
+    // Remove any existing loading indicator first
+    const existingLoader = messagesContainer.querySelector('.chat-loading-indicator');
+    if (existingLoader) {
+      existingLoader.remove();
+    }
+
+    const loader = document.createElement('div');
+    loader.className = 'chat-loading-indicator';
+    loader.innerHTML = `
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <span class="loading-text">${message}</span>
+      </div>
+    `;
+    messagesContainer.appendChild(loader);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    return loader;
+  }
+
+  function hideLoadingIndicator(loader) {
+    if (loader && loader.parentNode) {
+      loader.parentNode.removeChild(loader);
+    }
   }
 
   // === FUNZIONI OPERATORE ===
@@ -1095,8 +1310,16 @@ function initializeChatbot() {
           data.messages.forEach(msg => {
             if ((msg.sender === 'OPERATOR' || msg.sender === 'SYSTEM') && !displayedMessageIds.has(msg.id)) {
               displayedMessageIds.add(msg.id);
-              // No operator name prefix - just show the message
-              addMessage(msg.message, msg.sender === 'OPERATOR' ? 'operator' : 'bot');
+              // Map sender to correct message type
+              const senderType = msg.sender === 'OPERATOR' ? 'operator' :
+                                msg.sender === 'SYSTEM' ? 'system' : 'bot';
+
+              // Extract operator name from metadata if available
+              const operatorName = (msg.sender === 'OPERATOR' && msg.metadata?.operatorName)
+                ? msg.metadata.operatorName
+                : null;
+
+              addMessage(msg.message, senderType, operatorName);
               // Show smartActions if present (e.g., closure request buttons)
               if (msg.smartActions && msg.smartActions.length > 0) {
                 showSmartActions(msg.smartActions);
@@ -1193,6 +1416,7 @@ function initializeChatbot() {
 
       // Set sessionId from ticket
       sessionId = data.sessionId;
+      saveSessionId(sessionId); // 💾 Persist session to localStorage
 
       // Open popup automatically
       openPopup();
@@ -1202,12 +1426,18 @@ function initializeChatbot() {
         addMessage(data.welcomeMessage, 'bot');
       }
 
-      // Load previous messages
+      // ✅ Load previous messages with smartActions support
       if (data.messages && data.messages.length > 0) {
-        data.messages.forEach(msg => {
+        data.messages.forEach((msg, index) => {
           const sender = msg.sender === 'USER' ? 'user' :
                         msg.sender === 'OPERATOR' ? 'operator' : 'bot';
           addMessage(msg.message, sender);
+
+          // Show smartActions from last message if available
+          if (index === data.messages.length - 1 && msg.smartActions && msg.smartActions.length > 0) {
+            console.log('📊 Displaying smartActions from resumed message:', msg.smartActions);
+            showSmartActions(msg.smartActions);
+          }
         });
       }
 
@@ -1240,12 +1470,19 @@ function initializeChatbot() {
         updateHeaderForOperatorMode();
         startOperatorPolling();
         
-        // Mostra eventuali messaggi operatore già presenti
+        // ✅ Mostra eventuali messaggi operatore già presenti con smartActions
         if (data.messages && data.messages.length > 0) {
-          data.messages.forEach(msg => {
+          data.messages.forEach((msg, index) => {
             if (msg.sender === 'OPERATOR') {
-              // No operator name prefix - just show the message
-              addMessage(msg.message, 'operator');
+              // Extract operator name from metadata if available
+              const operatorName = msg.metadata?.operatorName || null;
+              addMessage(msg.message, 'operator', operatorName);
+
+              // Show smartActions from last message if available
+              if (index === data.messages.length - 1 && msg.smartActions && msg.smartActions.length > 0) {
+                console.log('📊 Displaying smartActions from operator message:', msg.smartActions);
+                showSmartActions(msg.smartActions);
+              }
             }
           });
         }
@@ -1390,9 +1627,16 @@ function initializeChatbot() {
         // Operatore ha inviato un messaggio - mostralo immediatamente
         if (notification.message) {
           const msg = notification.message;
-          // No operator name prefix - just show the message
-          addMessage(msg.message, 'operator');
-          lastMessageTime = msg.timestamp;
+          // Check for duplicates before displaying
+          if (!displayedMessageIds.has(msg.id)) {
+            displayedMessageIds.add(msg.id);
+            // Extract operator name from metadata if available
+            const operatorName = msg.metadata?.operatorName || null;
+            addMessage(msg.message, 'operator', operatorName);
+            lastMessageTime = msg.timestamp;
+          } else {
+            console.log('⚠️ Duplicate operator message prevented:', msg.id);
+          }
 
           // Stop polling if WebSocket is working
           if (pollInterval && ws && ws.readyState === WebSocket.OPEN) {
@@ -1424,14 +1668,34 @@ function initializeChatbot() {
         addMessage('⚠️ L\'operatore si è disconnesso. Puoi continuare a scrivere.', 'bot');
         break;
 
+      case 'system_message':
+        // System message (e.g., "Operator joined")
+        if (notification.message) {
+          const msg = notification.message;
+          // Check for duplicates before displaying
+          if (!displayedMessageIds.has(msg.id)) {
+            displayedMessageIds.add(msg.id);
+            addMessage(msg.message, 'system');
+          } else {
+            console.log('⚠️ Duplicate system message prevented:', msg.id);
+          }
+        }
+        break;
+
       case 'closure_request':
         // Operatore vuole chiudere la conversazione
         if (notification.message) {
           const msg = notification.message;
-          addMessage(msg.message, 'bot');
-          // Show smart actions buttons if present
-          if (msg.smartActions && msg.smartActions.length > 0) {
-            showSmartActions(msg.smartActions);
+          // Check for duplicates before displaying
+          if (!displayedMessageIds.has(msg.id)) {
+            displayedMessageIds.add(msg.id);
+            addMessage(msg.message, 'bot');
+            // Show smart actions buttons if present
+            if (msg.smartActions && msg.smartActions.length > 0) {
+              showSmartActions(msg.smartActions);
+            }
+          } else {
+            console.log('⚠️ Duplicate closure request prevented:', msg.id);
           }
         }
         break;
