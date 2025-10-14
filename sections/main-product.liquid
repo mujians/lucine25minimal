@@ -3,46 +3,6 @@
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
-  <!-- Eruda Debug Console for Mobile -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>
-    eruda.init();
-    console.log('🔧 Eruda Debug Console initialized');
-
-    // Helper per copiare tutti i log
-    window.tooltipLogs = [];
-    const originalLog = console.log;
-    const originalError = console.error;
-
-    console.log = function(...args) {
-      window.tooltipLogs.push({type: 'log', time: new Date().toISOString(), message: args});
-      originalLog.apply(console, args);
-    };
-
-    console.error = function(...args) {
-      window.tooltipLogs.push({type: 'error', time: new Date().toISOString(), message: args});
-      originalError.apply(console, args);
-    };
-
-    // Comando per copiare tutti i log
-    window.copyAllLogs = function() {
-      const formatted = window.tooltipLogs.map(log => {
-        const msg = log.message.map(m => typeof m === 'object' ? JSON.stringify(m, null, 2) : m).join(' ');
-        return `[${log.time}] [${log.type.toUpperCase()}] ${msg}`;
-      }).join('\n\n');
-
-      navigator.clipboard.writeText(formatted).then(() => {
-        alert('✅ Tutti i log copiati negli appunti! (' + window.tooltipLogs.length + ' entries)');
-      }).catch(err => {
-        console.error('Errore copia:', err);
-        // Fallback: mostra in un prompt
-        prompt('Copia manualmente:', formatted);
-      });
-    };
-
-    console.log('💡 TIP: Usa window.copyAllLogs() per copiare tutti i log negli appunti');
-  </script>
-
   <script>
       // Find all Evey-related elements
       const eveyContainer = document.querySelector('.evey-scheduler-container');
