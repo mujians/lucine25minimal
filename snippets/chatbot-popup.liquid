@@ -291,6 +291,28 @@
   </div>
 </div>
 
+<script>
+  // ✅ MOSTRA CHATBOT SOLO SU ?chatbot=test&pb=0
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Controlla se ci sono i parametri richiesti
+    if (urlParams.get('chatbot') === 'test' && urlParams.get('pb') === '0') {
+      // ✅ URL corretta - mostra chatbot
+      document.getElementById('chatbotContainer').style.display = 'block';
+      initializeChatbot(); // Funzione che inizializza il chatbot
+    } else {
+      // ❌ URL sbagliata - nascondi chatbot
+      document.getElementById('chatbotContainer').style.display = 'none';
+    }
+  });
+
+  function initializeChatbot() {
+    // ... tutto il resto del codice del chatbot qui ...
+  }
+  </script>
+
+  
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
