@@ -954,12 +954,14 @@ function initializeChatbot() {
             console.log('💡 AI suggests operator assistance');
             showSmartActions([
               {
-                label: '👤 Parla con un operatore',
+                icon: '👤',
+                text: 'Parla con un operatore',
                 action: 'request_operator',
                 type: 'primary'
               },
               {
-                label: '🤖 Continua con AI',
+                icon: '🤖',
+                text: 'Continua con AI',
                 action: 'continue_ai',
                 type: 'secondary'
               }
