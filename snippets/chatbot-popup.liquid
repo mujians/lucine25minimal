@@ -886,11 +886,11 @@ function initializeChatbot() {
 
         const sessionData = await sessionResponse.json();
 
-        if (!sessionResponse.ok || !sessionData.sessionId) {
+        if (!sessionResponse.ok || !sessionData.data || !sessionData.data.id) {
           throw new Error('Failed to create session');
         }
 
-        sessionId = sessionData.sessionId;
+        sessionId = sessionData.data.id;
         saveSessionId(sessionId);
         console.log('✅ Session created:', sessionId);
 
@@ -912,23 +912,17 @@ function initializeChatbot() {
       const data = await messageResponse.json();
 
       if (!messageResponse.ok || data.error) {
-        throw new Error(data.error || 'Failed to send message');
+        throw new Error(data.error?.message || 'Failed to send message');
       }
 
-      // Controlla se è richiesta operatore
-      if (data.message && data.message.type === 'operator') {
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-      }
+      // Aggiungi risposta AI se presente
+      if (data.data?.aiResponse && data.data.aiResponse.content) {
+        addMessage(data.data.aiResponse.content, 'bot');
 
-      // Aggiungi risposta bot
-      if (data.message && data.message.content) {
-        addMessage(data.message.content, data.message.type === 'operator' ? 'operator' : 'bot');
-      }
-
-      // Mostra smart actions se presenti
-      if (data.smartActions && data.smartActions.length > 0) {
-        showSmartActions(data.smartActions);
+        // Verifica se l'AI suggerisce un operatore
+        if (data.data.aiResponse.suggestOperator) {
+          console.log('💡 AI suggests operator assistance');
+        }
       }
 
     } catch (error) {
@@ -1169,7 +1163,7 @@ function initializeChatbot() {
       console.log('✅ Chat resumed:', data);
 
       // Set sessionId from ticket
-      sessionId = data.sessionId || data.ticket?.sessionId;
+      sessionId = data.data?.sessionId;
       if (sessionId) {
         saveSessionId(sessionId);
       }
@@ -1177,25 +1171,22 @@ function initializeChatbot() {
       // Open popup automatically
       openPopup();
 
+      // Load previous messages from chatHistory
+      if (data.data?.chatHistory) {
+        try {
+          const messages = JSON.parse(data.data.chatHistory);
+          messages.forEach((msg) => {
+            const sender = msg.type === 'user' ? 'user' :
+                          msg.type === 'operator' ? 'operator' : 'ai' ? 'bot' : 'bot';
+            addMessage(msg.content, sender);
+          });
+        } catch (e) {
+          console.error('Error parsing chat history:', e);
+        }
+      }
+
       // Show welcome message
-      if (data.welcomeMessage) {
-        addMessage(data.welcomeMessage, 'bot');
-      }
-
-      // Load previous messages
-      if (data.messages && data.messages.length > 0) {
-        data.messages.forEach((msg) => {
-          const sender = msg.type === 'user' ? 'user' :
-                        msg.type === 'operator' ? 'operator' : 'bot';
-          addMessage(msg.content, sender, msg.operatorName);
-        });
-      }
-
-      // Setup operator mode if operator is connected
-      if (data.operatorConnected) {
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-      }
+      addMessage('Conversazione ripristinata! Continua da dove avevi lasciato.', 'bot');
 
       // Initialize Socket.IO
       if (sessionId) {
