@@ -898,30 +898,73 @@ function initializeChatbot() {
         initializeSocketIO();
       }
 
-      // ✅ STEP 2: Send message to session
-      const messageResponse = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/message`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: message
-        })
-      });
+      // ✅ STEP 2: Send message to session OR request operator
+      if (message === 'request_operator') {
+        // Request operator endpoint
+        const operatorResponse = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/request-operator`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
 
-      const data = await messageResponse.json();
+        const operatorData = await operatorResponse.json();
 
-      if (!messageResponse.ok || data.error) {
-        throw new Error(data.error?.message || 'Failed to send message');
-      }
+        if (!operatorResponse.ok || operatorData.error) {
+          throw new Error(operatorData.error?.message || 'Failed to request operator');
+        }
 
-      // Aggiungi risposta AI se presente
-      if (data.data?.aiResponse && data.data.aiResponse.content) {
-        addMessage(data.data.aiResponse.content, 'bot');
+        // Handle operator response
+        if (operatorData.data?.operatorAvailable === false) {
+          // No operators available
+          addMessage(operatorData.data.message || 'Nessun operatore disponibile al momento.', 'bot');
+        } else if (operatorData.data?.assigned) {
+          // Operator assigned
+          isOperatorMode = true;
+          updateHeaderForOperatorMode();
+          addMessage('✅ Un operatore ti risponderà a breve!', 'system');
+        } else {
+          // In queue
+          addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
+        }
+      } else {
+        // Normal message to AI
+        const messageResponse = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: message
+          })
+        });
 
-        // Verifica se l'AI suggerisce un operatore
-        if (data.data.aiResponse.suggestOperator) {
-          console.log('💡 AI suggests operator assistance');
+        const data = await messageResponse.json();
+
+        if (!messageResponse.ok || data.error) {
+          throw new Error(data.error?.message || 'Failed to send message');
+        }
+
+        // Aggiungi risposta AI se presente
+        if (data.data?.aiResponse && data.data.aiResponse.content) {
+          addMessage(data.data.aiResponse.content, 'bot');
+
+          // Se l'AI suggerisce operatore, mostra smart action
+          if (data.data.aiResponse.suggestOperator) {
+            console.log('💡 AI suggests operator assistance');
+            showSmartActions([
+              {
+                label: '👤 Parla con un operatore',
+                action: 'request_operator',
+                type: 'primary'
+              },
+              {
+                label: '🤖 Continua con AI',
+                action: 'continue_ai',
+                type: 'secondary'
+              }
+            ]);
+          }
         }
       }
 
