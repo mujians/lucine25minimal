@@ -1,4 +1,8 @@
-<!-- CHATBOT POPUP v3.0 - AGGIORNATO 01/10/2025 - Real-time WebSocket: instant messages, queue updates, no polling delay - Solo con ?chatbot=test -->
+<!-- CHATBOT POPUP v4.0 - UPDATED 22/10/2025 - Socket.IO Real-time + New API Endpoints - Compatible with chatbot-lucy-2025 backend -->
+
+<!-- Socket.IO Client CDN -->
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
 <style>
 /* Chatbot Popup Styles - Aligned with theme */
 :root {
@@ -97,8 +101,6 @@
   animation: slideUp 0.3s ease;
 }
 
-/* Expanded mode removed */
-
 /* Mobile responsive */
 @media (max-width: 480px) {
   .chat-popup {
@@ -108,7 +110,7 @@
     right: 20px;
     left: 20px;
   }
-  
+
   .chat-popup.expanded {
     width: 100vw;
     height: 100vh;
@@ -121,7 +123,7 @@
   }
 }
 
-/* Desktop expanded mode - coerente con il sito */
+/* Desktop expanded mode */
 @media (min-width: 768px) {
   .chat-popup.expanded {
     background: rgba(26, 26, 26, 0.98);
@@ -132,13 +134,13 @@
 }
 
 @keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.95); 
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -157,7 +159,7 @@
 }
 
 .chat-title {
-  font-size: 1.125rem; /* 18px - matches site body text */
+  font-size: 1.125rem;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -169,7 +171,6 @@
   gap: 8px;
 }
 
-.chat-expand,
 .chat-close {
   background: none;
   border: none;
@@ -186,14 +187,9 @@
   transition: all 0.2s ease;
 }
 
-.chat-expand:hover,
 .chat-close:hover {
   background: rgba(255,255,255,0.15);
   transform: scale(1.05);
-}
-
-.chat-expand {
-  font-size: 16px;
 }
 
 /* Messages Area */
@@ -227,16 +223,20 @@
   align-items: flex-start;
 }
 
+.chat-message.operator {
+  align-items: flex-start;
+}
+
 .chat-message.system {
-  align-items: center; /* Center system messages */
+  align-items: center;
 }
 
 .message-bubble {
   max-width: 80%;
   padding: 0.75rem 1rem;
   border-radius: 18px;
-  font-size: 1rem !important; /* 16px - standard size */
-  line-height: 1.6 !important; /* matches site line-height */
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
   word-wrap: break-word;
   font-weight: 400 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
@@ -289,29 +289,6 @@
   font-style: italic;
 }
 
-/* Welcome Message */
-.chat-welcome {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: var(--text-gray);
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.chat-welcome p {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
-}
-
-.chat-welcome h4 {
-  color: var(--christmas-green);
-  font-size: 1.35rem; /* matches sketch-card h4 */
-  font-weight: normal;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
-  font-family: 'Lucine di Natale', -apple-system, sans-serif;
-}
-
 /* Input Area */
 .chat-input-container {
   padding: 1rem;
@@ -334,7 +311,7 @@
   color: white;
   padding: 0.75rem;
   border-radius: 20px;
-  font-size: 1rem; /* 16px - standard input size */
+  font-size: 1rem;
   line-height: 1.4;
   resize: none;
   max-height: 100px;
@@ -411,36 +388,6 @@
   30% { opacity: 1; }
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .chat-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-    animation: slideUpMobile 0.3s ease;
-  }
-  
-  @keyframes slideUpMobile {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  
-  .chatbot-container {
-    bottom: 15px;
-    right: 15px;
-  }
-  
-  .chat-bubble {
-    width: 55px;
-    height: 55px;
-  }
-}
-
 /* Chat Links */
 .chat-link {
   display: inline-block;
@@ -507,10 +454,6 @@
   background: linear-gradient(135deg, #128C7E, #25D366);
   color: white;
   border-color: #128C7E;
-}
-
-.chat-link:active {
-  transform: translateY(0);
 }
 
 /* Smart Actions */
@@ -580,22 +523,6 @@
   backdrop-filter: blur(15px);
 }
 
-.smart-action-button.primary:hover {
-  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
-}
-
-.smart-action-button.success:hover {
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
-}
-
-.smart-action-button.info:hover {
-  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
-}
-
-.smart-action-button.secondary:hover {
-  box-shadow: 0 8px 25px rgba(102, 102, 102, 0.3);
-}
-
 .smart-action-button:active {
   transform: translateY(0);
 }
@@ -625,27 +552,7 @@
   font-weight: 400;
 }
 
-/* Responsive */
-@media (max-width: 380px) {
-  .smart-action-button {
-    padding: 0.75rem;
-    gap: 0.75rem;
-  }
-  
-  .action-icon {
-    font-size: 1.25rem;
-  }
-  
-  .action-text {
-    font-size: 0.9rem;
-  }
-  
-  .action-description {
-    font-size: 0.8rem;
-  }
-}
-
-/* ✅ NEW: Loading indicator styles */
+/* Loading indicator */
 .chat-loading-indicator {
   display: flex;
   justify-content: center;
@@ -691,6 +598,36 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .chat-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    animation: slideUpMobile 0.3s ease;
+  }
+
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .chatbot-container {
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .chat-bubble {
+    width: 55px;
+    height: 55px;
   }
 }
 
@@ -740,13 +677,12 @@
       L'assistente sta scrivendo<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
     </div>
 
-
     <!-- Input -->
     <div class="chat-input-container">
       <div class="chat-input-group">
-        <textarea 
-          class="chat-input-field" 
-          id="chatInputField" 
+        <textarea
+          class="chat-input-field"
+          id="chatInputField"
           placeholder="Scrivi la tua domanda..."
           rows="1"
         ></textarea>
@@ -762,14 +698,14 @@
 // Inizializza chatbot solo se c'è il parametro URL
 document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
-  
-  if (urlParams.get('chatbot') === 'test') {
+
+  if (urlParams.get('chatbot') === 'test' || urlParams.get('pb') === '0') {
     initializeChatbot();
   }
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v3.0 - Ticket Resume + Better Operator UX');
+  console.log('🤖 Chatbot v4.0 - Socket.IO + New API');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -783,9 +719,9 @@ function initializeChatbot() {
   // Mostra il container
   container.style.display = 'block';
 
-  // Configurazione
-  const BACKEND_URL = 'https://lucine-chatbot.onrender.com/api/chat';
-  const WS_URL = 'wss://lucine-chatbot.onrender.com';
+  // Configurazione - UPDATED ENDPOINTS
+  const BACKEND_URL = 'https://chatbot-lucy-2025.onrender.com';
+  const SOCKET_URL = 'https://chatbot-lucy-2025.onrender.com';
 
   // Session persistence constants
   const SESSION_STORAGE_KEY = 'lucine_chat_session_id';
@@ -840,11 +776,7 @@ function initializeChatbot() {
 
   let isPopupOpen = false;
   let isOperatorMode = false;
-  let pollInterval = null;
-  let lastMessageTime = null;
-  let ws = null; // WebSocket connection
-  let wsReconnectAttempts = 0;
-  const WS_MAX_RECONNECT_ATTEMPTS = 5;
+  let socket = null; // Socket.IO connection
   const displayedMessageIds = new Set(); // Track displayed messages globally
 
   // 🔗 Check if URL has ticket token for resume
@@ -853,10 +785,6 @@ function initializeChatbot() {
   if (ticketToken) {
     console.log('🎫 Ticket token found in URL:', ticketToken);
     resumeChatFromTicket(ticketToken);
-  } else if (sessionId) {
-    // 💾 Session restored from localStorage - check status
-    console.log('💾 Session restored, checking status...');
-    checkSessionStatus();
   }
 
   // Event Listeners
@@ -885,28 +813,14 @@ function initializeChatbot() {
     popup.classList.add('show');
     isPopupOpen = true;
     notification.style.display = 'none';
-    
-    // Controlla se la sessione è già con operatore
-    checkSessionStatus();
-    
+
     setTimeout(() => input.focus(), 300);
   }
 
   function closePopup() {
     popup.classList.remove('show');
     isPopupOpen = false;
-
-    // Stop polling se attivo
-    if (pollInterval) {
-      clearInterval(pollInterval);
-      pollInterval = null;
-    }
-
-    // Disconnect WebSocket (optional - keeps connection alive for background updates)
-    // disconnectWebSocket();
   }
-
-  // Expand functionality removed
 
   function handleKeyPress(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -920,6 +834,7 @@ function initializeChatbot() {
     input.style.height = Math.min(input.scrollHeight, 100) + 'px';
   }
 
+  // ✅ UPDATED: New API flow - Create session first, then send messages
   async function sendMessage(messageText) {
     const message = messageText || input.value.trim();
     if (!message) return;
@@ -952,95 +867,115 @@ function initializeChatbot() {
     setInputState(false);
     showTyping();
 
-    // ✅ NEW: Show loading indicator
     const loader = showLoadingIndicator('Invio in corso...');
 
     try {
-      // Timeout controller - 10 secondi
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      // ✅ STEP 1: Create session if we don't have one
+      if (!sessionId) {
+        console.log('📝 Creating new chat session...');
+        const sessionResponse = await fetch(`${BACKEND_URL}/api/chat/session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userName: 'Guest',
+            userAgent: navigator.userAgent
+          })
+        });
 
-      const response = await fetch(BACKEND_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Session-ID': sessionId || ''
-        },
-        body: JSON.stringify({
-          message: message,
-          sessionId: sessionId
-        }),
-        signal: controller.signal
-      });
+        const sessionData = await sessionResponse.json();
 
-      clearTimeout(timeoutId);
-
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      // Aggiorna sessionId (backend genera se null)
-      if (data.sessionId) {
-        sessionId = data.sessionId;
-        saveSessionId(sessionId); // 💾 Persist session to localStorage
-        // 📡 Initialize WebSocket connection now that we have sessionId
-        initializeWebSocketIfNeeded();
-      }
-
-      // Controlla se è escalation dal backend (status connecting_operator)
-      if (data.status === 'connecting_operator') {
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-        startOperatorPolling();
-        addMessage(data.reply, 'bot');
-        return;
-      }
-
-      // Se già con operatore, non mostrare conferma (polling mostrerà risposta)
-      if (data.status === 'with_operator' || data.operatorConnected) {
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-        if (!pollInterval) {
-          startOperatorPolling();
+        if (!sessionResponse.ok || !sessionData.data || !sessionData.data.id) {
+          throw new Error('Failed to create session');
         }
-        // Don't show "message sent" confirmation - just wait for operator reply
-        return;
+
+        sessionId = sessionData.data.id;
+        saveSessionId(sessionId);
+        console.log('✅ Session created:', sessionId);
+
+        // Initialize Socket.IO connection
+        initializeSocketIO();
       }
 
-      // Controlla se è richiesta ticket
-      if (data.status === 'ticket_request') {
-        addMessage(data.reply, 'bot');
-        showTicketForm();
-        return;
-      }
+      // ✅ STEP 2: Send message to session OR request operator
+      if (message === 'request_operator') {
+        // Request operator endpoint
+        const operatorResponse = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/request-operator`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
 
-      // Aggiungi risposta bot normale
-      addMessage(data.reply, 'bot');
+        const operatorData = await operatorResponse.json();
 
-      // Mostra smart actions se presenti
-      if (data.smartActions && data.smartActions.length > 0) {
-        showSmartActions(data.smartActions);
+        if (!operatorResponse.ok || operatorData.error) {
+          throw new Error(operatorData.error?.message || 'Failed to request operator');
+        }
+
+        // Handle operator response
+        if (operatorData.data?.operatorAvailable === false) {
+          // No operators available
+          addMessage(operatorData.data.message || 'Nessun operatore disponibile al momento.', 'bot');
+        } else if (operatorData.data?.assigned) {
+          // Operator assigned
+          isOperatorMode = true;
+          updateHeaderForOperatorMode();
+          addMessage('✅ Un operatore ti risponderà a breve!', 'system');
+        } else {
+          // In queue
+          addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
+        }
+      } else {
+        // Normal message to AI
+        const messageResponse = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: message
+          })
+        });
+
+        const data = await messageResponse.json();
+
+        if (!messageResponse.ok || data.error) {
+          throw new Error(data.error?.message || 'Failed to send message');
+        }
+
+        // Aggiungi risposta AI se presente
+        if (data.data?.aiResponse && data.data.aiResponse.content) {
+          addMessage(data.data.aiResponse.content, 'bot');
+
+          // Se l'AI suggerisce operatore, mostra smart action
+          if (data.data.aiResponse.suggestOperator) {
+            console.log('💡 AI suggests operator assistance');
+            showSmartActions([
+              {
+                icon: '👤',
+                text: 'Parla con un operatore',
+                action: 'request_operator',
+                type: 'primary'
+              },
+              {
+                icon: '🤖',
+                text: 'Continua con AI',
+                action: 'continue_ai',
+                type: 'secondary'
+              }
+            ]);
+          }
+        }
       }
 
     } catch (error) {
-      if (error.name === 'AbortError') {
-        addMessage('⏱️ Il server sta impiegando troppo tempo. Riprova tra qualche secondo.', 'bot');
-      } else if (error.message.includes('fetch') || error.message.includes('network')) {
-        addMessage('🌐 Problema di connessione. Controlla la tua connessione internet.', 'bot');
-      } else {
-        addMessage('Mi dispiace, c\'è stato un problema. Riprova o contatta 📧 info@lucinedinatale.it', 'bot');
-      }
-      console.error('Chat Error:', {
-        name: error.name,
-        message: error.message,
-        sessionId: sessionId,
-        backendUrl: BACKEND_URL
-      });
+      console.error('❌ Chat Error:', error);
+      addMessage('Mi dispiace, c\'è stato un problema. Riprova o contatta 📧 info@lucinedinatale.it', 'bot');
     } finally {
       hideTyping();
-      hideLoadingIndicator(loader);  // ✅ NEW: Always hide loader
+      hideLoadingIndicator(loader);
       setInputState(true);
       input.focus();
     }
@@ -1059,7 +994,7 @@ function initializeChatbot() {
       displayText = `<span class="operator-name">${operatorName}:</span> ${text}`;
     }
 
-    // Processa il testo per rendere i link cliccabili e belli
+    // Processa il testo per rendere i link cliccabili
     let processedText = escapeHtml(displayText);
 
     // Markdown: Bold (**text**) e Italic (*text* o _text_)
@@ -1067,7 +1002,7 @@ function initializeChatbot() {
     processedText = processedText.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     processedText = processedText.replace(/_([^_]+)_/g, '<em>$1</em>');
 
-    // Prima processa i link markdown [testo](url) per evitare conflitti
+    // Prima processa i link markdown [testo](url)
     processedText = processedText.replace(
       /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
       (match, linkText, url) => {
@@ -1082,49 +1017,48 @@ function initializeChatbot() {
         }
       }
     );
-    
-    // Poi processa le URL nude (solo se non sono già dentro link HTML)
+
+    // Poi processa le URL nude
     processedText = processedText.replace(
-      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/products\/[^\s<]+)/g, 
+      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/products\/[^\s<]+)/g,
       '<a href="$1" target="_blank" class="chat-link product-link">🎫 Prenota biglietti</a>'
     );
-    
+
     processedText = processedText.replace(
-      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/cart[^\s<]*)/g, 
+      /(?<!href=")(?<!href=')(https?:\/\/lucinedinatale\.it\/cart[^\s<]*)/g,
       '<a href="$1" target="_blank" class="chat-link cart-link">🛒 Vai al carrello</a>'
     );
-    
-    // Email links (solo se non già in link HTML)
+
+    // Email links
     processedText = processedText.replace(
       /(?<!href=")(?<!href=')(info@lucinedinatale\.it)/g,
       '<a href="mailto:$1" class="chat-link email-link">📧 $1</a>'
     );
-    
-    // WhatsApp links (solo se non già in link HTML)
+
+    // WhatsApp links
     processedText = processedText.replace(
       /(?<!href=")(?<!href=')(https?:\/\/wa\.me\/[^\s<]+)/g,
       '<a href="$1" target="_blank" class="chat-link whatsapp-link">📱 Contatta WhatsApp</a>'
     );
-    
-    // Altri link generici (solo se non già in link HTML)
+
+    // Altri link generici
     processedText = processedText.replace(
       /(?<!href=")(?<!href=')(?<!class="chat-link[^"]*">)(https?:\/\/[^\s<]+)/g,
       '<a href="$1" target="_blank" class="chat-link">🔗 Apri link</a>'
     );
-    
+
     // Converte line breaks
     processedText = processedText.replace(/\n\n/g, '<br><br>');
     processedText = processedText.replace(/\n/g, '<br>');
-    
+
     bubbleDiv.innerHTML = processedText;
-    
+
     messageDiv.appendChild(bubbleDiv);
     messagesContainer.appendChild(messageDiv);
-    
+
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
-
 
   function showSmartActions(actions) {
     // Rimuovi smart actions precedenti
@@ -1133,13 +1067,11 @@ function initializeChatbot() {
       existingActions.remove();
     }
 
-    // ✅ VALIDATION: Check if actions is valid array
     if (!actions || !Array.isArray(actions) || actions.length === 0) {
       console.warn('⚠️ showSmartActions called with invalid data:', actions);
       return;
     }
 
-    // Crea container smart actions
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'smart-actions-container';
 
@@ -1147,18 +1079,11 @@ function initializeChatbot() {
     actionsGrid.className = 'smart-actions-grid';
 
     actions.forEach(action => {
-      // ✅ VALIDATION: Check required fields
-      if (!action || typeof action !== 'object') {
+      if (!action || typeof action !== 'object' || !action.text) {
         console.error('❌ Invalid action object:', action);
-        return; // Skip this action
+        return;
       }
 
-      if (!action.text) {
-        console.error('❌ SmartAction missing required field "text":', action);
-        return; // Skip this action
-      }
-
-      // ✅ FALLBACKS: Provide defaults for optional fields
       const icon = action.icon || '📌';
       const text = action.text;
       const description = action.description || '';
@@ -1174,59 +1099,43 @@ function initializeChatbot() {
           ${description ? `<div class="action-description">${description}</div>` : ''}
         </div>
       `;
-      
-      // ✅ VALIDATION: Check if action is disabled (informational only)
+
       if (action.disabled === true) {
         actionButton.disabled = true;
         actionButton.style.opacity = '0.8';
         actionButton.style.cursor = 'default';
-        actionButton.title = 'Informazione - nessuna azione richiesta';
       }
 
-      // ✅ VALIDATION: Check if action handler exists
       if (!action.disabled && !action.action && !action.url) {
-        console.warn('⚠️ SmartAction has no action or url:', action);
         actionButton.disabled = true;
         actionButton.style.opacity = '0.6';
-        actionButton.style.cursor = 'not-allowed';
       }
 
       actionButton.addEventListener('click', () => {
         if (action.url) {
           window.open(action.url, '_blank');
-        } else if (action.action === 'whatsapp_signup') {
-          sendMessage('voglio attivare notifiche whatsapp');
         } else if (action.action === 'request_operator') {
           sendMessage('request_operator');
         } else if (action.action === 'continue_ai') {
           sendMessage('continua con assistente AI');
-        } else if (action.action === 'wait_in_queue') {
-          // ⚠️ INFORMATIONAL ONLY: This button should be disabled (shown as info)
-          // The queue state is already managed by backend
-          console.log('ℹ️ User acknowledged queue status - no action needed');
-          // Note: This action should ideally be disabled via backend (type: 'info', disabled: true)
         } else if (action.action === 'continue_chat') {
-          // User wants to continue with operator
           sendMessage('continue_chat');
         } else if (action.action === 'end_chat') {
-          // User confirms end of conversation
           sendMessage('end_chat');
         } else if (action.action === 'request_ticket') {
-          // User wants to open a ticket
           sendMessage('apri ticket');
         } else {
           console.warn('⚠️ Unknown action:', action.action);
         }
         actionsContainer.remove();
       });
-      
+
       actionsGrid.appendChild(actionButton);
     });
-    
+
     actionsContainer.appendChild(actionsGrid);
     messagesContainer.appendChild(actionsContainer);
-    
-    // Scroll to bottom
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
@@ -1249,9 +1158,7 @@ function initializeChatbot() {
     return div.innerHTML;
   }
 
-  // ✅ NEW: Loading indicator functions
   function showLoadingIndicator(message = 'Caricamento...') {
-    // Remove any existing loading indicator first
     const existingLoader = messagesContainer.querySelector('.chat-loading-indicator');
     if (existingLoader) {
       existingLoader.remove();
@@ -1276,66 +1183,71 @@ function initializeChatbot() {
     }
   }
 
-  // === FUNZIONI OPERATORE ===
-  
   function updateHeaderForOperatorMode() {
     const chatTitle = document.querySelector('.chat-title');
     if (chatTitle) {
       chatTitle.innerHTML = '🟢 CHAT DAL VIVO - OPERATORE';
-      chatTitle.style.color = '#10B981'; // Verde per indicare connessione dal vivo
+      chatTitle.style.color = '#10B981';
     }
   }
-  
-  function startOperatorPolling() {
-    if (pollInterval) {
-      clearInterval(pollInterval);
-    }
 
-    console.log('🔄 Avvio polling operatore per sessione:', sessionId);
+  // ✅ UPDATED: Resume from ticket - Fixed endpoint
+  async function resumeChatFromTicket(token) {
+    try {
+      console.log('🔗 Resuming chat from ticket token...');
 
-    pollInterval = setInterval(async () => {
-      try {
-        // Costruisci URL con parametro lastMessageTime se disponibile
-        let pollUrl = `https://lucine-chatbot.onrender.com/api/chat/poll/${sessionId}`;
-        if (lastMessageTime) {
-          pollUrl += `?lastMessageTime=${encodeURIComponent(lastMessageTime)}`;
-        }
+      const response = await fetch(`${BACKEND_URL}/api/tickets/resume/${token}`);
+      const data = await response.json();
 
-        const response = await fetch(pollUrl);
-        const data = await response.json();
-
-        if (data.messages && data.messages.length > 0) {
-          console.log('📨 Nuovi messaggi operatore:', data.messages);
-
-          data.messages.forEach(msg => {
-            if ((msg.sender === 'OPERATOR' || msg.sender === 'SYSTEM') && !displayedMessageIds.has(msg.id)) {
-              displayedMessageIds.add(msg.id);
-              // Map sender to correct message type
-              const senderType = msg.sender === 'OPERATOR' ? 'operator' :
-                                msg.sender === 'SYSTEM' ? 'system' : 'bot';
-
-              // Extract operator name from metadata if available
-              const operatorName = (msg.sender === 'OPERATOR' && msg.metadata?.operatorName)
-                ? msg.metadata.operatorName
-                : null;
-
-              addMessage(msg.message, senderType, operatorName);
-              // Show smartActions if present (e.g., closure request buttons)
-              if (msg.smartActions && msg.smartActions.length > 0) {
-                showSmartActions(msg.smartActions);
-              }
-              // Aggiorna lastMessageTime con il timestamp più recente
-              lastMessageTime = msg.timestamp;
-            }
-          });
-        }
-
-      } catch (error) {
-        console.error('❌ Errore polling operatore:', error);
+      if (!response.ok || data.error) {
+        console.error('❌ Resume error:', data.message);
+        addMessage(`❌ ${data.message || 'Token non valido o scaduto'}`, 'bot');
+        return;
       }
-    }, 3000); // Polling ogni 3 secondi
+
+      console.log('✅ Chat resumed:', data);
+
+      // Set sessionId from ticket
+      sessionId = data.data?.sessionId;
+      if (sessionId) {
+        saveSessionId(sessionId);
+      }
+
+      // Open popup automatically
+      openPopup();
+
+      // Load previous messages from chatHistory
+      if (data.data?.chatHistory) {
+        try {
+          const messages = JSON.parse(data.data.chatHistory);
+          messages.forEach((msg) => {
+            const sender = msg.type === 'user' ? 'user' :
+                          msg.type === 'operator' ? 'operator' : 'ai' ? 'bot' : 'bot';
+            addMessage(msg.content, sender);
+          });
+        } catch (e) {
+          console.error('Error parsing chat history:', e);
+        }
+      }
+
+      // Show welcome message
+      addMessage('Conversazione ripristinata! Continua da dove avevi lasciato.', 'bot');
+
+      // Initialize Socket.IO
+      if (sessionId) {
+        initializeSocketIO();
+      }
+
+    } catch (error) {
+      console.error('❌ Failed to resume chat:', error);
+      addMessage('❌ Errore nel riprendere la conversazione. Riprova più tardi.', 'bot');
+    }
   }
-  
+
+  // Esponi sendMessage globalmente
+  window.sendMessage = sendMessage;
+
+  // Show ticket form
   function showTicketForm() {
     const ticketHtml = `
       <div class="ticket-form" style="margin: 1rem 0; padding: 1rem; background: rgba(45, 45, 45, 0.8); border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
@@ -1354,12 +1266,12 @@ function initializeChatbot() {
     messagesContainer.appendChild(ticketDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
-  
-  // Funzione globale per submit ticket
+
+  // ✅ UPDATED: Ticket creation with new schema
   window.submitTicket = async function() {
-    const name = document.getElementById('ticketName').value;
-    const email = document.getElementById('ticketEmail').value;
-    const message = document.getElementById('ticketMessage').value;
+    const name = document.getElementById('ticketName')?.value;
+    const email = document.getElementById('ticketEmail')?.value;
+    const message = document.getElementById('ticketMessage')?.value;
 
     if (!name || !email || !message) {
       alert('Compila tutti i campi');
@@ -1367,24 +1279,25 @@ function initializeChatbot() {
     }
 
     try {
-      const response = await fetch('https://lucine-chatbot.onrender.com/api/tickets', {
+      const response = await fetch(`${BACKEND_URL}/api/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           sessionId: sessionId,
-          subject: `Richiesta supporto - ${name}`,
-          description: message,
-          userEmail: email,
-          contactMethod: 'EMAIL'
+          userName: name,
+          contactMethod: 'EMAIL',
+          email: email,
+          initialMessage: message,
+          priority: 'NORMAL'
         })
       });
 
       const data = await response.json();
 
-      if (data.ticketId || data.ticketNumber) {
-        addMessage(`✅ Ticket #${data.ticketNumber} creato! Ti ricontatteremo al più presto via email.`, 'bot');
+      if (response.ok && data.ticket) {
+        addMessage(`✅ Ticket creato! Ti ricontatteremo al più presto via email.`, 'bot');
         // Rimuovi il form
         const form = document.querySelector('.ticket-form');
         if (form) form.remove();
@@ -1398,330 +1311,104 @@ function initializeChatbot() {
     }
   };
 
-  // 🔗 Resume chat from ticket token
-  async function resumeChatFromTicket(token) {
-    try {
-      console.log('🔗 Resuming chat from ticket token...');
-
-      const response = await fetch(`https://lucine-chatbot.onrender.com/api/chat/resume/${token}`);
-      const data = await response.json();
-
-      if (data.error) {
-        console.error('❌ Resume error:', data.message);
-        addMessage(`❌ ${data.message}`, 'bot');
-        return;
-      }
-
-      console.log('✅ Chat resumed:', data);
-
-      // Set sessionId from ticket
-      sessionId = data.sessionId;
-      saveSessionId(sessionId); // 💾 Persist session to localStorage
-
-      // Open popup automatically
-      openPopup();
-
-      // Show welcome message
-      if (data.welcomeMessage) {
-        addMessage(data.welcomeMessage, 'bot');
-      }
-
-      // ✅ Load previous messages with smartActions support
-      if (data.messages && data.messages.length > 0) {
-        data.messages.forEach((msg, index) => {
-          const sender = msg.sender === 'USER' ? 'user' :
-                        msg.sender === 'OPERATOR' ? 'operator' : 'bot';
-          addMessage(msg.message, sender);
-
-          // Show smartActions from last message if available
-          if (index === data.messages.length - 1 && msg.smartActions && msg.smartActions.length > 0) {
-            console.log('📊 Displaying smartActions from resumed message:', msg.smartActions);
-            showSmartActions(msg.smartActions);
-          }
-        });
-      }
-
-      // Setup operator mode if operator is connected
-      if (data.operatorConnected) {
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-        startOperatorPolling();
-      }
-
-      // Initialize WebSocket
-      initializeWebSocketIfNeeded();
-
-    } catch (error) {
-      console.error('❌ Failed to resume chat:', error);
-      addMessage('❌ Errore nel riprendere la conversazione. Riprova più tardi.', 'bot');
-    }
-  }
-
-  // Controlla stato sessione all'apertura del widget
-  async function checkSessionStatus() {
-    try {
-      const response = await fetch(`https://lucine-chatbot.onrender.com/api/chat/poll/${sessionId}`);
-      const data = await response.json();
-      
-      // Se la sessione è già WITH_OPERATOR, avvia il polling
-      if (data.sessionStatus === 'WITH_OPERATOR' && !isOperatorMode) {
-        console.log('🔄 Sessione già con operatore, avvio polling...');
-        isOperatorMode = true;
-        updateHeaderForOperatorMode();
-        startOperatorPolling();
-        
-        // ✅ Mostra eventuali messaggi operatore già presenti con smartActions
-        if (data.messages && data.messages.length > 0) {
-          data.messages.forEach((msg, index) => {
-            if (msg.sender === 'OPERATOR') {
-              // Extract operator name from metadata if available
-              const operatorName = msg.metadata?.operatorName || null;
-              addMessage(msg.message, 'operator', operatorName);
-
-              // Show smartActions from last message if available
-              if (index === data.messages.length - 1 && msg.smartActions && msg.smartActions.length > 0) {
-                console.log('📊 Displaying smartActions from operator message:', msg.smartActions);
-                showSmartActions(msg.smartActions);
-              }
-            }
-          });
-        }
-      }
-    } catch (error) {
-      console.error('❌ Errore controllo stato sessione:', error);
-    }
-  }
-
-  // Esponi sendMessage globalmente per i suggerimenti
-  window.sendMessage = sendMessage;
-
-  // Funzione per aggiungere prodotti al carrello
-  window.addToCart = function(variantId, quantity = 1) {
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: variantId,
-        quantity: quantity
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Aggiorna il contatore del carrello
-      fetch('/cart.js')
-        .then(response => response.json())
-        .then(cart => {
-          // Aggiorna UI del carrello se presente
-          const cartCount = document.querySelector('.cart-count');
-          if (cartCount) {
-            cartCount.textContent = cart.item_count;
-          }
-          
-          // Messaggio di conferma nel chat
-          addMessage(`✅ Prodotto aggiunto al carrello! Ora hai ${cart.item_count} articoli.`, 'bot');
-        });
-    })
-    .catch(error => {
-      addMessage('❌ Errore nell\'aggiungere il prodotto al carrello. Riprova!', 'bot');
-      console.error('Error adding to cart:', error);
-    });
-  };
-
   // ========================
-  // 📡 WEBSOCKET CONNECTION
+  // 📡 SOCKET.IO CONNECTION
   // ========================
 
-  /**
-   * Connect to WebSocket for real-time notifications
-   */
-  function connectWebSocket() {
+  function initializeSocketIO() {
     if (!sessionId) {
-      console.log('⚠️ Cannot connect WebSocket without sessionId');
+      console.log('⚠️ Cannot connect Socket.IO without sessionId');
       return;
     }
 
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      console.log('✅ WebSocket already connected');
+    if (socket && socket.connected) {
+      console.log('✅ Socket.IO already connected');
       return;
     }
 
     try {
-      console.log('🔌 Connecting to WebSocket:', WS_URL);
-      ws = new WebSocket(WS_URL);
+      console.log('🔌 Connecting to Socket.IO:', SOCKET_URL);
+      socket = io(SOCKET_URL, {
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5
+      });
 
-      ws.onopen = () => {
-        console.log('✅ WebSocket connected');
-        wsReconnectAttempts = 0;
+      socket.on('connect', () => {
+        console.log('✅ Socket.IO connected');
 
-        // Authenticate with sessionId
-        ws.send(JSON.stringify({
-          type: 'widget_auth',
-          sessionId: sessionId
-        }));
-      };
+        // Join chat session
+        socket.emit('join_chat', sessionId);
+      });
 
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          console.log('📨 WebSocket message:', data);
+      socket.on('chat_joined', (data) => {
+        console.log('✅ Joined chat:', data);
+      });
 
-          handleWebSocketMessage(data);
-        } catch (error) {
-          console.error('❌ WebSocket message parse error:', error);
-        }
-      };
+      socket.on('new_message', (data) => {
+        console.log('📨 New message:', data);
 
-      ws.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
-      };
+        if (data.message && !displayedMessageIds.has(data.message.id)) {
+          displayedMessageIds.add(data.message.id);
 
-      ws.onclose = () => {
-        console.log('👋 WebSocket disconnected');
-        ws = null;
+          const sender = data.message.type === 'user' ? 'user' :
+                        data.message.type === 'operator' ? 'operator' : 'bot';
 
-        // Reconnect with exponential backoff
-        if (wsReconnectAttempts < WS_MAX_RECONNECT_ATTEMPTS) {
-          wsReconnectAttempts++;
-          const delay = Math.min(1000 * Math.pow(2, wsReconnectAttempts), 30000);
-          console.log(`🔄 Reconnecting in ${delay}ms (attempt ${wsReconnectAttempts}/${WS_MAX_RECONNECT_ATTEMPTS})`);
-          setTimeout(connectWebSocket, delay);
-        } else {
-          console.log('❌ Max WebSocket reconnect attempts reached. Falling back to polling.');
-        }
-      };
+          addMessage(data.message.content, sender, data.message.operatorName);
 
-    } catch (error) {
-      console.error('❌ WebSocket connection error:', error);
-    }
-  }
-
-  /**
-   * Handle incoming WebSocket messages
-   */
-  function handleWebSocketMessage(data) {
-    switch (data.type) {
-      case 'auth_success':
-        console.log('✅ WebSocket authenticated');
-        break;
-
-      case 'notification':
-        handleNotification(data);
-        break;
-
-      default:
-        console.log('⚠️ Unknown WebSocket message type:', data.type);
-    }
-  }
-
-  /**
-   * Handle WebSocket notifications
-   */
-  function handleNotification(notification) {
-    const event = notification.event;
-    console.log('🔔 Notification:', event, notification);
-
-    switch (event) {
-      case 'new_operator_message':
-        // Operatore ha inviato un messaggio - mostralo immediatamente
-        if (notification.message) {
-          const msg = notification.message;
-          // Check for duplicates before displaying
-          if (!displayedMessageIds.has(msg.id)) {
-            displayedMessageIds.add(msg.id);
-            // Extract operator name from metadata if available
-            const operatorName = msg.metadata?.operatorName || null;
-            addMessage(msg.message, 'operator', operatorName);
-            lastMessageTime = msg.timestamp;
-          } else {
-            console.log('⚠️ Duplicate operator message prevented:', msg.id);
-          }
-
-          // Stop polling if WebSocket is working
-          if (pollInterval && ws && ws.readyState === WebSocket.OPEN) {
-            console.log('🔄 Stopping polling - using WebSocket instead');
-            clearInterval(pollInterval);
-            pollInterval = null;
+          // Show smart actions if present
+          if (data.message.smartActions && data.message.smartActions.length > 0) {
+            showSmartActions(data.message.smartActions);
           }
         }
-        break;
+      });
 
-      case 'queue_update':
-        // Posizione in coda aggiornata
-        if (notification.position !== undefined) {
-          const msg = notification.message ||
-            `📊 Posizione in coda: ${notification.position}° (attesa ~${notification.estimatedWait || '?'} min)`;
-          addMessage(msg, 'bot');
+      // Listen for operator messages (from dashboard operator)
+      socket.on('operator_message', (data) => {
+        console.log('👤💬 Operator message received:', data);
+
+        if (data.message && !displayedMessageIds.has(data.message.id)) {
+          displayedMessageIds.add(data.message.id);
+          addMessage(data.message.content, 'operator', data.message.operatorName);
         }
-        break;
+      });
 
-      case 'operator_connected':
-        // Operatore si è connesso
-        addMessage('✅ Un operatore si è connesso alla chat!', 'bot');
+      socket.on('operator_assigned', (data) => {
+        console.log('👤 Operator assigned:', data);
         isOperatorMode = true;
         updateHeaderForOperatorMode();
-        break;
+        addMessage(`✅ ${data.operatorName || 'Un operatore'} si è connesso alla chat!`, 'system');
+      });
 
-      case 'operator_disconnected':
-        // Operatore si è disconnesso
-        addMessage('⚠️ L\'operatore si è disconnesso. Puoi continuare a scrivere.', 'bot');
-        break;
+      socket.on('operator_joined', (data) => {
+        console.log('👤 Operator joined:', data);
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+      });
 
-      case 'system_message':
-        // System message (e.g., "Operator joined")
-        if (notification.message) {
-          const msg = notification.message;
-          // Check for duplicates before displaying
-          if (!displayedMessageIds.has(msg.id)) {
-            displayedMessageIds.add(msg.id);
-            addMessage(msg.message, 'system');
-          } else {
-            console.log('⚠️ Duplicate system message prevented:', msg.id);
-          }
-        }
-        break;
+      socket.on('chat_closed', (data) => {
+        console.log('👋 Chat closed:', data);
+        addMessage('La chat è stata chiusa. Grazie per averci contattato!', 'system');
+        isOperatorMode = false;
+      });
 
-      case 'closure_request':
-        // Operatore vuole chiudere la conversazione
-        if (notification.message) {
-          const msg = notification.message;
-          // Check for duplicates before displaying
-          if (!displayedMessageIds.has(msg.id)) {
-            displayedMessageIds.add(msg.id);
-            addMessage(msg.message, 'bot');
-            // Show smart actions buttons if present
-            if (msg.smartActions && msg.smartActions.length > 0) {
-              showSmartActions(msg.smartActions);
-            }
-          } else {
-            console.log('⚠️ Duplicate closure request prevented:', msg.id);
-          }
-        }
-        break;
+      socket.on('disconnect', () => {
+        console.log('👋 Socket.IO disconnected');
+      });
 
-      default:
-        console.log('⚠️ Unknown notification event:', event);
+      socket.on('connect_error', (error) => {
+        console.error('❌ Socket.IO connection error:', error);
+      });
+
+    } catch (error) {
+      console.error('❌ Socket.IO initialization error:', error);
     }
   }
 
-  /**
-   * Disconnect WebSocket
-   */
-  function disconnectWebSocket() {
-    if (ws) {
-      console.log('🔌 Disconnecting WebSocket');
-      ws.close();
-      ws = null;
-    }
-  }
-
-  // Connect WebSocket when sessionId is available
-  // This will be called after first message is sent and sessionId is received
-  function initializeWebSocketIfNeeded() {
-    if (sessionId && !ws) {
-      connectWebSocket();
-    }
+  // Initialize Socket.IO if we have a session
+  if (sessionId) {
+    initializeSocketIO();
   }
 }
 </script>
