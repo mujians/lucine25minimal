@@ -1364,6 +1364,16 @@ function initializeChatbot() {
         }
       });
 
+      // Listen for operator messages (from dashboard operator)
+      socket.on('operator_message', (data) => {
+        console.log('👤💬 Operator message received:', data);
+
+        if (data.message && !displayedMessageIds.has(data.message.id)) {
+          displayedMessageIds.add(data.message.id);
+          addMessage(data.message.content, 'operator', data.message.operatorName);
+        }
+      });
+
       socket.on('operator_assigned', (data) => {
         console.log('👤 Operator assigned:', data);
         isOperatorMode = true;
