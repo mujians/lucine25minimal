@@ -1,4 +1,5 @@
-<!-- CHATBOT POPUP v4.0 - UPDATED 22/10/2025 - Socket.IO Real-time + New API Endpoints - Compatible with chatbot-lucy-2025 backend -->
+<!-- CHATBOT POPUP v4.1 - UPDATED 23/10/2025 - Dynamic Settings + Socket.IO Real-time + New API Endpoints - Compatible with chatbot-lucy-2025 backend -->
+<!-- ✨ NEW: Loads widget configuration (colors, position, greeting) from dashboard settings via /api/settings/public -->
 
 <!-- Socket.IO Client CDN -->
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
@@ -705,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeChatbot() {
-  console.log('🤖 Chatbot v4.0 - Socket.IO + New API');
+  console.log('🤖 Chatbot v4.1 - Dynamic Settings + Socket.IO');
   const container = document.getElementById('chatbotContainer');
   const bubble = document.getElementById('chatBubble');
   const popup = document.getElementById('chatPopup');
@@ -716,12 +717,91 @@ function initializeChatbot() {
   const typingIndicator = document.getElementById('typingIndicator');
   const notification = document.getElementById('chatNotification');
 
-  // Mostra il container
-  container.style.display = 'block';
-
   // Configurazione - UPDATED ENDPOINTS
   const BACKEND_URL = 'https://chatbot-lucy-2025.onrender.com';
   const SOCKET_URL = 'https://chatbot-lucy-2025.onrender.com';
+
+  // ✅ LOAD DYNAMIC SETTINGS FROM BACKEND
+  let widgetSettings = {
+    primaryColor: '#dc2626',
+    position: 'bottom-right',
+    greeting: 'Ciao! Sono Lucy, il tuo assistente virtuale. 👋',
+    title: 'LUCY - ASSISTENTE VIRTUALE',
+    subtitle: 'Chiedimi quello che vuoi sapere.'
+  };
+
+  // Fetch settings from backend
+  async function loadWidgetSettings() {
+    try {
+      console.log('⚙️ Loading widget settings...');
+      const response = await fetch(`${BACKEND_URL}/api/settings/public`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          widgetSettings = { ...widgetSettings, ...data.data };
+          console.log('✅ Settings loaded:', widgetSettings);
+          applySettings();
+        }
+      } else {
+        console.warn('⚠️ Failed to load settings, using defaults');
+      }
+    } catch (error) {
+      console.error('❌ Error loading settings:', error);
+      console.log('Using default settings');
+    }
+  }
+
+  // Apply settings to widget
+  function applySettings() {
+    // Apply primary color
+    if (widgetSettings.primaryColor) {
+      document.documentElement.style.setProperty('--christmas-red', widgetSettings.primaryColor);
+      console.log('🎨 Applied primary color:', widgetSettings.primaryColor);
+    }
+
+    // Apply position
+    if (widgetSettings.position) {
+      const positions = {
+        'bottom-right': { bottom: '20px', right: '20px', left: 'auto', top: 'auto' },
+        'bottom-left': { bottom: '20px', left: '20px', right: 'auto', top: 'auto' },
+        'top-right': { top: '20px', right: '20px', left: 'auto', bottom: 'auto' },
+        'top-left': { top: '20px', left: '20px', right: 'auto', bottom: 'auto' }
+      };
+
+      const pos = positions[widgetSettings.position] || positions['bottom-right'];
+      Object.assign(container.style, pos);
+      console.log('📍 Applied position:', widgetSettings.position);
+    }
+
+    // Apply title
+    if (widgetSettings.title) {
+      const titleElement = document.querySelector('.chat-title');
+      if (titleElement) {
+        titleElement.textContent = widgetSettings.title.toUpperCase();
+        console.log('📝 Applied title:', widgetSettings.title);
+      }
+    }
+
+    // Update welcome messages
+    updateWelcomeMessages();
+  }
+
+  // Update welcome messages with settings
+  function updateWelcomeMessages() {
+    const welcomeMessages = messagesContainer.querySelectorAll('.chat-message.bot');
+    if (welcomeMessages.length >= 2 && widgetSettings.greeting && widgetSettings.subtitle) {
+      welcomeMessages[0].querySelector('.message-bubble').textContent = widgetSettings.greeting;
+      welcomeMessages[1].querySelector('.message-bubble').innerHTML = widgetSettings.subtitle;
+      console.log('💬 Updated welcome messages');
+    }
+  }
+
+  // Load settings immediately
+  loadWidgetSettings();
+
+  // Mostra il container
+  container.style.display = 'block';
 
   // Session persistence constants
   const SESSION_STORAGE_KEY = 'lucine_chat_session_id';
