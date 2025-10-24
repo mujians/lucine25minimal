@@ -1125,12 +1125,21 @@ function initializeChatbot() {
     processedText = processedText.replace(/\n\n/g, '<br><br>');
     processedText = processedText.replace(/\n/g, '<br>');
 
-    // Add operator name prefix AFTER processing (so HTML is not escaped)
-    if (sender === 'operator' && operatorName) {
-      processedText = `<span class="operator-name">${escapeHtml(operatorName)}:</span> ${processedText}`;
-    }
-
     bubbleDiv.innerHTML = processedText;
+
+    // Add operator name badge ABOVE message bubble (not inline)
+    if (sender === 'operator' && operatorName) {
+      const badgeDiv = document.createElement('div');
+      badgeDiv.className = 'operator-badge';
+      badgeDiv.textContent = operatorName;
+      badgeDiv.style.cssText = `
+        font-size: 11px;
+        color: #666;
+        margin-bottom: 4px;
+        font-weight: 500;
+      `;
+      messageDiv.appendChild(badgeDiv);
+    }
 
     messageDiv.appendChild(bubbleDiv);
     messagesContainer.appendChild(messageDiv);
