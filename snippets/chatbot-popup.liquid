@@ -1244,6 +1244,10 @@ function initializeChatbot() {
     actionsContainer.appendChild(actionsGrid);
     messagesContainer.appendChild(actionsContainer);
 
+    // ✅ DEBUG: Confirm buttons were added
+    console.log(`✅ Smart actions added to DOM: ${actions.length} buttons`);
+    console.log('📍 Actions container in DOM:', messagesContainer.contains(actionsContainer));
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
