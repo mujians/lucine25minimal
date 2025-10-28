@@ -998,6 +998,24 @@ function initializeChatbot() {
         if (operatorData.data?.operatorAvailable === false) {
           // No operators available
           addMessage(operatorData.data.message || 'Nessun operatore disponibile al momento.', 'bot');
+
+          // ✅ FIX P0.3: Show smart actions to open ticket or continue with AI
+          showSmartActions([
+            {
+              icon: '📝',
+              text: 'Apri Ticket',
+              description: 'Lascia un messaggio, ti ricontatteremo',
+              action: 'request_ticket',
+              type: 'primary'
+            },
+            {
+              icon: '🤖',
+              text: 'Continua con AI',
+              description: 'Prova a chiedermi altro',
+              action: 'continue_ai',
+              type: 'secondary'
+            }
+          ]);
         } else if (operatorData.data?.assigned) {
           // Operator assigned
           isOperatorMode = true;
@@ -1211,7 +1229,9 @@ function initializeChatbot() {
         } else if (action.action === 'end_chat') {
           sendMessage('end_chat');
         } else if (action.action === 'request_ticket') {
-          sendMessage('apri ticket');
+          // ✅ FIX P0.4: Show ticket form instead of sending message
+          showTicketForm();
+          actionsContainer.remove();
         } else {
           console.warn('⚠️ Unknown action:', action.action);
         }
