@@ -1522,6 +1522,10 @@ function initializeChatbot() {
         sessionId = null;
         isOperatorMode = false;
 
+        // P1.7 Fix: Disable input after chat closed
+        setInputState(false);
+        input.placeholder = 'Chat chiusa';
+
         console.log('✅ Session cleared - next conversation will be new');
       });
 
