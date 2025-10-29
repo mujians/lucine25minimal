@@ -796,6 +796,9 @@ function initializeChatbot() {
     subtitle: 'Chiedimi quello che vuoi sapere.'
   };
 
+  // BUG #7 FIX: Store interval reference for cleanup
+  let settingsRefreshInterval = null;
+
   // P2.1: Fetch settings from backend with cache busting
   async function loadWidgetSettings(skipCache = false) {
     try {
@@ -840,7 +843,13 @@ function initializeChatbot() {
 
   // P2.1: Auto-refresh settings every 5 minutes to catch dashboard changes
   function startSettingsAutoRefresh() {
-    setInterval(() => {
+    // BUG #7 FIX: Clear existing interval to prevent memory leak
+    if (settingsRefreshInterval) {
+      clearInterval(settingsRefreshInterval);
+    }
+
+    // BUG #7 FIX: Store interval reference for cleanup
+    settingsRefreshInterval = setInterval(() => {
       console.log('🔄 Auto-refreshing widget settings...');
       loadWidgetSettings(true); // Skip cache on auto-refresh
     }, 5 * 60 * 1000); // 5 minutes
@@ -2011,5 +2020,13 @@ function initializeChatbot() {
   if (sessionId) {
     initializeSocketIO();
   }
+
+  // BUG #7 FIX: Cleanup interval on page unload to prevent memory leak
+  window.addEventListener('beforeunload', () => {
+    if (settingsRefreshInterval) {
+      clearInterval(settingsRefreshInterval);
+      console.log('🧹 Cleaned up settings refresh interval');
+    }
+  });
 }
 </script>
