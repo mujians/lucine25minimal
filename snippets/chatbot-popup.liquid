@@ -730,17 +730,37 @@ function initializeChatbot() {
     subtitle: 'Chiedimi quello che vuoi sapere.'
   };
 
-  // Fetch settings from backend
-  async function loadWidgetSettings() {
+  // P2.1: Fetch settings from backend with cache busting
+  async function loadWidgetSettings(skipCache = false) {
     try {
       console.log('⚙️ Loading widget settings...');
-      const response = await fetch(`${BACKEND_URL}/api/settings/public`);
+
+      // P2.1: Add cache-busting timestamp to prevent stale cached settings
+      const cacheBuster = skipCache ? `?t=${Date.now()}` : '';
+      const response = await fetch(`${BACKEND_URL}/api/settings/public${cacheBuster}`, {
+        cache: skipCache ? 'no-cache' : 'default'
+      });
 
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data) {
+          // P2.1: Check if settings version changed
+          const previousVersion = localStorage.getItem('widgetSettingsVersion');
+          const newVersion = data.data.version;
+
           widgetSettings = { ...widgetSettings, ...data.data };
           console.log('✅ Settings loaded:', widgetSettings);
+
+          // P2.1: Store version for change detection
+          if (newVersion) {
+            localStorage.setItem('widgetSettingsVersion', newVersion);
+
+            // If version changed and widget was already loaded, reapply settings
+            if (previousVersion && previousVersion !== String(newVersion)) {
+              console.log('🔄 Settings version changed, reapplying...');
+            }
+          }
+
           applySettings();
         }
       } else {
@@ -750,6 +770,14 @@ function initializeChatbot() {
       console.error('❌ Error loading settings:', error);
       console.log('Using default settings');
     }
+  }
+
+  // P2.1: Auto-refresh settings every 5 minutes to catch dashboard changes
+  function startSettingsAutoRefresh() {
+    setInterval(() => {
+      console.log('🔄 Auto-refreshing widget settings...');
+      loadWidgetSettings(true); // Skip cache on auto-refresh
+    }, 5 * 60 * 1000); // 5 minutes
   }
 
   // Apply settings to widget
@@ -799,6 +827,9 @@ function initializeChatbot() {
 
   // Load settings immediately
   loadWidgetSettings();
+
+  // P2.1: Start auto-refresh to keep settings updated
+  startSettingsAutoRefresh();
 
   // Mostra il container
   container.style.display = 'block';
