@@ -1016,13 +1016,13 @@ function initializeChatbot() {
               type: 'secondary'
             }
           ]);
-        } else if (operatorData.data?.assigned) {
-          // Operator assigned
+        } else if (operatorData.data?.operatorAvailable === true) {
+          // Operator assigned successfully
           isOperatorMode = true;
           updateHeaderForOperatorMode();
-          addMessage('✅ Un operatore ti risponderà a breve!', 'system');
+          addMessage(`✅ ${operatorData.data.operator?.name || 'Un operatore'} si è unito alla chat!`, 'system');
         } else {
-          // In queue
+          // In queue (shouldn't happen with current backend logic)
           addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
         }
       } else {
