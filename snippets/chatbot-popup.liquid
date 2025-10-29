@@ -378,6 +378,42 @@
   cursor: not-allowed;
 }
 
+/* P0.1: Upload Button */
+.chat-upload-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.chat-upload-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.chat-upload-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chat-upload-button.uploading {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* Typing Indicator */
 .typing-indicator {
   display: none;
@@ -703,6 +739,14 @@
     <!-- Input -->
     <div class="chat-input-container">
       <div class="chat-input-group">
+        <!-- P0.1: Hidden file input -->
+        <input type="file" id="chatFileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style="display: none;">
+
+        <!-- P0.1: Upload button -->
+        <button class="chat-upload-button" id="chatUploadButton" title="Carica file">
+          📎
+        </button>
+
         <textarea
           class="chat-input-field"
           id="chatInputField"
@@ -927,6 +971,68 @@ function initializeChatbot() {
   input.addEventListener('keypress', handleKeyPress);
   input.addEventListener('input', autoResize);
   input.addEventListener('input', handleUserTyping); // P0.5: Typing indicator
+
+  // P0.1: File Upload Event Listeners
+  const uploadBtn = document.getElementById('chatUploadButton');
+  const fileInput = document.getElementById('chatFileInput');
+
+  uploadBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File troppo grande. Dimensione massima: 10MB');
+      fileInput.value = '';
+      return;
+    }
+
+    if (!sessionId) {
+      alert('Sessione non attiva. Riprova.');
+      fileInput.value = '';
+      return;
+    }
+
+    // Show uploading state
+    uploadBtn.disabled = true;
+    uploadBtn.classList.add('uploading');
+    uploadBtn.textContent = '⏳';
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Errore durante l\'upload');
+      }
+
+      const data = await response.json();
+      console.log('✅ P0.1: File uploaded:', data);
+
+      // Message will be displayed via WebSocket
+
+      // Clear file input
+      fileInput.value = '';
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert(error.message || 'Errore durante l\'upload del file');
+    } finally {
+      // Restore button state
+      uploadBtn.disabled = false;
+      uploadBtn.classList.remove('uploading');
+      uploadBtn.textContent = '📎';
+    }
+  });
 
   // Mostra notifica dopo 3 secondi
   setTimeout(() => {
@@ -1201,12 +1307,68 @@ function initializeChatbot() {
     }
   }
 
-  function addMessage(text, sender, operatorName = null) {
+  function addMessage(text, sender, operatorName = null, attachment = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}`;
 
     const bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'message-bubble';
+
+    // P0.1: Display file attachment if present
+    if (attachment && attachment.url) {
+      const attachmentDiv = document.createElement('div');
+      attachmentDiv.style.cssText = 'margin-bottom: 8px;';
+
+      if (attachment.resourceType === 'image') {
+        // Display image
+        const img = document.createElement('img');
+        img.src = attachment.url;
+        img.alt = attachment.originalName || 'Image';
+        img.style.cssText = 'max-width: 100%; height: auto; border-radius: 8px; max-height: 200px; object-fit: contain; cursor: pointer;';
+        img.onclick = () => window.open(attachment.url, '_blank');
+        attachmentDiv.appendChild(img);
+      } else {
+        // Display file card
+        const fileCard = document.createElement('a');
+        fileCard.href = attachment.url;
+        fileCard.target = '_blank';
+        fileCard.rel = 'noopener noreferrer';
+        fileCard.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; text-decoration: none; color: inherit; transition: background 0.2s;';
+        fileCard.onmouseover = () => fileCard.style.background = 'rgba(255,255,255,0.2)';
+        fileCard.onmouseout = () => fileCard.style.background = 'rgba(255,255,255,0.1)';
+
+        const icon = document.createElement('span');
+        icon.style.cssText = 'font-size: 24px;';
+        const mimetype = attachment.mimetype || '';
+        if (mimetype.includes('pdf')) icon.textContent = '📄';
+        else if (mimetype.includes('word')) icon.textContent = '📝';
+        else if (mimetype.includes('excel') || mimetype.includes('spreadsheet')) icon.textContent = '📊';
+        else if (mimetype.includes('zip') || mimetype.includes('rar')) icon.textContent = '📦';
+        else icon.textContent = '📎';
+
+        const details = document.createElement('div');
+        details.style.cssText = 'flex: 1; min-width: 0;';
+        const filename = document.createElement('div');
+        filename.textContent = attachment.originalName || 'File';
+        filename.style.cssText = 'font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
+        const filesize = document.createElement('div');
+        filesize.textContent = attachment.size ? `${(attachment.size / 1024).toFixed(1)} KB` : '';
+        filesize.style.cssText = 'font-size: 12px; opacity: 0.7;';
+        details.appendChild(filename);
+        details.appendChild(filesize);
+
+        const downloadIcon = document.createElement('span');
+        downloadIcon.textContent = '⬇';
+        downloadIcon.style.cssText = 'font-size: 18px;';
+
+        fileCard.appendChild(icon);
+        fileCard.appendChild(details);
+        fileCard.appendChild(downloadIcon);
+        attachmentDiv.appendChild(fileCard);
+      }
+
+      bubbleDiv.appendChild(attachmentDiv);
+    }
 
     // Processa il testo per rendere i link cliccabili
     let processedText = escapeHtml(text);
@@ -1595,7 +1757,7 @@ function initializeChatbot() {
           const sender = data.message.type === 'user' ? 'user' :
                         data.message.type === 'operator' ? 'operator' : 'bot';
 
-          addMessage(data.message.content, sender, data.message.operatorName);
+          addMessage(data.message.content, sender, data.message.operatorName, data.message.attachment);
 
           // Show smart actions if present
           if (data.message.smartActions && data.message.smartActions.length > 0) {
@@ -1610,7 +1772,7 @@ function initializeChatbot() {
 
         if (data.message && !displayedMessageIds.has(data.message.id)) {
           displayedMessageIds.add(data.message.id);
-          addMessage(data.message.content, 'operator', data.message.operatorName);
+          addMessage(data.message.content, 'operator', data.message.operatorName, data.message.attachment);
         }
       });
 
