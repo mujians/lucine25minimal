@@ -1449,9 +1449,14 @@ function initializeChatbot() {
 
       socket.on('connect', () => {
         console.log('✅ Socket.IO connected');
+        console.log('🔍 Current sessionId:', sessionId);
 
-        // Join chat session
-        socket.emit('join_chat', sessionId);
+        // Join chat session (use current value of sessionId)
+        if (sessionId) {
+          socket.emit('join_chat', sessionId);
+        } else {
+          console.error('❌ Cannot join chat: sessionId is undefined');
+        }
       });
 
       socket.on('chat_joined', (data) => {
