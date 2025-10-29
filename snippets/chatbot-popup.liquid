@@ -216,6 +216,28 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* P0.5: Typing indicator animation */
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #666;
+  animation: typingDot 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+  30% { transform: translateY(-10px); opacity: 1; }
+}
+
 .chat-message.user {
   align-items: flex-end;
 }
@@ -904,6 +926,7 @@ function initializeChatbot() {
   sendBtn.addEventListener('click', () => sendMessage());
   input.addEventListener('keypress', handleKeyPress);
   input.addEventListener('input', autoResize);
+  input.addEventListener('input', handleUserTyping); // P0.5: Typing indicator
 
   // Mostra notifica dopo 3 secondi
   setTimeout(() => {
@@ -943,6 +966,66 @@ function initializeChatbot() {
   function autoResize() {
     input.style.height = 'auto';
     input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+  }
+
+  // P0.5: User typing indicator
+  let typingTimeout = null;
+  function handleUserTyping() {
+    if (!socket || !socket.connected || !sessionId) return;
+
+    // Emit typing started
+    socket.emit('user_typing', {
+      sessionId: sessionId,
+      isTyping: true,
+    });
+
+    // Clear previous timeout
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Stop typing after 1 second of inactivity
+    typingTimeout = setTimeout(() => {
+      if (socket && socket.connected && sessionId) {
+        socket.emit('user_typing', {
+          sessionId: sessionId,
+          isTyping: false,
+        });
+      }
+    }, 1000);
+  }
+
+  // P0.5: Show operator typing indicator
+  function showTypingIndicator(isTyping, operatorName) {
+    const existingIndicator = document.getElementById('typing-indicator');
+
+    if (isTyping) {
+      // Create typing indicator if not exists
+      if (!existingIndicator) {
+        const indicator = document.createElement('div');
+        indicator.id = 'typing-indicator';
+        indicator.className = 'chat-message operator-message';
+        indicator.innerHTML = `
+          <div class="message-content">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>${operatorName || 'Operatore'} sta scrivendo</span>
+              <div style="display: flex; gap: 4px;">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        messagesContainer.appendChild(indicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    } else {
+      // Remove typing indicator
+      if (existingIndicator) {
+        existingIndicator.remove();
+      }
+    }
   }
 
   // ✅ UPDATED: New API flow - Create session first, then send messages
@@ -1528,6 +1611,13 @@ function initializeChatbot() {
         if (data.message && !displayedMessageIds.has(data.message.id)) {
           displayedMessageIds.add(data.message.id);
           addMessage(data.message.content, 'operator', data.message.operatorName);
+        }
+      });
+
+      // P0.5: Listen for operator typing indicator
+      socket.on('operator_typing', (data) => {
+        if (data.sessionId === sessionId) {
+          showTypingIndicator(data.isTyping, data.operatorName);
         }
       });
 
