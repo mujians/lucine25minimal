@@ -1453,7 +1453,8 @@ function initializeChatbot() {
 
         // Join chat session (use current value of sessionId)
         if (sessionId) {
-          socket.emit('join_chat', sessionId);
+          socket.emit('join_chat', { sessionId: sessionId });
+          console.log('📤 Emitted join_chat with sessionId:', sessionId);
         } else {
           console.error('❌ Cannot join chat: sessionId is undefined');
         }
