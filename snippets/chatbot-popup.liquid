@@ -1516,7 +1516,13 @@ function initializeChatbot() {
       socket.on('chat_closed', (data) => {
         console.log('👋 Chat closed:', data);
         addMessage('La chat è stata chiusa. Grazie per averci contattato!', 'system');
+
+        // P11 Fix: Clear session quando operatore chiude la chat
+        localStorage.removeItem('chatSessionId');
+        sessionId = null;
         isOperatorMode = false;
+
+        console.log('✅ Session cleared - next conversation will be new');
       });
 
       socket.on('disconnect', () => {
