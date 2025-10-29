@@ -1408,13 +1408,13 @@ function initializeChatbot() {
 
       const data = await response.json();
 
-      if (response.ok && data.ticket) {
+      if (response.ok && data.success && data.data?.ticket) {
         addMessage(`✅ Ticket creato! Ti ricontatteremo al più presto via email.`, 'bot');
         // Rimuovi il form
         const form = document.querySelector('.ticket-form');
         if (form) form.remove();
       } else {
-        throw new Error(data.error || 'Errore creazione ticket');
+        throw new Error(data.error?.message || 'Errore creazione ticket');
       }
 
     } catch (error) {
