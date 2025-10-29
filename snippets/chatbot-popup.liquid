@@ -1065,6 +1065,15 @@ function initializeChatbot() {
               }
             ]);
           }
+        } else if (data.data?.withOperator) {
+          // Sei in chat con operatore - il messaggio è stato inviato
+          console.log(`✅ Message sent to operator: ${data.data.operatorName}`);
+
+          // Assicurati che isOperatorMode sia true e header sia aggiornato
+          if (!isOperatorMode) {
+            isOperatorMode = true;
+            updateHeaderForOperatorMode();
+          }
         }
       }
 
