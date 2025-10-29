@@ -1134,6 +1134,180 @@ function initializeChatbot() {
     }
   }
 
+  // P1.2: Show rating popup after chat closed (CSAT)
+  function showRatingPopup(sessionId) {
+    // Check if rating already submitted for this session
+    const ratedSessions = JSON.parse(localStorage.getItem('ratedSessions') || '[]');
+    if (ratedSessions.includes(sessionId)) {
+      console.log('Rating already submitted for this session');
+      return;
+    }
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'rating-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+    `;
+
+    // Create popup
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    `;
+
+    let selectedRating = 0;
+
+    popup.innerHTML = `
+      <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #333;">Come valuti il supporto?</h3>
+      <p style="margin: 0 0 20px 0; font-size: 14px; color: #666;">Il tuo feedback ci aiuta a migliorare</p>
+
+      <div id="stars-container" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px;">
+        ${[1,2,3,4,5].map(num => `
+          <span class="rating-star" data-rating="${num}" style="
+            font-size: 40px;
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s;
+          ">⭐</span>
+        `).join('')}
+      </div>
+
+      <textarea id="rating-comment" placeholder="Commento opzionale..." style="
+        width: 100%;
+        min-height: 80px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        margin-bottom: 20px;
+      "></textarea>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="rating-skip" style="
+          flex: 1;
+          padding: 12px;
+          border: 1px solid #ddd;
+          background: white;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 14px;
+        ">Salta</button>
+        <button id="rating-submit" disabled style="
+          flex: 1;
+          padding: 12px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 14px;
+          opacity: 0.5;
+        ">Invia</button>
+      </div>
+    `;
+
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+
+    // Star interaction
+    const stars = popup.querySelectorAll('.rating-star');
+    const submitBtn = popup.querySelector('#rating-submit');
+
+    stars.forEach((star, index) => {
+      star.addEventListener('mouseenter', () => {
+        stars.forEach((s, i) => {
+          s.style.color = i <= index ? '#ffc107' : '#ddd';
+          s.style.transform = i <= index ? 'scale(1.1)' : 'scale(1)';
+        });
+      });
+
+      star.addEventListener('mouseleave', () => {
+        stars.forEach((s, i) => {
+          s.style.color = i < selectedRating ? '#ffc107' : '#ddd';
+          s.style.transform = 'scale(1)';
+        });
+      });
+
+      star.addEventListener('click', () => {
+        selectedRating = index + 1;
+        stars.forEach((s, i) => {
+          s.style.color = i < selectedRating ? '#ffc107' : '#ddd';
+        });
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      });
+    });
+
+    // Submit rating
+    submitBtn.addEventListener('click', async () => {
+      if (selectedRating === 0) return;
+
+      const comment = popup.querySelector('#rating-comment').value.trim();
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Invio...';
+
+        const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/rating`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rating: selectedRating, comment: comment || null }),
+        });
+
+        if (response.ok) {
+          // Save to localStorage to prevent duplicate ratings
+          ratedSessions.push(sessionId);
+          localStorage.setItem('ratedSessions', JSON.stringify(ratedSessions));
+
+          // Show thank you message
+          popup.innerHTML = `
+            <div style="text-align: center;">
+              <div style="font-size: 60px; margin-bottom: 10px;">✅</div>
+              <h3 style="margin: 0 0 8px 0; color: #333;">Grazie per il feedback!</h3>
+              <p style="margin: 0; color: #666; font-size: 14px;">Il tuo parere ci aiuta a migliorare</p>
+            </div>
+          `;
+
+          setTimeout(() => {
+            overlay.remove();
+          }, 2000);
+
+          console.log(`✅ P1.2: Rating ${selectedRating}⭐ submitted for session ${sessionId}`);
+        } else {
+          throw new Error('Failed to submit rating');
+        }
+      } catch (error) {
+        console.error('Rating submission error:', error);
+        alert('Errore durante l\'invio del rating. Riprova.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Invia';
+      }
+    });
+
+    // Skip rating
+    popup.querySelector('#rating-skip').addEventListener('click', () => {
+      overlay.remove();
+      console.log('Rating skipped');
+    });
+  }
+
   // ✅ UPDATED: New API flow - Create session first, then send messages
   async function sendMessage(messageText) {
     const message = messageText || input.value.trim();
@@ -1799,6 +1973,14 @@ function initializeChatbot() {
       socket.on('chat_closed', (data) => {
         console.log('👋 Chat closed:', data);
         addMessage('La chat è stata chiusa. Grazie per averci contattato!', 'system');
+
+        // P1.2: Show rating popup after 2 seconds
+        const closedSessionId = sessionId; // Save sessionId before clearing
+        setTimeout(() => {
+          if (closedSessionId) {
+            showRatingPopup(closedSessionId);
+          }
+        }, 2000);
 
         // P11 Fix: Clear session quando operatore chiude la chat
         localStorage.removeItem('chatSessionId');
