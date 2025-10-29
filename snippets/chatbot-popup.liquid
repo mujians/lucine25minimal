@@ -1423,9 +1423,10 @@ function initializeChatbot() {
             }
           ]);
         } else if (operatorData.data?.operatorAvailable === true) {
-          // Operator assigned - waiting for them to respond
-          addMessage(`⏳ Ti abbiamo messo in coda. ${operatorData.data.operator?.name || 'Un operatore'} ti risponderà a breve.`, 'system');
+          // Operator assigned successfully
+          // Don't show "in queue" message - backend will send "si è unito alla chat" message via WebSocket
           // isOperatorMode will be set when operator_assigned event is received
+          console.log(`✅ Operator ${operatorData.data.operator?.name} assigned - waiting for connection message`);
         } else {
           // In queue (shouldn't happen with current backend logic)
           addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
@@ -1994,7 +1995,7 @@ function initializeChatbot() {
         console.log('👤 Operator assigned:', data);
         isOperatorMode = true;
         updateHeaderForOperatorMode();
-        addMessage(`✅ ${data.operatorName || 'Un operatore'} si è connesso alla chat!`, 'system');
+        // Don't add message here - backend already sends "si è unito alla chat" message
       });
 
       socket.on('operator_joined', (data) => {
