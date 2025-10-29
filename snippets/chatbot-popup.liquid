@@ -701,7 +701,7 @@
         <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
       </svg>
     </div>
-    <div class="chat-notification" id="chatNotification" style="display: none;">1</div>
+    <div class="chat-notification" id="chatNotification" style="display: none;">0</div>
   </div>
 
   <!-- Chat Popup -->
@@ -798,6 +798,23 @@ function initializeChatbot() {
 
   // BUG #7 FIX: Store interval reference for cleanup
   let settingsRefreshInterval = null;
+
+  // P2.5: Dynamic badge counter for unread messages
+  let unreadMessageCount = 0;
+
+  // P2.5: Update badge with current unread count
+  function updateBadge(count) {
+    unreadMessageCount = Math.max(0, count); // Ensure non-negative
+
+    if (unreadMessageCount > 0) {
+      notification.textContent = unreadMessageCount > 9 ? '9+' : unreadMessageCount.toString();
+      notification.style.display = 'flex';
+    } else {
+      notification.style.display = 'none';
+    }
+
+    console.log(`📬 Badge updated: ${unreadMessageCount} unread messages`);
+  }
 
   // P2.1: Fetch settings from backend with cache busting
   async function loadWidgetSettings(skipCache = false) {
@@ -1043,10 +1060,11 @@ function initializeChatbot() {
     }
   });
 
-  // Mostra notifica dopo 3 secondi
+  // P2.5: Show badge after 3 seconds if popup is closed (optional welcome prompt)
   setTimeout(() => {
-    if (!isPopupOpen) {
-      notification.style.display = 'flex';
+    if (!isPopupOpen && unreadMessageCount === 0) {
+      // Show "1" as a prompt to open the chat (not a real unread message)
+      updateBadge(1);
     }
   }, 3000);
 
@@ -1061,7 +1079,9 @@ function initializeChatbot() {
   function openPopup() {
     popup.classList.add('show');
     isPopupOpen = true;
-    notification.style.display = 'none';
+
+    // P2.5: Reset badge when opening popup
+    updateBadge(0);
 
     setTimeout(() => input.focus(), 300);
   }
@@ -1981,6 +2001,11 @@ function initializeChatbot() {
         if (data.message && !displayedMessageIds.has(data.message.id)) {
           displayedMessageIds.add(data.message.id);
           addMessage(data.message.content, 'operator', data.message.operatorName, data.message.attachment);
+
+          // P2.5: Increment badge if popup is closed
+          if (!isPopupOpen) {
+            updateBadge(unreadMessageCount + 1);
+          }
         }
       });
 
