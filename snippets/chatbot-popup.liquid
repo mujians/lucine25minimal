@@ -1017,10 +1017,9 @@ function initializeChatbot() {
             }
           ]);
         } else if (operatorData.data?.operatorAvailable === true) {
-          // Operator assigned successfully
-          isOperatorMode = true;
-          updateHeaderForOperatorMode();
-          addMessage(`✅ ${operatorData.data.operator?.name || 'Un operatore'} si è unito alla chat!`, 'system');
+          // Operator assigned - waiting for them to respond
+          addMessage(`⏳ Ti abbiamo messo in coda. ${operatorData.data.operator?.name || 'Un operatore'} ti risponderà a breve.`, 'system');
+          // isOperatorMode will be set when operator_assigned event is received
         } else {
           // In queue (shouldn't happen with current backend logic)
           addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
