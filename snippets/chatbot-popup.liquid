@@ -1337,9 +1337,12 @@ function initializeChatbot() {
                               message === 'end_chat' ||
                               message === 'apri ticket';
 
+    // BUG #9 FIX: Generate temporary ID for optimistic UI
+    const tempId = !isInternalCommand ? `temp_${Date.now()}` : null;
+
     // Aggiungi messaggio utente (solo se non è comando interno)
     if (!isInternalCommand) {
-      addMessage(message, 'user');
+      addMessage(message, 'user', null, null, tempId);
     }
 
     // Reset input
@@ -1481,6 +1484,12 @@ function initializeChatbot() {
 
     } catch (error) {
       console.error('❌ Chat Error:', error);
+
+      // BUG #9 FIX: Remove temporary user message on error (rollback optimistic UI)
+      if (tempId) {
+        removeMessage(tempId);
+      }
+
       addMessage('Mi dispiace, c\'è stato un problema. Riprova o contatta 📧 info@lucinedinatale.it', 'bot');
     } finally {
       hideTyping();
@@ -1490,9 +1499,15 @@ function initializeChatbot() {
     }
   }
 
-  function addMessage(text, sender, operatorName = null, attachment = null) {
+  // BUG #9 FIX: Support temporary message IDs for optimistic UI with rollback
+  function addMessage(text, sender, operatorName = null, attachment = null, tempId = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}`;
+
+    // BUG #9 FIX: Store temp ID as data attribute for removal if needed
+    if (tempId) {
+      messageDiv.setAttribute('data-temp-id', tempId);
+    }
 
     const bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'message-bubble';
@@ -1631,6 +1646,15 @@ function initializeChatbot() {
 
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // BUG #9 FIX: Remove message by temporary ID (for rollback on error)
+  function removeMessage(tempId) {
+    const messageDiv = messagesContainer.querySelector(`[data-temp-id="${tempId}"]`);
+    if (messageDiv) {
+      messageDiv.remove();
+      console.log(`🗑️ Removed temporary message: ${tempId}`);
+    }
   }
 
   function showSmartActions(actions) {
