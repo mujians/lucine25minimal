@@ -1812,6 +1812,14 @@ function initializeChatbot() {
           // ✅ FIX P0.4: Show ticket form instead of sending message
           showTicketForm();
           actionsContainer.remove();
+        } else if (action.action === 'resume_chat') {
+          // NEW: Resume existing chat session
+          resumeExistingChat();
+          actionsContainer.remove();
+        } else if (action.action === 'start_new_chat') {
+          // NEW: Start fresh new chat
+          startNewChat();
+          actionsContainer.remove();
         } else {
           console.warn('⚠️ Unknown action:', action.action);
         }
@@ -1896,14 +1904,14 @@ function initializeChatbot() {
         text: 'Riprendi chat',
         description: 'Continua la conversazione',
         type: 'primary',
-        action: () => resumeExistingChat()
+        action: 'resume_chat'
       },
       {
         icon: '➕',
         text: 'Nuova chat',
         description: 'Inizia da zero',
         type: 'secondary',
-        action: () => startNewChat()
+        action: 'start_new_chat'
       }
     ]);
 
@@ -1920,8 +1928,9 @@ function initializeChatbot() {
 
     console.log('🔄 Resuming session:', pendingResumeSession.sessionId);
 
-    // Set sessionId and join
+    // Set sessionId and save to localStorage
     sessionId = pendingResumeSession.sessionId;
+    saveSessionId(sessionId); // Save to localStorage
     pendingResumeSession = null;
 
     // Mark as operator mode
@@ -1952,9 +1961,13 @@ function initializeChatbot() {
 
       addMessage('✅ Chat ripresa con successo!', 'system');
 
-      // Join WebSocket room if connected
+      // Join WebSocket room
       if (socket && socket.connected) {
+        console.log('🔌 Joining WebSocket room:', sessionId);
         socket.emit('join_chat', { sessionId });
+      } else {
+        console.log('⏳ Socket not connected yet - will join on connect');
+        // Socket will auto-join when it connects (socket.on('connect') handler)
       }
 
     } catch (error) {
