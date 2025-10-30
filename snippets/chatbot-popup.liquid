@@ -953,7 +953,7 @@ function initializeChatbot() {
     return null;
   }
 
-  // FIX: Validate restored session is still active
+  // FIX: Validate restored session and check if needs resume prompt
   async function validateRestoredSession(storedSessionId) {
     if (!storedSessionId) return null;
 
@@ -968,20 +968,28 @@ function initializeChatbot() {
       }
 
       const sessionData = await response.json();
-      console.log('📊 Session validation response:', sessionData);
+      console.log('📊 Session validation response:', sessionData.data);
 
-      // Check if session is closed
-      if (sessionData.status === 'CLOSED' || sessionData.status === 'TICKET_CREATED') {
+      const session = sessionData.data || sessionData;
+      const status = session.status;
+
+      // Check if session is closed or converted to ticket
+      if (status === 'CLOSED' || status === 'TICKET_CREATED') {
         console.log('🚫 Session is closed, clearing localStorage');
         clearSessionStorage();
         return null;
       }
 
+      // If WITH_OPERATOR, ask user if they want to resume
+      if (status === 'WITH_OPERATOR') {
+        console.log('👤 Session has operator - showing resume prompt');
+        return { sessionId: storedSessionId, needsResume: true, operatorName: session.operator?.name };
+      }
+
       console.log('✅ Session is valid and active');
-      return storedSessionId;
+      return { sessionId: storedSessionId, needsResume: false };
     } catch (error) {
       console.error('❌ Error validating session:', error);
-      // On error, clear session to be safe
       clearSessionStorage();
       return null;
     }
@@ -1011,6 +1019,7 @@ function initializeChatbot() {
   // Try to restore session from localStorage
   let sessionId = loadSessionId();
   let sessionValidated = false; // Track if we validated the restored session
+  let pendingResumeSession = null; // Store session info if needs resume prompt
 
   let isPopupOpen = false;
   let isOperatorMode = false;
@@ -1020,12 +1029,23 @@ function initializeChatbot() {
   // FIX: Validate restored session on page load
   (async function initializeSession() {
     if (sessionId && !sessionValidated) {
-      sessionId = await validateRestoredSession(sessionId);
+      const validationResult = await validateRestoredSession(sessionId);
       sessionValidated = true;
 
-      // If session was invalid, it's now null
-      if (!sessionId) {
+      if (!validationResult) {
+        // Session invalid/closed - start fresh
         console.log('💡 Starting fresh - no valid session to restore');
+        sessionId = null;
+      } else if (validationResult.needsResume) {
+        // Session WITH_OPERATOR - show resume prompt
+        console.log('📋 Session with operator found - prompting user to resume');
+        pendingResumeSession = validationResult;
+        sessionId = null; // Don't auto-join yet
+        showResumePrompt(validationResult.operatorName);
+      } else {
+        // Session ACTIVE/WAITING - restore normally
+        console.log('✅ Restoring active session');
+        sessionId = validationResult.sessionId;
       }
     }
   })();
@@ -1861,6 +1881,111 @@ function initializeChatbot() {
       chatTitle.innerHTML = '🟢 CHAT DAL VIVO - OPERATORE';
       chatTitle.style.color = '#10B981';
     }
+  }
+
+  // NEW: Show resume prompt when WITH_OPERATOR session found
+  function showResumePrompt(operatorName) {
+    // Add system message
+    const operatorText = operatorName ? ` con ${operatorName}` : '';
+    addMessage(`Hai una chat in corso${operatorText}. Vuoi riprenderla?`, 'system');
+
+    // Show action buttons
+    showSmartActions([
+      {
+        icon: '🔄',
+        text: 'Riprendi chat',
+        description: 'Continua la conversazione',
+        type: 'primary',
+        action: () => resumeExistingChat()
+      },
+      {
+        icon: '➕',
+        text: 'Nuova chat',
+        description: 'Inizia da zero',
+        type: 'secondary',
+        action: () => startNewChat()
+      }
+    ]);
+
+    // Show badge to notify user
+    updateBadge(1);
+  }
+
+  // Resume the pending session
+  async function resumeExistingChat() {
+    if (!pendingResumeSession) {
+      console.error('❌ No pending session to resume');
+      return;
+    }
+
+    console.log('🔄 Resuming session:', pendingResumeSession.sessionId);
+
+    // Set sessionId and join
+    sessionId = pendingResumeSession.sessionId;
+    pendingResumeSession = null;
+
+    // Mark as operator mode
+    isOperatorMode = true;
+    updateHeaderForOperatorMode();
+
+    // Load previous messages
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}`);
+      const data = await response.json();
+      const session = data.data || data;
+
+      // Clear chat and reload messages
+      chatMessages.innerHTML = '';
+      displayedMessageIds.clear();
+
+      // Add messages from session
+      if (session.messagesNew && Array.isArray(session.messagesNew)) {
+        session.messagesNew.forEach(msg => {
+          if (!displayedMessageIds.has(msg.id)) {
+            displayedMessageIds.add(msg.id);
+            const sender = msg.type === 'USER' ? 'user' :
+                          msg.type === 'OPERATOR' ? 'operator' : 'bot';
+            addMessage(msg.content, sender, msg.operatorName);
+          }
+        });
+      }
+
+      addMessage('✅ Chat ripresa con successo!', 'system');
+
+      // Join WebSocket room if connected
+      if (socket && socket.connected) {
+        socket.emit('join_chat', { sessionId });
+      }
+
+    } catch (error) {
+      console.error('❌ Error resuming chat:', error);
+      addMessage('Errore durante il ripristino della chat.', 'system');
+    }
+  }
+
+  // Start fresh new chat
+  function startNewChat() {
+    console.log('➕ Starting new chat - clearing old session');
+
+    // Clear localStorage
+    clearSessionStorage();
+    sessionId = null;
+    pendingResumeSession = null;
+    sessionValidated = false;
+
+    // Clear chat
+    chatMessages.innerHTML = '';
+    displayedMessageIds.clear();
+    isOperatorMode = false;
+
+    // Reset header
+    const chatTitle = document.querySelector('.chat-title');
+    if (chatTitle) {
+      chatTitle.textContent = 'LUCY - ASSISTENTE VIRTUALE';
+      chatTitle.style.color = '';
+    }
+
+    addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
   }
 
   // ✅ UPDATED: Resume from ticket - Fixed endpoint
