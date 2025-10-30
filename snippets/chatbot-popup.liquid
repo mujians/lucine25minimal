@@ -953,6 +953,40 @@ function initializeChatbot() {
     return null;
   }
 
+  // FIX: Validate restored session is still active
+  async function validateRestoredSession(storedSessionId) {
+    if (!storedSessionId) return null;
+
+    try {
+      console.log('🔍 Validating restored session:', storedSessionId);
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${storedSessionId}`);
+
+      if (!response.ok) {
+        console.log('❌ Session not found on server, clearing localStorage');
+        clearSessionStorage();
+        return null;
+      }
+
+      const sessionData = await response.json();
+      console.log('📊 Session validation response:', sessionData);
+
+      // Check if session is closed
+      if (sessionData.status === 'CLOSED' || sessionData.status === 'TICKET_CREATED') {
+        console.log('🚫 Session is closed, clearing localStorage');
+        clearSessionStorage();
+        return null;
+      }
+
+      console.log('✅ Session is valid and active');
+      return storedSessionId;
+    } catch (error) {
+      console.error('❌ Error validating session:', error);
+      // On error, clear session to be safe
+      clearSessionStorage();
+      return null;
+    }
+  }
+
   function saveSessionId(id) {
     try {
       const expiry = new Date(Date.now() + SESSION_TTL);
@@ -976,11 +1010,25 @@ function initializeChatbot() {
 
   // Try to restore session from localStorage
   let sessionId = loadSessionId();
+  let sessionValidated = false; // Track if we validated the restored session
 
   let isPopupOpen = false;
   let isOperatorMode = false;
   let socket = null; // Socket.IO connection
   const displayedMessageIds = new Set(); // Track displayed messages globally
+
+  // FIX: Validate restored session on page load
+  (async function initializeSession() {
+    if (sessionId && !sessionValidated) {
+      sessionId = await validateRestoredSession(sessionId);
+      sessionValidated = true;
+
+      // If session was invalid, it's now null
+      if (!sessionId) {
+        console.log('💡 Starting fresh - no valid session to restore');
+      }
+    }
+  })();
 
   // 🔗 Check if URL has ticket token for resume
   const urlParams = new URLSearchParams(window.location.search);
@@ -2041,9 +2089,10 @@ function initializeChatbot() {
           }
         }, 2000);
 
-        // P11 Fix: Clear session quando operatore chiude la chat
-        localStorage.removeItem('chatSessionId');
+        // FIX: Clear session quando operatore chiude la chat (using correct function)
+        clearSessionStorage(); // Clears both SESSION_STORAGE_KEY and SESSION_EXPIRY_KEY
         sessionId = null;
+        sessionValidated = false; // Reset validation flag
         isOperatorMode = false;
 
         // P1.7 Fix: Disable input after chat closed
