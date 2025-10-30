@@ -1164,6 +1164,16 @@ function initializeChatbot() {
   let socket = null; // Socket.IO connection
   const displayedMessageIds = new Set(); // Track displayed messages globally
 
+  // Inactivity timeout variables
+  let lastUserActivity = Date.now();
+  let inactivityCheckInterval = null;
+  let inactivityWarningShown = false;
+  const INACTIVITY_WARNING_TIME = 3 * 60 * 1000; // 3 minutes
+  const INACTIVITY_FINAL_TIME = 5 * 60 * 1000; // 5 minutes
+
+  // Typing indicator timeout
+  let typingIndicatorTimeout = null;
+
   // FIX: Validate restored session on page load
   (async function initializeSession() {
     if (sessionId && !sessionValidated) {
@@ -1336,9 +1346,15 @@ function initializeChatbot() {
     }, 1000);
   }
 
-  // P0.5: Show operator typing indicator
+  // P0.5: Show operator typing indicator with auto-timeout
   function showTypingIndicator(isTyping, operatorName) {
     const existingIndicator = document.getElementById('typing-indicator');
+
+    // Clear existing timeout
+    if (typingIndicatorTimeout) {
+      clearTimeout(typingIndicatorTimeout);
+      typingIndicatorTimeout = null;
+    }
 
     if (isTyping) {
       // Create typing indicator if not exists
@@ -1361,6 +1377,15 @@ function initializeChatbot() {
         messagesContainer.appendChild(indicator);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
+
+      // Auto-remove after 5 seconds if no "stop typing" event received
+      typingIndicatorTimeout = setTimeout(() => {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+          console.log('⏱️  Auto-removing stuck typing indicator');
+          indicator.remove();
+        }
+      }, 5000);
     } else {
       // Remove typing indicator
       if (existingIndicator) {
@@ -1543,10 +1568,74 @@ function initializeChatbot() {
     });
   }
 
+  // Inactivity timeout functions
+  function resetInactivityTimer() {
+    lastUserActivity = Date.now();
+    inactivityWarningShown = false;
+  }
+
+  function startInactivityCheck() {
+    // Only start if in operator mode
+    if (!isOperatorMode) return;
+
+    // Clear existing interval if any
+    if (inactivityCheckInterval) {
+      clearInterval(inactivityCheckInterval);
+    }
+
+    // Check every 30 seconds
+    inactivityCheckInterval = setInterval(checkInactivity, 30000);
+    console.log('⏱️  Inactivity check started');
+  }
+
+  function stopInactivityCheck() {
+    if (inactivityCheckInterval) {
+      clearInterval(inactivityCheckInterval);
+      inactivityCheckInterval = null;
+      inactivityWarningShown = false;
+      console.log('⏱️  Inactivity check stopped');
+    }
+  }
+
+  function checkInactivity() {
+    const now = Date.now();
+    const inactiveTime = now - lastUserActivity;
+
+    // Final warning - 5 minutes
+    if (inactiveTime >= INACTIVITY_FINAL_TIME) {
+      addMessage(
+        '⚠️ La chat è stata inattiva per 5 minuti. Vuoi continuare?',
+        'system'
+      );
+      stopInactivityCheck();
+      return;
+    }
+
+    // First warning - 3 minutes
+    if (inactiveTime >= INACTIVITY_WARNING_TIME && !inactivityWarningShown) {
+      addMessage(
+        '👋 Sei ancora lì? La chat verrà considerata inattiva tra 2 minuti.',
+        'system'
+      );
+      inactivityWarningShown = true;
+
+      // Notify operator
+      if (socket && socket.connected && sessionId) {
+        socket.emit('user_inactive', {
+          sessionId,
+          inactiveTime: Math.floor(inactiveTime / 1000)
+        });
+      }
+    }
+  }
+
   // ✅ UPDATED: New API flow - Create session first, then send messages
   async function sendMessage(messageText) {
     const message = messageText || input.value.trim();
     if (!message) return;
+
+    // Reset inactivity timer on user message
+    resetInactivityTimer();
 
     // Rimuovi welcome se presente
     const welcome = messagesContainer.querySelector('.chat-welcome');
@@ -2193,10 +2282,20 @@ function initializeChatbot() {
       if (socket && socket.connected) {
         console.log('🔌 Joining WebSocket room:', sessionId);
         socket.emit('join_chat', { sessionId });
+
+        // Notify operator that user has resumed the chat
+        socket.emit('user_resumed_chat', {
+          sessionId,
+          userName: session.userName || 'Utente',
+          timestamp: new Date().toISOString()
+        });
       } else {
         console.log('⏳ Socket not connected yet - will join on connect');
         // Socket will auto-join when it connects (socket.on('connect') handler)
       }
+
+      // Start inactivity check for resumed chat
+      startInactivityCheck();
 
     } catch (error) {
       console.error('❌ Error resuming chat:', error);
@@ -2474,6 +2573,9 @@ function initializeChatbot() {
         // Re-enable input
         setInputState(true);
         input.placeholder = 'Scrivi un messaggio...';
+
+        // Start inactivity check
+        startInactivityCheck();
       });
 
       socket.on('operator_request_cancelled', (data) => {
@@ -2503,6 +2605,9 @@ function initializeChatbot() {
         sessionId = null;
         sessionValidated = false; // Reset validation flag
         isOperatorMode = false;
+
+        // Stop inactivity check
+        stopInactivityCheck();
 
         // P1.7 Fix: Disable input after chat closed
         setInputState(false);
