@@ -611,6 +611,47 @@
   font-weight: 400;
 }
 
+/* Waiting for operator UI */
+.waiting-operator-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE5CC 100%);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 2px solid #FFB84D;
+}
+
+.waiting-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.waiting-text {
+  flex: 1;
+}
+
+.waiting-text strong {
+  display: block;
+  color: #B87300;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.waiting-text p {
+  margin: 0;
+  color: #8B5A00;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
 /* Loading indicator */
 .chat-loading-indicator {
   display: flex;
@@ -1613,11 +1654,13 @@ function initializeChatbot() {
               type: 'secondary'
             }
           ]);
+        } else if (operatorData.data?.operatorAvailable === true && operatorData.data?.status === 'WAITING') {
+          // NEW: Waiting for operator to accept
+          console.log(`⏳ Waiting for operator acceptance...`);
+          showWaitingForOperator();
         } else if (operatorData.data?.operatorAvailable === true) {
-          // Operator assigned successfully
-          // Don't show "in queue" message - backend will send "si è unito alla chat" message via WebSocket
-          // isOperatorMode will be set when operator_assigned event is received
-          console.log(`✅ Operator ${operatorData.data.operator?.name} assigned - waiting for connection message`);
+          // Operator assigned successfully (old flow - backwards compatibility)
+          console.log(`✅ Operator assigned - waiting for connection message`);
         } else {
           // In queue (shouldn't happen with current backend logic)
           addMessage('Sei in coda. Un operatore ti risponderà appena possibile.', 'system');
@@ -1953,6 +1996,88 @@ function initializeChatbot() {
   function setInputState(enabled) {
     input.disabled = !enabled;
     sendBtn.disabled = !enabled;
+  }
+
+  function showWaitingForOperator() {
+    // Remove any existing waiting UI
+    hideWaitingForOperator();
+
+    // Disable input while waiting
+    setInputState(false);
+    input.placeholder = '⏳ In attesa di un operatore...';
+
+    // Create waiting UI with cancel button
+    const waitingContainer = document.createElement('div');
+    waitingContainer.id = 'waiting-operator-container';
+    waitingContainer.className = 'smart-actions-container';
+
+    waitingContainer.innerHTML = `
+      <div class="waiting-operator-message">
+        <div class="waiting-icon">⏳</div>
+        <div class="waiting-text">
+          <strong>In attesa di un operatore...</strong>
+          <p>La tua richiesta è stata inviata. Un operatore risponderà appena possibile.</p>
+        </div>
+      </div>
+      <button id="cancel-operator-request-btn" class="smart-action-button secondary" style="width: 100%; margin-top: 10px;">
+        <div class="action-icon">✖️</div>
+        <div class="action-content">
+          <div class="action-text">Annulla Richiesta</div>
+          <div class="action-description">Torna all'assistente AI</div>
+        </div>
+      </button>
+    `;
+
+    chatMessages.appendChild(waitingContainer);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Add cancel button event listener
+    const cancelBtn = document.getElementById('cancel-operator-request-btn');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', async () => {
+        await cancelOperatorRequest();
+      });
+    }
+  }
+
+  function hideWaitingForOperator() {
+    const waitingContainer = document.getElementById('waiting-operator-container');
+    if (waitingContainer) {
+      waitingContainer.remove();
+    }
+  }
+
+  async function cancelOperatorRequest() {
+    if (!sessionId) return;
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/cancel-operator-request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.error) {
+        throw new Error(data.error?.message || 'Failed to cancel operator request');
+      }
+
+      console.log('🚫 Operator request cancelled successfully');
+      hideWaitingForOperator();
+
+      // Re-enable input
+      setInputState(true);
+      input.placeholder = 'Scrivi un messaggio...';
+
+      // Show confirmation message
+      addMessage(data.data?.message || 'Richiesta annullata. Puoi continuare con l\'assistente AI.', 'system');
+
+    } catch (error) {
+      console.error('Failed to cancel operator request:', error);
+      alert('Errore durante l\'annullamento della richiesta');
+    }
   }
 
   function escapeHtml(text) {
@@ -2330,10 +2455,35 @@ function initializeChatbot() {
         // Don't add message here - backend already sends "si è unito alla chat" message
       });
 
+      socket.on('operator_request_sent', (data) => {
+        console.log('⏳ Operator request sent:', data);
+        showWaitingForOperator();
+      });
+
       socket.on('operator_joined', (data) => {
         console.log('👤 Operator joined:', data);
         isOperatorMode = true;
         updateHeaderForOperatorMode();
+        hideWaitingForOperator();
+
+        // Add system message from backend
+        if (data.message) {
+          addMessage(data.message.content, 'system');
+        }
+
+        // Re-enable input
+        setInputState(true);
+        input.placeholder = 'Scrivi un messaggio...';
+      });
+
+      socket.on('operator_request_cancelled', (data) => {
+        console.log('🚫 Operator request cancelled:', data);
+        hideWaitingForOperator();
+        addMessage(data.message || 'Richiesta operatore annullata', 'system');
+
+        // Re-enable input
+        setInputState(true);
+        input.placeholder = 'Scrivi un messaggio...';
       });
 
       socket.on('chat_closed', (data) => {
