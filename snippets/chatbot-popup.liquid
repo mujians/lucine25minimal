@@ -802,6 +802,103 @@ function initializeChatbot() {
   // P2.5: Dynamic badge counter for unread messages
   let unreadMessageCount = 0;
 
+  // P2.6: Audio notification for new messages
+  const notificationAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBDGH0fPTgjMGHm7A7+OZWQ==');
+  let audioUnlocked = false; // Track if audio context is unlocked
+
+  // P2.6: Play notification sound
+  function playNotificationSound() {
+    if (!audioUnlocked) {
+      console.log('🔇 Audio not unlocked yet');
+      return;
+    }
+
+    notificationAudio.currentTime = 0;
+    notificationAudio.play()
+      .then(() => console.log('🔔 Notification sound played'))
+      .catch(e => console.log('🔇 Audio play failed:', e.message));
+  }
+
+  // P2.6: Unlock audio on first user interaction
+  function unlockAudio() {
+    if (audioUnlocked) return;
+
+    notificationAudio.play()
+      .then(() => {
+        notificationAudio.pause();
+        notificationAudio.currentTime = 0;
+        audioUnlocked = true;
+        console.log('🔓 Audio context unlocked');
+      })
+      .catch(() => {
+        console.log('🔒 Audio unlock failed');
+      });
+  }
+
+  // P2.7: Browser notifications
+  let notificationPermissionRequested = false;
+
+  // P2.7: Request notification permission after first message
+  function requestNotificationPermission() {
+    if (notificationPermissionRequested) return;
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+
+    notificationPermissionRequested = true;
+    Notification.requestPermission().then(permission => {
+      console.log('🔔 Notification permission:', permission);
+    });
+  }
+
+  // P2.7: Show browser notification
+  function showBrowserNotification(title, body, data = {}) {
+    if (!('Notification' in window)) {
+      console.log('🚫 Browser notifications not supported');
+      return;
+    }
+
+    if (Notification.permission !== 'granted') {
+      console.log('🔕 Notification permission not granted');
+      return;
+    }
+
+    // Don't notify if document has focus and popup is open
+    if (document.hasFocus() && isPopupOpen) {
+      console.log('👀 User is watching - skipping notification');
+      return;
+    }
+
+    try {
+      const notification = new Notification(title, {
+        body: body,
+        icon: 'https://lucinedinatale.it/cdn/shop/files/logo_bianco_512.png?v=1730272455',
+        badge: 'https://lucinedinatale.it/cdn/shop/files/logo_bianco_512.png?v=1730272455',
+        tag: 'lucine-chatbot',
+        requireInteraction: false,
+        silent: false, // Play default sound
+        data: data
+      });
+
+      // Auto-close after 5 seconds
+      setTimeout(() => notification.close(), 5000);
+
+      // Handle click - focus window and open popup
+      notification.onclick = () => {
+        window.focus();
+        if (!isPopupOpen) {
+          popup.classList.add('show');
+          isPopupOpen = true;
+          updateBadge(0);
+        }
+        notification.close();
+      };
+
+      console.log('✅ Browser notification shown:', title);
+    } catch (error) {
+      console.log('❌ Failed to show notification:', error.message);
+    }
+  }
+
   // P2.5: Update badge with current unread count
   function updateBadge(count) {
     unreadMessageCount = Math.max(0, count); // Ensure non-negative
@@ -1470,6 +1567,12 @@ function initializeChatbot() {
 
         // Initialize Socket.IO connection
         initializeSocketIO();
+
+        // P2.6: Unlock audio on first interaction
+        unlockAudio();
+
+        // P2.7: Request notification permission after first message
+        requestNotificationPermission();
       }
 
       // ✅ STEP 2: Send message to session OR request operator
@@ -2191,6 +2294,24 @@ function initializeChatbot() {
           // P2.5: Increment badge if popup is closed
           if (!isPopupOpen) {
             updateBadge(unreadMessageCount + 1);
+          }
+
+          // P2.6 & P2.7: Notifications if popup closed or window not focused
+          if (!isPopupOpen || !document.hasFocus()) {
+            // Play sound notification
+            playNotificationSound();
+
+            // Show browser notification
+            const operatorName = data.message.operatorName || 'Operatore';
+            const messagePreview = data.message.content.length > 50
+              ? data.message.content.substring(0, 50) + '...'
+              : data.message.content;
+
+            showBrowserNotification(
+              `${operatorName} ha risposto`,
+              messagePreview,
+              { sessionId: sessionId, messageId: data.message.id }
+            );
           }
         }
       });
