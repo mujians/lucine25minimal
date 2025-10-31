@@ -1378,14 +1378,15 @@ function initializeChatbot() {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
 
-      // Auto-remove after 5 seconds if no "stop typing" event received
+      // Auto-remove after 10 seconds if no "stop typing" event received
+      // (Increased from 5s to 10s for operators who type slowly)
       typingIndicatorTimeout = setTimeout(() => {
         const indicator = document.getElementById('typing-indicator');
         if (indicator) {
           console.log('⏱️  Auto-removing stuck typing indicator');
           indicator.remove();
         }
-      }, 5000);
+      }, 10000);
     } else {
       // Remove typing indicator
       if (existingIndicator) {
@@ -2591,6 +2592,10 @@ function initializeChatbot() {
 
         if (data.message && !displayedMessageIds.has(data.message.id)) {
           displayedMessageIds.add(data.message.id);
+
+          // Hide typing indicator immediately when message arrives
+          showTypingIndicator(false);
+
           addMessage(data.message.content, 'operator', data.message.operatorName, data.message.attachment);
 
           // P2.5: Increment badge if popup is closed
