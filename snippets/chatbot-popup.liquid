@@ -2706,6 +2706,57 @@ function initializeChatbot() {
         console.log('✅ Session cleared - next conversation will be new');
       });
 
+      // Handle operator disconnect (connection lost, browser closed, etc.)
+      socket.on('operator_disconnected', (data) => {
+        console.log('🔴 Operator disconnected:', data);
+
+        // Save sessionId before clearing (for rating)
+        const disconnectedSessionId = sessionId;
+
+        addMessage('🔴 L\'operatore non è più disponibile a causa di un problema tecnico.', 'system');
+
+        // Clear session state
+        clearSessionStorage();
+        sessionId = null;
+        sessionValidated = false;
+        isOperatorMode = false;
+
+        // Stop inactivity check
+        stopInactivityCheck();
+
+        // Disable input
+        setInputState(false);
+        input.placeholder = 'Operatore disconnesso';
+
+        // Show smart actions for recovery options
+        showSmartActions([
+          {
+            icon: '📋',
+            text: 'Apri Ticket',
+            description: 'Lascia i tuoi contatti, ti ricontatteremo',
+            type: 'primary',
+            action: 'request_ticket'
+          },
+          {
+            icon: '🤖',
+            text: 'Continua con AI',
+            description: 'Prova l\'assistente automatico',
+            type: 'secondary',
+            action: 'start_fresh_chat'
+          },
+          {
+            icon: '⭐',
+            text: 'Valuta',
+            description: 'Valuta la tua esperienza',
+            type: 'secondary',
+            action: 'show_rating',
+            data: { sessionId: disconnectedSessionId }
+          }
+        ]);
+
+        console.log('✅ Operator disconnect handled - recovery options shown');
+      });
+
       socket.on('disconnect', () => {
         console.log('👋 Socket.IO disconnected');
       });
