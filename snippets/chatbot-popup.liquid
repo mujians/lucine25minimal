@@ -2122,6 +2122,63 @@ function initializeChatbot() {
               timestamp: new Date().toISOString()
             });
           }
+        } else if (action.action === 'reopen_chat') {
+          // ISSUE #14: Reopen recently closed chat (<5 min)
+          const reopenSessionId = action.data?.sessionId;
+          const closedAt = action.data?.closedAt;
+
+          // Client-side check: verify still within 5-minute window
+          if (closedAt && (Date.now() - closedAt) > 5 * 60 * 1000) {
+            addMessage('⚠️ Troppo tempo è passato dalla chiusura. Inizia una nuova chat.', 'system');
+            removeAllActionContainers();
+            return;
+          }
+
+          removeAllActionContainers();
+          setInputState(false);
+
+          console.log(`🔄 Attempting to reopen session ${reopenSessionId}`);
+
+          fetch(`${BACKEND_URL}/api/chat/session/${reopenSessionId}/reopen`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                console.log('✅ Chat reopened successfully:', data);
+
+                // Restore session state
+                sessionId = reopenSessionId;
+                isOperatorMode = true;
+
+                // Add system message if provided
+                if (data.data.message) {
+                  addMessage(data.data.message.content, 'system');
+                }
+
+                // Update UI to operator mode
+                updateHeaderForOperatorMode();
+                setInputState(true);
+                input.placeholder = `Scrivi a ${data.data.operatorName || 'operatore'}...`;
+
+                console.log(`✅ Session ${sessionId} reopened, WITH_OPERATOR mode active`);
+              } else {
+                throw new Error(data.error?.message || 'Failed to reopen chat');
+              }
+            })
+            .catch(err => {
+              console.error('❌ Failed to reopen chat:', err);
+
+              // Check if error code indicates window expired
+              if (err.message?.includes('too long ago') || err.message?.includes('REOPEN_WINDOW_EXPIRED')) {
+                addMessage('⏱️ Troppo tempo è passato dalla chiusura. Inizia una nuova chat.', 'system');
+              } else {
+                addMessage('❌ Impossibile riaprire la chat. Inizia una nuova conversazione.', 'system');
+              }
+
+              setInputState(true);
+            });
         } else if (action.action === 'start_fresh_chat') {
           // SECURITY: Prevent fresh chat during active operator session
           if (isOperatorMode) {
@@ -2784,24 +2841,38 @@ function initializeChatbot() {
         input.placeholder = 'Chat chiusa';
 
         // Show smart actions for next steps
-        // Removed "Apri Ticket" - operator already handled the request
-        showSmartActions([
-          {
-            icon: '💬',
-            text: 'Nuova Chat',
-            description: 'Inizia una nuova conversazione',
-            type: 'primary',
-            action: 'start_fresh_chat'
-          },
-          {
-            icon: '⭐',
-            text: 'Valuta',
-            description: 'Valuta la tua esperienza',
-            type: 'secondary',
-            action: 'show_rating',
-            data: { sessionId: closedSessionId }
-          }
-        ]);
+        // Calculate if chat was closed recently (<5 min) for reopen option
+        const closedTime = Date.now();
+        const actions = [];
+
+        // Add "Riapri Chat" if closed less than 5 minutes ago
+        actions.push({
+          icon: '🔄',
+          text: 'Riapri Chat',
+          description: 'Ho dimenticato qualcosa',
+          type: 'primary',
+          action: 'reopen_chat',
+          data: { sessionId: closedSessionId, closedAt: closedTime }
+        });
+
+        actions.push({
+          icon: '💬',
+          text: 'Nuova Chat',
+          description: 'Inizia una nuova conversazione',
+          type: 'secondary',
+          action: 'start_fresh_chat'
+        });
+
+        actions.push({
+          icon: '⭐',
+          text: 'Valuta',
+          description: 'Valuta la tua esperienza',
+          type: 'secondary',
+          action: 'show_rating',
+          data: { sessionId: closedSessionId }
+        });
+
+        showSmartActions(actions);
 
         console.log('✅ Session cleared - next conversation will be new');
       });
@@ -2906,6 +2977,59 @@ function initializeChatbot() {
         ]);
 
         console.log('✅ Operator timeout handled - recovery options shown');
+      });
+
+      // Handle WAITING timeout (no operator accepted within 5 min)
+      socket.on('operator_wait_timeout', (data) => {
+        console.log('⏱️ WAITING timeout:', data);
+
+        addMessage('⏱️ Nessun operatore ha risposto entro il tempo previsto.', 'system');
+
+        // Clear WAITING state
+        isOperatorMode = false;
+        setInputState(true);
+
+        // Show recovery options
+        showSmartActions([
+          {
+            icon: '📋',
+            text: 'Apri Ticket',
+            description: 'Lascia i tuoi contatti',
+            type: 'primary',
+            action: 'request_ticket'
+          },
+          {
+            icon: '🤖',
+            text: 'Continua con AI',
+            description: 'Prova l\'assistente automatico',
+            type: 'secondary',
+            action: 'continue_ai'
+          }
+        ]);
+
+        console.log('✅ WAITING timeout handled - recovery options shown');
+      });
+
+      // Handle chat auto-closed (user didn't return after 5 min)
+      socket.on('chat_auto_closed', (data) => {
+        console.log('🔒 Chat auto-closed:', data);
+        // User-side: just log, session already cleared
+      });
+
+      // Handle chat reopened
+      socket.on('chat_reopened', (data) => {
+        console.log('🔄 Chat reopened:', data);
+
+        // Add system message
+        if (data.message) {
+          addMessage(data.message.content, 'system');
+        }
+
+        // Ensure operator mode is active
+        isOperatorMode = true;
+        updateHeaderForOperatorMode();
+        setInputState(true);
+        input.placeholder = `Scrivi a ${data.operatorName || 'operatore'}...`;
       });
 
       socket.on('disconnect', () => {
