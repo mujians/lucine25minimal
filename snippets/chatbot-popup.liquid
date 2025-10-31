@@ -1175,6 +1175,12 @@ function initializeChatbot() {
   const INACTIVITY_WARNING_TIME = 3 * 60 * 1000; // 3 minutes
   const INACTIVITY_FINAL_TIME = 5 * 60 * 1000; // 5 minutes
 
+  // Network quality detection variables
+  let isOnline = navigator.onLine;
+  let messageQueue = []; // Queue messages when offline
+  let reconnectAttempts = 0;
+  const MAX_RECONNECT_ATTEMPTS = 5;
+
   // Typing indicator timeout
   let typingIndicatorTimeout = null;
 
@@ -1217,6 +1223,11 @@ function initializeChatbot() {
   input.addEventListener('keypress', handleKeyPress);
   input.addEventListener('input', autoResize);
   input.addEventListener('input', handleUserTyping); // P0.5: Typing indicator
+
+  // Network quality detection listeners
+  window.addEventListener('online', handleOnline);
+  window.addEventListener('offline', handleOffline);
+  console.log('🌐 Network listeners initialized');
 
   // P0.1: File Upload Event Listeners
   const uploadBtn = document.getElementById('chatUploadButton');
@@ -1653,6 +1664,16 @@ function initializeChatbot() {
   async function sendMessage(messageText) {
     const message = messageText || input.value.trim();
     if (!message) return;
+
+    // Check if offline - queue message
+    if (!isOnline || !navigator.onLine) {
+      console.log('🔴 Offline: Queueing message');
+      queueMessage(message);
+      input.value = '';
+      input.style.height = 'auto';
+      addMessage('💾 Messaggio salvato. Verrà inviato quando torni online.', 'system');
+      return;
+    }
 
     // Reset inactivity timer on user message
     resetInactivityTimer();
@@ -2239,6 +2260,159 @@ function initializeChatbot() {
   function setInputState(enabled) {
     input.disabled = !enabled;
     sendBtn.disabled = !enabled;
+  }
+
+  // Network Quality Detection Functions
+  function showNetworkIndicator(status) {
+    // Remove existing indicator
+    const existingIndicator = document.querySelector('.network-indicator');
+    if (existingIndicator) {
+      existingIndicator.remove();
+    }
+
+    const indicators = {
+      offline: { icon: '🔴', text: 'Offline', color: '#dc2626' },
+      reconnecting: { icon: '🟡', text: 'Riconnessione...', color: '#f59e0b' },
+      online: { icon: '🟢', text: 'Online', color: '#16a34a' }
+    };
+
+    const indicator = indicators[status];
+    if (!indicator) return;
+
+    const indicatorEl = document.createElement('div');
+    indicatorEl.className = 'network-indicator';
+    indicatorEl.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: ${indicator.color}15;
+      border-left: 3px solid ${indicator.color};
+      font-size: 13px;
+      color: ${indicator.color};
+      font-weight: 500;
+    `;
+    indicatorEl.innerHTML = `<span>${indicator.icon}</span><span>${indicator.text}</span>`;
+
+    // Insert at top of messages container
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.insertBefore(indicatorEl, chatMessages.firstChild);
+
+    // Auto-hide "online" after 3 seconds
+    if (status === 'online') {
+      setTimeout(() => {
+        indicatorEl.style.transition = 'opacity 0.5s';
+        indicatorEl.style.opacity = '0';
+        setTimeout(() => indicatorEl.remove(), 500);
+      }, 3000);
+    }
+  }
+
+  function hideNetworkIndicator() {
+    const indicator = document.querySelector('.network-indicator');
+    if (indicator) {
+      indicator.remove();
+    }
+  }
+
+  function handleOffline() {
+    isOnline = false;
+    console.log('🔴 Network: OFFLINE');
+    showNetworkIndicator('offline');
+
+    // Disable input
+    setInputState(false);
+    input.placeholder = '🔴 Nessuna connessione...';
+  }
+
+  function handleOnline() {
+    isOnline = true;
+    reconnectAttempts = 0;
+    console.log('🟢 Network: ONLINE');
+    showNetworkIndicator('online');
+
+    // Re-enable input if not in operator mode
+    if (!isOperatorMode) {
+      setInputState(true);
+      input.placeholder = 'Scrivi un messaggio...';
+    }
+
+    // Send queued messages
+    if (messageQueue.length > 0) {
+      console.log(`📤 Sending ${messageQueue.length} queued messages...`);
+      sendQueuedMessages();
+    }
+  }
+
+  function handleReconnecting() {
+    reconnectAttempts++;
+    console.log(`🟡 Reconnecting... (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`);
+    showNetworkIndicator('reconnecting');
+
+    if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+      handleOffline();
+    }
+  }
+
+  function queueMessage(message) {
+    messageQueue.push({
+      content: message,
+      timestamp: Date.now()
+    });
+    console.log(`💾 Message queued (${messageQueue.length} in queue)`);
+
+    // Save queue to localStorage
+    try {
+      localStorage.setItem('lucine_message_queue', JSON.stringify(messageQueue));
+    } catch (e) {
+      console.error('Failed to save message queue:', e);
+    }
+  }
+
+  async function sendQueuedMessages() {
+    if (messageQueue.length === 0) return;
+
+    const queue = [...messageQueue];
+    messageQueue = [];
+
+    // Clear localStorage queue
+    try {
+      localStorage.removeItem('lucine_message_queue');
+    } catch (e) {
+      console.error('Failed to clear message queue:', e);
+    }
+
+    // Send each message
+    for (const queuedMsg of queue) {
+      try {
+        await sendMessage(queuedMsg.content);
+        console.log(`✅ Queued message sent: ${queuedMsg.content.substring(0, 30)}...`);
+      } catch (error) {
+        console.error('Failed to send queued message:', error);
+        // Re-queue if failed
+        messageQueue.push(queuedMsg);
+      }
+    }
+
+    // If some messages failed, save them back
+    if (messageQueue.length > 0) {
+      try {
+        localStorage.setItem('lucine_message_queue', JSON.stringify(messageQueue));
+      } catch (e) {
+        console.error('Failed to save message queue:', e);
+      }
+    }
+  }
+
+  // Load queued messages from localStorage on init
+  try {
+    const savedQueue = localStorage.getItem('lucine_message_queue');
+    if (savedQueue) {
+      messageQueue = JSON.parse(savedQueue);
+      console.log(`📥 Loaded ${messageQueue.length} queued messages from storage`);
+    }
+  } catch (e) {
+    console.error('Failed to load message queue:', e);
   }
 
   function showWaitingForOperator() {
@@ -3032,12 +3206,36 @@ function initializeChatbot() {
         input.placeholder = `Scrivi a ${data.operatorName || 'operatore'}...`;
       });
 
-      socket.on('disconnect', () => {
-        console.log('👋 Socket.IO disconnected');
+      socket.on('disconnect', (reason) => {
+        console.log('👋 Socket.IO disconnected:', reason);
+        if (reason === 'io server disconnect' || reason === 'io client disconnect') {
+          // Intentional disconnect, don't show reconnecting
+          return;
+        }
+        handleReconnecting();
+      });
+
+      socket.on('connect', () => {
+        console.log('✅ Socket.IO connected');
+        if (reconnectAttempts > 0) {
+          // Was reconnecting, now connected
+          handleOnline();
+        }
       });
 
       socket.on('connect_error', (error) => {
         console.error('❌ Socket.IO connection error:', error);
+        handleReconnecting();
+      });
+
+      socket.on('reconnect_attempt', (attemptNumber) => {
+        console.log(`🔄 Reconnect attempt ${attemptNumber}`);
+        handleReconnecting();
+      });
+
+      socket.on('reconnect_failed', () => {
+        console.error('❌ Reconnection failed after all attempts');
+        handleOffline();
       });
 
     } catch (error) {
