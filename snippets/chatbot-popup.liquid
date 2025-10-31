@@ -2049,33 +2049,43 @@ function initializeChatbot() {
       }
 
       actionButton.addEventListener('click', () => {
+        // FIX: Remove ALL smart action containers immediately on click
+        const removeAllActionContainers = () => {
+          document.querySelectorAll('.smart-actions-container').forEach(el => el.remove());
+        };
+
         if (action.url) {
           window.open(action.url, '_blank');
+          removeAllActionContainers();
         } else if (action.action === 'request_operator') {
           sendMessage('request_operator');
+          removeAllActionContainers();
         } else if (action.action === 'continue_ai') {
           sendMessage('continua con assistente AI');
+          removeAllActionContainers();
         } else if (action.action === 'continue_chat') {
           sendMessage('continue_chat');
+          removeAllActionContainers();
         } else if (action.action === 'end_chat') {
           sendMessage('end_chat');
+          removeAllActionContainers();
         } else if (action.action === 'request_ticket') {
           // ✅ FIX P0.4: Show ticket form instead of sending message
+          removeAllActionContainers();
           showTicketForm();
-          actionsContainer.remove();
         } else if (action.action === 'resume_chat') {
           // NEW: Resume existing chat session
+          removeAllActionContainers();
           resumeExistingChat();
-          actionsContainer.remove();
         } else if (action.action === 'start_new_chat') {
           // NEW: Start fresh new chat
+          removeAllActionContainers();
           startNewChat();
-          actionsContainer.remove();
         } else if (action.action === 'confirm_presence') {
           // NEW: User confirms they are still present
+          removeAllActionContainers();
           resetInactivityTimer();
           addMessage('✅ Perfetto! Continuo ad aspettarti.', 'system');
-          actionsContainer.remove();
           // Notify operator user is back
           if (socket && socket.connected && sessionId) {
             socket.emit('user_confirmed_presence', {
@@ -2085,6 +2095,7 @@ function initializeChatbot() {
           }
         } else if (action.action === 'switch_to_ai') {
           // NEW: User wants to switch back to AI
+          removeAllActionContainers();
           stopInactivityCheck();
           isOperatorMode = false;
           // Reset header
@@ -2094,7 +2105,6 @@ function initializeChatbot() {
             chatTitle.style.color = '';
           }
           addMessage('🤖 Perfetto! Torno in modalità assistente AI. Come posso aiutarti?', 'bot');
-          actionsContainer.remove();
           // Notify operator user switched to AI
           if (socket && socket.connected && sessionId) {
             socket.emit('user_switched_to_ai', {
@@ -2103,7 +2113,15 @@ function initializeChatbot() {
             });
           }
         } else if (action.action === 'start_fresh_chat') {
+          // SECURITY: Prevent fresh chat during active operator session
+          if (isOperatorMode) {
+            alert('Non puoi iniziare una nuova chat mentre sei connesso con un operatore. L\'operatore deve chiudere la chat prima.');
+            removeAllActionContainers();
+            return;
+          }
+
           // NEW: Start completely fresh chat (after closure)
+          removeAllActionContainers();
           chatMessages.innerHTML = '';
           displayedMessageIds.clear();
           isOperatorMode = false;
@@ -2117,18 +2135,17 @@ function initializeChatbot() {
           setInputState(true);
           input.placeholder = 'Scrivi un messaggio...';
           addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
-          actionsContainer.remove();
         } else if (action.action === 'show_rating') {
           // NEW: Show rating popup for closed session
+          removeAllActionContainers();
           const sessionId = action.data?.sessionId;
           if (sessionId) {
             showRatingPopup(sessionId);
           }
-          actionsContainer.remove();
         } else {
           console.warn('⚠️ Unknown action:', action.action);
+          removeAllActionContainers();
         }
-        actionsContainer.remove();
       });
 
       actionsGrid.appendChild(actionButton);
@@ -2329,6 +2346,44 @@ function initializeChatbot() {
       const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}`);
       const data = await response.json();
       const session = data.data || data;
+
+      // CHECK: Is operator still online?
+      if (session.status === 'WITH_OPERATOR' && !session.operatorOnline) {
+        console.warn('⚠️ Operator is offline - showing recovery options');
+
+        // Clear chat and show recovery message
+        chatMessages.innerHTML = '';
+        displayedMessageIds.clear();
+
+        addMessage('L\'operatore precedentemente connesso non è più disponibile. Scegli come continuare:', 'system');
+
+        // Show recovery options
+        showSmartActions([
+          {
+            icon: '📋',
+            text: 'Apri Ticket',
+            description: 'Lascia un messaggio, ti ricontatteremo',
+            action: 'request_ticket',
+            type: 'primary'
+          },
+          {
+            icon: '🤖',
+            text: 'Continua con AI',
+            description: 'Riprendi con assistente automatico',
+            action: 'continue_ai',
+            type: 'secondary'
+          },
+          {
+            icon: '👤',
+            text: 'Richiedi nuovo operatore',
+            description: 'Attendi un operatore disponibile',
+            action: 'request_operator',
+            type: 'secondary'
+          }
+        ]);
+
+        return; // Stop here - don't resume chat
+      }
 
       // Clear chat and reload messages
       chatMessages.innerHTML = '';
