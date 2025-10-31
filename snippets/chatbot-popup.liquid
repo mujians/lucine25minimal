@@ -1601,31 +1601,46 @@ function initializeChatbot() {
     const now = Date.now();
     const inactiveTime = now - lastUserActivity;
 
-    // Final warning - 5 minutes
+    // Final warning - 5 minutes (notify operator)
     if (inactiveTime >= INACTIVITY_FINAL_TIME) {
-      addMessage(
-        '⚠️ La chat è stata inattiva per 5 minuti. Vuoi continuare?',
-        'system'
-      );
+      // Notify operator that user is truly inactive
+      if (socket && socket.connected && sessionId) {
+        socket.emit('user_inactive_final', {
+          sessionId,
+          inactiveTime: Math.floor(inactiveTime / 1000),
+          message: 'Utente inattivo da 5 minuti'
+        });
+      }
       stopInactivityCheck();
       return;
     }
 
-    // First warning - 3 minutes
+    // First warning - 3 minutes (show interactive prompt)
     if (inactiveTime >= INACTIVITY_WARNING_TIME && !inactivityWarningShown) {
       addMessage(
-        '👋 Sei ancora lì? La chat verrà considerata inattiva tra 2 minuti.',
+        '⏱️ Sei ancora lì? La chat verrà considerata inattiva tra 2 minuti.',
         'system'
       );
-      inactivityWarningShown = true;
 
-      // Notify operator
-      if (socket && socket.connected && sessionId) {
-        socket.emit('user_inactive', {
-          sessionId,
-          inactiveTime: Math.floor(inactiveTime / 1000)
-        });
-      }
+      // Show smart actions for user choice
+      showSmartActions([
+        {
+          icon: '🟢',
+          text: 'Sì, sono qui',
+          description: 'Continua con operatore',
+          type: 'primary',
+          action: 'confirm_presence'
+        },
+        {
+          icon: '🤖',
+          text: 'Continua con AI',
+          description: 'Torna all\'assistente automatico',
+          type: 'secondary',
+          action: 'switch_to_ai'
+        }
+      ]);
+
+      inactivityWarningShown = true;
     }
   }
 
@@ -2054,6 +2069,60 @@ function initializeChatbot() {
         } else if (action.action === 'start_new_chat') {
           // NEW: Start fresh new chat
           startNewChat();
+          actionsContainer.remove();
+        } else if (action.action === 'confirm_presence') {
+          // NEW: User confirms they are still present
+          resetInactivityTimer();
+          addMessage('✅ Perfetto! Continuo ad aspettarti.', 'system');
+          actionsContainer.remove();
+          // Notify operator user is back
+          if (socket && socket.connected && sessionId) {
+            socket.emit('user_confirmed_presence', {
+              sessionId,
+              timestamp: new Date().toISOString()
+            });
+          }
+        } else if (action.action === 'switch_to_ai') {
+          // NEW: User wants to switch back to AI
+          stopInactivityCheck();
+          isOperatorMode = false;
+          // Reset header
+          const chatTitle = document.querySelector('.chat-title');
+          if (chatTitle) {
+            chatTitle.textContent = 'LUCY - ASSISTENTE VIRTUALE';
+            chatTitle.style.color = '';
+          }
+          addMessage('🤖 Perfetto! Torno in modalità assistente AI. Come posso aiutarti?', 'bot');
+          actionsContainer.remove();
+          // Notify operator user switched to AI
+          if (socket && socket.connected && sessionId) {
+            socket.emit('user_switched_to_ai', {
+              sessionId,
+              timestamp: new Date().toISOString()
+            });
+          }
+        } else if (action.action === 'start_fresh_chat') {
+          // NEW: Start completely fresh chat (after closure)
+          chatMessages.innerHTML = '';
+          displayedMessageIds.clear();
+          isOperatorMode = false;
+          // Reset header
+          const chatTitle = document.querySelector('.chat-title');
+          if (chatTitle) {
+            chatTitle.textContent = 'LUCY - ASSISTENTE VIRTUALE';
+            chatTitle.style.color = '';
+          }
+          // Re-enable input
+          setInputState(true);
+          input.placeholder = 'Scrivi un messaggio...';
+          addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
+          actionsContainer.remove();
+        } else if (action.action === 'show_rating') {
+          // NEW: Show rating popup for closed session
+          const sessionId = action.data?.sessionId;
+          if (sessionId) {
+            showRatingPopup(sessionId);
+          }
           actionsContainer.remove();
         } else {
           console.warn('⚠️ Unknown action:', action.action);
@@ -2592,13 +2661,8 @@ function initializeChatbot() {
         console.log('👋 Chat closed:', data);
         addMessage('La chat è stata chiusa. Grazie per averci contattato!', 'system');
 
-        // P1.2: Show rating popup after 2 seconds
-        const closedSessionId = sessionId; // Save sessionId before clearing
-        setTimeout(() => {
-          if (closedSessionId) {
-            showRatingPopup(closedSessionId);
-          }
-        }, 2000);
+        // Save sessionId before clearing (for rating)
+        const closedSessionId = sessionId;
 
         // FIX: Clear session quando operatore chiude la chat (using correct function)
         clearSessionStorage(); // Clears both SESSION_STORAGE_KEY and SESSION_EXPIRY_KEY
@@ -2612,6 +2676,32 @@ function initializeChatbot() {
         // P1.7 Fix: Disable input after chat closed
         setInputState(false);
         input.placeholder = 'Chat chiusa';
+
+        // Show smart actions for next steps
+        showSmartActions([
+          {
+            icon: '📋',
+            text: 'Apri Ticket',
+            description: 'Lascia i tuoi contatti',
+            type: 'primary',
+            action: 'request_ticket'
+          },
+          {
+            icon: '💬',
+            text: 'Nuova Chat',
+            description: 'Inizia una nuova conversazione',
+            type: 'secondary',
+            action: 'start_fresh_chat'
+          },
+          {
+            icon: '⭐',
+            text: 'Valuta',
+            description: 'Valuta la tua esperienza',
+            type: 'secondary',
+            action: 'show_rating',
+            data: { sessionId: closedSessionId }
+          }
+        ]);
 
         console.log('✅ Session cleared - next conversation will be new');
       });
