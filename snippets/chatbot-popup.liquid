@@ -1165,6 +1165,7 @@ function initializeChatbot() {
 
   let isPopupOpen = false;
   let isOperatorMode = false;
+  let userName = null; // v2.3.4: Track user name for pre-filling ticket form
   let socket = null; // Socket.IO connection
   const displayedMessageIds = new Set(); // Track displayed messages globally
 
@@ -2752,10 +2753,13 @@ function initializeChatbot() {
 
   // Show ticket form
   function showTicketForm() {
+    // v2.3.4: Pre-fill name if we have it
+    const nameValue = userName || '';
+
     const ticketHtml = `
       <div class="ticket-form" style="margin: 1rem 0; padding: 1rem; background: rgba(45, 45, 45, 0.8); border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
         <h4 style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.1rem;">📝 Lascia un messaggio</h4>
-        <input type="text" id="ticketName" placeholder="Il tuo nome" style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem; border: 1px solid #555; border-radius: 6px; background: #333; color: white;">
+        <input type="text" id="ticketName" placeholder="Il tuo nome" value="${nameValue}" style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem; border: 1px solid #555; border-radius: 6px; background: #333; color: white;">
         <input type="email" id="ticketEmail" placeholder="La tua email" style="width: 100%; margin-bottom: 0.5rem; padding: 0.5rem; border: 1px solid #555; border-radius: 6px; background: #333; color: white;">
         <textarea id="ticketMessage" placeholder="Il tuo messaggio..." style="width: 100%; height: 80px; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid #555; border-radius: 6px; background: #333; color: white; resize: vertical;"></textarea>
         <div style="display: flex; gap: 10px;">
@@ -2840,6 +2844,25 @@ function initializeChatbot() {
         }
         // Poi aggiungi il messaggio di conferma
         addMessage(`✅ Ticket creato! Ti ricontatteremo al più presto via email.`, 'bot');
+
+        // v2.3.4: Show recovery options after ticket creation
+        const actions = [
+          {
+            icon: '🤖',
+            text: 'Continua con Lucy',
+            description: 'Torna all\'assistente virtuale',
+            type: 'primary',
+            action: 'start_fresh_chat'
+          },
+          {
+            icon: '❌',
+            text: 'Chiudi',
+            description: 'Chiudi la chat',
+            type: 'secondary',
+            action: 'close_widget'
+          }
+        ];
+        showSmartActions(actions);
       } else {
         throw new Error(data.error?.message || 'Errore creazione ticket');
       }
@@ -2982,6 +3005,15 @@ function initializeChatbot() {
 
         // Start inactivity check
         startInactivityCheck();
+      });
+
+      // v2.3.4: Listen for user name captured event
+      socket.on('user_name_captured', (data) => {
+        console.log('📝 User name captured:', data);
+        if (data.userName) {
+          userName = data.userName;
+          console.log('✅ Stored user name for ticket form:', userName);
+        }
       });
 
       socket.on('operator_request_cancelled', (data) => {
