@@ -2891,6 +2891,110 @@ function initializeChatbot() {
     }
   };
 
+  // v2.3.5: Show user name collection form when operator joins
+  function showUserNameForm() {
+    console.log('📝 Showing user name form');
+
+    const formHtml = `
+      <div class="username-form" style="margin: 1rem 0; padding: 1rem; background: rgba(45, 45, 45, 0.8); border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+        <h4 style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.1rem;">👤 Come ti chiami?</h4>
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 1rem;">Così posso rivolgermi a te nel modo giusto!</p>
+        <input type="text" id="userNameInput" placeholder="Il tuo nome" style="width: 100%; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid #555; border-radius: 6px; background: #333; color: white;">
+        <div style="display: flex; gap: 10px;">
+          <button onclick="skipUserName()" style="background: #6b7280; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1;">⏭️ Salta</button>
+          <button onclick="submitUserName()" style="background: #f59e0b; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1;">✅ Continua</button>
+        </div>
+      </div>
+    `;
+
+    // Add form as HTML message
+    const formDiv = document.createElement('div');
+    formDiv.className = 'chat-message bot';
+    formDiv.innerHTML = `<div class="message-bubble">${formHtml}</div>`;
+    messagesContainer.appendChild(formDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Focus on input
+    setTimeout(() => {
+      document.getElementById('userNameInput')?.focus();
+    }, 100);
+  }
+
+  // Submit user name
+  window.submitUserName = async function() {
+    const nameInput = document.getElementById('userNameInput');
+    const name = nameInput?.value?.trim();
+
+    if (!name) {
+      nameInput?.focus();
+      return;
+    }
+
+    // Validate name (2-50 characters, letters and spaces only)
+    if (name.length < 2 || name.length > 50) {
+      alert('Inserisci un nome valido (2-50 caratteri)');
+      return;
+    }
+
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(name)) {
+      alert('Il nome può contenere solo lettere e spazi');
+      return;
+    }
+
+    try {
+      // Send name to backend
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/set-name`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName: name })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store name globally for ticket form pre-fill
+        userName = name;
+        console.log('✅ User name saved:', userName);
+
+        // Remove form
+        const form = document.querySelector('.username-form');
+        if (form) {
+          const messageContainer = form.closest('.chat-message');
+          if (messageContainer) {
+            messageContainer.remove();
+          }
+        }
+
+        // Add confirmation message
+        addMessage(`✅ Perfetto, ${userName}! Come posso aiutarti?`, 'operator');
+      } else {
+        throw new Error(data.error?.message || 'Errore salvataggio nome');
+      }
+    } catch (error) {
+      console.error('❌ Errore salvataggio nome:', error);
+      alert('Errore nel salvataggio del nome. Riprova.');
+    }
+  };
+
+  // Skip user name entry
+  window.skipUserName = function() {
+    console.log('⏭️ User skipped name entry');
+
+    // Remove form
+    const form = document.querySelector('.username-form');
+    if (form) {
+      const messageContainer = form.closest('.chat-message');
+      if (messageContainer) {
+        messageContainer.remove();
+      }
+    }
+
+    // Add message
+    addMessage('Nessun problema! Come posso aiutarti?', 'operator');
+  };
+
   // ========================
   // 📡 SOCKET.IO CONNECTION
   // ========================
@@ -3015,10 +3119,14 @@ function initializeChatbot() {
         updateHeaderForOperatorMode();
         hideWaitingForOperator();
 
-        // Add system message from backend
-        if (data.message) {
+        // v2.3.5: Show user name form instead of automatic greeting message
+        // Skip the backend greeting message (it says "come ti chiami?" which we'll ask via form)
+        if (data.message && !data.message.content.includes('come ti chiami')) {
           addMessage(data.message.content, 'system');
         }
+
+        // Show name collection form
+        showUserNameForm();
 
         // Re-enable input
         setInputState(true);
