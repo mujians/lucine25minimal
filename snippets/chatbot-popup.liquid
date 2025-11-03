@@ -753,6 +753,21 @@
         LUCY - ASSISTENTE VIRTUALE
       </div>
       <div class="chat-controls">
+        <!-- v2.3.5: ISSUE #10 - Return to AI button (only visible in operator mode) -->
+        <button id="returnToAIBtn" onclick="returnToAI()" title="Torna all'assistente AI" style="
+          display: none;
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 13px;
+          margin-right: 8px;
+          transition: all 0.2s;
+        " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+          🤖 Torna all'AI
+        </button>
         <button class="chat-close" id="chatClose" title="Chiudi chat">×</button>
       </div>
     </div>
@@ -2553,7 +2568,69 @@ function initializeChatbot() {
       chatTitle.innerHTML = '🟢 CHAT DAL VIVO - OPERATORE';
       chatTitle.style.color = '#10B981';
     }
+
+    // v2.3.5: ISSUE #10 - Show "Return to AI" button
+    const returnBtn = document.getElementById('returnToAIBtn');
+    if (returnBtn) {
+      returnBtn.style.display = 'block';
+    }
   }
+
+  // v2.3.5: ISSUE #10 - User returns to AI from operator chat
+  window.returnToAI = async function() {
+    if (!sessionId) {
+      console.error('❌ No session ID for return to AI');
+      return;
+    }
+
+    if (!confirm('Vuoi tornare all\'assistente AI? L\'operatore verrà disconnesso dalla chat.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/return-to-ai`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        console.log('✅ Returned to AI successfully');
+
+        // Switch to AI mode
+        isOperatorMode = false;
+        stopInactivityCheck();
+
+        // Hide return button
+        const returnBtn = document.getElementById('returnToAIBtn');
+        if (returnBtn) {
+          returnBtn.style.display = 'none';
+        }
+
+        // Reset header
+        const chatTitle = document.querySelector('.chat-title');
+        if (chatTitle) {
+          chatTitle.textContent = 'LUCY - ASSISTENTE VIRTUALE';
+          chatTitle.style.color = '';
+        }
+
+        // Re-enable input for AI
+        setInputState(true);
+        input.placeholder = 'Scrivi un messaggio...';
+
+        // Add confirmation message
+        addMessage('✅ Sei tornato all\'assistente AI. Come posso aiutarti?', 'bot');
+      } else {
+        throw new Error(data.error?.message || 'Errore durante il ritorno all\'AI');
+      }
+    } catch (error) {
+      console.error('❌ Return to AI error:', error);
+      alert('Errore durante il ritorno all\'assistente AI. Riprova.');
+    }
+  };
 
   // NEW: Show resume prompt when WITH_OPERATOR session found
   function showResumePrompt(operatorName) {
