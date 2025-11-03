@@ -768,6 +768,20 @@
         " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
           🤖 Torna all'AI
         </button>
+        <!-- v2.3.7: BUG #1 - End conversation button (always visible) -->
+        <button id="endConversationBtn" onclick="endConversation()" title="Termina conversazione e ricomincia" style="
+          background: rgba(239, 68, 68, 0.2);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 13px;
+          margin-right: 8px;
+          transition: all 0.2s;
+        " onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'">
+          🔴 Termina
+        </button>
         <button class="chat-close" id="chatClose" title="Chiudi chat">×</button>
       </div>
     </div>
@@ -2246,6 +2260,10 @@ function initializeChatbot() {
           if (sessionId) {
             showRatingPopup(sessionId);
           }
+        } else if (action.action === 'close_widget') {
+          // v2.3.7: FIX BUG #2 - Close widget action handler
+          closePopup(); // Minimizza il widget
+          removeAllActionContainers();
         } else {
           console.warn('⚠️ Unknown action:', action.action);
           removeAllActionContainers();
@@ -2629,6 +2647,82 @@ function initializeChatbot() {
     } catch (error) {
       console.error('❌ Return to AI error:', error);
       alert('Errore durante il ritorno all\'assistente AI. Riprova.');
+    }
+  };
+
+  // v2.3.7: BUG #1 - End conversation and start fresh
+  window.endConversation = async function() {
+    // Confirm with user
+    if (!confirm('Vuoi terminare questa conversazione e iniziare da zero?\n\nTutta la cronologia della chat verrà rimossa.')) {
+      return;
+    }
+
+    try {
+      // If there's a session, notify backend
+      if (sessionId) {
+        const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/end-conversation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          console.log('✅ Conversation ended successfully');
+        } else {
+          console.warn('⚠️ Error ending conversation:', data.error?.message);
+          // Continue anyway to reset local state
+        }
+      }
+
+      // Clear session completely
+      clearSessionStorage(); // Clears both SESSION_STORAGE_KEY and SESSION_EXPIRY_KEY
+      sessionId = null;
+      sessionValidated = false;
+      isOperatorMode = false;
+      userName = null;
+
+      // Stop all timers
+      stopInactivityCheck();
+
+      // Hide operator-specific UI
+      const returnBtn = document.getElementById('returnToAIBtn');
+      if (returnBtn) {
+        returnBtn.style.display = 'none';
+      }
+
+      // Reset header
+      const chatTitle = document.querySelector('.chat-title');
+      if (chatTitle) {
+        chatTitle.textContent = 'LUCY - ASSISTENTE VIRTUALE';
+        chatTitle.style.color = '';
+      }
+
+      // Clear all messages
+      messagesContainer.innerHTML = '';
+
+      // Reset input
+      setInputState(true);
+      input.placeholder = 'Scrivi un messaggio...';
+      input.value = '';
+
+      // Show fresh welcome message
+      addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
+
+      console.log('🔄 Conversation reset - ready for new session');
+    } catch (error) {
+      console.error('❌ End conversation error:', error);
+      alert('Errore durante la terminazione. La chat verrà comunque resettata.');
+
+      // Force reset anyway
+      clearSessionStorage();
+      sessionId = null;
+      sessionValidated = false;
+      isOperatorMode = false;
+      messagesContainer.innerHTML = '';
+      addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
     }
   };
 
