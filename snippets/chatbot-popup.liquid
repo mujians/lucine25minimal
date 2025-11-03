@@ -2459,9 +2459,20 @@ function initializeChatbot() {
   }
 
   function hideWaitingForOperator() {
+    console.log('🔍 Attempting to hide waiting operator UI...');
     const waitingContainer = document.getElementById('waiting-operator-container');
     if (waitingContainer) {
       waitingContainer.remove();
+      console.log('✅ Waiting operator UI removed successfully');
+    } else {
+      console.log('ℹ️ No waiting operator UI found (already removed or never shown)');
+    }
+
+    // Defensive: Also remove by class in case ID was lost
+    const waitingElements = document.querySelectorAll('.waiting-operator-message');
+    if (waitingElements.length > 0) {
+      waitingElements.forEach(el => el.closest('.smart-actions-container')?.remove());
+      console.log(`🧹 Cleaned up ${waitingElements.length} orphaned waiting UI elements`);
     }
   }
 
@@ -2479,6 +2490,13 @@ function initializeChatbot() {
       const data = await response.json();
 
       if (!response.ok || data.error) {
+        // FIX: If 400 error, operator may have already joined - hide waiting UI gracefully
+        if (response.status === 400) {
+          console.log('ℹ️ Cannot cancel: operator may have already joined');
+          hideWaitingForOperator();
+          addMessage('Un operatore si è appena unito alla chat!', 'system');
+          return;
+        }
         throw new Error(data.error?.message || 'Failed to cancel operator request');
       }
 
@@ -2980,6 +2998,7 @@ function initializeChatbot() {
         console.log('👤 Operator assigned:', data);
         isOperatorMode = true;
         updateHeaderForOperatorMode();
+        hideWaitingForOperator(); // FIX: Always hide waiting UI when operator is assigned
         // Don't add message here - backend already sends "si è unito alla chat" message
       });
 
@@ -2990,6 +3009,8 @@ function initializeChatbot() {
 
       socket.on('operator_joined', (data) => {
         console.log('👤 Operator joined:', data);
+        console.log('🔄 Switching to operator mode and hiding waiting UI...');
+
         isOperatorMode = true;
         updateHeaderForOperatorMode();
         hideWaitingForOperator();
@@ -3005,6 +3026,8 @@ function initializeChatbot() {
 
         // Start inactivity check
         startInactivityCheck();
+
+        console.log('✅ Operator mode activated, waiting UI should be hidden');
       });
 
       // v2.3.4: Listen for user name captured event
