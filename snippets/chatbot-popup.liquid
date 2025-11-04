@@ -1441,7 +1441,8 @@ function initializeChatbot() {
   }
 
   // P1.2: Show rating popup after chat closed (CSAT)
-  function showRatingPopup(sessionId) {
+  // v2.3.8: LACUNA #5 - Added chatType parameter for AI ratings
+  function showRatingPopup(sessionId, chatType = 'OPERATOR') {
     // Check if rating already submitted for this session
     const ratedSessions = JSON.parse(localStorage.getItem('ratedSessions') || '[]');
     if (ratedSessions.includes(sessionId)) {
@@ -1478,9 +1479,17 @@ function initializeChatbot() {
 
     let selectedRating = 0;
 
+    // v2.3.8: LACUNA #5 - Different text for AI vs OPERATOR
+    const title = chatType === 'AI'
+      ? 'Come valuti l\'assistente AI?'
+      : 'Come valuti il supporto?';
+    const subtitle = chatType === 'AI'
+      ? 'L\'AI è stata utile? Il tuo feedback ci aiuta a migliorare'
+      : 'Il tuo feedback ci aiuta a migliorare';
+
     popup.innerHTML = `
-      <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #333;">Come valuti il supporto?</h3>
-      <p style="margin: 0 0 20px 0; font-size: 14px; color: #666;">Il tuo feedback ci aiuta a migliorare</p>
+      <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #333;">${title}</h3>
+      <p style="margin: 0 0 20px 0; font-size: 14px; color: #666;">${subtitle}</p>
 
       <div id="stars-container" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px;">
         ${[1,2,3,4,5].map(num => `
@@ -1574,7 +1583,11 @@ function initializeChatbot() {
         const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/rating`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ rating: selectedRating, comment: comment || null }),
+          body: JSON.stringify({
+            rating: selectedRating,
+            comment: comment || null,
+            chatType: chatType, // v2.3.8: LACUNA #5 - Include chatType
+          }),
         });
 
         if (response.ok) {
@@ -2657,6 +2670,10 @@ function initializeChatbot() {
       return;
     }
 
+    // v2.3.8: LACUNA #5 - Save state before clearing for AI rating
+    const wasAIOnly = !isOperatorMode && sessionId; // AI chat if never entered operator mode
+    const endedSessionId = sessionId;
+
     try {
       // If there's a session, notify backend
       if (sessionId) {
@@ -2712,6 +2729,14 @@ function initializeChatbot() {
       addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
 
       console.log('🔄 Conversation reset - ready for new session');
+
+      // v2.3.8: LACUNA #5 - Show AI rating if it was AI-only chat
+      if (wasAIOnly && endedSessionId) {
+        console.log('💬 Showing AI rating popup for ended session');
+        setTimeout(() => {
+          showRatingPopup(endedSessionId, 'AI');
+        }, 500); // Small delay for better UX
+      }
     } catch (error) {
       console.error('❌ End conversation error:', error);
       alert('Errore durante la terminazione. La chat verrà comunque resettata.');
