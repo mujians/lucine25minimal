@@ -3201,8 +3201,11 @@ function initializeChatbot() {
       return;
     }
 
+    // v2.3.9: If socket already connected, just join the new chat room
     if (socket && socket.connected) {
-      console.log('✅ Socket.IO already connected');
+      console.log('✅ Socket.IO already connected - joining new chat room');
+      socket.emit('join_chat', { sessionId: sessionId });
+      console.log('📤 Emitted join_chat with new sessionId:', sessionId);
       return;
     }
 
