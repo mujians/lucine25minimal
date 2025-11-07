@@ -3804,6 +3804,11 @@ function initializeChatbot() {
 
         showSmartActions(actions);
 
+        // v2.3.12: Show inline rating automatically after chat closed
+        setTimeout(() => {
+          showInlineRating(closedSessionId, 'OPERATOR');
+        }, 500); // Small delay for better UX
+
         console.log('✅ Session cleared - next conversation will be new');
       });
 
@@ -3855,6 +3860,11 @@ function initializeChatbot() {
           }
         ]);
 
+        // v2.3.12: Show inline rating automatically after operator disconnect
+        setTimeout(() => {
+          showInlineRating(disconnectedSessionId, 'OPERATOR');
+        }, 500); // Small delay for better UX
+
         console.log('✅ Operator disconnect handled - recovery options shown');
       });
 
@@ -3905,6 +3915,11 @@ function initializeChatbot() {
             data: { sessionId: timeoutSessionId, chatType: 'OPERATOR' } // v2.3.12: Include chatType
           }
         ]);
+
+        // v2.3.12: Show inline rating automatically after operator timeout
+        setTimeout(() => {
+          showInlineRating(timeoutSessionId, 'OPERATOR');
+        }, 500); // Small delay for better UX
 
         console.log('✅ Operator timeout handled - recovery options shown');
       });
@@ -4066,6 +4081,11 @@ function initializeChatbot() {
         ];
 
         showSmartActions(actions);
+
+        // v2.3.12: Show inline rating automatically after inactivity closure
+        setTimeout(() => {
+          showInlineRating(data.sessionId, 'OPERATOR');
+        }, 500); // Small delay for better UX
       });
 
       // v2.3.11: AI chat closed for inactivity (can be reactivated)
