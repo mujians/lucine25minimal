@@ -2243,6 +2243,10 @@ function initializeChatbot() {
 
               setInputState(true);
             });
+        } else if (action.action === 'reactivate_ai_chat') {
+          // v2.3.11: Reactivate AI chat closed for inactivity
+          removeAllActionContainers();
+          reactivateAIChat();
         } else if (action.action === 'start_fresh_chat') {
           // SECURITY: Prevent fresh chat during active operator session
           if (isOperatorMode) {
@@ -2750,6 +2754,63 @@ function initializeChatbot() {
       addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
     }
   };
+
+  // v2.3.11: Reactivate AI chat closed for inactivity
+  async function reactivateAIChat() {
+    if (!sessionId) {
+      console.error('❌ No sessionId to reactivate');
+      addMessage('❌ Errore: nessuna sessione da riattivare.', 'system');
+      return;
+    }
+
+    try {
+      addMessage('🔄 Riattivazione chat in corso...', 'system');
+
+      const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/reactivate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Check if error code indicates window expired
+        if (data.error?.code === 'REACTIVATE_WINDOW_EXPIRED') {
+          addMessage('⏰ Chat chiusa da troppo tempo. Iniziamo una nuova conversazione!', 'system');
+          setTimeout(() => {
+            clearSessionStorage();
+            sessionId = null;
+            chatMessages.innerHTML = '';
+            displayedMessageIds.clear();
+            setInputState(true);
+            input.placeholder = 'Scrivi un messaggio...';
+            addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
+          }, 2000);
+        } else {
+          throw new Error(data.error?.message || 'Errore riattivazione');
+        }
+        return;
+      }
+
+      // Riattivazione riuscita
+      console.log('✅ Chat riattivata:', data);
+      addMessage('✅ Chat riattivata! Continua pure la conversazione.', 'system');
+
+      // Riabilita input
+      setInputState(true);
+      input.placeholder = 'Scrivi un messaggio...';
+      input.focus();
+
+      // Riconnetti socket se necessario
+      if (socket && socket.connected) {
+        socket.emit('join_chat', { sessionId });
+      }
+
+    } catch (error) {
+      console.error('❌ Errore riattivazione:', error);
+      addMessage('❌ Errore durante la riattivazione. Riprova o inizia una nuova chat.', 'system');
+    }
+  }
 
   // NEW: Show resume prompt when WITH_OPERATOR session found
   function showResumePrompt(operatorName) {
@@ -3672,6 +3733,50 @@ function initializeChatbot() {
         ];
 
         showSmartActions(actions);
+      });
+
+      // v2.3.11: AI chat closed for inactivity (can be reactivated)
+      socket.on('ai_chat_closed_inactivity', (data) => {
+        console.log('🔒 AI chat closed for inactivity:', data);
+
+        addMessage(
+          data.message || 'Chat chiusa per inattività. Puoi riaprirla o iniziarne una nuova!',
+          'system'
+        );
+
+        // ⚠️ NON cancellare sessionId - serve per riattivare
+        // clearSessionStorage(); ❌ NO!
+
+        // Disable input temporaneamente
+        setInputState(false);
+        input.placeholder = 'Chat chiusa per inattività';
+
+        // Show smart actions: Riapri | Nuova Chat
+        const actions = [
+          {
+            icon: '🔄',
+            text: 'Riapri Chat',
+            description: 'Continua la conversazione',
+            type: 'primary',
+            action: 'reactivate_ai_chat'
+          },
+          {
+            icon: '💬',
+            text: 'Nuova Chat',
+            description: 'Inizia da capo',
+            type: 'secondary',
+            action: 'start_fresh_chat'
+          }
+        ];
+
+        showSmartActions(actions);
+      });
+
+      // v2.3.11: AI chat reactivated successfully
+      socket.on('ai_chat_reactivated', (data) => {
+        console.log('✅ AI chat reactivated:', data);
+        // Message already added by reactivateAIChat function
+        // Just log confirmation
       });
 
       socket.on('disconnect', (reason) => {
