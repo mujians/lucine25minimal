@@ -3163,8 +3163,8 @@ function initializeChatbot() {
           }
         }
 
-        // Add confirmation message
-        addMessage(`✅ Perfetto, ${userName}! Come posso aiutarti?`, 'operator');
+        // v2.3.9: Message now sent via WebSocket from backend - no need to add locally
+        // addMessage(`✅ Perfetto, ${userName}! Come posso aiutarti?`, 'operator');
       } else {
         throw new Error(data.error?.message || 'Errore salvataggio nome');
       }
