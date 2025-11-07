@@ -1339,6 +1339,11 @@ function initializeChatbot() {
   const fileInput = document.getElementById('chatFileInput');
 
   uploadBtn.addEventListener('click', () => {
+    // Only allow file upload when connected with operator
+    if (!isOperatorMode) {
+      addMessage('📎 Puoi inviare file solo quando sei connesso con un operatore.', 'system');
+      return;
+    }
     fileInput.click();
   });
 
@@ -1359,10 +1364,14 @@ function initializeChatbot() {
       return;
     }
 
-    // Show uploading state
+    // Show uploading state with feedback
     uploadBtn.disabled = true;
     uploadBtn.classList.add('uploading');
     uploadBtn.textContent = '⏳';
+
+    // Show upload progress message with filename
+    const fileSize = (file.size / 1024).toFixed(0);
+    const uploadingMsg = addMessage(`📤 Caricamento ${file.name} (${fileSize} KB)...`, 'system');
 
     try {
       const formData = new FormData();
@@ -1381,12 +1390,24 @@ function initializeChatbot() {
       const data = await response.json();
       console.log('✅ P0.1: File uploaded:', data);
 
-      // Message will be displayed via WebSocket
+      // Remove uploading message
+      if (uploadingMsg && uploadingMsg.remove) {
+        uploadingMsg.remove();
+      }
+
+      // Show success message (will be replaced by actual message via WebSocket)
+      addMessage(`✅ File inviato con successo!`, 'system');
 
       // Clear file input
       fileInput.value = '';
     } catch (error) {
       console.error('Upload error:', error);
+
+      // Remove uploading message
+      if (uploadingMsg && uploadingMsg.remove) {
+        uploadingMsg.remove();
+      }
+
       addMessage(STRINGS['file_upload.error'], 'system');
     } finally {
       // Restore button state
