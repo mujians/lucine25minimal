@@ -803,7 +803,7 @@
 
     <!-- Typing Indicator -->
     <div class="typing-indicator" id="typingIndicator">
-      L'assistente sta scrivendo<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+      <span id="typingIndicatorText">Lucy sta scrivendo</span><span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
     </div>
 
     <!-- Input -->
@@ -865,6 +865,81 @@ function initializeChatbot() {
     title: 'LUCY - ASSISTENTE VIRTUALE',
     subtitle: 'Chiedimi quello che vuoi sapere.'
   };
+
+  // v2.3.12: Widget strings (editable from dashboard)
+  let STRINGS = {
+    // Defaults (will be overridden by API)
+    'ai.typing': 'Lucy sta scrivendo',
+    'welcome.initial': '👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?',
+    'welcome.new_chat': '💬 Nuova chat avviata. Come posso aiutarti?',
+    'operator.typing': '{operatorName} sta scrivendo',
+    'closure.inactivity': 'Chat chiusa per inattività. Puoi riaprirla o iniziarne una nuova!',
+    'closure.operator': 'La chat è stata chiusa. Grazie per averci contattato!',
+    'closure.operator_inactivity': 'La chat è stata chiusa per inattività. Puoi iniziare una nuova conversazione quando vuoi!',
+    'closure.ended': 'Chat chiusa',
+    'closure.ended_inactivity': 'Chat chiusa per inattività',
+    'return_to_ai.confirm_question': '⚠️ Vuoi tornare all\'assistente AI? L\'operatore verrà disconnesso dalla chat.',
+    'return_to_ai.success': '✅ Sei tornato all\'assistente AI. Come posso aiutarti?',
+    'return_to_ai.error': '❌ Errore durante il ritorno all\'assistente AI. Riprova.',
+    'end_conversation.confirm_question': '⚠️ Vuoi terminare questa conversazione e iniziare da zero? Tutta la cronologia della chat verrà rimossa.',
+    'end_conversation.cancelled': '✅ Conversazione continuata.',
+    'end_conversation.error': '❌ Errore durante la terminazione. La chat verrà comunque resettata.',
+    'file_upload.too_large': '❌ File troppo grande. Dimensione massima: 10MB',
+    'file_upload.no_session': '❌ Sessione non attiva. Riprova.',
+    'file_upload.error': '❌ Errore durante l\'upload del file',
+    'operator_request.cancel_error': '❌ Errore durante l\'annullamento della richiesta.',
+    'fresh_chat.operator_active': '⚠️ Non puoi iniziare una nuova chat mentre sei connesso con un operatore. L\'operatore deve chiudere la chat prima.',
+    'rating.ai_title': 'Come valuti l\'assistente AI?',
+    'rating.ai_subtitle': 'L\'AI è stata utile? Il tuo feedback ci aiuta a migliorare',
+    'rating.operator_title': 'Come valuti il supporto?',
+    'rating.operator_subtitle': 'Il tuo feedback ci aiuta a migliorare',
+    'rating.placeholder': 'Commento opzionale...',
+    'rating.skip': 'Salta',
+    'rating.submit': 'Invia',
+    'rating.submitting': 'Invio...',
+    'rating.thanks': 'Grazie per il feedback!',
+    'rating.thanks_subtitle': 'Il tuo parere ci aiuta a migliorare',
+    'rating.error': '❌ Errore durante l\'invio del rating. Riprova.',
+    'validation.ticket_required': '⚠️ Compila tutti i campi del ticket.',
+    'validation.email_invalid': '⚠️ Inserisci un indirizzo email valido.',
+    'validation.name_length': '⚠️ Inserisci un nome valido (2-50 caratteri).',
+    'validation.name_chars': '⚠️ Il nome può contenere solo lettere e spazi.',
+    'validation.name_save_error': '❌ Errore nel salvataggio del nome. Riprova.',
+    'reactivate.no_session': '❌ Errore: nessuna sessione da riattivare.',
+    'reactivate.loading': '🔄 Riattivazione chat in corso...',
+    'reactivate.expired': '⏰ Chat chiusa da troppo tempo. Iniziamo una nuova conversazione!',
+    'reactivate.new_chat_starting': '💬 Nuova chat avviata. Come posso aiutarti?',
+    'reactivate.success': '✅ Chat riattivata! Continua pure la conversazione.',
+    'reactivate.error': '❌ Errore durante la riattivazione. Riprova o inizia una nuova chat.'
+  };
+
+  // v2.3.12: Load widget strings from API
+  async function loadWidgetStrings() {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/config/widget-strings`);
+      if (response.ok) {
+        const data = await response.json();
+        STRINGS = { ...STRINGS, ...data.data.strings };
+        console.log('✅ Widget strings loaded from dashboard');
+
+        // Update UI with loaded strings
+        updateUIStrings();
+      }
+    } catch (error) {
+      console.log('⚠️ Using default widget strings');
+    }
+  }
+
+  // v2.3.12: Update UI elements with loaded strings
+  function updateUIStrings() {
+    const typingText = document.getElementById('typingIndicatorText');
+    if (typingText) {
+      typingText.textContent = STRINGS['ai.typing'] || 'Lucy sta scrivendo';
+    }
+  }
+
+  // Load strings immediately
+  loadWidgetStrings();
 
   // BUG #7 FIX: Store interval reference for cleanup
   let settingsRefreshInterval = null;
@@ -1273,13 +1348,13 @@ function initializeChatbot() {
 
     // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      alert('File troppo grande. Dimensione massima: 10MB');
+      addMessage(STRINGS['file_upload.too_large'], 'system');
       fileInput.value = '';
       return;
     }
 
     if (!sessionId) {
-      alert('Sessione non attiva. Riprova.');
+      addMessage(STRINGS['file_upload.no_session'], 'system');
       fileInput.value = '';
       return;
     }
@@ -1312,7 +1387,7 @@ function initializeChatbot() {
       fileInput.value = '';
     } catch (error) {
       console.error('Upload error:', error);
-      alert(error.message || 'Errore durante l\'upload del file');
+      addMessage(STRINGS['file_upload.error'], 'system');
     } finally {
       // Restore button state
       uploadBtn.disabled = false;
@@ -1410,7 +1485,7 @@ function initializeChatbot() {
         indicator.innerHTML = `
           <div class="message-content">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span>${operatorName || 'Operatore'} sta scrivendo</span>
+              <span>${STRINGS['operator.typing'].replace('{operatorName}', operatorName || 'Operatore')}</span>
               <div style="display: flex; gap: 4px;">
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
@@ -1442,6 +1517,7 @@ function initializeChatbot() {
 
   // P1.2: Show rating popup after chat closed (CSAT)
   // v2.3.8: LACUNA #5 - Added chatType parameter for AI ratings
+  // v2.3.12: DEPRECATED - Use showInlineRating() instead (kept for backward compatibility)
   function showRatingPopup(sessionId, chatType = 'OPERATOR') {
     // Check if rating already submitted for this session
     const ratedSessions = JSON.parse(localStorage.getItem('ratedSessions') || '[]');
@@ -1623,6 +1699,201 @@ function initializeChatbot() {
     // Skip rating
     popup.querySelector('#rating-skip').addEventListener('click', () => {
       overlay.remove();
+      console.log('Rating skipped');
+    });
+  }
+
+  // v2.3.12: IMPROVEMENT #1 - Inline rating (no popup overlay)
+  function showInlineRating(sessionId, chatType = 'OPERATOR') {
+    // Check if rating already submitted for this session
+    const ratedSessions = JSON.parse(localStorage.getItem('ratedSessions') || '[]');
+    if (ratedSessions.includes(sessionId)) {
+      console.log('Rating already submitted for this session');
+      return;
+    }
+
+    // Remove any existing rating containers to prevent duplicates
+    const existingRating = document.querySelector('.inline-rating-container');
+    if (existingRating) {
+      existingRating.remove();
+    }
+
+    // Remove any existing popup overlays (safety check for migration)
+    const existingOverlay = document.getElementById('rating-overlay');
+    if (existingOverlay) {
+      existingOverlay.remove();
+      console.log('Removed existing rating overlay');
+    }
+
+    let selectedRating = 0;
+
+    // v2.3.8: Different text for AI vs OPERATOR
+    const title = chatType === 'AI'
+      ? STRINGS['rating.ai_title']
+      : STRINGS['rating.operator_title'];
+    const subtitle = chatType === 'AI'
+      ? STRINGS['rating.ai_subtitle']
+      : STRINGS['rating.operator_subtitle'];
+
+    // Create inline rating container
+    const ratingContainer = document.createElement('div');
+    ratingContainer.className = 'inline-rating-container';
+    ratingContainer.style.cssText = `
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px 0;
+      animation: slideIn 0.3s ease-out;
+    `;
+
+    ratingContainer.innerHTML = `
+      <div style="text-align: center;">
+        <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #333;">${title}</h4>
+        <p style="margin: 0 0 15px 0; font-size: 13px; color: #666;">${subtitle}</p>
+
+        <div id="inline-stars-container" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 15px;">
+          ${[1,2,3,4,5].map(num => `
+            <span class="inline-rating-star" data-rating="${num}" style="
+              font-size: 36px;
+              cursor: pointer;
+              color: #ddd;
+              transition: all 0.2s;
+              user-select: none;
+            ">⭐</span>
+          `).join('')}
+        </div>
+
+        <textarea id="inline-rating-comment" placeholder="${STRINGS['rating.placeholder']}" style="
+          width: calc(100% - 24px);
+          min-height: 60px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-family: inherit;
+          font-size: 13px;
+          resize: vertical;
+          margin-bottom: 15px;
+        "></textarea>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="inline-rating-skip" style="
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+          ">${STRINGS['rating.skip']}</button>
+          <button id="inline-rating-submit" disabled style="
+            flex: 1;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: not-allowed;
+            font-size: 14px;
+            opacity: 0.5;
+            transition: all 0.2s;
+          ">${STRINGS['rating.submit']}</button>
+        </div>
+      </div>
+    `;
+
+    messagesContainer.appendChild(ratingContainer);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Star interaction
+    const stars = ratingContainer.querySelectorAll('.inline-rating-star');
+    const submitBtn = ratingContainer.querySelector('#inline-rating-submit');
+
+    stars.forEach((star, index) => {
+      star.addEventListener('mouseenter', () => {
+        stars.forEach((s, i) => {
+          s.style.color = i <= index ? '#ffc107' : '#ddd';
+          s.style.transform = i <= index ? 'scale(1.1)' : 'scale(1)';
+        });
+      });
+
+      star.addEventListener('mouseleave', () => {
+        stars.forEach((s, i) => {
+          s.style.color = i < selectedRating ? '#ffc107' : '#ddd';
+          s.style.transform = 'scale(1)';
+        });
+      });
+
+      star.addEventListener('click', () => {
+        selectedRating = index + 1;
+        stars.forEach((s, i) => {
+          s.style.color = i < selectedRating ? '#ffc107' : '#ddd';
+        });
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+      });
+    });
+
+    // Submit rating
+    submitBtn.addEventListener('click', async () => {
+      if (selectedRating === 0) return;
+
+      const comment = ratingContainer.querySelector('#inline-rating-comment').value.trim();
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = STRINGS['rating.submitting'];
+
+        const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/rating`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rating: selectedRating,
+            comment: comment || null,
+            chatType: chatType,
+          }),
+        });
+
+        if (response.ok) {
+          // Save to localStorage to prevent duplicate ratings
+          ratedSessions.push(sessionId);
+          localStorage.setItem('ratedSessions', JSON.stringify(ratedSessions));
+
+          // Replace rating form with thank you message
+          ratingContainer.innerHTML = `
+            <div style="text-align: center; padding: 10px;">
+              <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+              <h4 style="margin: 0 0 5px 0; color: #28a745;">${STRINGS['rating.thanks']}</h4>
+              <p style="margin: 0; color: #666; font-size: 13px;">${STRINGS['rating.thanks_subtitle']}</p>
+            </div>
+          `;
+
+          // Auto-remove after 3 seconds
+          setTimeout(() => {
+            ratingContainer.style.transition = 'opacity 0.3s ease-out';
+            ratingContainer.style.opacity = '0';
+            setTimeout(() => ratingContainer.remove(), 300);
+          }, 3000);
+
+          console.log(`✅ P1.2: Rating ${selectedRating}⭐ submitted for session ${sessionId}`);
+        } else {
+          throw new Error('Failed to submit rating');
+        }
+      } catch (error) {
+        console.error('Rating submission error:', error);
+        addMessage(STRINGS['rating.error'], 'system');
+        submitBtn.disabled = false;
+        submitBtn.textContent = STRINGS['rating.submit'];
+      }
+    });
+
+    // Skip rating
+    ratingContainer.querySelector('#inline-rating-skip').addEventListener('click', () => {
+      ratingContainer.style.transition = 'opacity 0.3s ease-out';
+      ratingContainer.style.opacity = '0';
+      setTimeout(() => ratingContainer.remove(), 300);
       console.log('Rating skipped');
     });
   }
@@ -2250,8 +2521,8 @@ function initializeChatbot() {
         } else if (action.action === 'start_fresh_chat') {
           // SECURITY: Prevent fresh chat during active operator session
           if (isOperatorMode) {
-            alert('Non puoi iniziare una nuova chat mentre sei connesso con un operatore. L\'operatore deve chiudere la chat prima.');
             removeAllActionContainers();
+            addMessage(STRINGS['fresh_chat.operator_active'], 'system');
             return;
           }
 
@@ -2269,18 +2540,35 @@ function initializeChatbot() {
           // Re-enable input
           setInputState(true);
           input.placeholder = 'Scrivi un messaggio...';
-          addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
+          addMessage(STRINGS['welcome.new_chat'], 'bot');
         } else if (action.action === 'show_rating') {
-          // NEW: Show rating popup for closed session
+          // v2.3.12: Show inline rating for closed session
           removeAllActionContainers();
           const sessionId = action.data?.sessionId;
+          const chatType = action.data?.chatType || 'OPERATOR';
           if (sessionId) {
-            showRatingPopup(sessionId);
+            showInlineRating(sessionId, chatType);
           }
         } else if (action.action === 'close_widget') {
           // v2.3.7: FIX BUG #2 - Close widget action handler
           closePopup(); // Minimizza il widget
           removeAllActionContainers();
+        } else if (action.action === 'confirm_end_conversation') {
+          // v2.3.12: Confirm end conversation (inline)
+          removeAllActionContainers();
+          executeEndConversation();
+        } else if (action.action === 'cancel_end_conversation') {
+          // v2.3.12: Cancel end conversation
+          removeAllActionContainers();
+          addMessage(STRINGS['end_conversation.cancelled'], 'system');
+        } else if (action.action === 'confirm_return_to_ai') {
+          // v2.3.12: Confirm return to AI (inline)
+          removeAllActionContainers();
+          executeReturnToAI();
+        } else if (action.action === 'cancel_return_to_ai') {
+          // v2.3.12: Cancel return to AI
+          removeAllActionContainers();
+          addMessage('✅ Continui con l\'operatore.', 'system');
         } else {
           console.warn('⚠️ Unknown action:', action.action);
           removeAllActionContainers();
@@ -2562,7 +2850,7 @@ function initializeChatbot() {
 
     } catch (error) {
       console.error('Failed to cancel operator request:', error);
-      alert('Errore durante l\'annullamento della richiesta');
+      addMessage('❌ Errore durante l\'annullamento della richiesta.', 'system');
     }
   }
 
@@ -2612,16 +2900,39 @@ function initializeChatbot() {
   }
 
   // v2.3.5: ISSUE #10 - User returns to AI from operator chat
-  window.returnToAI = async function() {
+  // v2.3.12: IMPROVEMENT #2 - Inline confirmation (no browser popup)
+  window.returnToAI = function() {
     if (!sessionId) {
       console.error('❌ No session ID for return to AI');
+      addMessage(STRINGS['return_to_ai.error'], 'system');
       return;
     }
 
-    if (!confirm('Vuoi tornare all\'assistente AI? L\'operatore verrà disconnesso dalla chat.')) {
-      return;
-    }
+    // Show inline confirmation instead of confirm() popup
+    addMessage(STRINGS['return_to_ai.confirm_question'], 'system');
 
+    const actions = [
+      {
+        icon: '🤖',
+        text: 'Sì, torna ad AI',
+        description: 'Disconnetti operatore',
+        type: 'primary',
+        action: 'confirm_return_to_ai'
+      },
+      {
+        icon: '❌',
+        text: 'Annulla',
+        description: 'Continua con operatore',
+        type: 'secondary',
+        action: 'cancel_return_to_ai'
+      }
+    ];
+
+    showSmartActions(actions);
+  };
+
+  // v2.3.12: Execute return to AI after confirmation
+  async function executeReturnToAI() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/return-to-ai`, {
         method: 'POST',
@@ -2657,23 +2968,44 @@ function initializeChatbot() {
         input.placeholder = 'Scrivi un messaggio...';
 
         // Add confirmation message
-        addMessage('✅ Sei tornato all\'assistente AI. Come posso aiutarti?', 'bot');
+        addMessage(STRINGS['return_to_ai.success'], 'bot');
       } else {
         throw new Error(data.error?.message || 'Errore durante il ritorno all\'AI');
       }
     } catch (error) {
       console.error('❌ Return to AI error:', error);
-      alert('Errore durante il ritorno all\'assistente AI. Riprova.');
+      addMessage(STRINGS['return_to_ai.error'], 'system');
     }
-  };
+  }
 
   // v2.3.7: BUG #1 - End conversation and start fresh
-  window.endConversation = async function() {
-    // Confirm with user
-    if (!confirm('Vuoi terminare questa conversazione e iniziare da zero?\n\nTutta la cronologia della chat verrà rimossa.')) {
-      return;
-    }
+  // v2.3.12: IMPROVEMENT #2 - Inline confirmation (no browser popup)
+  window.endConversation = function() {
+    // Show inline confirmation instead of confirm() popup
+    addMessage(STRINGS['end_conversation.confirm_question'], 'system');
 
+    const actions = [
+      {
+        icon: '✅',
+        text: 'Sì, termina',
+        description: 'Rimuovi tutto e ricomincia',
+        type: 'primary',
+        action: 'confirm_end_conversation'
+      },
+      {
+        icon: '❌',
+        text: 'Annulla',
+        description: 'Continua questa chat',
+        type: 'secondary',
+        action: 'cancel_end_conversation'
+      }
+    ];
+
+    showSmartActions(actions);
+  };
+
+  // v2.3.12: Execute conversation end after confirmation
+  async function executeEndConversation() {
     // v2.3.8: LACUNA #5 - Save state before clearing for AI rating
     const wasAIOnly = !isOperatorMode && sessionId; // AI chat if never entered operator mode
     const endedSessionId = sessionId;
@@ -2730,20 +3062,21 @@ function initializeChatbot() {
       input.value = '';
 
       // Show fresh welcome message
-      addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
+      addMessage(STRINGS['welcome.initial'], 'bot');
 
       console.log('🔄 Conversation reset - ready for new session');
 
       // v2.3.8: LACUNA #5 - Show AI rating if it was AI-only chat
+      // v2.3.12: Changed to inline rating
       if (wasAIOnly && endedSessionId) {
-        console.log('💬 Showing AI rating popup for ended session');
+        console.log('💬 Showing AI inline rating for ended session');
         setTimeout(() => {
-          showRatingPopup(endedSessionId, 'AI');
+          showInlineRating(endedSessionId, 'AI');
         }, 500); // Small delay for better UX
       }
     } catch (error) {
       console.error('❌ End conversation error:', error);
-      alert('Errore durante la terminazione. La chat verrà comunque resettata.');
+      addMessage(STRINGS['end_conversation.error'], 'system');
 
       // Force reset anyway
       clearSessionStorage();
@@ -2751,20 +3084,20 @@ function initializeChatbot() {
       sessionValidated = false;
       isOperatorMode = false;
       messagesContainer.innerHTML = '';
-      addMessage('👋 Ciao! Sono Lucy, la tua assistente virtuale. Come posso aiutarti oggi?', 'bot');
+      addMessage(STRINGS['welcome.initial'], 'bot');
     }
-  };
+  }
 
   // v2.3.11: Reactivate AI chat closed for inactivity
   async function reactivateAIChat() {
     if (!sessionId) {
       console.error('❌ No sessionId to reactivate');
-      addMessage('❌ Errore: nessuna sessione da riattivare.', 'system');
+      addMessage(STRINGS['reactivate.no_session'], 'system');
       return;
     }
 
     try {
-      addMessage('🔄 Riattivazione chat in corso...', 'system');
+      addMessage(STRINGS['reactivate.loading'], 'system');
 
       const response = await fetch(`${BACKEND_URL}/api/chat/sessions/${sessionId}/reactivate`, {
         method: 'POST',
@@ -2776,7 +3109,7 @@ function initializeChatbot() {
       if (!response.ok) {
         // Check if error code indicates window expired
         if (data.error?.code === 'REACTIVATE_WINDOW_EXPIRED') {
-          addMessage('⏰ Chat chiusa da troppo tempo. Iniziamo una nuova conversazione!', 'system');
+          addMessage(STRINGS['reactivate.expired'], 'system');
           setTimeout(() => {
             clearSessionStorage();
             sessionId = null;
@@ -2784,7 +3117,7 @@ function initializeChatbot() {
             displayedMessageIds.clear();
             setInputState(true);
             input.placeholder = 'Scrivi un messaggio...';
-            addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
+            addMessage(STRINGS['reactivate.new_chat_starting'], 'bot');
           }, 2000);
         } else {
           throw new Error(data.error?.message || 'Errore riattivazione');
@@ -2794,7 +3127,7 @@ function initializeChatbot() {
 
       // Riattivazione riuscita
       console.log('✅ Chat riattivata:', data);
-      addMessage('✅ Chat riattivata! Continua pure la conversazione.', 'system');
+      addMessage(STRINGS['reactivate.success'], 'system');
 
       // Riabilita input
       setInputState(true);
@@ -2808,7 +3141,7 @@ function initializeChatbot() {
 
     } catch (error) {
       console.error('❌ Errore riattivazione:', error);
-      addMessage('❌ Errore durante la riattivazione. Riprova o inizia una nuova chat.', 'system');
+      addMessage(STRINGS['reactivate.error'], 'system');
     }
   }
 
@@ -2967,7 +3300,7 @@ function initializeChatbot() {
       chatTitle.style.color = '';
     }
 
-    addMessage('💬 Nuova chat avviata. Come posso aiutarti?', 'bot');
+    addMessage(STRINGS['welcome.new_chat'], 'bot');
   }
 
   // ✅ UPDATED: Resume from ticket - Fixed endpoint
@@ -3076,14 +3409,14 @@ function initializeChatbot() {
     const message = document.getElementById('ticketMessage')?.value;
 
     if (!name || !email || !message) {
-      alert('Compila tutti i campi');
+      addMessage(STRINGS['validation.ticket_required'], 'system');
       return;
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert('Inserisci un indirizzo email valido');
+      addMessage(STRINGS['validation.email_invalid'], 'system');
       return;
     }
 
@@ -3189,12 +3522,12 @@ function initializeChatbot() {
 
     // Validate name (2-50 characters, letters and spaces only)
     if (name.length < 2 || name.length > 50) {
-      alert('Inserisci un nome valido (2-50 caratteri)');
+      addMessage(STRINGS['validation.name_length'], 'system');
       return;
     }
 
     if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(name)) {
-      alert('Il nome può contenere solo lettere e spazi');
+      addMessage(STRINGS['validation.name_chars'], 'system');
       return;
     }
 
@@ -3231,7 +3564,7 @@ function initializeChatbot() {
       }
     } catch (error) {
       console.error('❌ Errore salvataggio nome:', error);
-      alert('Errore nel salvataggio del nome. Riprova.');
+      addMessage('❌ Errore nel salvataggio del nome. Riprova.', 'system');
     }
   };
 
@@ -3419,7 +3752,7 @@ function initializeChatbot() {
 
       socket.on('chat_closed', (data) => {
         console.log('👋 Chat closed:', data);
-        addMessage('La chat è stata chiusa. Grazie per averci contattato!', 'system');
+        addMessage(STRINGS['closure.operator'], 'system');
 
         // Save sessionId before clearing (for rating)
         const closedSessionId = sessionId;
@@ -3435,7 +3768,7 @@ function initializeChatbot() {
 
         // P1.7 Fix: Disable input after chat closed
         setInputState(false);
-        input.placeholder = 'Chat chiusa';
+        input.placeholder = STRINGS['closure.ended'];
 
         // Show smart actions for next steps
         // Calculate if chat was closed recently (<5 min) for reopen option
@@ -3466,7 +3799,7 @@ function initializeChatbot() {
           description: 'Valuta la tua esperienza',
           type: 'secondary',
           action: 'show_rating',
-          data: { sessionId: closedSessionId }
+          data: { sessionId: closedSessionId, chatType: 'OPERATOR' } // v2.3.12: Include chatType
         });
 
         showSmartActions(actions);
@@ -3518,7 +3851,7 @@ function initializeChatbot() {
             description: 'Valuta la tua esperienza',
             type: 'secondary',
             action: 'show_rating',
-            data: { sessionId: disconnectedSessionId }
+            data: { sessionId: disconnectedSessionId, chatType: 'OPERATOR' } // v2.3.12: Include chatType
           }
         ]);
 
@@ -3569,7 +3902,7 @@ function initializeChatbot() {
             description: 'Valuta la tua esperienza',
             type: 'secondary',
             action: 'show_rating',
-            data: { sessionId: timeoutSessionId }
+            data: { sessionId: timeoutSessionId, chatType: 'OPERATOR' } // v2.3.12: Include chatType
           }
         ]);
 
@@ -3696,7 +4029,7 @@ function initializeChatbot() {
         console.log('🔒 Chat closed due to inactivity:', data);
 
         addMessage(
-          data.message || 'La chat è stata chiusa per inattività. Puoi iniziare una nuova conversazione quando vuoi!',
+          data.message || STRINGS['closure.operator_inactivity'],
           'system'
         );
 
@@ -3711,7 +4044,7 @@ function initializeChatbot() {
 
         // Disable input
         setInputState(false);
-        input.placeholder = 'Chat chiusa per inattività';
+        input.placeholder = STRINGS['closure.ended_inactivity'];
 
         // Show smart actions for next steps
         const actions = [
@@ -3728,7 +4061,7 @@ function initializeChatbot() {
             description: 'Valuta la tua esperienza',
             type: 'secondary',
             action: 'show_rating',
-            data: { sessionId: data.sessionId }
+            data: { sessionId: data.sessionId, chatType: 'OPERATOR' } // v2.3.12: Include chatType
           }
         ];
 
@@ -3740,7 +4073,7 @@ function initializeChatbot() {
         console.log('🔒 AI chat closed for inactivity:', data);
 
         addMessage(
-          data.message || 'Chat chiusa per inattività. Puoi riaprirla o iniziarne una nuova!',
+          data.message || STRINGS['closure.inactivity'],
           'system'
         );
 
@@ -3749,7 +4082,7 @@ function initializeChatbot() {
 
         // Disable input temporaneamente
         setInputState(false);
-        input.placeholder = 'Chat chiusa per inattività';
+        input.placeholder = STRINGS['closure.ended_inactivity'];
 
         // Show smart actions: Riapri | Nuova Chat
         const actions = [
