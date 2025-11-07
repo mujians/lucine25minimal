@@ -3453,6 +3453,16 @@ function initializeChatbot() {
         // Poi aggiungi il messaggio di conferma
         addMessage(`✅ Ticket creato! Ti ricontatteremo al più presto via email.`, 'bot');
 
+        // Save sessionId for rating (before any potential clearing)
+        const ticketSessionId = sessionId;
+
+        // v2.3.12.1: Show inline rating automatically after ticket creation
+        setTimeout(() => {
+          if (ticketSessionId) {
+            showInlineRating(ticketSessionId, 'OPERATOR');
+          }
+        }, 500); // Small delay for better UX
+
         // v2.3.4: Show recovery options after ticket creation
         const actions = [
           {
