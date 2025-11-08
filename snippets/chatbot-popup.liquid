@@ -3600,7 +3600,7 @@ function initializeChatbot() {
   };
 
   // Skip user name entry
-  window.skipUserName = function() {
+  window.skipUserName = async function() {
     console.log('⏭️ User skipped name entry');
 
     // Remove form
@@ -3612,8 +3612,24 @@ function initializeChatbot() {
       }
     }
 
-    // Add message
-    addMessage('Nessun problema! Come posso aiutarti?', 'operator');
+    // Call backend to save skip and create greeting message
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/session/${sessionId}/skip-name`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to skip name');
+      }
+
+      console.log('✅ Name entry skipped, greeting message sent');
+      // Message will arrive via WebSocket (operator_message event)
+    } catch (error) {
+      console.error('❌ Error skipping name:', error);
+      // Fallback: add message locally if backend fails
+      addMessage('Nessun problema! Come posso aiutarti?', 'operator');
+    }
   };
 
   // ========================
