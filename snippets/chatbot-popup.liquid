@@ -1726,12 +1726,18 @@ function initializeChatbot() {
 
   // v2.3.12: IMPROVEMENT #1 - Inline rating (no popup overlay)
   function showInlineRating(sessionId, chatType = 'OPERATOR') {
+    console.log('🌟 showInlineRating called:', { sessionId, chatType });
+
     // Check if rating already submitted for this session
     const ratedSessions = JSON.parse(localStorage.getItem('ratedSessions') || '[]');
+    console.log('📝 Rated sessions:', ratedSessions);
+
     if (ratedSessions.includes(sessionId)) {
-      console.log('Rating already submitted for this session');
+      console.log('⚠️  Rating already submitted for this session - SKIPPING');
       return;
     }
+
+    console.log('✅ Proceeding to show rating form...');
 
     // Remove any existing rating containers to prevent duplicates
     const existingRating = document.querySelector('.inline-rating-container');
