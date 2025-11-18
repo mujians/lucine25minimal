@@ -11,17 +11,15 @@
   <div class="sidebar-menu">
     {% assign main_menu = linklists['menu-principale'] %}
     {% for link in main_menu.links %}
-      {% unless link.title contains 'Eventi' %}
-        {% assign is_current = false %}
-        {% if current_page_title %}
-          {% if link.title contains current_page_title %}
-            {% assign is_current = true %}
-          {% endif %}
+      {% assign is_current = false %}
+      {% if current_page_title %}
+        {% if link.title contains current_page_title %}
+          {% assign is_current = true %}
         {% endif %}
-        <button class="nav-item {% if is_current %}active{% endif %}" onclick="window.location.href='{{ link.url }}'">
-          <span class="nav-text">{{ link.title }}</span>
-        </button>
-      {% endunless %}
+      {% endif %}
+      <button class="nav-item {% if is_current %}active{% endif %}" onclick="window.location.href='{{ link.url }}'">
+        <span class="nav-text">{{ link.title }}</span>
+      </button>
     {% endfor %}
     
     <!-- Show Cart link only when on cart page -->
