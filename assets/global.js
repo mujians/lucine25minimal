@@ -74,23 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Special tracking for cart icon clicks  
-    if (closest && closest.href && closest.href.includes('/cart')) {
-      const cartInfo = {
-        element: closest,
-        href: closest.href,
-        coordinates: { x: event.clientX, y: event.clientY }
-      };
-      console.log('🛒 CART ICON CLICKED!', cartInfo);
-      
-      // PREVENT NAVIGATION TO KEEP LOGS - for debugging only
-      event.preventDefault();
-      alert('🛒 CART ICON DEBUG:\n\n' + 
-            'Href: ' + closest.href + '\n' +
-            'Coordinates: ' + event.clientX + ',' + event.clientY + '\n\n' +
-            'Check console for full details');
-      return false;
-    }
   }, true); // Use capture phase to catch everything
   
   console.log('✅ Click tracking active');
